@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.2</version>
     </parent>
 
     <artifactId>mconfigutil</artifactId>
@@ -42,13 +42,13 @@
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigsourcejar</artifactId>
-            <version>0.8.1</version>
+            <version>0.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigsourcefilesystem</artifactId>
-            <version>0.8.1</version>
+            <version>0.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
