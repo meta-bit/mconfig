@@ -11,6 +11,7 @@
 
     <artifactId>mconfigutil</artifactId>
     <name>mConfigUtil</name>
+    <description>mConfig utility functions</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -78,15 +79,6 @@
                 <configuration>
                     <excludePackageNames>org.metabit.platform.support.config.util.impl*</excludePackageNames>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

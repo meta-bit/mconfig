@@ -11,6 +11,7 @@
 
     <artifactId>mconfigsourcejar</artifactId>
     <name>mConfigSourceJAR</name>
+    <description>mConfig module for reading configurations from inside JAR and classpath (i.e. defaults)</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

@@ -11,6 +11,7 @@
 
     <artifactId>mconfigwinregistry</artifactId>
     <name>mConfigWinRegistry</name>
+    <description>JNI implementation for Windows Registry support in the mConfig platform.</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

@@ -24,6 +24,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.site.skip>false</maven.site.skip>
+        <maven.source.skip>true</maven.source.skip>
+        <!-- no binary distribution in JAR repositories -->
+        <skipPublishing>true</skipPublishing>
     </properties>
 
     <dependencies>
@@ -112,6 +115,16 @@
                     </excludePackageNames>
                 </configuration>
                 <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>aggregate-javadoc</id>
                         <phase>prepare-package</phase>

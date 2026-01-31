@@ -13,6 +13,8 @@
     <groupId>org.metabit.testing.platform.support.config.test</groupId>
     <artifactId>integrationtests</artifactId>
     <name>integrationtests</name>
+    <description>integration tests for mConfig</description>
+
     <packaging>pom</packaging>
     <modules>
         <module>integrationtestsBase</module>
@@ -28,6 +30,10 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.install.skip>true</maven.install.skip>
+        <maven.jar.skip>true</maven.jar.skip>
+        <maven.source.skip>true</maven.source.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

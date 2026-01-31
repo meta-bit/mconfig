@@ -14,6 +14,11 @@
     <name>mConfigFull</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.source.skip>true</maven.source.skip>
+    </properties>
+
     <description>
         mConfig with all mature sources and formats.
 

@@ -11,6 +11,7 @@
 
     <artifactId>mconfigbase</artifactId>
     <name>mConfigBase</name>
+    <description>signed binary package with mConfig core functionality</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,7 +66,7 @@
             <version>${project.version}</version>
         </dependency>
         <!--
-        coming next:
+        in consideration:
         - config source EnvVar
         - config source Windows Registry
         then, more file formats.
@@ -88,10 +89,19 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven.javadoc.plugin.version}</version>
                 <configuration>
-                    <skip>true</skip>
+                    <!-- pulls in javadoc from the modules shaded -->
+                    <includeDependencySources>true</includeDependencySources>
+                    <dependencySourceIncludes>
+                        <dependencySourceInclude>org.metabit.platform.support.config:*</dependencySourceInclude>
+                    </dependencySourceIncludes>
+                    <!-- exclude implementation details, document the API only -->
+                    <excludePackageNames>org.metabit.platform.support.config.*:org.metabit.platform.support.osdetection:org.metabit.library.format.json</excludePackageNames>
+                    <!-- don't be picky -->
+                    <doclint>none</doclint>
                 </configuration>
             </plugin>
 
+            <!-- the actual shading -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

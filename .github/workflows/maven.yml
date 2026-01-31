@@ -51,14 +51,14 @@ jobs:
           server-id: github
 
       # debugging: check the effective settings
-      - name: Verify Maven Settings
-        run: mvn help:effective-settings
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Debug Settings File
-        run: |
-          echo "Checking default path:"
-          ls -la ~/.m2/settings.xml && cat ~/.m2/settings.xml
+#      - name: Verify Maven Settings
+#        run: mvn help:effective-settings
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Debug Settings File
+#        run: |
+#          echo "Checking default path:"
+#          ls -la ~/.m2/settings.xml && cat ~/.m2/settings.xml
 
       - name: Publish to GitHub Packages
         # clean to ensure the old artifacts are not present

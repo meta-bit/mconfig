@@ -11,6 +11,7 @@
 
     <artifactId>mconfigsecrets</artifactId>
     <name>mConfigSecrets</name>
+    <description>mConfig module for secrets handling</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -11,6 +11,7 @@
 
     <artifactId>mconfigmapper</artifactId>
     <name>mConfigMapper</name>
+    <description>mConfig module for mapping configuration to and from Java objects (POJOs)</description>
 
     <dependencies>
         <dependency>

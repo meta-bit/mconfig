@@ -52,15 +52,6 @@
                     <!-- exclude all implementation details, document only the public API -->
                     <excludePackageNames>org.metabit.platform.support.config.*:org.metabit.platform.support.osdetection:org.metabit.library.format.json</excludePackageNames>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

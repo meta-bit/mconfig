@@ -11,6 +11,7 @@
 
     <artifactId>mconfigsourcefilesystem</artifactId>
     <name>mConfigSourceFilesystem</name>
+    <description>mConfig module for reading configurations from filesystem, using OS-dependant standard paths</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
