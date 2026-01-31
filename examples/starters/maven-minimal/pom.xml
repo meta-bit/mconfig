@@ -21,13 +21,13 @@
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigStandard</artifactId>
+            <artifactId>mconfigstandard</artifactId>
             <version>${mconfig.version}</version>
             <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigLoggingSlf4j</artifactId>
+            <artifactId>mconfigloggingslf4j</artifactId>
             <version>${mconfig.version}</version>
         </dependency>
         <dependency>

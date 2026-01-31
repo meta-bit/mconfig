@@ -5,17 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>mConfigFormatINI</artifactId>
-    <name>mConfig :: Format :: INI</name>
+    <artifactId>mconfigformatini</artifactId>
+    <name>mConfigFormatINI</name>
 
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

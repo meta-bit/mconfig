@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>mConfigBase</artifactId>
+    <artifactId>mconfigbase</artifactId>
+    <name>mConfigBase</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,43 +25,43 @@
         <!-- mConfigBase expects JDK9+ ; mConfigCore has a JDK8 variant-->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigScheme</artifactId>
+            <artifactId>mconfigscheme</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSecrets</artifactId>
+            <artifactId>mconfigsecrets</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceJAR</artifactId>
+            <artifactId>mconfigsourcejar</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceFilesystem</artifactId>
+            <artifactId>mconfigsourcefilesystem</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJavaProperties</artifactId>
+            <artifactId>mconfigformatjavaproperties</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- our shade warnings stem from mConfigUtil including classes itself -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigUtil</artifactId>
+            <artifactId>mconfigutil</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceEnvVar</artifactId>
+            <artifactId>mconfigsourceenvvar</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!--

@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>mConfigTools</artifactId>
+    <artifactId>mconfigtools</artifactId>
+    <name>mConfigTools</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -21,57 +22,57 @@
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigUtil</artifactId>
+            <artifactId>mconfigutil</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceJAR</artifactId>
+            <artifactId>mconfigsourcejar</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceFilesystem</artifactId>
+            <artifactId>mconfigsourcefilesystem</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceEnvVar</artifactId>
+            <artifactId>mconfigsourceenvvar</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigWinRegistry</artifactId>
+            <artifactId>mconfigwinregistry</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJavaProperties</artifactId>
+            <artifactId>mconfigformatjavaproperties</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJSONwithJackson</artifactId>
+            <artifactId>mconfigformatjsonwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatYAMLwithJackson</artifactId>
+            <artifactId>mconfigformatyamlwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatTOMLwithJackson</artifactId>
+            <artifactId>mconfigformattomlwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config.logging</groupId>
-            <artifactId>mConfigLoggingSlf4j</artifactId>
+            <artifactId>mconfigloggingslf4j</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

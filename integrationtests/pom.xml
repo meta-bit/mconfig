@@ -5,13 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
     <!-- intentionally a different package branch, so the tests come from "outside" -->
     <groupId>org.metabit.testing.platform.support.config.test</groupId>
     <artifactId>integrationtests</artifactId>
+    <name>integrationtests</name>
     <packaging>pom</packaging>
     <modules>
         <module>integrationtestsBase</module>

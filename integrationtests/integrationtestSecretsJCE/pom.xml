@@ -7,13 +7,13 @@
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>integrationtestSecretsJCE</artifactId>
-    <name>IT - mConfig Secrets with JCE</name>
+    <artifactId>integrationtestsecretsjce</artifactId>
+    <name>integrationtestSecretsJCE</name>
 
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigBase</artifactId>
+            <artifactId>mconfigbase</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

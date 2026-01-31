@@ -6,11 +6,12 @@
 
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>mConfigFull</artifactId>
+    <artifactId>mconfigfull</artifactId>
+    <name>mConfigFull</name>
     <packaging>pom</packaging>
 
     <description>
@@ -32,7 +33,7 @@
         <!-- Standard Core -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigStandard</artifactId>
+            <artifactId>mconfigstandard</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
@@ -40,39 +41,39 @@
         <!-- Additional Mature Sources -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceEnvVar</artifactId>
+            <artifactId>mconfigsourceenvvar</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigWinRegistry</artifactId>
+            <artifactId>mconfigwinregistry</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- Mature Formats -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJavaProperties</artifactId>
+            <artifactId>mconfigformatjavaproperties</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJSONwithJackson</artifactId>
+            <artifactId>mconfigformatjsonwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatYAMLwithJackson</artifactId>
+            <artifactId>mconfigformatyamlwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatTOMLwithJackson</artifactId>
+            <artifactId>mconfigformattomlwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatINI</artifactId>
+            <artifactId>mconfigformatini</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -80,26 +81,26 @@
         <!-- Other Mature Modules -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigMapper</artifactId>
+            <artifactId>mconfigmapper</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config.logging</groupId>
-            <artifactId>mConfigLoggingSlf4j</artifactId>
+            <artifactId>mconfigloggingslf4j</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!--
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigWinRegistryJNI</artifactId>
+            <artifactId>mconfigwinregistryjni</artifactId>
             <version>${project.version}</version>
         </dependency>
         -->
         <!--
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatYAMLwithSnakeYAML</artifactId>
+            <artifactId>mconfigformatyamlwithsnakeyaml</artifactId>
             <version>${project.version}</version>
         </dependency>
         -->

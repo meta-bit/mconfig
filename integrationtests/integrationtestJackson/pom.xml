@@ -7,8 +7,8 @@
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>integrationtestJackson</artifactId>
-    <name>IT - mConfig JSON with Jackson</name>
+    <artifactId>integrationtestjackson</artifactId>
+    <name>integrationtestJackson</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -19,22 +19,22 @@
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigBase</artifactId>
+            <artifactId>mconfigbase</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJSONwithJackson</artifactId>
+            <artifactId>mconfigformatjsonwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatYAMLwithJackson</artifactId>
+            <artifactId>mconfigformatyamlwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigMapper</artifactId>
+            <artifactId>mconfigmapper</artifactId>
             <version>${project.version}</version>
         </dependency>
 

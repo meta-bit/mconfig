@@ -5,12 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
     <groupId>org.metabit.platform.support.config.logging</groupId>
-    <artifactId>mConfigLoggingSlf4j</artifactId>
+    <artifactId>mconfigloggingslf4j</artifactId>
+    <name>mConfigLoggingSlf4j</name>
     <description>SLF4J (SLF4j2) logging module for mConfig</description>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -20,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>0.8.0</version>
             <scope>compile</scope>
         </dependency>

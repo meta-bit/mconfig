@@ -7,28 +7,28 @@
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>integrationtestTOML</artifactId>
-    <name>IT - mConfig TOML with Jackson</name>
+    <artifactId>integrationtesttoml</artifactId>
+    <name>integrationtestTOML</name>
 
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigBase</artifactId>
+            <artifactId>mconfigbase</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJSONwithJackson</artifactId>
+            <artifactId>mconfigformatjsonwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatTOMLwithJackson</artifactId>
+            <artifactId>mconfigformattomlwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigMapper</artifactId>
+            <artifactId>mconfigmapper</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -5,13 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfigStandard</artifactId>
+    <artifactId>mconfigstandard</artifactId>
+    <name>mConfigStandard</name>
     <version>0.8.0</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
@@ -25,44 +26,44 @@
         <!-- the core library, required -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- config schemes, for validation, documentation, etc. - very much recommended -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigScheme</artifactId>
+            <artifactId>mconfigscheme</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- handling of secrets and sensitive information. not only passwords -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSecrets</artifactId>
+            <artifactId>mconfigsecrets</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!-- utility library, optional -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigUtil</artifactId>
+            <artifactId>mconfigutil</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- reading hardcoded resources from within a JAR or similar Java packaging -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceJAR</artifactId>
+            <artifactId>mconfigsourcejar</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- reading configuration files from the filesystem. encapsulates and implements OS conventions -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceFilesystem</artifactId>
+            <artifactId>mconfigsourcefilesystem</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- configuration format Java Properties is a standard format for configuration files with Java -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJavaProperties</artifactId>
+            <artifactId>mconfigformatjavaproperties</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

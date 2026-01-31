@@ -10,7 +10,8 @@
     </parent>
 
     <groupId>org.metabit.testing.platform.support.config.test.valkey</groupId>
-    <artifactId>integrationtestValkeyRedis</artifactId>
+    <artifactId>integrationtestvalkeyredis</artifactId>
+    <name>integrationtestValkeyRedis</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

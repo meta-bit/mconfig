@@ -24,10 +24,10 @@
     </properties>
 
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfig</artifactId>
+    <artifactId>mconfig</artifactId>
     <version>0.8.0</version>
     <packaging>pom</packaging>
-    <name>metabit config libraries</name>
+    <name>mConfig</name>
     <description>
         A library to access local configuration files independent of operating system,
         with a default hierarchy for user/application/system settings etc.

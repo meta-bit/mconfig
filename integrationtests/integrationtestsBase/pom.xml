@@ -6,56 +6,56 @@
         <artifactId>integrationtests</artifactId>
         <version>0.8.0</version>
     </parent>
-    <artifactId>integrationtestsBase</artifactId>
-    <name>mConfig Base IT</name>
+    <artifactId>integrationtestsbase</artifactId>
+    <name>integrationtestsBase</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceFilesystem</artifactId>
+            <artifactId>mconfigsourcefilesystem</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceJAR</artifactId>
+            <artifactId>mconfigsourcejar</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigUtil</artifactId>
+            <artifactId>mconfigutil</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatRawFile</artifactId>
+            <artifactId>mconfigformatrawfile</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatJavaProperties</artifactId>
+            <artifactId>mconfigformatjavaproperties</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigFormatINI</artifactId>
+            <artifactId>mconfigformatini</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigScheme</artifactId>
+            <artifactId>mconfigscheme</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <!--
                         <dependency>
                             <groupId>org.metabit.platform.support.config</groupId>
-                            <artifactId>mConfigWinRegistry</artifactId>
+                            <artifactId>mconfigwinregistry</artifactId>
                             <version>${project.version}</version>
                         </dependency>
                 -->

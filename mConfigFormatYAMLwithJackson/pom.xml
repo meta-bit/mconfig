@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
 
-    <artifactId>mConfigFormatYAMLwithJackson</artifactId>
+    <artifactId>mconfigformatyamlwithjackson</artifactId>
+    <name>mConfigFormatYAMLwithJackson</name>
 
 
     <properties>
@@ -20,14 +21,14 @@
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -57,25 +58,25 @@
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceJAR</artifactId>
+            <artifactId>mconfigsourcejar</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigSourceFilesystem</artifactId>
+            <artifactId>mconfigsourcefilesystem</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigBase</artifactId>
+            <artifactId>mconfigbase</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigMapper</artifactId>
+            <artifactId>mconfigmapper</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
-        <artifactId>mConfig</artifactId>
+        <artifactId>mconfig</artifactId>
         <version>0.8.0</version>
     </parent>
     <description>mConfig module to obtain configuration information from OS/runtime environment</description>
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mConfigCore</artifactId>
+            <artifactId>mconfigcore</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -32,7 +32,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <artifactId>mConfigSourceEnvVar</artifactId>
+    <artifactId>mconfigsourceenvvar</artifactId>
+    <name>mConfigSourceEnvVar</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
