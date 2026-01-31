@@ -23,7 +23,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'
+          server-id: github
+          # serve ID must match the distribution ID in the POM/settings.xml
+          # This tells the action where to write the temporary settings.xml
+          settings-path: ${{ github.workspace }}
+          # cache: 'maven'
       - name: Build and Verify
         run: mvn --batch-mode clean verify
 
