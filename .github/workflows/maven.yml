@@ -65,5 +65,6 @@ jobs:
         # -DskipTests because we already ran them in the 'build' job
         run: mvn --batch-mode deploy -DskipTests -s ~/.m2/settings.xml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MAVEN_PAT }}
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
