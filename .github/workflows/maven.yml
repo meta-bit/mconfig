@@ -26,7 +26,8 @@ jobs:
           server-id: github
           # serve ID must match the distribution ID in the POM/settings.xml
           # This tells the action where to write the temporary settings.xml
-          settings-path: ${{ github.workspace }}
+          # settings-path: ${{ github.workspace }}
+          settings-path: ~/.m2
           # cache: 'maven'
       - name: Build and Verify
         run: mvn --batch-mode clean verify
@@ -58,7 +59,8 @@ jobs:
 
       - name: Publish to GitHub Packages
         # -DskipTests because we already ran them in the 'build' job
-        run: mvn --batch-mode deploy -DskipTests # -s ${{ github.workspace }}/settings.xml
+        # run: mvn --batch-mode deploy -DskipTests -s ${{ github.workspace }}/settings.xml
+        run: mvn --batch-mode deploy -DskipTests -s ~/.m2/settings.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
