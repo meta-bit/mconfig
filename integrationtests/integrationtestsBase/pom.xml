@@ -10,6 +10,10 @@
     <name>integrationtestsBase</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
