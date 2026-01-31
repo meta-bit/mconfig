@@ -40,7 +40,6 @@ jobs:
       contents: read
       packages: write        # Required to upload to GitHub Packages
 
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -48,8 +47,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          server-id: github   # has to match the repository ID in toplevel pom.xm
-          # settings-path: ${{ github.workspace }}
+          # server-id has to match the repository ID in toplevel pom.xm
+          server-id: github
+          # Force the file into the workspace
+          settings-path: ${{ github.workspace }}
 
       # debugging: check the effective settings
       - name: Verify Maven Settings
@@ -59,8 +60,7 @@ jobs:
 
       - name: Publish to GitHub Packages
         # -DskipTests because we already ran them in the 'build' job
-        # run: mvn --batch-mode deploy -DskipTests -s ${{ github.workspace }}/settings.xml
-        run: mvn --batch-mode deploy -DskipTests -s ~/.m2/settings.xml
+        run: mvn --batch-mode deploy -DskipTests -s ${{ github.workspace }}/settings.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
