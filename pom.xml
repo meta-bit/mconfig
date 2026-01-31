@@ -107,8 +107,9 @@
         <downloadUrl>https://oss.sonatype.org/content/groups/public/org/metabit/mConfigBase</downloadUrl>
     </distributionManagement>
     <scm>
-        <connection>scm:git:git@github.com:meta-bit/mconfig.git</connection>
+        <connection>scm:git:https://github.com/meta-bit/mconfig.git</connection>
         <developerConnection>scm:git:git@github.com:meta-bit/mconfig.git</developerConnection>
+        <!-- human-useable link -->
         <url>https://github.com/meta-bit/mconfig</url>
     </scm>
 
