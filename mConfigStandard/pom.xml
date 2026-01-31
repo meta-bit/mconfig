@@ -7,13 +7,13 @@
     <groupId>org.metabit.platform.support.config</groupId>
     <artifactId>mconfigstandard</artifactId>
     <name>mConfigStandard</name>
-    <version>0.8.0</version>
+    <version>0.8.1</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.0</version>
+        <version>0.8.1</version>
     </parent>
 
     <properties>

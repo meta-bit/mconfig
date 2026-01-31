@@ -1,6 +1,8 @@
 
-### 0.8.0
+### 0.8.1
+* version bump to help github with its workflows.
 
+### 0.8.0
 * public release now on github.
 
 ### 0.7.x
