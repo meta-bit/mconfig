@@ -1,0 +1,6 @@
+{
+  "string" : "some text",
+  "integer" : 2317,
+  "array_empty" : [ ],
+  "array_integers" : [ 1, 2, 3, 5, 8, 13 ]
+}

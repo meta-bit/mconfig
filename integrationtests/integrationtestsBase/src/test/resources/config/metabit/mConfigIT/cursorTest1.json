@@ -1,0 +1,6 @@
+{
+  "proper": "JSON format",
+  "empty_array" : [],
+  "empty_map" : {},
+  "integer" : 47
+}

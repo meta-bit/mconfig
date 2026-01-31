@@ -1,0 +1,2 @@
+org.metabit.platform.support.config.impl.format.raw.FileRawTextFormat
+org.metabit.platform.support.config.impl.format.raw.FileRawBinaryFormat

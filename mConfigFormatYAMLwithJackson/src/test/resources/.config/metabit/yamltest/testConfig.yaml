@@ -1,0 +1,6 @@
+name: "YAML Test App"
+version: "1.2.3"
+enabled: true
+count: 42
+nested:
+  key: value

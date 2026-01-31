@@ -1,0 +1,11 @@
+Package: mconfig-tools
+Version: ${project.version}
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: Metabit <support@metabit.com>
+Homepage: https://www.metabit.com
+Depends: default-jre
+Suggests: bash-completion
+Description: mConfig command-line tool
+ Command-line interface for inspecting and managing mConfig configuration data.

@@ -1,0 +1,1 @@
+package org.metabit.platform.support.config.impl.format.javaproperties;

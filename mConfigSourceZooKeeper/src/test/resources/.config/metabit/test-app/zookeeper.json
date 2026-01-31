@@ -1,0 +1,6 @@
+{
+  "zookeeper": {
+    "connectString": "localhost:ZOOKEEPER_PORT",
+    "rootPath": "/mconfig-test"
+  }
+}

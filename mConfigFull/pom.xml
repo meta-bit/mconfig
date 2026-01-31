@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.metabit.platform.support.config</groupId>
+        <artifactId>mConfig</artifactId>
+        <version>0.8.0</version>
+    </parent>
+
+    <artifactId>mConfigFull</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        mConfig with all mature sources and formats.
+
+        Specialized variants of included modules may be available (e.g. for
+        smaller code size or faster registry access).
+    </description>
+
+    <!-- We omit the more specialized module *variants* here.
+
+    We use a combined Jackson approach to cover formats, since they
+    share the common dependencies.
+    Also, for the windows registry access, we use the variant which
+    does not require a cross-compiler setup
+    -->
+
+    <dependencies>
+        <!-- Standard Core -->
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigStandard</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+
+        <!-- Additional Mature Sources -->
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigSourceEnvVar</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigWinRegistry</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Mature Formats -->
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigFormatJavaProperties</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigFormatJSONwithJackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigFormatYAMLwithJackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigFormatTOMLwithJackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigFormatINI</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!-- Other Mature Modules -->
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigMapper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config.logging</groupId>
+            <artifactId>mConfigLoggingSlf4j</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigWinRegistryJNI</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        -->
+        <!--
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigFormatYAMLwithSnakeYAML</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        -->
+    </dependencies>
+</project>

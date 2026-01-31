@@ -1,0 +1,27 @@
+# LICENSE
+# mConfig Design Integrity License (v0.8.0 - 1.0.0-pre)
+
+This software is licensed under the [Polyform Shield License 1.0.0](https://polyformproject.org/licenses/shield/1.0.0/),
+subject to the following Redistribution & Integrity Grant:
+
+1. Permitted Commercial Redistribution
+   Notwithstanding any restrictive language in the base license,
+   users are granted a non-exclusive, royalty-free right to
+   redistribute the unmodified mConfig library (in source or binary form)
+   as an integrated component of a larger commercial product or service.
+
+2. Design Integrity Restriction (The "No-Forks" Clause)
+   To prevent architectural fragmentation and ensure the consistency of
+   the tiered Scope and Config Scheme standards during this development phase:
+
+   The right to distribute modified versions (derivatives or "forks")
+   of the mConfig Core is strictly withheld until version 1.0.0.
+   Users may modify the code for private, internal use/bug-fixing,
+   but such modifications may not be redistributed publicly
+   or as part of a competing library.
+
+3. Transition to Open Source
+   The Licensor commits to re-licensing the mConfig Core module under the
+   Apache License upon the official release of version 1.0.0.
+   This rider serves as a temporary safeguard for the library's
+   architectural foundation during its maturation.

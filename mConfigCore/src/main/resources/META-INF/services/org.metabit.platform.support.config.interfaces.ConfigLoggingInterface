@@ -1,0 +1,2 @@
+org.metabit.platform.support.config.impl.core.NullLogging
+org.metabit.platform.support.config.impl.logging.ConsoleLogging

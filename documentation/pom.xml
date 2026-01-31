@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.metabit.platform.support.config</groupId>
+        <artifactId>mConfig</artifactId>
+        <version>0.8.0</version>
+    </parent>
+
+    <artifactId>documentation</artifactId>
+    <packaging>pom</packaging>
+    <url>http://www.metabit.com/</url>
+
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scp://webhost.company.com/www/website</url>
+        </site>
+    </distributionManagement>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.site.skip>false</maven.site.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigCore</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigScheme</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigSecrets</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- considering HTML generation:
+        or better maybe https://github.com/walokra/markdown-page-generator-plugin
+        <plugins>
+            see https://github.com/SchweizerischeBundesbahnen/markdown2html-maven-plugin
+            <plugin>
+                <groupId>ch.sbb.maven.plugins</groupId>
+                <artifactId>markdown2html-maven-plugin</artifactId>
+                <version>1.6.0</version>
+            </plugin>
+        </plugins>
+    -->
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+            <plugins>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.12.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.12.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-site</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <doclint>none</doclint>
+                    <failOnError>false</failOnError>
+                    <failOnWarnings>false</failOnWarnings>
+                    <quiet>true</quiet>
+                    <encoding>UTF-8</encoding>
+                    <detectJavaApiLink>false</detectJavaApiLink>
+                    <detectOfflineLinks>false</detectOfflineLinks>
+                    <excludePackageNames>
+                        org.metabit.platform.support.config.impl*:
+                        org.metabit.platform.support.config.util*:
+                        org.metabit.platform.support.config.tool*:
+                        org.metabit.platform.support.config.cheese*:
+                        org.metabit.platform.support.config.source*:
+                        org.metabit.platform.support.config.logging*:
+                        org.metabit.platform.support.config.mapper*:
+                        org.metabit.platform.support.config.scheme.impl*:
+                        org.metabit.library.format.json*:
+                        org.metabit.platform.support.osdetection*
+                    </excludePackageNames>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>aggregate-javadoc</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-aggregate-javadoc-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>aggregate-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-site-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classesDirectory>${project.build.directory}/site</classesDirectory>
+                            <classifier>site</classifier>
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting -->
+</project>

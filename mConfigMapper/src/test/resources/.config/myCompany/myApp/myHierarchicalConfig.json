@@ -1,0 +1,28 @@
+{
+  "inputDatabase": {
+    "name": "source DB",
+    "host": "remotehost",
+    "port": 1234,
+    "user": "user",
+    "password": "correcthorse"
+  },
+  "outputDatabase": {
+    "name": "source DB",
+    "host": "localhost",
+    "port": 1234,
+    "user": "user",
+    "password": "batterystaple"
+  },
+  "filter": {
+    "filterclass": "com.mycompany.myApp.MyConversionFilter",
+    "filtermethod": "convert",
+    "filterparams": {
+      "param1": "value1",
+      "param2": "value2"
+    }
+  },
+  "logging": {
+    "enabled": true,
+    "loglevel": "INFO"
+  }
+}

@@ -1,0 +1,3 @@
+org.metabit.platform.support.config.impl.format.json.jackson.JSONwithJacksonFormat
+org.metabit.platform.support.config.impl.format.json.jackson.JSON5withJacksonFormat
+

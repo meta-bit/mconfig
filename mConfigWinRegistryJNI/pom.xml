@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.metabit.platform.support.config</groupId>
+        <artifactId>mConfig</artifactId>
+        <version>0.8.0</version>
+    </parent>
+
+    <artifactId>mConfigWinRegistryJNI</artifactId>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mConfigCore</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>build-native-dll</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>linux</name>
+                </os>
+                <file>
+                    <exists>/usr/bin/x86_64-w64-mingw32-gcc</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>-h</arg>
+                                <arg>${project.build.directory}/native/include</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>cross-compile-dll</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.directory}/native/output"/>
+                                        <exec executable="x86_64-w64-mingw32-gcc" failonerror="true">
+                                            <arg value="-shared"/>
+                                            <arg value="-o"/>
+                                            <arg value="${project.build.directory}/native/output/mConfigWinRegistryJNI.dll"/>
+                                            <arg value="-I${java.home}/include"/>
+                                            <arg value="-I${java.home}/include/linux"/>
+                                            <arg value="-I${project.build.directory}/native/include"/>
+                                            <arg value="src/main/c/WindowsRegistryJNI.c"/>
+                                            <arg value="-ladvapi32"/>
+                                        </exec>
+                                        <mkdir dir="${project.build.outputDirectory}/META-INF/natives/windows-x64"/>
+                                        <copy file="${project.build.directory}/native/output/mConfigWinRegistryJNI.dll"
+                                              tofile="${project.build.outputDirectory}/META-INF/natives/windows-x64/mConfigWinRegistryJNI.dll"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

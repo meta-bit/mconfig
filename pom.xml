@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) metabit 2018-2026. placed under CC-BY-ND-4.0 license.
+  ~ Full license text available at https://tldrlegal.com/license/creative-commons-attribution-noderivatives-4.0-international-(cc-by-nd-4.0)#fulltext
+  ~ You may: distribute, use for commercial and non-commercial purposes
+  ~ You must: give credit, include/keep copyright, state any changes
+  ~ You mustn't: distribute modified versions, sublicense
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Set Java version for all modules -->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <!-- Ensure UTF-8 encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Skip site generation by default; documentation module overrides this. -->
+        <maven.site.skip>true</maven.site.skip>
+    </properties>
+
+    <groupId>org.metabit.platform.support.config</groupId>
+    <artifactId>mConfig</artifactId>
+    <version>0.8.0</version>
+    <packaging>pom</packaging>
+    <name>metabit config libraries</name>
+    <description>
+        A library to access local configuration files independent of operating system,
+        with a default hierarchy for user/application/system settings etc.
+        This library focuses providing access to the files, not the usage.
+        It is intended to be base library for other component which incorporate network based configs and parsing.
+    </description>
+    <url>https://metabit.org/software/API/</url>
+    <licenses>
+        <license>
+            <name>CC-BY-ND 4.0</name>
+            <url>http://creativecommons.org/licenses/by-nd/4.0/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <modules>
+        <module>mConfigFull</module>
+        <module>mConfigStandard</module>
+        <module>mConfigCore</module>
+        <module>mConfigScheme</module>
+        <module>mConfigSecrets</module>
+        <module>mConfigFormatJavaProperties</module>
+        <module>mConfigFormatJSONwithJackson</module>
+        <module>mConfigFormatRawFile</module>
+        <module>mConfigSourceFilesystem</module>
+        <module>mConfigSourceJAR</module>
+        <module>mConfigSourceEnvVar</module>
+        <module>mConfigWinRegistry</module>
+        <module>mConfigWinRegistryJNI</module>
+        <module>mConfigBase</module>
+        <module>mConfigLoggingSlf4j</module>
+        <module>mConfigMapper</module>
+        <module>integrationtests</module>
+        <module>mConfigUtil</module>
+        <module>mConfigTools</module>
+        <module>mConfigCheese</module>
+        <module>mConfigFormatYAMLwithJackson</module>
+        <module>mConfigFormatYAMLwithSnakeYAML</module>
+        <module>mConfigFormatINI</module>
+        <module>mConfigFormatTOMLwithJackson</module>
+        <module>mConfigSourceZooKeeper</module>
+        <module>documentation</module>
+    </modules>
+    <organization>
+        <name>metabit</name>
+        <url>https://www.metabit.com/</url>
+    </organization>
+    <developers>
+        <developer>
+            <name>J.Wilkes</name>
+            <!-- email => spamrisk. please contact via email given on website -->
+            <organization>metabit</organization>
+            <organizationUrl>https://www.metabit.org/</organizationUrl>
+        </developer>
+    </developers>
+
+
+    <!-- deployment only configuration settings -->
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <downloadUrl>https://oss.sonatype.org/content/groups/public/org/metabit/mConfigBase</downloadUrl>
+    </distributionManagement>
+
+
+    <!-- dependencies>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>buildnumber-maven-plugin</artifactId>
+            <version>3.2.0</version>
+            <type>maven-plugin</type>
+        </dependency>
+    </dependencies -->
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.5.2</version>
+                    <configuration>
+                        <argLine>-Dnet.bytebuddy.experimental=true</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.5.2</version>
+                    <configuration>
+                        <argLine>-Dnet.bytebuddy.experimental=true</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!-- deployment only configuration settings -->
+
+            <!-- Generates a source code JAR during package -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Generates JavaDocs during package -->
+            <!-- target JARs intentionally support older JDK, but for document
+                 generation, we can use the markdown feature of JDK23+ without
+                 detrimental consequences.
+                 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <!-- Use doclint:none to suppress all warnings if needed -->
+                    <doclint>none</doclint>
+                    <failOnError>false</failOnError>
+                    <failOnWarnings>false</failOnWarnings>
+                    <quiet>true</quiet>
+                    <!-- Add source encoding if needed -->
+                    <encoding>UTF-8</encoding>
+                    <!-- Add this to handle HTTPS redirects -->
+                    <detectJavaApiLink>false</detectJavaApiLink>
+                    <detectOfflineLinks>false</detectOfflineLinks>
+                </configuration>
+            </plugin>
+            <!-- allow for module-info while still compiling it in -->
+            <!-- Ensure compilation is done under Java 8 in all environments -->
+            <!-- it seems that signing needs separate configuration?! -->
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        -->
+
+            <!-- for deploying to Maven Central -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+            <!-- for header in all .java files -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <header>NOTICE</header>
+                    <aggregate>true</aggregate>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/package-info.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- GPL'd testing tool -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.9.8.2</version><!-- for JDK11 -->
+                <dependencies>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                    <!-- which we do, since recent versions of "spotbugs" refuse to work with e.g. Java JDK 9 -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>4.9.8</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <!-- excludeBugsFile></excludeBugsFile -->
+                    <!-- optional for finding security bugs
+                    <plugins>
+                        <plugin>
+                            <groupId>com.h3xstream.findsecbugs</groupId>
+                            <artifactId>findsecbugs-plugin</artifactId>
+                            <version>1.12.0</version>
+                        </plugin>
+                    </plugins>
+                    -->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <!-- defaults for compile and testCompile -->
+                <configuration>
+                    <release>11</release>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+
+            <!-- generating and adding build numbers
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>buildnumber</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <format>{0,number}</format>
+                    <items>
+                        <item>buildNumber</item>
+                    </items>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <revisionOnScmFailure>unknownbuild</revisionOnScmFailure>
+                </configuration>
+            </plugin>
+            -->
+        </plugins>
+        <!-- this is the pattern for adding build numbers to the artifacts:
+        <finalName>${project.artifactId}-${project.version}.${buildNumber}</finalName>
+        -->
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>5.11.4</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>5.14.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>5.14.2</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- activate signing, but only for release deployment -->
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.8</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Java 8 compatibility profile -->
+        <!-- requires toolchain for JDK to be locally declared in ~/.m2/toolchains.xml or the settings.xml -->
+        <profile>
+            <id>jdk8</id>
+            <build>
+                <plugins>
+                    <!-- Pick the JDK 1.8 toolchain declared in settings.xml -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-toolchains-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>toolchain</goal>
+                                </goals>
+                                <configuration>
+                                    <toolchains>
+                                        <jdk>
+                                            <version>1.8</version>
+                                        </jdk>
+                                    </toolchains>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Compile with the selected JDK 8 (no bootclasspath, no rt.jar) -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.11.0</version>
+                        <configuration>
+                            <!-- When actually using a JDK 8 toolchain, use source/target -->
+                            <source>1.8</source>
+                            <target>1.8</target>
+                            <!-- Optional: fail fast if annotation processing depends on higher JDK APIs -->
+                            <fork>true</fork>
+                        </configuration>
+                    </plugin>
+
+                    <!-- Optional: fail the build if the JDK 8 toolchain isn’t available -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.4.1</version>
+                        <executions>
+                            <execution>
+                                <id>enforce-toolchain-availability</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <!-- This checks the running JDK; toolchains picks the compiler.
+                                             If you want to enforce running Maven with Java 8 as well, keep this.
+                                             Otherwise you can remove this rule. -->
+                                        <requireJavaVersion>
+                                            <version>[1.8,)</version>
+                                        </requireJavaVersion>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <scm>
+        <url>http://opensource.metabit.com/tags/mConfigBase-0.5.0-SNAPSHOT</url>
+        <connection>scm:git:git://marcus.metabit.com:7999/ml/mconfigbase.git</connection>
+        <!-- scm:git:svn://192.168.11.9/metabit_library/source/mLib_Utils/tags/mConfigBase-0.4.1-SNAPSHOT -->
+        <developerConnection>scm:svn:svn://192.168.11.9/metabit_library/source/mLib_Utils/</developerConnection>
+    </scm>
+    <!-- modules>
+        <module>../mLib_Utils_jsonconfig</module>
+    </modules -->
+
+</project>

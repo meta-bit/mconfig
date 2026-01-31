@@ -1,0 +1,73 @@
+site_name: mConfig Documentation
+docs_dir: src/site/markdown
+site_dir: target/mkdocs
+use_directory_urls: false
+
+theme:
+#  name: material
+  name: readthedocs
+  features:
+    - navigation.footer
+
+markdown_extensions:
+  - tables
+  - fenced_code
+  - toc:
+      permalink: true
+  - admonition
+  - footnotes
+  - attr_list
+  - def_list
+#  - pymdownx.details
+#  - pymdownx.superfences:
+#      custom_fences:
+#        - name: mermaid
+#          class: mermaid
+#          format: !!python/name:pymdownx.superfences.fence_code_custom.simple
+#  - pymdownx.highlight
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - What is mConfig?: 0_what_is_this.md
+  - What does it do?: 1_what_does_it_do.md
+  - Getting Started: getting-started.md
+  - Regular Use: regular-use.md
+  - Test Mode: test-mode.md
+  - Core Concepts:
+      - How does it work?: 3_how_does_it_work.md
+      - Priorities and Hierarchies: 3_2_priorities_and_hierarchies.md
+      - Design Principles: design_consolidated.md
+      - Config Features: 4_1_ConfigFeatures.md
+      - Logging: logging.md
+      - Getting Information: 2_9_getting_information.md
+  - Operational Topics:
+      - Configuration Schemes: configuration-schemes.md
+      - Definitions and Valid Values: 2_10_definitions_and_valid_values.md
+      - Writing Configurations: writing-configurations.md
+      - Updates: 2_8_updates.md
+      - Handling Secrets: handling-secrets.md
+      - Windows Registry Access: windows-registry-access.md
+      - Extensions and Advanced Use: 2_6_extensions_and_advanced_use.md
+  - mConfig Tool: mconfig-tool.md
+  - Examples:
+      - Overview: examples/index.md
+      - Simple Configuration Loading: examples/simple_configuration_loading.md
+      - Advanced Configuration Handling: examples/advanced_configuration_handling.md
+      - Integration with CI/CD: examples/integration_with_cicd.md
+      - Testing Configurations: examples/testing_configurations.md
+      - mConfig Modules: examples/mconfig-modules.md
+      - JPMS (Java Modules): examples/java-modules.md
+      - Configuration Views: examples/configuration_views.md
+      - ZooKeeper: examples/zookeeper.md
+      - Handling Crypto Keys and Certificates: examples/handling_crypto_keys_and_certificates.md
+      - Schemes: examples/schemes.md
+  - Reference / Appendix:
+      - Code Improvements: 4_4_Code_Improvements.md
+      - FAQ: 4_FAQ.md
+      - Links: 5_links.md
+      - Legal: 6_legal.md
+      - Versions: 7_versions.md
+      - Contributing: 8_how_to_contribute.md
