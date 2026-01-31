@@ -48,7 +48,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           server-id: github   # has to match the repository ID in toplevel pom.xm
-          settings-path: ${{ github.workspace }}
+          # settings-path: ${{ github.workspace }}
 
       # debugging: check the effective settings
       - name: Verify Maven Settings
@@ -58,7 +58,7 @@ jobs:
 
       - name: Publish to GitHub Packages
         # -DskipTests because we already ran them in the 'build' job
-        run: mvn --batch-mode deploy -DskipTests
+        run: mvn --batch-mode deploy -DskipTests # -s ${{ github.workspace }}/settings.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
