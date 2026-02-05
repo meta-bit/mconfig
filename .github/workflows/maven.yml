@@ -30,7 +30,7 @@ jobs:
           settings-path: ~/.m2
           # cache: 'maven'
       - name: Build and Verify
-        run: mvn --batch-mode clean verify
+        run: mvn -Pgithub --batch-mode clean verify
 
   publish:
     needs: build             # Only runs if the build passes
