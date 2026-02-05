@@ -64,8 +64,7 @@ jobs:
         # clean to ensure the old artifacts are not present
         # run: mvn --batch-mode deploy -DskipTests -s ${{ github.workspace }}/settings.xml
         # -DskipTests because we already ran them in the 'build' job
-        run: mvn --batch-mode clean deploy -DskipTests -s ~/.m2/settings.xml
+        run: mvn --batch-mode clean deploy -DskipTests -Pgithub -s ~/.m2/settings.xml
         env:
           GITHUB_TOKEN: ${{ secrets.MAVEN_PAT }}
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
