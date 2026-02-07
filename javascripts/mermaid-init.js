@@ -1,10 +1,18 @@
 mermaid.initialize({
     startOnLoad: true,
-    queryMethods: [".language-mermaid"],
-    theme: "default"
+    securityLevel: 'loose',
+    theme: 'default'
 });
 
-// Manual trigger for MkDocs/Material compatibility
+// Force re-scan of the specific code blocks created by fenced_code
 document.addEventListener("DOMContentLoaded", function() {
-    mermaid.init(undefined, ".language-mermaid");
+    const blocks = document.querySelectorAll(".language-mermaid");
+    blocks.forEach((block, i) => {
+        const container = document.createElement("div");
+        container.id = "mermaid-graph-" + i;
+        container.className = "mermaid";
+        container.textContent = block.textContent;
+        block.parentElement.replaceWith(container);
+    });
+    mermaid.init(undefined, ".mermaid");
 });
