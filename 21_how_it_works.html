@@ -1834,18 +1834,19 @@ refresh automatically. → <code>ConfigFeature.UPDATE_CHECK_FREQUENCY_MS</code><
 </li>
 </ul>
 <p>This is how it is supposed to be (and as of 0.6.x, isn't yet!)
-<pre class="mermaid"><code>erDiagram
-    Configuration    }|--|| ConfigFactory : "comes from"
+<div class="highlight"><pre><span></span><code>erDiagram
+    Configuration    }|--|| ConfigFactory : &quot;comes from&quot;
     ConfigFactory    ||--|| ConfigSearchList : has
     Configuration    ||--|| ConfigSearchList : uses
     ConfigSearchList ||--|{ ConfigSource : contains
-    ConfigSource     ||--|| ConfigLocation : "has a specific"
-    ConfigSource     ||--|| ConfigStorage : "reads from"
-    ConfigSource     ||--|| ConfigFormat : "uses a specific"
-    ConfigStorage    ||--|{ ConfigFormat : "compatible with"
+    ConfigSource     ||--|| ConfigLocation : &quot;has a specific&quot;
+    ConfigSource     ||--|| ConfigStorage : &quot;reads from&quot;
+    ConfigSource     ||--|| ConfigFormat : &quot;uses a specific&quot;
+    ConfigStorage    ||--|{ ConfigFormat : &quot;compatible with&quot;
 
-    Configuration    ||--o| ConfigScheme : "may use"
-    ConfigScheme     ||--o{ ConfigSchemeEntry : contains </code></pre></p>
+    Configuration    ||--o| ConfigScheme : &quot;may use&quot;
+    ConfigScheme     ||--o{ ConfigSchemeEntry : contains 
+</code></pre></div></p>
 <p><strong>Configuration</strong> : the API interface to access configurations; produces/keeps ConfigEntry instances,
 and provides simple access to the values.
 They use their respective ConfigFactory search list, which consists of hierarchical and scoped
@@ -1879,22 +1880,24 @@ instantiated, for active use. It can produce Configuration instances, which link
    specific. How to match them, and link them in a general way? ))
 
 Situation as of 0.6
-<pre class="mermaid"><code>flowchart LR
+<div class="highlight"><pre><span></span><code>flowchart LR
     ConfigSearchList --&gt;|contains several| ConfigLocationImpl
     ConfigLocationImpl --&gt;|adds properties to| ConfigSourceInterface
     ConfigLocationImpl --&gt; location
     ConfigLocationImpl --&gt; flags
     ConfigSourceInterface --&gt; FileConfigSource
-    ConfigSourceInterface --&gt; SchemeDefaultConfigSource</code></pre>
+    ConfigSourceInterface --&gt; SchemeDefaultConfigSource
+</code></pre></div>
 </blockquote>
 
 <p>Planned for 0.7</p>
-<pre class="mermaid"><code>flowchart LR    
+<div class="highlight"><pre><span></span><code>flowchart LR    
     ConfigSearchList --&gt; ConfigSource
     ConfigSource  --&gt; ConfigStorage
     ConfigStorage -..-&gt; ConfigFormat
     ConfigStorage &lt;--&gt; ConfigLocation
-    Configuration --&gt; ConfigLocation</code></pre>
+    Configuration --&gt; ConfigLocation
+</code></pre></div>
 <h4 id="anchor">Anchor</h4>
 <p>The ConfigFactoryBuilder gathers and combines all the settings.
 It creates a <strong>ConfigFactoryInstanceContext</strong> and a ConfigFactory to use it.</p>

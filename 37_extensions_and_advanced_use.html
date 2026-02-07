@@ -1533,7 +1533,7 @@ DEFINED_AS_IN_FORMAT_1
   FULL_CONFIG_SCHEME_AS_DEFINED_IN_FORMAT_3
 ]
 </code></pre>
-<pre class="mermaid"><code>stateDiagram-v2
+<div class="highlight"><pre><span></span><code>stateDiagram-v2
     direction LR
     [*] --&gt; UNDECIDED
     UNDECIDED --&gt; ARRAY : on [
@@ -1541,7 +1541,7 @@ DEFINED_AS_IN_FORMAT_1
     SCHEME --&gt; SCHEME_ENDED : on }
     SCHEME --&gt; ENTRY_KEY: on string
     ENTRY  --&gt; SCHEME: on next value
-</code></pre>
+</code></pre></div>
 <h3 id="374-configure-priorities">3.7.4 configure priorities</h3>
 <h4 id="3741-file-type-priority">3.7.4.1 File Type Priority</h4>
 <p>You can control the resolution priority between different file types (e.g., JSON, YAML) using the <code>FILE_TYPE_PRIORITIES</code> feature. This re-orders the search list within each scope.</p>

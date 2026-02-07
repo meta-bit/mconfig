@@ -2393,7 +2393,7 @@ partially loaded configurations for their own initialization
 </ul>
 <h3 id="44102-discovery-and-binding-flow-mermaid">4.4.10.2 Discovery and Binding Flow (Mermaid)</h3>
 <p>The following diagram illustrates how schemes are discovered by storages, registered in the factory, and finally bound to configuration instances.</p>
-<pre class="mermaid"><code>sequenceDiagram
+<div class="highlight"><pre><span></span><code>sequenceDiagram
     participant S as ConfigStorage (e.g. JAR)
     participant C as ConfigFactoryInstanceContext
     participant F as ConfigFactory
@@ -2409,23 +2409,25 @@ partially loaded configurations for their own initialization
 
     Note over F, L: Binding Phase (during factory.getConfig)
     F-&gt;&gt;L: instantiate with matching scheme
-    L-&gt;&gt;DL: transferDefaults(scheme)</code></pre>
+    L-&gt;&gt;DL: transferDefaults(scheme)
+</code></pre></div>
 <h3 id="layered-configuration-mermaid">Layered Configuration (Mermaid)</h3>
-<pre class="mermaid"><code>%%{init: {'theme':'neutral'}}%%
+<div class="highlight"><pre><span></span><code>%%{init: {&#39;theme&#39;:&#39;neutral&#39;}}%%
 erDiagram
-    Configuration ||--|| BasicConfiguration : "facade for"
-    BasicConfiguration ||--|| LayeredConfiguration : "implemented by"
-    LayeredConfiguration ||--o| CacheLayer : "at top"
-    LayeredConfiguration ||--o{ ConfigSource : "stacked in the middle"
-    LayeredConfiguration ||--|| DefaultLayer : "at bottom"
-    LayeredConfiguration ||--o| ConfigScheme : "bound to"
-    ConfigScheme ||--|| DefaultLayer : "populates"
-    ConfigScheme ||--o{ ConfigEntrySpecification : "contains"
-    ConfigEntry }|--o| ConfigEntrySpecification : "validated by"
-    ConfigSource }|--|| ConfigScope : "belongs to"
-    ConfigSource ||--|| ConfigLocation : "where to look"
-    ConfigSource }o--|| ConfigStorage : "how to access"
-    ConfigSource }o--|{ ConfigFormat : "maps paths to entries"</code></pre>
+    Configuration ||--|| BasicConfiguration : &quot;facade for&quot;
+    BasicConfiguration ||--|| LayeredConfiguration : &quot;implemented by&quot;
+    LayeredConfiguration ||--o| CacheLayer : &quot;at top&quot;
+    LayeredConfiguration ||--o{ ConfigSource : &quot;stacked in the middle&quot;
+    LayeredConfiguration ||--|| DefaultLayer : &quot;at bottom&quot;
+    LayeredConfiguration ||--o| ConfigScheme : &quot;bound to&quot;
+    ConfigScheme ||--|| DefaultLayer : &quot;populates&quot;
+    ConfigScheme ||--o{ ConfigEntrySpecification : &quot;contains&quot;
+    ConfigEntry }|--o| ConfigEntrySpecification : &quot;validated by&quot;
+    ConfigSource }|--|| ConfigScope : &quot;belongs to&quot;
+    ConfigSource ||--|| ConfigLocation : &quot;where to look&quot;
+    ConfigSource }o--|| ConfigStorage : &quot;how to access&quot;
+    ConfigSource }o--|{ ConfigFormat : &quot;maps paths to entries&quot;
+</code></pre></div>
 <h2 id="4411-extending-mconfig">4.4.11 Extending mConfig</h2>
 <h3 id="44111-adding-new-storages">4.4.11.1 Adding New Storages</h3>
 <p>This is intended for library maintainers extending mConfig with new backends (e.g., databases, cloud stores).</p>
