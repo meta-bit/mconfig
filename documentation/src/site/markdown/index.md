@@ -5,6 +5,7 @@ The [mConfig Tool](41_mconfig_tool.md) is a powerful companion for exploring and
 
 **Core Principle**: Layered resolution stack prioritizes scopes (highest first):
 
+
 ```mermaid
 graph LR
   POLICY[POLICY<br/>Enforced/GPO] --> RUNTIME[RUNTIME<br/>Volatile RAM]
@@ -19,7 +20,8 @@ graph LR
 
   classDef high fill:#ff9999
   class POLICY,RUNTIME high
-  ```
+```
+
 
 Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > registry > JAR.
 

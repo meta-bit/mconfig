@@ -1,30 +1,24 @@
 site_name: mConfig Documentation
 docs_dir: src/site/markdown
 site_dir: target/mkdocs
+site_url: https://meta-bit.github.io/mconfig/
 use_directory_urls: false
 
 theme:
-#  name: material
-  name: readthedocs
+  name: material
   features:
     - navigation.footer
 
 markdown_extensions:
-  - tables
-  - fenced_code
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.extra
+  - admonition
   - toc:
       permalink: true
-  - admonition
-  - footnotes
-  - attr_list
-  - def_list
-#  - pymdownx.details
-#  - pymdownx.superfences:
-#      custom_fences:
-#        - name: mermaid
-#          class: mermaid
-#          format: !!python/name:pymdownx.superfences.fence_code_custom.simple
-#  - pymdownx.highlight
 
 plugins:
   - search
