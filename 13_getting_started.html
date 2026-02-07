@@ -1436,13 +1436,22 @@
 <h2 id="131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build<a class="headerlink" href="#131-include-the-library-in-your-project-build" title="Permanent link">&para;</a></h2>
 <p>For Java, start with adding the dependency to your project build:</p>
 <p>Maven:
-</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigStandard<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></p>
 <p>Gradle:
-
+<div class="highlight"><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
+</code></pre></div>
 (update version as needed)</p>
 <p>In case you are defining an <code>module-info.java</code> in your project, add this to the <code>requires</code>
 section:
-</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
+<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
+</code></pre></div></p>
 <h3 id="starters-recommended">Starters (Recommended)<a class="headerlink" href="#starters-recommended" title="Permanent link">&para;</a></h3>
 <p>For instant frustration-free setup, copy from <a href="../../../../examples/starters/README.md">examples/starters</a>:</p>
 <ul>
@@ -1455,7 +1464,13 @@ section:
 <p><a href="snippets.html"><img alt="Snippets" src="https://img.shields.io/badge/Snippets-quick-brightblue" /></a></p>
 <p>Copy-paste solutions for common config pains: hardcodes → env vars → secrets → tests.</p>
 <h2 id="132-start-with-a-simple-use-case">1.3.2 Start with a simple use case<a class="headerlink" href="#132-start-with-a-simple-use-case" title="Permanent link">&para;</a></h2>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">quickConfig</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="s">&quot;myApplication&quot;</span><span class="p">,</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">peerName</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">     </span><span class="n">portNumber</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">double</span><span class="w">  </span><span class="n">probability</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getDouble</span><span class="p">(</span><span class="s">&quot;probability&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">//...</span>
+</code></pre></div>
 <p>This will get you the requested values from the "network" configuration, 
 wherever in the standard directories or other places they are kept.</p>
 <p>If it's not working as expected, consult the <strong><a href="43_faq.html#quick-verification-checklist">Quick Verification Checklist</a></strong> in the FAQ.</p>
@@ -1477,12 +1492,29 @@ of your home directory, and see its contents turn up in your code.</p>
 and taking care of all these different locations is part of the library. Also, parsing different formats like JSON, YAML, and so on.
 And much more.</p>
 <p>The cleaner way, without shortcuts, goes like this:</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">String</span><span class="w">  </span><span class="n">peerName</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int</span><span class="w">     </span><span class="n">portNumber</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w">  </span><span class="n">probability</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getDouble</span><span class="p">(</span><span class="s">&quot;probability&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">//...</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
 <p>The try-with-resources in the top line instantiates the library with all defaults;
 the getConfiguration() line asks for a specific configuration, and then you
 can get config entries, typesafe.</p>
 <p>You can also list all available configuration names:</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">ConfigDiscoveryInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">listAvailableConfigurations</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigDiscoveryInfo</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">info</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Found: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">getConfigName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; in scope &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">getScope</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; URL: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">getUri</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
 <p><strong>Caveat</strong>:
 When you use the values stored in your local variables, you miss out on receiving changes. 
 It is preferable to use the mConfig objects directly; they'll have the latest values.</p>
@@ -1498,7 +1530,25 @@ may have lists/sets where the entries are not named, have no key.</p>
 <p>You can use the <code>ConfigCursor</code> to navigate through list items as individual nodes.</p>
 <p>(Actually, you can use the ConfigCursor for all the configuration; 
 it is just especially useful for navigating lists.)</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;myConfig&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ConfigCursor</span><span class="w"> </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getConfigCursor</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cursor</span><span class="p">.</span><span class="na">moveTo</span><span class="p">(</span><span class="s">&quot;servers&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cursor</span><span class="p">.</span><span class="na">isOnList</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">        </span><span class="n">cursor</span><span class="p">.</span><span class="na">enter</span><span class="p">();</span><span class="w"> </span><span class="c1">// Move into the array</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">cursor</span><span class="p">.</span><span class="na">moveNext</span><span class="p">())</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Now positioned on a list item.</span>
+<span class="w">            </span><span class="c1">// Items can be accessed as unnamed entries via virtual keys (indices).</span>
+<span class="w">            </span><span class="n">ConfigEntry</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cursor</span><span class="p">.</span><span class="na">getCurrentElement</span><span class="p">();</span>
+<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Server: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="na">getValueAsString</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="n">cursor</span><span class="p">.</span><span class="na">leave</span><span class="p">();</span><span class="w"> </span><span class="c1">// Move back up to the &quot;servers&quot; node</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
 <h2 id="137-module-system-considerations">1.3.7 Module System Considerations<a class="headerlink" href="#137-module-system-considerations" title="Permanent link">&para;</a></h2>
 <p>mConfig uses the Java Module System. The architecture is:</p>
 <ul>
@@ -1594,6 +1644,8 @@ so you don't need to "require" them in your <code>module-info.java</code>.</p>
     
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js"></script>
       
     
   </body>

@@ -1440,10 +1440,22 @@ Both support reading configuration data from <code>HKEY_CURRENT_USER</code> (USE
 <h2 id="362-priority-and-discovery">3.6.2 Priority and Discovery<a class="headerlink" href="#362-priority-and-discovery" title="Permanent link">&para;</a></h2>
 <p>If both modules are present on the classpath, mConfig defaults to using <code>mConfigWinRegistryJNI</code> (<code>registryjni</code>) over <code>mConfigWinRegistry</code> (<code>registry</code>) for better performance.</p>
 <p>To use a specific one, you can configure <code>STORAGE_TYPE_PRIORITIES</code>:
-</p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;company&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;app&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">STORAGE_TYPE_PRIORITIES</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;registryjni&quot;</span><span class="p">))</span><span class="w"> </span><span class="c1">// Force JNI</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div></p>
 <h2 id="363-base-path-configuration">3.6.3 Base Path Configuration<a class="headerlink" href="#363-base-path-configuration" title="Permanent link">&para;</a></h2>
 <p>By default, the registry source looks under <code>Software\\[&lt;CompanyName&gt;\\\\]&lt;ApplicationName&gt;</code> (company segment omitted if <code>COMPANY_NAME</code> blank/null/whitespace). You can override this using the <code>REGISTRY_BASE_PATH</code> feature:</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;company&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;app&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">REGISTRY_BASE_PATH</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Software\\LegacyPath\\App&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
 
 
 
@@ -1525,6 +1537,8 @@ Both support reading configuration data from <code>HKEY_CURRENT_USER</code> (USE
     
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js"></script>
       
     
   </body>

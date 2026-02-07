@@ -1376,7 +1376,9 @@ these, or do similar things.</p>
 <p>For this purpose, you can subscribe to changes, providing a callback which will
 get executed when a change occurs.</p>
 <h3 id="3211-location-level-updates">3.2.1.1 Location-level updates<a class="headerlink" href="#3211-location-level-updates" title="Permanent link">&para;</a></h3>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
+<span class="n">Configuration</span><span class="p">.</span><span class="na">unsubscribeFromUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
+</code></pre></div>
 <p>The callback will be executed when any of the Configuration layers in the specified scopes gets
 changed content.</p>
 <p><strong>Note on initial discovery:</strong> For subscribers, the transition from a non-existent entry
@@ -1386,7 +1388,8 @@ This ensures that dynamic entry creation is captured correctly.</p>
 <p>The callback is provided as parameter with the <code>ConfigLocation</code> where the change occurred.
 (You can get the scope from it, e.g.)</p>
 <h3 id="3212-entry-level-updates">3.2.1.2 Entry-level updates<a class="headerlink" href="#3212-entry-level-updates" title="Permanent link">&para;</a></h3>
-<p>
+<p><div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fullKey</span><span class="p">,</span><span class="w"> </span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
+</code></pre></div>
 Subscribe to changes of individual entries by their full key. </p>
 <p>The callback is called with the <code>ConfigLocation</code> where the entry change was detected.</p>
 <p>Unsubscribe with <code>Configuration.unsubscribeFromUpdates(Consumer&lt;ConfigLocation&gt; listener)</code>
@@ -1479,6 +1482,8 @@ of overhead... please give notice, explain the use case, and we'll get it done.<
     
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js"></script>
       
     
   </body>

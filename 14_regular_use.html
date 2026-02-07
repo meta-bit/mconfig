@@ -1495,7 +1495,8 @@ and apply it to the respective Configuration
 <h2 id="144-runtime-dynamic-configurations">1.4.4 Runtime Dynamic Configurations<a class="headerlink" href="#144-runtime-dynamic-configurations" title="Permanent link">&para;</a></h2>
 <p>Mutable Puts: you can change the values of existing entries at runtime.
 Example:
-
+<div class="highlight"><pre><span></span><code><span class="n">configFactory</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;voting.database.name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dynamicDB&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">);</span>
+</code></pre></div>
 The RUNTIME scope is at the highest priority ¹, so it overrides all others.</p>
 <p>So dynamically changing the configuration at runtime is quite possible.</p>
 <p>¹: the highest priority of all regular scopes, that is. the POLICY scope
@@ -1591,6 +1592,8 @@ if there is a writeable layer available within the scope or scopes specified.
     
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js"></script>
       
     
   </body>

@@ -1355,7 +1355,16 @@
 and <code>Properties</code> adaptation. They support chaining and inherit scheme validation where applicable.</p>
 <h2 id="withoverrides">withOverrides<a class="headerlink" href="#withoverrides" title="Permanent link">&para;</a></h2>
 <p>Overlay in-memory overrides on a parent <code>Configuration</code>:</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;app&quot;</span><span class="p">);</span>
+<span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">overrides</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;db.host&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;localhost&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;db.port&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5432</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">withOverrides</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="n">overrides</span><span class="p">);</span>
+
+<span class="n">String</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.host&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// &quot;localhost&quot;</span>
+<span class="n">Integer</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;db.port&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 5432 (auto-convert)</span>
+</code></pre></div>
 <ul>
 <li>Overrides take precedence.</li>
 <li>Lazy type conversion (null on parse fail).</li>
@@ -1364,7 +1373,10 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
 </ul>
 <h2 id="remapped">remapped<a class="headerlink" href="#remapped" title="Permanent link">&para;</a></h2>
 <p>Remap prefixed keys for sub-config views (e.g., DB modules):</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">remapped</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;super_db.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;db.&quot;</span><span class="p">);</span>
+<span class="n">String</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.host&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// → parent.getString(&quot;super_db.host&quot;)</span>
+<span class="n">String</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;other.key&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// passthru</span>
+</code></pre></div>
 <ul>
 <li><code>get("db.xxx")</code> → <code>parent.get("super_db.xxx")</code>.</li>
 <li>Non-matching keys delegate directly.</li>
@@ -1374,7 +1386,14 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
 </ul>
 <h2 id="fromproperties">fromProperties<a class="headerlink" href="#fromproperties" title="Permanent link">&para;</a></h2>
 <p>Adapt legacy <code>java.util.Properties</code>:</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="n">Properties</span><span class="w"> </span><span class="n">props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
+<span class="n">props</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="s">&quot;key1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;value1&quot;</span><span class="p">);</span>
+<span class="n">props</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="s">&quot;key2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;42&quot;</span><span class="p">);</span>
+<span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">fromProperties</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
+
+<span class="n">String</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;key1&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// &quot;value1&quot;</span>
+<span class="n">Integer</span><span class="w"> </span><span class="n">v2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;key2&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 42 (null on fail)</span>
+</code></pre></div>
 <ul>
 <li>Lazy parsing, null on errors.</li>
 <li>No scheme.</li>
@@ -1382,7 +1401,11 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
 </ul>
 <h2 id="chaining">Chaining<a class="headerlink" href="#chaining" title="Permanent link">&para;</a></h2>
 <p>Combine freely:</p>
-<p></p>
+<div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">dbView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">withOverrides</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">remapped</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;legacy_db.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;db.&quot;</span><span class="p">),</span><span class="w"> </span>
+<span class="w">    </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;db.timeout&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+</code></pre></div>
 <p>Views are read-only (<code>put*</code> throws <code>UnsupportedOperationException</code>)."</p>
 
 
@@ -1465,6 +1488,8 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
     
     
       <script src="../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js"></script>
       
     
   </body>

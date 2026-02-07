@@ -1350,7 +1350,25 @@
 <p>mConfig is a modular Java library for unified, portable configuration management. It abstracts OS-specific locations (e.g., <code>~/.config/</code>, <code>/etc/</code>, Windows Registry), multiple sources (files, env vars, JAR resources, ZooKeeper), and formats (JSON, YAML, TOML, Properties, etc.).
 The <a href="41_mconfig_tool.html">mConfig Tool</a> is a powerful companion for exploring and managing these configurations from the command line.</p>
 <p><strong>Core Principle</strong>: Layered resolution stack prioritizes scopes (highest first):</p>
-<p></p>
+<div class="highlight"><pre><span></span><code>graph LR
+  POLICY[POLICY&lt;br/&gt;Enforced/GPO] --&gt; RUNTIME[RUNTIME&lt;br/&gt;Volatile RAM]
+  RUNTIME --&gt; SESSION[SESSION&lt;br/&gt;Env/CLI]
+  SESSION --&gt; USER[USER&lt;br/&gt;~/.config/]
+  USER --&gt; APPLICATION[APPLICATION&lt;br/&gt;Portable/Install]
+  APPLICATION --&gt; HOST[HOST&lt;br/&gt;/etc/, HKLM]
+  HOST --&gt; CLUSTER[CLUSTER&lt;br/&gt;ZK/Networks]
+  CLUSTER --&gt; CLOUD[CLOUD&lt;br/&gt;Providers]
+  CLOUD --&gt; ORGANIZATION[ORGANIZATION&lt;br/&gt;Licensee]
+  ORGANIZATION --&gt; PRODUCT[PRODUCT&lt;br/&gt;JAR Defaults]
+
+  classDef high fill:#ff9999
+  class POLICY,RUNTIME high
+</code></pre></div>
+<div class="mermaid">
+graph LR
+  A --> B
+</div>
+
 <p>Ties within scope: Later-added &gt; earlier; storage prio: RAM &gt; secrets &gt; files &gt; registry &gt; JAR.</p>
 <p><strong>Quick Start</strong>: <a href="11_what_is_mconfig.html">What is mConfig?</a> → <a href="13_getting_started.html">Getting Started</a></p>
 <p><strong>Architecture</strong>: <a href="44_design_consolidated.html">Design Consolidated</a></p>
@@ -1459,6 +1477,8 @@ The <a href="41_mconfig_tool.html">mConfig Tool</a> is a powerful companion for 
     
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js"></script>
       
     
   </body>
