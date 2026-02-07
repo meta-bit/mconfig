@@ -297,7 +297,6 @@
                             <excludeArtifacts>
                                 <!-- separate documentation "site" not to be published on central, currently -->
                                 <excludeArtifact>documentation</excludeArtifact>
-
                                 <!-- integration tests are not published to central -->
                                 <excludeArtifact>integrationtests</excludeArtifact>
                                 <excludeArtifact>integrationtestsbase</excludeArtifact>
@@ -307,6 +306,7 @@
                                 <excludeArtifact>integrationtestsecretsjce</excludeArtifact>
                                 <excludeArtifact>integrationtestsecretsbc</excludeArtifact>
                                 <excludeArtifact>integrationtesttoml</excludeArtifact>
+                                <excludeArtifact>integrationtesttools</excludeArtifact>
                                 <!-- no .deb to maven central -->
                                 <excludeArtifact>.*\.deb</excludeArtifact>
                             </excludeArtifacts>

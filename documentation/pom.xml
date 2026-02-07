@@ -25,6 +25,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.site.skip>false</maven.site.skip>
         <maven.source.skip>true</maven.source.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
         <!-- no binary distribution in JAR repositories -->
         <skipPublishing>true</skipPublishing>
     </properties>
