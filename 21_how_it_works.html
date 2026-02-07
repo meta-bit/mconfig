@@ -1606,11 +1606,11 @@
                   
 
 
-<h1 id="21-how-it-works">2.1 How it Works<a class="headerlink" href="#21-how-it-works" title="Permanent link">&para;</a></h1>
+<h1 id="21-how-it-works">2.1 How it Works</h1>
 <p>To get started, we need a lot of preparation and settings.
 These are collected in a factory builder, <code>ConfigFactoryBuilder</code>,
 which then builds a <code>ConfigFactory</code> with specific settings.</p>
-<h3 id="self-configuration">Self-Configuration<a class="headerlink" href="#self-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="self-configuration">Self-Configuration</h3>
 <p>Before the ConfigFactory is fully operational, it may perform "self-configuration".
 If the <code>mConfigSourceJAR</code> module is active, the factory searches the classpath for:
 <code>.config/metabit/mConfig/mconfig.properties</code></p>
@@ -1623,7 +1623,7 @@ using its standard resource discovery layout.</p>
 <p>The ConfigFactory in turn produces individual Configuration objects.</p>
 <p>That's the startup phase; once that is done, you use the Configuration objects.</p>
 <hr />
-<h2 id="concept-scopes">Concept: Scopes<a class="headerlink" href="#concept-scopes" title="Permanent link">&para;</a></h2>
+<h2 id="concept-scopes">Concept: Scopes</h2>
 <p>mConfig uses the concept of hierarchical scopes (from the pre-2000 metabit MAUS project).</p>
 <p>The software may have its generic defaults, which can be overridden by settings
 of the individual local installation. But if you allow user-based settings,
@@ -1631,7 +1631,7 @@ these take precedence over the local installation; and settings given for the
 individual software instance run may override those, in turn. It's a hierarchy.</p>
 <p><strong>Scope order (lowest to highest priority):</strong>
 <code>PRODUCT</code> -&gt; <code>ORGANIZATION</code> -&gt; <code>CLOUD</code> -&gt; <code>CLUSTER</code> -&gt; <code>HOST</code> -&gt; <code>APPLICATION</code> -&gt; <code>USER</code> -&gt; <code>SESSION</code> -&gt; <code>RUNTIME</code> -&gt; <code>POLICY</code></p>
-<h3 id="scope-meanings-short-version">Scope meanings (short version)<a class="headerlink" href="#scope-meanings-short-version" title="Permanent link">&para;</a></h3>
+<h3 id="scope-meanings-short-version">Scope meanings (short version)</h3>
 <table>
 <thead>
 <tr>
@@ -1693,7 +1693,7 @@ individual software instance run may override those, in turn. It's a hierarchy.<
 </tr>
 </tbody>
 </table>
-<h3 id="default-scope-and-source-hierarchy">Default scope and source hierarchy<a class="headerlink" href="#default-scope-and-source-hierarchy" title="Permanent link">&para;</a></h3>
+<h3 id="default-scope-and-source-hierarchy">Default scope and source hierarchy</h3>
 <p>Resolution priority between different storage types (within the same scope) is deterministic.</p>
 <p><strong>Default Storage Priority (Highest to Lowest):</strong>
 1. <code>RAM</code> (In-memory overrides)
@@ -1704,7 +1704,7 @@ individual software instance run may override those, in turn. It's a hierarchy.<
 6. <code>zookeeper</code> (ZooKeeper module)
 7. <code>JAR</code> (Classpath resources/defaults)</p>
 <p>Use <code>STORAGE_TYPE_PRIORITIES</code> to change this order within a scope.</p>
-<h3 id="filesystem-search-paths-fileconfigstorage">Filesystem search paths (FileConfigStorage)<a class="headerlink" href="#filesystem-search-paths-fileconfigstorage" title="Permanent link">&para;</a></h3>
+<h3 id="filesystem-search-paths-fileconfigstorage">Filesystem search paths (FileConfigStorage)</h3>
 <p>The lists below show the default search paths <em>as added to the search list</em>.
 Earlier entries are preferred for <strong>creation</strong>; later entries override earlier ones
 within the same scope. <code>SUB_PATH</code> (if set) is appended to the application paths.
@@ -1771,8 +1771,8 @@ SESSION scope:
 - <code>~/.&lt;app&gt;/&lt;subPath&gt;</code></p>
 <p>HOST scope:
 - <code>$PWD/.config/&lt;app&gt;/&lt;subPath&gt;</code></p>
-<h2 id="the-process">The Process<a class="headerlink" href="#the-process" title="Permanent link">&para;</a></h2>
-<h3 id="layered-stack">Layered Stack<a class="headerlink" href="#layered-stack" title="Permanent link">&para;</a></h3>
+<h2 id="the-process">The Process</h2>
+<h3 id="layered-stack">Layered Stack</h3>
 <p>When you ask for a ConfigEntry (or just its value) by providing a key, 
 the library starts searching.
 The normal method is using a layered stack, sorted by the aforementioned scopes.</p>
@@ -1785,7 +1785,7 @@ and you get the ConfigEntry it has found.</p>
 <p>If you asked for just the value, not the full ConfigEntry, then the library
 tries to return the data found in the Java class matching the type of
 value you asked for (e.g. Boolean, Integer, byte array).</p>
-<h3 id="validation">validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
+<h3 id="validation">validation</h3>
 <p>Note the mention of <strong>valid</strong> data.
 You can, and should, provide a ConfigScheme which declares the expected
 entries, and some information about them.</p>
@@ -1803,7 +1803,7 @@ listing which contents are acceptable values.</p>
 - it also is available for documentation generation</p>
 <p>The checks are performed
 @TODO continue</p>
-<h2 id="changes-monitoring">Changes &amp; Monitoring<a class="headerlink" href="#changes-monitoring" title="Permanent link">&para;</a></h2>
+<h2 id="changes-monitoring">Changes &amp; Monitoring</h2>
 <p>There's two different aspects to changes.</p>
 <p>First, getting notifications when the <em>value</em> of a config entry changes.
 This is actively checking, even polling, for changes, to notify your code about
@@ -1816,7 +1816,7 @@ not much effort; but certain ones - especially files and parsing their formats -
 are not that cheap. So these are read, parsed, and then cached for some time.</p>
 <p>But the cache should not stay indefinitely, it needs to detect changes and/or
 refresh automatically. → <code>ConfigFeature.UPDATE_CHECK_FREQUENCY_MS</code></p>
-<h2 id="behind-the-scenes">Behind the Scenes<a class="headerlink" href="#behind-the-scenes" title="Permanent link">&para;</a></h2>
+<h2 id="behind-the-scenes">Behind the Scenes</h2>
 <p>mConfig uses these concepts for separation of concerns:</p>
 <ul>
 <li>
@@ -1834,19 +1834,18 @@ refresh automatically. → <code>ConfigFeature.UPDATE_CHECK_FREQUENCY_MS</code><
 </li>
 </ul>
 <p>This is how it is supposed to be (and as of 0.6.x, isn't yet!)
-<div class="highlight"><pre><span></span><code>erDiagram
-    Configuration    }|--|| ConfigFactory : &quot;comes from&quot;
+<pre class="mermaid"><code>erDiagram
+    Configuration    }|--|| ConfigFactory : "comes from"
     ConfigFactory    ||--|| ConfigSearchList : has
     Configuration    ||--|| ConfigSearchList : uses
     ConfigSearchList ||--|{ ConfigSource : contains
-    ConfigSource     ||--|| ConfigLocation : &quot;has a specific&quot;
-    ConfigSource     ||--|| ConfigStorage : &quot;reads from&quot;
-    ConfigSource     ||--|| ConfigFormat : &quot;uses a specific&quot;
-    ConfigStorage    ||--|{ ConfigFormat : &quot;compatible with&quot;
+    ConfigSource     ||--|| ConfigLocation : "has a specific"
+    ConfigSource     ||--|| ConfigStorage : "reads from"
+    ConfigSource     ||--|| ConfigFormat : "uses a specific"
+    ConfigStorage    ||--|{ ConfigFormat : "compatible with"
 
-    Configuration    ||--o| ConfigScheme : &quot;may use&quot;
-    ConfigScheme     ||--o{ ConfigSchemeEntry : contains 
-</code></pre></div></p>
+    Configuration    ||--o| ConfigScheme : "may use"
+    ConfigScheme     ||--o{ ConfigSchemeEntry : contains </code></pre></p>
 <p><strong>Configuration</strong> : the API interface to access configurations; produces/keeps ConfigEntry instances,
 and provides simple access to the values.
 They use their respective ConfigFactory search list, which consists of hierarchical and scoped
@@ -1880,57 +1879,55 @@ instantiated, for active use. It can produce Configuration instances, which link
    specific. How to match them, and link them in a general way? ))
 
 Situation as of 0.6
-<div class="highlight"><pre><span></span><code>flowchart LR
+<pre class="mermaid"><code>flowchart LR
     ConfigSearchList --&gt;|contains several| ConfigLocationImpl
     ConfigLocationImpl --&gt;|adds properties to| ConfigSourceInterface
     ConfigLocationImpl --&gt; location
     ConfigLocationImpl --&gt; flags
     ConfigSourceInterface --&gt; FileConfigSource
-    ConfigSourceInterface --&gt; SchemeDefaultConfigSource
-</code></pre></div>
+    ConfigSourceInterface --&gt; SchemeDefaultConfigSource</code></pre>
 </blockquote>
 
 <p>Planned for 0.7</p>
-<div class="highlight"><pre><span></span><code>flowchart LR    
+<pre class="mermaid"><code>flowchart LR    
     ConfigSearchList --&gt; ConfigSource
     ConfigSource  --&gt; ConfigStorage
     ConfigStorage -..-&gt; ConfigFormat
     ConfigStorage &lt;--&gt; ConfigLocation
-    Configuration --&gt; ConfigLocation
-</code></pre></div>
-<h4 id="anchor">Anchor<a class="headerlink" href="#anchor" title="Permanent link">&para;</a></h4>
+    Configuration --&gt; ConfigLocation</code></pre>
+<h4 id="anchor">Anchor</h4>
 <p>The ConfigFactoryBuilder gathers and combines all the settings.
 It creates a <strong>ConfigFactoryInstanceContext</strong> and a ConfigFactory to use it.</p>
 <p>The ConfigFactoryInstanceContext is passed to several objects the ConfigFactory
 uses, so they can get their respective features, settings, access to a logger,
 and so on - it is an internally shared resource.</p>
-<h2 id="security-and-secrets">Security and Secrets<a class="headerlink" href="#security-and-secrets" title="Permanent link">&para;</a></h2>
+<h2 id="security-and-secrets">Security and Secrets</h2>
 <p>mConfig has built-in support for sensitive data such as passwords, API keys, and private certificates.</p>
-<h3 id="secret-redaction">Secret Redaction<a class="headerlink" href="#secret-redaction" title="Permanent link">&para;</a></h3>
+<h3 id="secret-redaction">Secret Redaction</h3>
 <p>Config entries marked as secrets in the <code>ConfigScheme</code> are automatically handled with care:
 - Their <code>toString()</code> representation is redacted (<code>[REDACTED]</code>). (using stars could be ambiguous)
 - They are stored in specialized <code>SecretConfigEntryLeaf</code> objects.
 - In-memory storage uses <code>byte[]</code> or <code>char[]</code> to allow for clearing the data after use.</p>
-<h3 id="the-secretvalue-api">The SecretValue API<a class="headerlink" href="#the-secretvalue-api" title="Permanent link">&para;</a></h3>
+<h3 id="the-secretvalue-api">The SecretValue API</h3>
 <p>For programmatically accessing secrets, mConfig provides the <code>SecretValue</code> interface. 
 This allows retrieving the sensitive data without it being accidentally converted to a standard <code>String</code> that might linger in the Java String Pool.</p>
 <div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;database/password&quot;</span><span class="p">);</span>
 <span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">rawBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
 <span class="c1">// ... use and then potentially clear the bytes</span>
 </code></pre></div>
-<h2 id="binary-data-blobs">Binary Data (BLOBs)<a class="headerlink" href="#binary-data-blobs" title="Permanent link">&para;</a></h2>
+<h2 id="binary-data-blobs">Binary Data (BLOBs)</h2>
 <p>Not all configuration is text-based. mConfig supports Binary Large Objects (BLOBs) for things like license files, binary keys, or certificates.</p>
-<h3 id="hierarchical-blobs">Hierarchical BLOBs<a class="headerlink" href="#hierarchical-blobs" title="Permanent link">&para;</a></h3>
+<h3 id="hierarchical-blobs">Hierarchical BLOBs</h3>
 <p>In modern formats like JSON and YAML, binary data can be embedded directly.
 - <strong>YAML</strong> uses the standard <code>!!binary</code> tag.
 - <strong>JSON</strong> uses Base64 encoded strings. If a <code>ConfigScheme</code> is provided that marks a key as <code>BYTES</code> type, mConfig will automatically decode the Base64 string into a byte array.</p>
-<h3 id="flat-binary-files">Flat Binary Files<a class="headerlink" href="#flat-binary-files" title="Permanent link">&para;</a></h3>
+<h3 id="flat-binary-files">Flat Binary Files</h3>
 <p>For legacy support or specific use cases, an entire file can be treated as a single binary blob. This uses the <code>binary_file</code> format and is accessed via the empty string key (<code>""</code>).</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Retrieving an entire .bin file as a single blob</span>
 <span class="n">Configuration</span><span class="w"> </span><span class="n">licenseCfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;license&quot;</span><span class="p">);</span>
 <span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">licenseData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">licenseCfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="failure-handling">Failure Handling<a class="headerlink" href="#failure-handling" title="Permanent link">&para;</a></h3>
+<h3 id="failure-handling">Failure Handling</h3>
 <p>If there is no ConfigEntry found at any layer, and no specific default is found,
 the reaction is determined by the ConfigFeature flags set.</p>
 <p>(a) return a generic default value depending on the type

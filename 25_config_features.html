@@ -1530,7 +1530,7 @@
                   
 
 
-<h1 id="25-config-features">2.5 Config Features<a class="headerlink" href="#25-config-features" title="Permanent link">&para;</a></h1>
+<h1 id="25-config-features">2.5 Config Features</h1>
 <p>ConfigFeature flags tune how a ConfigFactory is built and how it behaves.
 Set them on the ConfigFactoryBuilder before calling <code>build()</code>.</p>
 <p>Example:
@@ -1545,7 +1545,7 @@ Set them on the ConfigFactoryBuilder before calling <code>build()</code>.</p>
   (e.g., ZooKeeper, Registry, Secrets, JAR).
 - Runtime environment variables can override a subset of settings if
   <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is enabled. See "Runtime overrides" below.</p>
-<h2 id="runtime-overrides">Runtime overrides<a class="headerlink" href="#runtime-overrides" title="Permanent link">&para;</a></h2>
+<h2 id="runtime-overrides">Runtime overrides</h2>
 <p>If <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is set to <code>true</code>, mConfig accepts runtime
 settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>:</p>
 <ul>
@@ -1555,22 +1555,22 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
 <li><code>MCONFIG_RUNTIME_MODULES</code> -&gt; <code>ADDITIONAL_MODULE_PATHS</code> (comma-separated)</li>
 <li><code>MCONFIG_RUNTIME_TEST_MODE</code> -&gt; <code>TEST_MODE</code></li>
 </ul>
-<h2 id="feature-reference">Feature reference<a class="headerlink" href="#feature-reference" title="Permanent link">&para;</a></h2>
-<h3 id="test-mode">Test mode<a class="headerlink" href="#test-mode" title="Permanent link">&para;</a></h3>
+<h2 id="feature-reference">Feature reference</h2>
+<h3 id="test-mode">Test mode</h3>
 <ul>
 <li><code>PERMIT_TEST_MODE</code> (Boolean, default: true): Master gate for test mode usage.</li>
 <li><code>TEST_MODE</code> (Boolean, default: false): Activate test-mode search locations.</li>
 <li><code>TESTMODE_DIRECTORIES</code> (<code>List&lt;String&gt;</code>, default: empty): Scoped paths in <code>SCOPE:PATH</code> format.</li>
 <li><code>TESTMODE_PARAMETERS</code> (<code>Map&lt;String,String&gt;</code>): Additional test parameters.</li>
 </ul>
-<h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h3>
+<h3 id="logging">Logging</h3>
 <ul>
 <li><code>QUIET</code> (Boolean, default: false): Reduce internal mConfig logging.</li>
 <li><code>LOGGING_TO_USE_IN_CONFIGLIB</code> (String, default: ""): Force a specific logging module.</li>
 <li><code>LOGLEVEL_NUMBER</code> (Integer, default: 4): Numeric log level for basic loggers.</li>
 <li><code>LOGGING_REDIRECT_TARGET</code> (String): Redirect internal logging (<code>stderr</code>, <code>stdout</code>, <code>quiet</code>, <code>file:&lt;path&gt;</code>).</li>
 </ul>
-<h3 id="filesystem-and-registry-paths">Filesystem and registry paths<a class="headerlink" href="#filesystem-and-registry-paths" title="Permanent link">&para;</a></h3>
+<h3 id="filesystem-and-registry-paths">Filesystem and registry paths</h3>
 <ul>
 <li><code>ADDITIONAL_RUNTIME_DIRECTORIES</code> (<code>List&lt;String&gt;</code>): Extra filesystem directories (prepended) for <code>RUNTIME</code> scope.</li>
 <li><code>ADDITIONAL_USER_DIRECTORIES</code> (<code>List&lt;String&gt;</code>): Extra filesystem directories (prepended) for <code>USER</code> scope.</li>
@@ -1580,26 +1580,26 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
 <li><code>TRIM_TEXTVALUE_SPACES</code> (Boolean, default: true): Trim leading/trailing spaces in text values.</li>
 <li><code>WRITE_CONDENSED_FORMAT</code> (Boolean, default: false): Prefer compact output when writing text formats.</li>
 </ul>
-<h3 id="format-priorities">Format priorities<a class="headerlink" href="#format-priorities" title="Permanent link">&para;</a></h3>
+<h3 id="format-priorities">Format priorities</h3>
 <ul>
 <li><code>FILE_FORMAT_READING_PRIORITIES</code> (<code>List&lt;String&gt;</code>, default: <code>DHALL,TOML,YAML,JSON5,JSON,ASN1,properties,INI</code>): Read order.</li>
 <li><code>FILE_FORMAT_WRITING_PRIORITIES</code> (<code>List&lt;String&gt;</code>, default: <code>TOML,YAML,JSON5,JSON,properties</code>): Write order.</li>
 <li><code>FILE_FORMAT_READING_ALLOW_ALL_FORMATS</code> (Boolean, default: true): Fallback to non-listed formats.</li>
 <li><code>FILE_FORMAT_WRITING_ALLOW_ALL_FORMATS</code> (Boolean, default: true): Fallback to non-listed formats.</li>
 </ul>
-<h3 id="storage-type-priorities">Storage type priorities<a class="headerlink" href="#storage-type-priorities" title="Permanent link">&para;</a></h3>
+<h3 id="storage-type-priorities">Storage type priorities</h3>
 <ul>
 <li><code>STORAGE_TYPE_PRIORITIES</code> (<code>List&lt;String&gt;</code>, default: <code>RAM,secrets,files,registry,registryjni,zookeeper,JAR</code>): Init/search order within a scope.</li>
 <li><code>STORAGE_TYPE_ALLOW_ALL_STORAGES</code> (Boolean, default: true): Allow storages not explicitly listed.</li>
 </ul>
-<h3 id="schemes-and-defaults">Schemes and defaults<a class="headerlink" href="#schemes-and-defaults" title="Permanent link">&para;</a></h3>
+<h3 id="schemes-and-defaults">Schemes and defaults</h3>
 <ul>
 <li><code>CONFIG_SCHEME_LIST</code> (<code>Map&lt;String,ConfigScheme&gt;</code>): Provide schemes programmatically.</li>
 <li><code>SCHEME_STRICT_MODE</code> (Boolean, default: false): Reject keys not in the scheme.</li>
 <li><code>SCHEME_RESETS_DEFAULTS</code> (Boolean, default: false): Replace existing defaults instead of merging.</li>
 <li><code>FREE_CONFIGURATION</code> (Boolean): Allow configs without a scheme (behavior may evolve).</li>
 </ul>
-<h3 id="missing-entry-behavior">Missing entry behavior<a class="headerlink" href="#missing-entry-behavior" title="Permanent link">&para;</a></h3>
+<h3 id="missing-entry-behavior">Missing entry behavior</h3>
 <ul>
 <li><code>EXCEPTION_ON_MISSING_ENTRY</code> (Boolean, default: true): Throw when a key is absent.</li>
 <li><code>DEFAULT_ON_MISSING_ENTRY</code> (Boolean, default: false): Return scheme defaults if missing (requires exceptions disabled).</li>
@@ -1607,7 +1607,7 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
 <li><code>FALLBACKS_ACROSS_SCOPES</code> (Boolean, default: true): Allow fallback to less specific scopes on reads.</li>
 <li><code>WRITE_FALLBACK_ACROSS_SCOPES</code> (Boolean, default: false): Allow fallback to more specific scopes on writes.</li>
 </ul>
-<h3 id="cache-and-update-checks">Cache and update checks<a class="headerlink" href="#cache-and-update-checks" title="Permanent link">&para;</a></h3>
+<h3 id="cache-and-update-checks">Cache and update checks</h3>
 <ul>
 <li><code>UPDATE_CHECK_FREQUENCY_MS</code> (Integer, default: 2000): Polling interval for cached sources.</li>
 <li><code>UPDATE_CHECK_SCOPES</code> (<code>List&lt;String&gt;</code>, default: all scopes): Limit update checks by scope.</li>
@@ -1617,20 +1617,20 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
 <li><code>WRITE_SYNC</code> (Boolean): Sync writes immediately (storage-dependent).</li>
 <li><code>NO_DEFAULT_DIRECTORIES</code> (Boolean): Disable default filesystem paths (experimental).</li>
 </ul>
-<h3 id="modules-and-runtime-configuration">Modules and runtime configuration<a class="headerlink" href="#modules-and-runtime-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="modules-and-runtime-configuration">Modules and runtime configuration</h3>
 <ul>
 <li><code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> (Boolean, default: false): Allow <code>MCONFIG_RUNTIME_*</code> env overrides.</li>
 <li><code>ENABLE_SELF_CONFIGURATION</code> (Boolean, default: true): Allow classpath self-configuration.</li>
 <li><code>ADDITIONAL_MODULE_PATHS</code> (<code>List&lt;String&gt;</code>): Add module IDs/paths during discovery.</li>
 <li><code>DISABLED_MODULE_IDS</code> (<code>List&lt;String&gt;</code>): Disable specific module IDs.</li>
 </ul>
-<h3 id="secrets-providers-mconfigsecrets">Secrets providers (mConfigSecrets)<a class="headerlink" href="#secrets-providers-mconfigsecrets" title="Permanent link">&para;</a></h3>
+<h3 id="secrets-providers-mconfigsecrets">Secrets providers (mConfigSecrets)</h3>
 <ul>
 <li><code>SECRETS_PROVIDER_ID</code> (String): Primary provider ID.</li>
 <li><code>SECRETS_PROVIDER_CONFIG</code> (<code>Map&lt;String,Object&gt;</code>): Provider configuration.</li>
 <li><code>ADDITIONAL_SECRETS_PROVIDERS</code> (<code>List&lt;Map&lt;String,Object&gt;&gt;</code>): Additional providers with optional scope.</li>
 </ul>
-<h3 id="zookeeper-mconfigsourcezookeeper">ZooKeeper (mConfigSourceZooKeeper)<a class="headerlink" href="#zookeeper-mconfigsourcezookeeper" title="Permanent link">&para;</a></h3>
+<h3 id="zookeeper-mconfigsourcezookeeper">ZooKeeper (mConfigSourceZooKeeper)</h3>
 <ul>
 <li><code>ZOOKEEPER_CONNECT_STRING</code> (String): Connection string.</li>
 <li><code>ZOOKEEPER_ROOT_PATH</code> (String, default: <code>/mconfig</code>): Root path.</li>
@@ -1639,13 +1639,13 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
 <li><code>ZOOKEEPER_RETRY_MAX_RETRIES</code> (Integer, default: 3): Retry count.</li>
 <li><code>ZOOKEEPER_BOOTSTRAP_CONFIG_NAME</code> (String, default: <code>zookeeper</code>): Bootstrap config name.</li>
 </ul>
-<h3 id="class-loading">Class loading<a class="headerlink" href="#class-loading" title="Permanent link">&para;</a></h3>
+<h3 id="class-loading">Class loading</h3>
 <ul>
 <li><code>USE_CONTEXT_CLASS_LOADER</code> (Boolean, default: false): Prefer thread context loader.</li>
 <li><code>USE_SYSTEM_CLASS_LOADER</code> (Boolean, default: false): Prefer system class loader.</li>
 <li></li>
 </ul>
-<h3 id="identity-and-context">Identity and context<a class="headerlink" href="#identity-and-context" title="Permanent link">&para;</a></h3>
+<h3 id="identity-and-context">Identity and context</h3>
 <ul>
 <li><code>COMPANY_NAME</code> (String, optional): Company/organization name used in OS paths. Blank/null/whitespace intentionally omits the company segment across all sources.</li>
 <li><code>APPLICATION_NAME</code> (String, required): Application name used in OS paths.</li>
@@ -1655,7 +1655,7 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
 <li><code>HOSTNAME</code> (String, auto-detected): Hostname of the current machine/container.
   These are automatically set by the library; they are available as a ConfigFeature so you can override them if needed.</li>
 </ul>
-<h2 id="patterns-to-avoid-boilerplate">Patterns to avoid boilerplate<a class="headerlink" href="#patterns-to-avoid-boilerplate" title="Permanent link">&para;</a></h2>
+<h2 id="patterns-to-avoid-boilerplate">Patterns to avoid boilerplate</h2>
 <ul>
 <li>Missing values: prefer <code>EXCEPTION_ON_MISSING_ENTRY=false</code> and <code>DEFAULT_ON_MISSING_ENTRY=true</code> over manual <code>try/catch</code> or <code>null</code> wrapping.</li>
 <li>Strict config contracts: set <code>SCHEME_STRICT_MODE=true</code> instead of filtering keys by hand.</li>

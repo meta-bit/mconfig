@@ -1362,20 +1362,20 @@
                   
 
 
-<h1 id="32-updates">3.2 Updates<a class="headerlink" href="#32-updates" title="Permanent link">&para;</a></h1>
+<h1 id="32-updates">3.2 Updates</h1>
 <p>mConfig automatically detects and uses updates in the configuration sources.</p>
 <p>Thus, if you access Configuration contents, you'll receive the current values.</p>
 <p>Conversely, if you store the values you got from the mConfig Configuration in a
 local variable, that variable won't receive updates, of course.</p>
 <p>Now for the details.</p>
-<h2 id="321-update-notifications">3.2.1 Update notifications<a class="headerlink" href="#321-update-notifications" title="Permanent link">&para;</a></h2>
+<h2 id="321-update-notifications">3.2.1 Update notifications</h2>
 <p>While the easiest way to use mConfig is just to <code>get()</code> from the Configuration
 whenever you need a value - there are library objects created using the values
 values, where you can't pass an mConfig handle. You would need to reinstantiate
 these, or do similar things.</p>
 <p>For this purpose, you can subscribe to changes, providing a callback which will
 get executed when a change occurs.</p>
-<h3 id="3211-location-level-updates">3.2.1.1 Location-level updates<a class="headerlink" href="#3211-location-level-updates" title="Permanent link">&para;</a></h3>
+<h3 id="3211-location-level-updates">3.2.1.1 Location-level updates</h3>
 <div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
 <span class="n">Configuration</span><span class="p">.</span><span class="na">unsubscribeFromUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
 </code></pre></div>
@@ -1387,14 +1387,14 @@ This ensures that dynamic entry creation is captured correctly.</p>
 <p>By default, the scopes exclude RUNTIME, because that's what you set yourself at runtime.</p>
 <p>The callback is provided as parameter with the <code>ConfigLocation</code> where the change occurred.
 (You can get the scope from it, e.g.)</p>
-<h3 id="3212-entry-level-updates">3.2.1.2 Entry-level updates<a class="headerlink" href="#3212-entry-level-updates" title="Permanent link">&para;</a></h3>
+<h3 id="3212-entry-level-updates">3.2.1.2 Entry-level updates</h3>
 <p><div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fullKey</span><span class="p">,</span><span class="w"> </span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
 </code></pre></div>
 Subscribe to changes of individual entries by their full key. </p>
 <p>The callback is called with the <code>ConfigLocation</code> where the entry change was detected.</p>
 <p>Unsubscribe with <code>Configuration.unsubscribeFromUpdates(Consumer&lt;ConfigLocation&gt; listener)</code>
 when you don't need it anymore; this feature requires a bit of CPU time when active.</p>
-<h2 id="322-update-settings">3.2.2 Update settings<a class="headerlink" href="#322-update-settings" title="Permanent link">&para;</a></h2>
+<h2 id="322-update-settings">3.2.2 Update settings</h2>
 <p>To reduce overhead, mConfig limits the checks for new content to every x seconds.
 You can set this with the parameter XXXXXXXXXXXXTOBENAMED.</p>
 <p>NOT IMPLEMENTED YET:

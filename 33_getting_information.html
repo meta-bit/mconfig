@@ -1376,8 +1376,8 @@
                   
 
 
-<h1 id="33-getting-information">3.3 Getting Information<a class="headerlink" href="#33-getting-information" title="Permanent link">&para;</a></h1>
-<h2 id="331-locations">3.3.1 Locations<a class="headerlink" href="#331-locations" title="Permanent link">&para;</a></h2>
+<h1 id="33-getting-information">3.3 Getting Information</h1>
+<h2 id="331-locations">3.3.1 Locations</h2>
 <p>So, where is my specific configuration looking for its contents?</p>
 <p>To see where a Configuration instance gets its contents from, you can use <code>getSourceLocations()</code> like this:
 <div class="highlight"><pre><span></span><code><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;config locations: &quot;</span><span class="p">);</span>
@@ -1392,10 +1392,10 @@ There is <code>getSearchList()</code> from ConfigFactory.
 </code></pre></div></p>
 <p>Depending on your use case, you'll want different parts of the ConfigLocation entries.
 Above is just a little text dump.</p>
-<h2 id="332-legacy-support-blobs-and-where-to-put-files">3.3.2 Legacy support: BLOBs, and where to put files?<a class="headerlink" href="#332-legacy-support-blobs-and-where-to-put-files" title="Permanent link">&para;</a></h2>
+<h2 id="332-legacy-support-blobs-and-where-to-put-files">3.3.2 Legacy support: BLOBs, and where to put files?</h2>
 <p>Use Configuration mechanisms where possible; this enables all the features,
 including scheme checking, network storage, and so on.</p>
-<h3 id="3321-raw-files-text-and-binary">3.3.2.1 Raw Files (Text and Binary)<a class="headerlink" href="#3321-raw-files-text-and-binary" title="Permanent link">&para;</a></h3>
+<h3 id="3321-raw-files-text-and-binary">3.3.2.1 Raw Files (Text and Binary)</h3>
 <p>You may need to access the entire content of a file as a single String or byte array. mConfig provides two specialized formats for this purpose: <code>text_file</code> and <code>binary_file</code>.</p>
 <p><strong>Reading a text file as a single String:</strong>
 By using the <code>text_file</code> format, the entire file content is read into a single entry with an empty key <code>""</code>.</p>
@@ -1417,7 +1417,7 @@ The <code>binary_file</code> format works similarly but provides the content as 
 <span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<h3 id="3322-hierarchical-blobs">3.3.2.2 Hierarchical BLOBs<a class="headerlink" href="#3322-hierarchical-blobs" title="Permanent link">&para;</a></h3>
+<h3 id="3322-hierarchical-blobs">3.3.2.2 Hierarchical BLOBs</h3>
 <p>In modern formats like JSON and YAML, binary data can be part of the hierarchical structure.</p>
 <p><strong>JSON (Base64):</strong>
 If a <code>ConfigScheme</code> defines a key as type <code>BYTES</code>, mConfig will automatically decode a Base64-encoded string in a JSON file.</p>
@@ -1425,7 +1425,7 @@ If a <code>ConfigScheme</code> defines a key as type <code>BYTES</code>, mConfig
 YAML supports binary data natively using the <code>!!binary</code> tag. mConfig will correctly retrieve these as byte arrays.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;server/certificate&quot;</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="3323-legacy-blobs">3.3.2.3 Legacy BLOBs<a class="headerlink" href="#3323-legacy-blobs" title="Permanent link">&para;</a></h3>
+<h3 id="3323-legacy-blobs">3.3.2.3 Legacy BLOBs</h3>
 <p>The second fallback for supporting legacy applications is that you can get
 filesystem paths for a given Scope. If there are several for the same Scope,
 mConfigUtil will prioritize the most specific entry, and prefer those which

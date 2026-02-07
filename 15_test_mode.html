@@ -1564,7 +1564,7 @@
                   
 
 
-<h1 id="15-test-mode">1.5 Test Mode<a class="headerlink" href="#15-test-mode" title="Permanent link">&para;</a></h1>
+<h1 id="15-test-mode">1.5 Test Mode</h1>
 <p>mConfig has a test mode. This is to support software using mConfig
 in performing automated tests.</p>
 <p>Test mode supports:
@@ -1576,7 +1576,7 @@ with the test environment – preferably with as little residue in the actual
 code as possible.</p>
 <p>One of the solution approaches is to supply the code with different configurations,
 depending on whether it is run in test mode, or regular runtime mode.</p>
-<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<h2 id="goals">Goals</h2>
 <p>We want to allow testing configurations without modifying the actual code.</p>
 <p>The simple, straightforward way would be to provide <code>ConfigFactoryBuilder</code> instances
 to your code, set up differently depending on whether testing or not. But that's
@@ -1588,8 +1588,8 @@ you also specify.</p>
 <p>This way, your test code can set the test environment in a @BeforeAll/@BeforeEach
 function before the tests start, while tests and <strong>code stay free of test-specific
 modifications</strong> in regard to mConfig.</p>
-<h2 id="use">Use<a class="headerlink" href="#use" title="Permanent link">&para;</a></h2>
-<h3 id="activate-test-mode">Activate Test Mode<a class="headerlink" href="#activate-test-mode" title="Permanent link">&para;</a></h3>
+<h2 id="use">Use</h2>
+<h3 id="activate-test-mode">Activate Test Mode</h3>
 <p><code>ConfigFactoryBuilder.setTestMode(true);</code></p>
 <p>or with Environment Variables, e.g.
 <code>MCONFIG_RUNTIME_TEST_MODE=true</code></p>
@@ -1597,7 +1597,7 @@ modifications</strong> in regard to mConfig.</p>
 1. EnvVar source module present, 
 2. ALLOW_RUNTIME_FLAG set to true in the ConfigFactoryBuilder.
 )</p>
-<h4 id="effects-of-test-mode">Effects of Test Mode<a class="headerlink" href="#effects-of-test-mode" title="Permanent link">&para;</a></h4>
+<h4 id="effects-of-test-mode">Effects of Test Mode</h4>
 <p>this will</p>
 <ul>
 <li>disable lookup in the regular file paths</li>
@@ -1618,14 +1618,14 @@ modifications</strong> in regard to mConfig.</p>
 <li>NB: JARs rarely compile in test resources! The JAR aspect takes effect 
   only if you are building test JARs in addition to the regular ones.</li>
 </ul>
-<h4 id="paths-for-test-mode">Paths for Test Mode<a class="headerlink" href="#paths-for-test-mode" title="Permanent link">&para;</a></h4>
+<h4 id="paths-for-test-mode">Paths for Test Mode</h4>
 <p>Below the src/test/resources/config/ directory, we check for subdirectories with
 the scope names in all-caps, e.g. PRODUCT, APPLICATION, USER, to allow
 for placement of respective contents.</p>
 <p>In the other case, we go test/.config/<em>COMPANY</em>/<em>PRODUCTNAME</em>, to mirror such entries
 for production.</p>
 <p>So, activating test mode results in these directories searched for entries:</p>
-<h5 id="test-mode-search-paths">Test mode search paths<a class="headerlink" href="#test-mode-search-paths" title="Permanent link">&para;</a></h5>
+<h5 id="test-mode-search-paths">Test mode search paths</h5>
 <p>In test mode, standard OS paths are bypassed. Use explicit paths via <code>ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of("USER:/tmp/test-user"))</code> <strong>or</strong> fallbacks like <code>src/test/resources/.config/&amp;lt;company&amp;gt;/&amp;lt;app&amp;gt;/</code> and <code>src/test/resources/config/{SCOPE}</code> (resources &gt; project configs).</p>
 <table>
 <thead>
@@ -1689,7 +1689,7 @@ for production.</p>
 </tbody>
 </table>
 <p>NB: "COMPANY" and "APP" placeholders replaced by code values. Scope dirs verbatim UPPERCASE. Resources override project configs; scopes follow enum priority (higher scopes override lower).</p>
-<h3 id="custom-test-directories">Custom test directories<a class="headerlink" href="#custom-test-directories" title="Permanent link">&para;</a></h3>
+<h3 id="custom-test-directories">Custom test directories</h3>
 <p>You can provide a list of directories for <code>TESTMODE_DIRECTORIES</code> with their respective scope.</p>
 <p>Format: <code>SCOPENAME ":" PATH</code>
 e.g. <code>USER:/~developer/mylocaltest</code> or <code>APPLICATION:/tmp/generatedautomatedtestingdir</code>.</p>
@@ -1699,7 +1699,7 @@ If the scope name is omitted or invalid, it defaults to <code>RUNTIME</code> sco
 In <code>TEST_MODE</code>, <code>ADDITIONAL_RUNTIME_DIRECTORIES</code> and <code>ADDITIONAL_USER_DIRECTORIES</code> 
 are intentionally ignored to prevent tests from accidentally interacting with real production data.
 Only <code>TESTMODE_DIRECTORIES</code> and the default test resource locations are used.</p>
-<h3 id="set-your-own-paths-legacy-api-for-some-test-environments">Set your own paths (legacy API for some test environments)<a class="headerlink" href="#set-your-own-paths-legacy-api-for-some-test-environments" title="Permanent link">&para;</a></h3>
+<h3 id="set-your-own-paths-legacy-api-for-some-test-environments">Set your own paths (legacy API for some test environments)</h3>
 <p>ConfigFactoryBuilder.setTestConfigPaths() allows you to set multiple paths for 
 each scope, to be used in test mode. Deprecated; use the custom test directories above.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@BeforeAll</span>
@@ -1712,23 +1712,23 @@ each scope, to be used in test mode. Deprecated; use the custom test directories
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 <p><strong>Deprecated legacy API</strong>: Paths added at <code>RUNTIME</code> scope.</p>
-<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
+<h2 id="security-considerations">Security Considerations</h2>
 <p>To prevent accidental or malicious activation of test mode in production environments,
 mConfig employs a two-tier security gate system.</p>
-<h3 id="151-global-static-gate-forbidtestmode-permittestmode">1.5.1 Global Static Gate (<code>forbidTestMode()</code> / <code>permitTestMode()</code>)<a class="headerlink" href="#151-global-static-gate-forbidtestmode-permittestmode" title="Permanent link">&para;</a></h3>
+<h3 id="151-global-static-gate-forbidtestmode-permittestmode">1.5.1 Global Static Gate (<code>forbidTestMode()</code> / <code>permitTestMode()</code>)</h3>
 <p>This is a JVM-wide master switch. Calling <code>ConfigFactoryBuilder.forbidTestMode()</code> 
 ensures that no code within the JVM can activate <code>TEST_MODE</code>, 
 regardless of other settings. This is intended for production environments 
 to provide a hard security boundary.</p>
-<h3 id="152-instance-dynamic-gate-permit_test_mode-feature">1.5.2 Instance Dynamic Gate (<code>PERMIT_TEST_MODE</code> Feature)<a class="headerlink" href="#152-instance-dynamic-gate-permit_test_mode-feature" title="Permanent link">&para;</a></h3>
+<h3 id="152-instance-dynamic-gate-permit_test_mode-feature">1.5.2 Instance Dynamic Gate (<code>PERMIT_TEST_MODE</code> Feature)</h3>
 <p>This is a per-builder configuration flag. It acts as a final check 
 before an instance activates test mode.</p>
-<h4 id="productive-by-default">"Productive by Default"<a class="headerlink" href="#productive-by-default" title="Permanent link">&para;</a></h4>
+<h4 id="productive-by-default">"Productive by Default"</h4>
 <p>To simplify development, the <code>PERMIT_TEST_MODE</code> feature defaults to <code>true</code>. 
 This allows developers to activate <code>TEST_MODE</code> using a single flag 
 (via environment variables, system properties, or <code>setFeature</code>) 
 without needing to explicitly enable permissions in standard environments.</p>
-<h4 id="test-mode-proofing-lockdown">"Test Mode Proofing" (Lockdown)<a class="headerlink" href="#test-mode-proofing-lockdown" title="Permanent link">&para;</a></h4>
+<h4 id="test-mode-proofing-lockdown">"Test Mode Proofing" (Lockdown)</h4>
 <p>Despite with the default being <code>true</code>, <code>PERMIT_TEST_MODE</code> remains an useful security tool
 for some situations.
 In a complex process where <code>TEST_MODE</code> might be enabled globally
@@ -1742,7 +1742,7 @@ In a complex process where <code>TEST_MODE</code> might be enabled globally
 </code></pre></div>
 Even if <code>TEST_MODE</code> is requested externally, this specific instance will remain in production mode, ensuring it never reads from <code>src/test/resources</code> or other untrusted test locations,
 like some dynamically generated test directories and -files.</p>
-<h3 id="activation-logic">Activation Logic<a class="headerlink" href="#activation-logic" title="Permanent link">&para;</a></h3>
+<h3 id="activation-logic">Activation Logic</h3>
 <p>Test mode is only enabled if <strong>both</strong> the global gate and the instance gate allow it. The following logic is enforced during the <code>build()</code> process:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModePermitted</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">PERMIT_TEST_MODE</span><span class="p">))</span><span class="w"> </span>
@@ -1759,7 +1759,7 @@ like some dynamically generated test directories and -files.</p>
 <span class="w">    </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">setBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security<a class="headerlink" href="#153-self-configuration-security" title="Permanent link">&para;</a></h3>
+<h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security</h3>
 <p>mConfig's self-configuration feature (loading <code>mconfig.properties</code> from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable it:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ENABLE_SELF_CONFIGURATION</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>

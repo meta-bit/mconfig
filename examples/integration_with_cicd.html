@@ -1364,9 +1364,9 @@
                   
 
 
-<h1 id="integration-with-cicd">Integration with CI/CD<a class="headerlink" href="#integration-with-cicd" title="Permanent link">&para;</a></h1>
+<h1 id="integration-with-cicd">Integration with CI/CD</h1>
 <p>This example shows how to make mConfig predictable in CI/CD and automated pipelines.</p>
-<h2 id="1-enable-test-mode-via-environment-variables">1. Enable Test Mode via environment variables<a class="headerlink" href="#1-enable-test-mode-via-environment-variables" title="Permanent link">&para;</a></h2>
+<h2 id="1-enable-test-mode-via-environment-variables">1. Enable Test Mode via environment variables</h2>
 <p>mConfig can enable Test Mode without code changes when <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is on.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MCONFIG_RUNTIME_TEST_MODE</span><span class="o">=</span><span class="nb">true</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">MCONFIG_RUNTIME_DEBUG_LEVEL</span><span class="o">=</span>debug
@@ -1379,10 +1379,10 @@
 <span class="w">    </span><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div></p>
-<h2 id="2-keep-test-configs-in-test-resources">2. Keep test configs in test resources<a class="headerlink" href="#2-keep-test-configs-in-test-resources" title="Permanent link">&para;</a></h2>
+<h2 id="2-keep-test-configs-in-test-resources">2. Keep test configs in test resources</h2>
 <p>CI usually runs tests from the build tree. Keep your test configs here:
 - <code>src/test/resources/.config/ACME/ourApp/network.properties</code></p>
-<h2 id="3-prefer-configuration-schemes-in-ci">3. Prefer configuration schemes in CI<a class="headerlink" href="#3-prefer-configuration-schemes-in-ci" title="Permanent link">&para;</a></h2>
+<h2 id="3-prefer-configuration-schemes-in-ci">3. Prefer configuration schemes in CI</h2>
 <p>Schemes are recommended in CI because they:
 1. Prevent most cases of incomplete configs by providing defaults.
 2. Enforce mandatory values and validation rules early.</p>
@@ -1394,14 +1394,14 @@
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/tls&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BOOLEAN&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
-<h2 id="4-use-explicit-test-directories-optional">4. Use explicit test directories (optional)<a class="headerlink" href="#4-use-explicit-test-directories-optional" title="Permanent link">&para;</a></h2>
+<h2 id="4-use-explicit-test-directories-optional">4. Use explicit test directories (optional)</h2>
 <p>If your CI environment mounts a special directory, point mConfig at it:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">TESTMODE_DIRECTORIES</span><span class="p">,</span>
 <span class="w">            </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;USER:/mnt/ci/config/user&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APPLICATION:/mnt/ci/config/app&quot;</span><span class="p">));</span>
 </code></pre></div>
-<h2 id="5-pin-formats-and-storage-priority-optional">5. Pin formats and storage priority (optional)<a class="headerlink" href="#5-pin-formats-and-storage-priority-optional" title="Permanent link">&para;</a></h2>
+<h2 id="5-pin-formats-and-storage-priority-optional">5. Pin formats and storage priority (optional)</h2>
 <p>Avoid surprises from environment changes by pinning priorities:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">FILE_FORMAT_READING_PRIORITIES</span><span class="p">,</span>

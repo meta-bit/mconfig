@@ -2124,12 +2124,12 @@
                   
 
 
-<h1 id="44-mconfig-consolidated-design-document">4.4 mConfig Consolidated Design Document<a class="headerlink" href="#44-mconfig-consolidated-design-document" title="Permanent link">&para;</a></h1>
-<h2 id="441-overview">4.4.1 Overview<a class="headerlink" href="#441-overview" title="Permanent link">&para;</a></h2>
+<h1 id="44-mconfig-consolidated-design-document">4.4 mConfig Consolidated Design Document</h1>
+<h2 id="441-overview">4.4.1 Overview</h2>
 <p>mConfig is a modular configuration library for Java, designed for flexibility, 
 extensibility, and standardized configuration management 
 across different operating systems and environments.</p>
-<h3 id="4411-multi-platform-portability-goal">4.4.1.1 Multi-Platform Portability Goal<a class="headerlink" href="#4411-multi-platform-portability-goal" title="Permanent link">&para;</a></h3>
+<h3 id="4411-multi-platform-portability-goal">4.4.1.1 Multi-Platform Portability Goal</h3>
 <p>While the primary implementation is in Java, mConfig is designed 
 with future ports to other languages (e.g., C, Rust, Python) in mind.
 - <strong>Abstraction over Platform Specifics</strong>: Core logic (in <code>mConfigCore</code>) MUST 
@@ -2139,10 +2139,10 @@ must be isolated in dedicated modules (like <code>mConfigSourceJAR</code>).
 - <strong>Standardized Interfaces</strong>: Use generic interfaces for discovery and storage
 to ensure that the core behavior can be mirrored in other language environments
 without significant architectural changes.</p>
-<h3 id="core-architectural-principle-layered-stack">Core Architectural Principle: Layered Stack<a class="headerlink" href="#core-architectural-principle-layered-stack" title="Permanent link">&para;</a></h3>
+<h3 id="core-architectural-principle-layered-stack">Core Architectural Principle: Layered Stack</h3>
 <p>Configurations are resolved through a stack of layers, prioritized by scope specificity.
 <strong>Cache (optional) -&gt; Found Sources (ordered by scope) -&gt; Defaults</strong></p>
-<h2 id="442-scopes-and-priority">4.4.2 Scopes and Priority<a class="headerlink" href="#442-scopes-and-priority" title="Permanent link">&para;</a></h2>
+<h2 id="442-scopes-and-priority">4.4.2 Scopes and Priority</h2>
 <p>Scopes define the visibility and precedence of configuration data.</p>
 <table>
 <thead>
@@ -2206,7 +2206,7 @@ without significant architectural changes.</p>
 </tbody>
 </table>
 <p><strong>Tie-breaking within the same scope:</strong> Later-added layers take precedence over earlier-added ones.</p>
-<h3 id="4421-storage-type-priority">4.4.2.1 Storage Type Priority<a class="headerlink" href="#4421-storage-type-priority" title="Permanent link">&para;</a></h3>
+<h3 id="4421-storage-type-priority">4.4.2.1 Storage Type Priority</h3>
 <p>Resolution priority between different storage types (within the same scope) is deterministic.</p>
 <p><strong>Default Order (Highest to Lowest):</strong>
 1. <code>RAM</code> (In-memory overrides)
@@ -2217,10 +2217,10 @@ without significant architectural changes.</p>
 6. <code>zookeeper</code> (ZooKeeper - Experimental, Self-configuring)
 7. <code>JAR</code> (Classpath resources/defaults)</p>
 <p>This order can be customized via <code>STORAGE_TYPE_PRIORITIES</code> (List of IDs) and <code>STORAGE_TYPE_ALLOW_ALL_STORAGES</code> (Boolean).</p>
-<h2 id="4422-self-configuration">4.4.2.2 Self-Configuration<a class="headerlink" href="#4422-self-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="4422-self-configuration">4.4.2.2 Self-Configuration</h2>
 <p>mConfig supports "self-configuration" to allow the library to configure 
 its own behavior using the same discovery mechanisms it provides to applications.</p>
-<h3 id="44221-library-self-configuration-configfactorysettings">4.4.2.2.1 Library Self-Configuration (ConfigFactorySettings)<a class="headerlink" href="#44221-library-self-configuration-configfactorysettings" title="Permanent link">&para;</a></h3>
+<h3 id="44221-library-self-configuration-configfactorysettings">4.4.2.2.1 Library Self-Configuration (ConfigFactorySettings)</h3>
 <p>When the <code>mConfigSourceJAR</code> module is present, mConfig automatically searches
 for a properties file named <code>mconfig.properties</code> in the following classpath location:
 <code>.config/metabit/mConfig/mconfig.properties</code></p>
@@ -2235,7 +2235,7 @@ allowing settings to be provided from multiple JARs or resource paths.</li>
 Keys (ignoring case) are matched against <code>ConfigFeature</code> constants.</li>
 <li><strong>Disabling</strong>: This feature is enabled by default for convenience, but can be disabled via <code>ConfigFeature.ENABLE_SELF_CONFIGURATION = false</code> for environments with strict classpath security requirements.</li>
 </ul>
-<h3 id="44222-networked-source-self-configuration">4.4.2.2.2 Networked Source Self-Configuration<a class="headerlink" href="#44222-networked-source-self-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="44222-networked-source-self-configuration">4.4.2.2.2 Networked Source Self-Configuration</h3>
 <p>Networked sources (like ZooKeeper) can also retrieve their own connection settings (connect string, root path, etc.) from previously loaded layers (e.g., JAR defaults or local filesystem overrides).</p>
 <p><strong>Resolution Order during Startup:</strong>
 1.  <strong>Core Discovery</strong>: Modules (Storages, Formats) and <code>ConfigFactoryComponent</code>s are identified.
@@ -2248,26 +2248,26 @@ Keys (ignoring case) are matched against <code>ConfigFeature</code> constants.</
     - If settings are missing, it remains inactive (zero-config support).
 5.  <strong>Finalization</strong>: The factory is ready, including any successfully activated networked layers.</p>
 <p>See <a href="examples/zookeeper.html">ZooKeeper Example</a> for detailed configuration snippets.</p>
-<h2 id="443-core-components">4.4.3 Core Components<a class="headerlink" href="#443-core-components" title="Permanent link">&para;</a></h2>
-<h3 id="configfactory">ConfigFactory<a class="headerlink" href="#configfactory" title="Permanent link">&para;</a></h3>
+<h2 id="443-core-components">4.4.3 Core Components</h2>
+<h3 id="configfactory">ConfigFactory</h3>
 <p>The main entry point. It manages the <code>ConfigSearchList</code> and instantiates <code>Configuration</code> objects.</p>
-<h3 id="configsearchlist">ConfigSearchList<a class="headerlink" href="#configsearchlist" title="Permanent link">&para;</a></h3>
+<h3 id="configsearchlist">ConfigSearchList</h3>
 <p>A prioritized list of <code>ConfigLocation</code> entries defining where the library should look for configurations.</p>
-<h3 id="configlocation-configsource">ConfigLocation &amp; ConfigSource<a class="headerlink" href="#configlocation-configsource" title="Permanent link">&para;</a></h3>
+<h3 id="configlocation-configsource">ConfigLocation &amp; ConfigSource</h3>
 <ul>
 <li><strong>ConfigLocation</strong>: Defines <em>where</em> a configuration might be found (Storage + Handle + Scope).</li>
 <li><strong>ConfigSource</strong>: An instantiated <code>ConfigLocation</code> that is associated with a specific <code>ConfigLayer</code>. It confirms the configuration exists and is readable.</li>
 </ul>
-<h3 id="configstorage">ConfigStorage<a class="headerlink" href="#configstorage" title="Permanent link">&para;</a></h3>
+<h3 id="configstorage">ConfigStorage</h3>
 <p>Provides low-level access to data (e.g., <code>FileConfigStorage</code>, <code>WindowsRegistryConfigStorage</code>, <code>EnvVarConfigStorage</code>).</p>
-<h3 id="configformat">ConfigFormat<a class="headerlink" href="#configformat" title="Permanent link">&para;</a></h3>
+<h3 id="configformat">ConfigFormat</h3>
 <p>Parses and writes data in specific formats (e.g., <code>Properties</code>, <code>JSON</code>, <code>YAML</code>, <code>TOML</code>, <code>JSON5</code>, <code>INI</code>). It is responsible for instantiating <code>ConfigLayer</code> objects.</p>
-<h3 id="configlayer">ConfigLayer<a class="headerlink" href="#configlayer" title="Permanent link">&para;</a></h3>
+<h3 id="configlayer">ConfigLayer</h3>
 <p>A concrete instance of configuration data from a <code>ConfigLocation</code>. It maps hierarchical keys (e.g., <code>database/host</code>) to <code>ConfigEntry</code> objects.</p>
-<h3 id="configentry">ConfigEntry<a class="headerlink" href="#configentry" title="Permanent link">&para;</a></h3>
+<h3 id="configentry">ConfigEntry</h3>
 <p>A leaf node in the configuration tree, containing the value and metadata (like the source location).</p>
-<h2 id="444-operational-modes">4.4.4 Operational Modes<a class="headerlink" href="#444-operational-modes" title="Permanent link">&para;</a></h2>
-<h3 id="test_mode">TEST_MODE<a class="headerlink" href="#test_mode" title="Permanent link">&para;</a></h3>
+<h2 id="444-operational-modes">4.4.4 Operational Modes</h2>
+<h3 id="test_mode">TEST_MODE</h3>
 <ul>
 <li>Bypasses standard OS locations.</li>
 <li>Uses only explicitly provided test paths (via <code>TESTMODE_DIRECTORIES</code> feature) and standard test resources.</li>
@@ -2275,13 +2275,13 @@ Keys (ignoring case) are matched against <code>ConfigFeature</code> constants.</
 <li>Prevents tests from interfering with or relying on actual user configurations.</li>
 <li><strong>Security</strong>: Employs a two-tier gate system (Global Static Gate + Instance Dynamic Gate). <code>PERMIT_TEST_MODE</code> defaults to <code>true</code> ("Productive by Default") but can be locked down per instance.</li>
 </ul>
-<h3 id="additional_directories">ADDITIONAL_DIRECTORIES<a class="headerlink" href="#additional_directories" title="Permanent link">&para;</a></h3>
+<h3 id="additional_directories">ADDITIONAL_DIRECTORIES</h3>
 <ul>
 <li><code>ADDITIONAL_RUNTIME_DIRECTORIES</code> and <code>ADDITIONAL_USER_DIRECTORIES</code> allow adding custom search paths at runtime.</li>
 <li>Support the <code>SCOPENAME ":" PATH</code> format, allowing paths to be assigned to any scope (not just their default scope).</li>
 <li>Prepended to the search list of their respective scope, ensuring they take precedence over default locations.</li>
 </ul>
-<h3 id="service-mode-auto-refresh-monitoring">SERVICE-mode (Auto-refresh &amp; Monitoring)<a class="headerlink" href="#service-mode-auto-refresh-monitoring" title="Permanent link">&para;</a></h3>
+<h3 id="service-mode-auto-refresh-monitoring">SERVICE-mode (Auto-refresh &amp; Monitoring)</h3>
 <ul>
 <li>If enabled, every access re-checks the search list for new or updated configuration files.</li>
 <li>Recommended to be used with a <strong>Cache Layer</strong> to mitigate performance overhead.</li>
@@ -2289,68 +2289,68 @@ Keys (ignoring case) are matched against <code>ConfigFeature</code> constants.</
 <li><strong>Monitoring Support</strong>: <code>Configuration</code> supports the <code>subscribeToUpdates(Consumer&lt;ConfigLocation&gt;)</code> mechanism. 
   This is used by the <code>monitor</code> CLI command to provide real-time reporting of changes.</li>
 </ul>
-<h3 id="4442-self-configuration-security">4.4.4.2 Self-Configuration Security<a class="headerlink" href="#4442-self-configuration-security" title="Permanent link">&para;</a></h3>
+<h3 id="4442-self-configuration-security">4.4.4.2 Self-Configuration Security</h3>
 <p>Self-configuration (see section 2.2.1) automatically applies settings from the classpath. In environments where the classpath might contain untrusted JARs, this feature can be disabled:
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ENABLE_SELF_CONFIGURATION</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </code></pre></div>
 Disabling self-configuration ensures that the <code>ConfigFactory</code> starts with only the settings explicitly provided in code, preventing "configuration injection" via the classpath.</p>
-<h2 id="445-reading-and-writing">4.4.5 Reading and Writing<a class="headerlink" href="#445-reading-and-writing" title="Permanent link">&para;</a></h2>
-<h3 id="reading">Reading<a class="headerlink" href="#reading" title="Permanent link">&para;</a></h3>
+<h2 id="445-reading-and-writing">4.4.5 Reading and Writing</h2>
+<h3 id="reading">Reading</h3>
 <ul>
 <li>Sequential search from most specific to least specific scope.</li>
 <li>Value conversion (String to Integer, Boolean, etc.) is handled at the <code>Configuration</code> facade level.</li>
 </ul>
-<h3 id="writing">Writing<a class="headerlink" href="#writing" title="Permanent link">&para;</a></h3>
+<h3 id="writing">Writing</h3>
 <ul>
 <li><strong>Direct Write</strong>: Attempt to write back to the <code>ConfigLocation</code> where the entry was found.</li>
 <li><strong>Scope-based Write</strong>: Specify a scope for the write operation.</li>
 <li><strong>Write Fallback (Fall-forward)</strong>: If writing to the preferred location fails, attempt to write to a more specific scope (e.g., if MACHINE is read-only, write to USER).</li>
 <li><strong>Write Cache</strong>: Optional layer that buffers writes until a <code>flush()</code> is called.</li>
 </ul>
-<h2 id="446-security-and-secrets">4.4.6 Security and Secrets<a class="headerlink" href="#446-security-and-secrets" title="Permanent link">&para;</a></h2>
+<h2 id="446-security-and-secrets">4.4.6 Security and Secrets</h2>
 <p>mConfig provides specialized handling for sensitive data (API keys, passwords, certificates).</p>
-<h3 id="4461-secret-entries">4.4.6.1 Secret Entries<a class="headerlink" href="#4461-secret-entries" title="Permanent link">&para;</a></h3>
+<h3 id="4461-secret-entries">4.4.6.1 Secret Entries</h3>
 <ul>
 <li>Sensitive data should be handled via <code>SecretValue</code> and <code>SecretConfigEntryLeaf</code>.</li>
 <li>Values are obfuscated in memory (<code>char[]</code> or <code>byte[]</code> instead of <code>String</code> where possible).</li>
 <li><code>toString()</code> implementation of secret entries is automatically redacted (<code>[REDACTED]</code>).</li>
 <li><code>ConfigFacadeImpl.getSecret(key)</code> is the preferred API to retrieve a <code>SecretValue</code>.</li>
 </ul>
-<h3 id="4462-scheme-driven-secrets">4.4.6.2 Scheme-Driven Secrets<a class="headerlink" href="#4462-scheme-driven-secrets" title="Permanent link">&para;</a></h3>
+<h3 id="4462-scheme-driven-secrets">4.4.6.2 Scheme-Driven Secrets</h3>
 <p>A <code>ConfigEntry</code> is treated as a secret if its <code>ConfigEntrySpecification</code> (from a <code>ConfigScheme</code>) has the <code>SECRET</code> flag set.
 - <code>ConfigEntryFactory</code> automatically creates a <code>SecretConfigEntryLeaf</code> if the scheme marks the key as a secret.
 - <strong>Intelligent Type Selection</strong>: When creating a secret entry, the factory chooses a <code>SecretType</code> (e.g., <code>PLAIN_TEXT</code> vs <code>SYMMETRIC_KEY</code>) based on the requested <code>ConfigEntryType</code>.</p>
-<h3 id="4463-external-secrets-providers">4.4.6.3 External Secrets Providers<a class="headerlink" href="#4463-external-secrets-providers" title="Permanent link">&para;</a></h3>
+<h3 id="4463-external-secrets-providers">4.4.6.3 External Secrets Providers</h3>
 <p>External authentication (e.g., towards networked sources like HashiCorp Vault) 
 can be integrated via specialized modules implementing <code>ConfigSecretsProviderInterface</code>.
 - Secret providers are initialized during the configuration loading phase.
 - They can receive a <code>ConfigurationPhaseWrapper</code> to access 
 partially loaded configurations for their own initialization
 (e.g., to read the Vault address from a local file).</p>
-<h2 id="447-format-specifics">4.4.7 Format Specifics<a class="headerlink" href="#447-format-specifics" title="Permanent link">&para;</a></h2>
-<h3 id="java-properties">Java .properties<a class="headerlink" href="#java-properties" title="Permanent link">&para;</a></h3>
+<h2 id="447-format-specifics">4.4.7 Format Specifics</h2>
+<h3 id="java-properties">Java .properties</h3>
 <ul>
 <li>Flat key-value pairs. Trims whitespace.</li>
 <li>Supports multi-line values with <code>\</code>.</li>
 </ul>
-<h3 id="json-json5">JSON / JSON5<a class="headerlink" href="#json-json5" title="Permanent link">&para;</a></h3>
+<h3 id="json-json5">JSON / JSON5</h3>
 <ul>
 <li>Toplevel must be an Object or Array.</li>
 <li>JSON5 adds support for comments, trailing commas, and unquoted keys.</li>
 </ul>
-<h3 id="yaml">YAML<a class="headerlink" href="#yaml" title="Permanent link">&para;</a></h3>
+<h3 id="yaml">YAML</h3>
 <ul>
 <li>Supports hierarchical structures.</li>
 <li>Implementation must ensure secure parsing (avoiding arbitrary command execution).</li>
 </ul>
-<h3 id="ini">INI<a class="headerlink" href="#ini" title="Permanent link">&para;</a></h3>
+<h3 id="ini">INI</h3>
 <ul>
 <li>Section-based (<code>[section]</code>).</li>
 <li>Hierarchical keys can be mapped to sections using <code>/</code> (e.g., <code>[first/second]</code>).</li>
 </ul>
-<h3 id="4477-writing-priorities">4.4.7.7 Writing Priorities<a class="headerlink" href="#4477-writing-priorities" title="Permanent link">&para;</a></h3>
+<h3 id="4477-writing-priorities">4.4.7.7 Writing Priorities</h3>
 <p>When writing to a configuration (e.g., via <code>put</code>), mConfig applies the following priorities within the requested scope(s):</p>
 <ol>
 <li><strong>Priority 1: Update Existing Entry.</strong> The highest-priority writeable layer in the scope that already contains the key is updated.</li>
@@ -2358,42 +2358,42 @@ partially loaded configurations for their own initialization
 <li><strong>Priority 3: Create New Layer.</strong> If no writeable layers exist for the scope, mConfig attempts to create a new one using the prioritized <code>ConfigStorage</code> and <code>ConfigFormat</code> settings.</li>
 </ol>
 <p>Writes are strictly scope-isolated unless <code>WRITE_FALLBACK_ACROSS_SCOPES</code> is enabled. For multi-scope writes, mConfig iterates from the most specific to the most generic scope, stopping at the first successful write.</p>
-<h2 id="448-blobs-binary-data">4.4.8 BLOBs (Binary Data)<a class="headerlink" href="#448-blobs-binary-data" title="Permanent link">&para;</a></h2>
+<h2 id="448-blobs-binary-data">4.4.8 BLOBs (Binary Data)</h2>
 <p>mConfig supports Binary Large Objects (certs, licenses, keys) in two distinct ways:</p>
-<h3 id="4481-hierarchical-blobs-keyed-leaves">4.4.8.1 Hierarchical BLOBs (Keyed Leaves)<a class="headerlink" href="#4481-hierarchical-blobs-keyed-leaves" title="Permanent link">&para;</a></h3>
+<h3 id="4481-hierarchical-blobs-keyed-leaves">4.4.8.1 Hierarchical BLOBs (Keyed Leaves)</h3>
 <p>In hierarchical formats like JSON and YAML, binary data can exist as a leaf node with a specific key (e.g., <code>server/certificate</code>).
 - <strong>YAML</strong>: Native support via the <code>!!binary</code> tag.
 - <strong>JSON</strong>: Supported via Base64 encoding. If a <code>ConfigScheme</code> marks a key as <code>BYTES</code>, the JSON format will automatically decode the Base64 string into a <code>BlobConfigEntryLeaf</code>.
 - These entries are part of the regular configuration tree and can be accessed via <code>getValueAsBytes()</code>.</p>
-<h3 id="4482-flat-blobs-opaque-files">4.4.8.2 Flat BLOBs (Opaque Files)<a class="headerlink" href="#4482-flat-blobs-opaque-files" title="Permanent link">&para;</a></h3>
+<h3 id="4482-flat-blobs-opaque-files">4.4.8.2 Flat BLOBs (Opaque Files)</h3>
 <p>Entire files can be treated as a single binary blob using the <code>FileRawBinaryFormat</code> (extension <code>.bin</code>).
 - These are <strong>opaque</strong> and have no internal structure.
 - The entry is always accessed using the empty string key (<code>""</code>).
 - Requesting any other key from a flat binary layer will return <code>null</code>.</p>
-<h2 id="449-crypto-library-interaction">4.4.9 Crypto Library Interaction<a class="headerlink" href="#449-crypto-library-interaction" title="Permanent link">&para;</a></h2>
+<h2 id="449-crypto-library-interaction">4.4.9 Crypto Library Interaction</h2>
 <p>mConfig is designed to work seamlessly with standard Java crypto libraries (JCE) and third-party libraries like BouncyCastle.</p>
 <ul>
 <li><strong>JCE Integration</strong>: <code>SecretValue</code> can store raw bytes of <code>PrivateKey</code>, <code>PublicKey</code>, or <code>SecretKey</code>. Conversion typically involves <code>key.getEncoded()</code>.</li>
 <li><strong>BouncyCastle</strong>: Can be used to process <code>SecretValue</code> contents (e.g., parsing a PEM-encoded certificate stored as a <code>BYTES</code> entry).</li>
 <li><strong>Test Strategy</strong>: Integration tests (<code>SecretsJCETest</code>, <code>SecretsBCTest</code>) verify that low-level binary secrets are preserved exactly as they move through the configuration stack.</li>
 </ul>
-<h2 id="4410-configuration-schemes">4.4.10 Configuration Schemes<a class="headerlink" href="#4410-configuration-schemes" title="Permanent link">&para;</a></h2>
+<h2 id="4410-configuration-schemes">4.4.10 Configuration Schemes</h2>
 <p>Configuration Schemes define the contract for a set of configuration entries, specifying keys, types, defaults, and validation rules.</p>
 <p>See the detailed <strong><a href="23_configuration_schemes.html">Configuration Schemes</a></strong> for information on:
 - Scheme structure and properties
 - Future-proofing with the <code>MANDATORY</code> block
 - JSON format variants
 - Discovery and registration via <code>ConfigSchemeRepository</code></p>
-<h3 id="44101-discovery-and-precedence">4.4.10.1 Discovery and Precedence<a class="headerlink" href="#44101-discovery-and-precedence" title="Permanent link">&para;</a></h3>
+<h3 id="44101-discovery-and-precedence">4.4.10.1 Discovery and Precedence</h3>
 <p>Schemes are automatically discovered from the classpath (specifically within <code>.config/</code> directories) if the <code>JARConfigSource</code> is active.</p>
 <ul>
 <li><strong>Unified Discovery:</strong> Discovery is performed across all classpath resources, including both <code>main</code> and <code>test</code> resource directories.</li>
 <li><strong>Precedence:</strong> If multiple scheme files for the same configuration name are discovered, a "Last-One-Wins" strategy is applied based on the order returned by the <code>ClassLoader</code>. In typical development environments (Maven/Gradle), this means production resources might overwrite test resources if they appear later in the classpath enumeration.</li>
 <li><strong>Scope Agnosticism:</strong> Unlike configuration data (layers), schemes are not scope-isolated in <code>TEST_MODE</code>. Production schemes are always loaded to ensure a consistent contract.</li>
 </ul>
-<h3 id="44102-discovery-and-binding-flow-mermaid">4.4.10.2 Discovery and Binding Flow (Mermaid)<a class="headerlink" href="#44102-discovery-and-binding-flow-mermaid" title="Permanent link">&para;</a></h3>
+<h3 id="44102-discovery-and-binding-flow-mermaid">4.4.10.2 Discovery and Binding Flow (Mermaid)</h3>
 <p>The following diagram illustrates how schemes are discovered by storages, registered in the factory, and finally bound to configuration instances.</p>
-<div class="highlight"><pre><span></span><code>sequenceDiagram
+<pre class="mermaid"><code>sequenceDiagram
     participant S as ConfigStorage (e.g. JAR)
     participant C as ConfigFactoryInstanceContext
     participant F as ConfigFactory
@@ -2409,27 +2409,25 @@ partially loaded configurations for their own initialization
 
     Note over F, L: Binding Phase (during factory.getConfig)
     F-&gt;&gt;L: instantiate with matching scheme
-    L-&gt;&gt;DL: transferDefaults(scheme)
-</code></pre></div>
-<h3 id="layered-configuration-mermaid">Layered Configuration (Mermaid)<a class="headerlink" href="#layered-configuration-mermaid" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>%%{init: {&#39;theme&#39;:&#39;neutral&#39;}}%%
+    L-&gt;&gt;DL: transferDefaults(scheme)</code></pre>
+<h3 id="layered-configuration-mermaid">Layered Configuration (Mermaid)</h3>
+<pre class="mermaid"><code>%%{init: {'theme':'neutral'}}%%
 erDiagram
-    Configuration ||--|| BasicConfiguration : &quot;facade for&quot;
-    BasicConfiguration ||--|| LayeredConfiguration : &quot;implemented by&quot;
-    LayeredConfiguration ||--o| CacheLayer : &quot;at top&quot;
-    LayeredConfiguration ||--o{ ConfigSource : &quot;stacked in the middle&quot;
-    LayeredConfiguration ||--|| DefaultLayer : &quot;at bottom&quot;
-    LayeredConfiguration ||--o| ConfigScheme : &quot;bound to&quot;
-    ConfigScheme ||--|| DefaultLayer : &quot;populates&quot;
-    ConfigScheme ||--o{ ConfigEntrySpecification : &quot;contains&quot;
-    ConfigEntry }|--o| ConfigEntrySpecification : &quot;validated by&quot;
-    ConfigSource }|--|| ConfigScope : &quot;belongs to&quot;
-    ConfigSource ||--|| ConfigLocation : &quot;where to look&quot;
-    ConfigSource }o--|| ConfigStorage : &quot;how to access&quot;
-    ConfigSource }o--|{ ConfigFormat : &quot;maps paths to entries&quot;
-</code></pre></div>
-<h2 id="4411-extending-mconfig">4.4.11 Extending mConfig<a class="headerlink" href="#4411-extending-mconfig" title="Permanent link">&para;</a></h2>
-<h3 id="44111-adding-new-storages">4.4.11.1 Adding New Storages<a class="headerlink" href="#44111-adding-new-storages" title="Permanent link">&para;</a></h3>
+    Configuration ||--|| BasicConfiguration : "facade for"
+    BasicConfiguration ||--|| LayeredConfiguration : "implemented by"
+    LayeredConfiguration ||--o| CacheLayer : "at top"
+    LayeredConfiguration ||--o{ ConfigSource : "stacked in the middle"
+    LayeredConfiguration ||--|| DefaultLayer : "at bottom"
+    LayeredConfiguration ||--o| ConfigScheme : "bound to"
+    ConfigScheme ||--|| DefaultLayer : "populates"
+    ConfigScheme ||--o{ ConfigEntrySpecification : "contains"
+    ConfigEntry }|--o| ConfigEntrySpecification : "validated by"
+    ConfigSource }|--|| ConfigScope : "belongs to"
+    ConfigSource ||--|| ConfigLocation : "where to look"
+    ConfigSource }o--|| ConfigStorage : "how to access"
+    ConfigSource }o--|{ ConfigFormat : "maps paths to entries"</code></pre>
+<h2 id="4411-extending-mconfig">4.4.11 Extending mConfig</h2>
+<h3 id="44111-adding-new-storages">4.4.11.1 Adding New Storages</h3>
 <p>This is intended for library maintainers extending mConfig with new backends (e.g., databases, cloud stores).</p>
 <p>When implementing a new <code>ConfigStorage</code>:</p>
 <ol>
@@ -2441,7 +2439,7 @@ erDiagram
 </ol>
 <p>Examples: <code>FileConfigStorage</code>, <code>JARConfigSource</code>, <code>WindowsRegistryConfigSource</code>.</p>
 <p>In case a specific config format is to be supported as well, it can go into the same module.</p>
-<h3 id="44112-adding-new-configfeatures">4.4.11.2 Adding New ConfigFeatures<a class="headerlink" href="#44112-adding-new-configfeatures" title="Permanent link">&para;</a></h3>
+<h3 id="44112-adding-new-configfeatures">4.4.11.2 Adding New ConfigFeatures</h3>
 <p>This is not for library consumers; only project owners should need to perform this step.</p>
 <p>When adding a new constant to the <code>ConfigFeature</code> enum in <code>mConfigCore</code>, you MUST perform the following steps to ensure technical consistency and avoid runtime errors:</p>
 <ol>
@@ -2456,20 +2454,20 @@ erDiagram
 </li>
 <li><strong>Verification</strong>: Run the <code>ConfigFeatureTypesTest</code> unit test to ensure that all features have a valid type assigned. A missing type will cause a <code>NullPointerException</code> when the feature is accessed via <code>ConfigFactorySettings</code>.</li>
 </ol>
-<h2 id="4412-best-practices">4.4.12 Best Practices<a class="headerlink" href="#4412-best-practices" title="Permanent link">&para;</a></h2>
-<h3 id="classpath-layout">Classpath Layout<a class="headerlink" href="#classpath-layout" title="Permanent link">&para;</a></h3>
+<h2 id="4412-best-practices">4.4.12 Best Practices</h2>
+<h3 id="classpath-layout">Classpath Layout</h3>
 <ul>
 <li><strong>Production Defaults</strong>: <code>src/main/resources/.config/&amp;lt;company&amp;gt;/&amp;lt;app&amp;gt;/&amp;lt;config&amp;gt;.&amp;lt;ext&amp;gt;</code> (JARConfigSource).</li>
 <li><strong>Test Mode</strong>: <code>src/test/resources/.config/&amp;lt;company&amp;gt;/&amp;lt;app&amp;gt;/</code> + <code>config/{SCOPE}</code> (overrides project).</li>
 <li><strong>Schemes</strong>: Same path + <code>.scheme.json</code>.</li>
 </ul>
-<h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h3>
+<h3 id="logging">Logging</h3>
 <ul>
 <li>Implement <code>ConfigLoggingInterface</code> for structured logs (SLF4J/JUL/Logback).</li>
 <li><strong>Avoid</strong>: <code>System.out.println</code> (blocks UI/threads).</li>
 <li>Secrets auto-redacted.</li>
 </ul>
-<h3 id="secrets-handling">Secrets Handling<a class="headerlink" href="#secrets-handling" title="Permanent link">&para;</a></h3>
+<h3 id="secrets-handling">Secrets Handling</h3>
 <ul>
 <li>Retrieve: <code>SecretValue sv = config.getSecret(key)</code> (scheme-marked SECRET).</li>
 <li>Use: <code>byte[] data = sv.getValue()</code>; <code>sv.erase()</code> post-use (secure wipe).</li>

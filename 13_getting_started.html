@@ -1432,8 +1432,8 @@
                   
 
 
-<h1 id="13-getting-started">1.3 Getting Started<a class="headerlink" href="#13-getting-started" title="Permanent link">&para;</a></h1>
-<h2 id="131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build<a class="headerlink" href="#131-include-the-library-in-your-project-build" title="Permanent link">&para;</a></h2>
+<h1 id="13-getting-started">1.3 Getting Started</h1>
+<h2 id="131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build</h2>
 <p>For Java, start with adding the dependency to your project build:</p>
 <p>Maven:
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
@@ -1452,7 +1452,7 @@ section:
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
 <span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
 </code></pre></div></p>
-<h3 id="starters-recommended">Starters (Recommended)<a class="headerlink" href="#starters-recommended" title="Permanent link">&para;</a></h3>
+<h3 id="starters-recommended">Starters (Recommended)</h3>
 <p>For instant frustration-free setup, copy from <a href="../../../../examples/starters/README.md">examples/starters</a>:</p>
 <ul>
 <li><a href="../../../../examples/starters/maven-minimal/README.md"><img alt="Maven" src="https://img.shields.io/badge/Maven-Minimal-blue" /></a> <code>mvn compile exec:java</code></li>
@@ -1460,10 +1460,10 @@ section:
 <li><a href="../../../../examples/starters/jpms-maven/README.md"><img alt="JPMS" src="https://img.shields.io/badge/JPMS-Maven-orange" /></a> <code>mvn compile exec:java</code> (module-info included!)</li>
 </ul>
 <p>See each README for details.</p>
-<h3 id="snippets-quick-wins">Snippets (Quick Wins 🚀)<a class="headerlink" href="#snippets-quick-wins" title="Permanent link">&para;</a></h3>
+<h3 id="snippets-quick-wins">Snippets (Quick Wins 🚀)</h3>
 <p><a href="snippets.html"><img alt="Snippets" src="https://img.shields.io/badge/Snippets-quick-brightblue" /></a></p>
 <p>Copy-paste solutions for common config pains: hardcodes → env vars → secrets → tests.</p>
-<h2 id="132-start-with-a-simple-use-case">1.3.2 Start with a simple use case<a class="headerlink" href="#132-start-with-a-simple-use-case" title="Permanent link">&para;</a></h2>
+<h2 id="132-start-with-a-simple-use-case">1.3.2 Start with a simple use case</h2>
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">quickConfig</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="s">&quot;myApplication&quot;</span><span class="p">,</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">peerName</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span>
@@ -1475,9 +1475,9 @@ section:
 wherever in the standard directories or other places they are kept.</p>
 <p>If it's not working as expected, consult the <strong><a href="43_faq.html#quick-verification-checklist">Quick Verification Checklist</a></strong> in the FAQ.</p>
 <p>For more information on how to define the contract for your configurations (keys, types, defaults, and validation), see <strong><a href="23_configuration_schemes.html">Configuration Schemes</a></strong>.</p>
-<h2 id="133-common-pitfalls">1.3.3 Common Pitfalls<a class="headerlink" href="#133-common-pitfalls" title="Permanent link">&para;</a></h2>
+<h2 id="133-common-pitfalls">1.3.3 Common Pitfalls</h2>
 <p>For advice on avoiding typical mistakes and leveraging feature flags effectively, see <a href="38_code_improvements.html">Code Improvements and Best Practices</a>.</p>
-<h2 id="134-resource-placement-the-config-folder">1.3.4 Resource Placement (the .config/ folder)<a class="headerlink" href="#134-resource-placement-the-config-folder" title="Permanent link">&para;</a></h2>
+<h2 id="134-resource-placement-the-config-folder">1.3.4 Resource Placement (the .config/ folder)</h2>
 <p>To bundle configurations, schemes, or library settings with your application, 
 use the <code>.config/</code> resource folder in your classpath (e.g., <code>src/main/resources/.config/</code>).</p>
 <ul>
@@ -1518,12 +1518,12 @@ can get config entries, typesafe.</p>
 <p><strong>Caveat</strong>:
 When you use the values stored in your local variables, you miss out on receiving changes. 
 It is preferable to use the mConfig objects directly; they'll have the latest values.</p>
-<h2 id="135-search-list-and-priority">1.3.5 Search List and Priority<a class="headerlink" href="#135-search-list-and-priority" title="Permanent link">&para;</a></h2>
+<h2 id="135-search-list-and-priority">1.3.5 Search List and Priority</h2>
 <p>Everything should just work, by default. But in some environments, you may want to customize the search list,
 or the storage types priority, or the file format priority... </p>
 <p>You can add extra directories to the search list, or change the priority of the storage types.</p>
 <p>see <a href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a> for details.</p>
-<h2 id="136-navigating-lists-with-configcursor">1.3.6 Navigating Lists with ConfigCursor<a class="headerlink" href="#136-navigating-lists-with-configcursor" title="Permanent link">&para;</a></h2>
+<h2 id="136-navigating-lists-with-configcursor">1.3.6 Navigating Lists with ConfigCursor</h2>
 <p>Configuration formats that support arrays (like YAML, JSON, or TOML)
 may have lists/sets where the entries are not named, have no key.</p>
 <p>So you can't access them by name. </p>
@@ -1549,7 +1549,7 @@ it is just especially useful for navigating lists.)</p>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<h2 id="137-module-system-considerations">1.3.7 Module System Considerations<a class="headerlink" href="#137-module-system-considerations" title="Permanent link">&para;</a></h2>
+<h2 id="137-module-system-considerations">1.3.7 Module System Considerations</h2>
 <p>mConfig uses the Java Module System. The architecture is:</p>
 <ul>
 <li><code>mConfigBase</code>: Aggregator module that bundles some standard dependencies</li>

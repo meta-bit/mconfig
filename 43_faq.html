@@ -1512,9 +1512,9 @@
                   
 
 
-<h1 id="43-faq-frequently-asked-questions">4.3 FAQ - Frequently Asked Questions<a class="headerlink" href="#43-faq-frequently-asked-questions" title="Permanent link">&para;</a></h1>
-<h2 id="431-i-want-to">4.3.1 I want to...<a class="headerlink" href="#431-i-want-to" title="Permanent link">&para;</a></h2>
-<h3 id="i-want-to-extract-a-subconfiguration-to-a-properties-object">I want to extract a subconfiguration to a Properties object.<a class="headerlink" href="#i-want-to-extract-a-subconfiguration-to-a-properties-object" title="Permanent link">&para;</a></h3>
+<h1 id="43-faq-frequently-asked-questions">4.3 FAQ - Frequently Asked Questions</h1>
+<h2 id="431-i-want-to">4.3.1 I want to...</h2>
+<h3 id="i-want-to-extract-a-subconfiguration-to-a-properties-object">I want to extract a subconfiguration to a Properties object.</h3>
 <p>If your configuration contains a subset of entries, say, for an existing Java
 component which expects them that way, and you just want to get an pass them
 on,</p>
@@ -1529,21 +1529,21 @@ different from what you'd get if you were using the Configuration itself!</p>
 <p>Recommendation: If that subconfig can be limited in what it may and should contain,
 please consider using a ConfigScheme (in addition, or instead).</p>
 <p>Also, have a look at other methods in the ConfigUtil class, for similar use cases.</p>
-<h3 id="i-want-to-know-where-my-configuration-files-are-located">I want to know where my configuration files are located.<a class="headerlink" href="#i-want-to-know-where-my-configuration-files-are-located" title="Permanent link">&para;</a></h3>
+<h3 id="i-want-to-know-where-my-configuration-files-are-located">I want to know where my configuration files are located.</h3>
 <p>Use the mConfigTool provided.
 It can tell you the general search paths (potential locations),
 as well as the actual locations of the files it found,
 and where the values in individual entries come from.</p>
-<h2 id="432-why-is">4.3.2 Why is...<a class="headerlink" href="#432-why-is" title="Permanent link">&para;</a></h2>
-<h3 id="why-cant-i-state-my-defaults-right-at-the-place-im-asking-for-the-value">Why can't I state my defaults right at the place I'm asking for the value?<a class="headerlink" href="#why-cant-i-state-my-defaults-right-at-the-place-im-asking-for-the-value" title="Permanent link">&para;</a></h3>
+<h2 id="432-why-is">4.3.2 Why is...</h2>
+<h3 id="why-cant-i-state-my-defaults-right-at-the-place-im-asking-for-the-value">Why can't I state my defaults right at the place I'm asking for the value?</h3>
 <p>This approach sounds simpler - <code>getInteger("weightInTons",5)</code> looks good at first sight.
 Until you realize what happens when you ask for this value a second time, or a third...
 Also, this prevents you from generating a proper documentation of your configuration parameters.</p>
 <p>ConfigSchemes should not be hard to use. Try them, please.</p>
 <p>But if you insist on using the old way, 
 there is the mConfigCheese module - for those who like their code a bit pungent.</p>
-<h2 id="433-how-can-i-fix">4.3.3 How can I fix...<a class="headerlink" href="#433-how-can-i-fix" title="Permanent link">&para;</a></h2>
-<h3 id="quick-verification-checklist">Quick Verification Checklist<a class="headerlink" href="#quick-verification-checklist" title="Permanent link">&para;</a></h3>
+<h2 id="433-how-can-i-fix">4.3.3 How can I fix...</h2>
+<h3 id="quick-verification-checklist">Quick Verification Checklist</h3>
 <p>If it's not working yet:</p>
 <ol>
 <li>
@@ -1571,7 +1571,7 @@ probability = 0.5
 <p><strong>See detailed troubleshooting sections below.</strong></p>
 </li>
 </ol>
-<h3 id="updates-to-config-files-are-not-detected">Updates to config files are not detected<a class="headerlink" href="#updates-to-config-files-are-not-detected" title="Permanent link">&para;</a></h3>
+<h3 id="updates-to-config-files-are-not-detected">Updates to config files are not detected</h3>
 <ol>
 <li>You are not buffering the results in some local variables, are you?
 <br/>
@@ -1590,7 +1590,7 @@ You can choose and combine mconfig Format modules; if the file extension pattern
 of the config file does not match with a file format present in your
 current build, it won't be read.</li>
 </ol>
-<h3 id="jpms-module-access-errors">JPMS Module Access Errors<a class="headerlink" href="#jpms-module-access-errors" title="Permanent link">&para;</a></h3>
+<h3 id="jpms-module-access-errors">JPMS Module Access Errors</h3>
 <p>If your application uses JPMS (named <code>module-info.java</code>) but omits <code>requires</code> for mConfig modules, you will see access errors.</p>
 <p><strong>Compile-time (javac):</strong>
 <div class="highlight"><pre><span></span><code>cannot access metabit.mconfig.core.ConfigFactory
@@ -1607,7 +1607,7 @@ Add the required <code>requires</code> directives to your <code>module-info.java
 <li><a href="../../../../mConfigStandard/README.md">mConfigStandard</a> (JPMS <code>requires</code> section)</li>
 </ul>
 <p>See also <a href="examples/java-modules.html">JPMS introduction</a>.</p>
-<h3 id="config-values-always-returning-defaults-or-null">Config values always returning defaults or null<a class="headerlink" href="#config-values-always-returning-defaults-or-null" title="Permanent link">&para;</a></h3>
+<h3 id="config-values-always-returning-defaults-or-null">Config values always returning defaults or null</h3>
 <p><strong>Symptoms:</strong> Calls like <code>cfg.getString("key")</code> return <code>null</code> or scheme defaults; no exceptions or warnings.</p>
 <p><strong>Common causes:</strong>
 - Mismatched <code>company</code>, <code>application</code>, or <code>configName</code> (case-sensitive).
@@ -1619,7 +1619,7 @@ Add the required <code>requires</code> directives to your <code>module-info.java
 2. Run <a href="../../../../mConfigTools/README.md">mConfigTool</a> CLI for full diagnostics: paths searched, files found, entry origins.
 3. Verify placements per <a href="13_getting_started.html">Getting Started</a>.
 4. Add missing format modules (e.g., <code>mConfigFormatYAMLwithJackson</code> for YAML).</p>
-<h3 id="tests-not-loading-expected-configurations">Tests not loading expected configurations<a class="headerlink" href="#tests-not-loading-expected-configurations" title="Permanent link">&para;</a></h3>
+<h3 id="tests-not-loading-expected-configurations">Tests not loading expected configurations</h3>
 <p><strong>Symptoms:</strong> Unit/integration tests use production defaults or empty configs despite <code>setTestMode(true)</code>.</p>
 <p><strong>Causes:</strong>
 - Missing <code>ConfigFactoryBuilder.setTestMode(true)</code> before <code>build()</code>.
@@ -1632,7 +1632,7 @@ Add the required <code>requires</code> directives to your <code>module-info.java
    - <code>src/test/resources/config/&lt;SCOPE&gt;</code> (e.g., <code>USER</code>)
 3. Custom: <code>ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of("USER:src/test/configs"));</code>
 4. See full details in <a href="15_test_mode.html">Test Mode</a>.</p>
-<h3 id="no-mconfig-logging-output">No mConfig logging output<a class="headerlink" href="#no-mconfig-logging-output" title="Permanent link">&para;</a></h3>
+<h3 id="no-mconfig-logging-output">No mConfig logging output</h3>
 <p><strong>Symptoms:</strong> Silent on config discovery, errors, or debug info.</p>
 <p><strong>Fix:</strong>
 1. Add dependency: <code>mConfigLoggingSlf4j</code>.
@@ -1641,7 +1641,7 @@ Add the required <code>requires</code> directives to your <code>module-info.java
 </code></pre></div>
 3. Ensure SLF4J implementation (logback-classic, log4j-slf4j) on classpath.
 See <a href="42_logging.html">Logging</a>.</p>
-<h3 id="environment-variables-dont-provide-config-values">Environment variables don't provide config values<a class="headerlink" href="#environment-variables-dont-provide-config-values" title="Permanent link">&para;</a></h3>
+<h3 id="environment-variables-dont-provide-config-values">Environment variables don't provide config values</h3>
 <p><strong>Symptoms:</strong> Env vars like <code>myapp-network-peer=localhost</code> ignored.</p>
 <p><strong>Fix:</strong>
 1. Add <code>mConfigSourceEnvVar</code> dependency.

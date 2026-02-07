@@ -1538,9 +1538,9 @@
                   
 
 
-<h1 id="42-logging-in-mconfig">4.2 Logging in mConfig<a class="headerlink" href="#42-logging-in-mconfig" title="Permanent link">&para;</a></h1>
+<h1 id="42-logging-in-mconfig">4.2 Logging in mConfig</h1>
 <p>mConfig uses a custom logging abstraction defined by the <code>ConfigLoggingInterface</code>. This allows the library to remain independent of specific logging frameworks while still providing necessary diagnostic information.</p>
-<h2 id="available-implementations">Available Implementations<a class="headerlink" href="#available-implementations" title="Permanent link">&para;</a></h2>
+<h2 id="available-implementations">Available Implementations</h2>
 <table>
 <thead>
 <tr>
@@ -1575,11 +1575,11 @@
 </tr>
 </tbody>
 </table>
-<h3 id="internal-and-hidden-implementations">Internal and Hidden Implementations<a class="headerlink" href="#internal-and-hidden-implementations" title="Permanent link">&para;</a></h3>
+<h3 id="internal-and-hidden-implementations">Internal and Hidden Implementations</h3>
 <p><code>InternalLogger</code> (<code>mConfigCore</code>, <code>impl.core</code>): Activated if <code>ConfigFeature.LOGGING_REDIRECT_TARGET</code> is set. Redirects to specified target.</p>
-<h2 id="using-slf4j2logger-in-production">Using SLF4J2Logger in Production<a class="headerlink" href="#using-slf4j2logger-in-production" title="Permanent link">&para;</a></h2>
+<h2 id="using-slf4j2logger-in-production">Using SLF4J2Logger in Production</h2>
 <p><code>Slf4j2Logger</code> (priority 5) bridges mConfig logging to SLF4J.</p>
-<h3 id="421-add-dependencies">4.2.1 Add Dependencies<a class="headerlink" href="#421-add-dependencies" title="Permanent link">&para;</a></h3>
+<h3 id="421-add-dependencies">4.2.1 Add Dependencies</h3>
 <p>Maven:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
@@ -1591,15 +1591,15 @@
 <div class="highlight"><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigLoggingSlf4j:${mconfig.version}&#39;
 </code></pre></div>
 <p><strong>Note:</strong> Also need SLF4J API + impl (e.g., logback-classic).</p>
-<h3 id="422-auto-discovery">4.2.2 Auto-Discovery<a class="headerlink" href="#422-auto-discovery" title="Permanent link">&para;</a></h3>
+<h3 id="422-auto-discovery">4.2.2 Auto-Discovery</h3>
 <p>With <code>mConfigLoggingSlf4j</code> on classpath, auto-selected (highest prio).</p>
 <p>Override with <code>ConfigFactoryBuilder.setFeature(ConfigFeature.LOGGING_TO_USE_IN_CONFIGLIB, "slf4j")</code>.</p>
-<h3 id="423-configuration">4.2.3 Configuration<a class="headerlink" href="#423-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="423-configuration">4.2.3 Configuration</h3>
 <p>Configure SLF4J via <code>logback.xml</code>, etc. </p>
 <p><code>Slf4j2Logger</code> uses logger name from <code>ConfigFactoryBuilder</code> company/app or default "mConfig".</p>
-<h2 id="consolelogging-for-development-and-tests">ConsoleLogging for Development and Tests<a class="headerlink" href="#consolelogging-for-development-and-tests" title="Permanent link">&para;</a></h2>
+<h2 id="consolelogging-for-development-and-tests">ConsoleLogging for Development and Tests</h2>
 <p><code>ConsoleLogging</code> is a lightweight console logger (stdout for lower levels, stderr for WARN/ERROR) for debugging mConfig internals. No external dependencies required.</p>
-<h3 id="424-build-configuration-maven-gradle">4.2.4 Build Configuration (Maven &amp; Gradle)<a class="headerlink" href="#424-build-configuration-maven-gradle" title="Permanent link">&para;</a></h3>
+<h3 id="424-build-configuration-maven-gradle">4.2.4 Build Configuration (Maven &amp; Gradle)</h3>
 <p>To use <code>ConsoleLogging</code> in modules other than <code>mConfigCore</code>, you must include the <code>mConfigCore</code> <code>test-jar</code> dependency in your build:</p>
 <p>Maven:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
@@ -1613,7 +1613,7 @@
 <p>Gradle:</p>
 <div class="highlight"><pre><span></span><code>testImplementation &#39;org.metabit.platform.support.config:mConfigCore:${mconfig.version}:tests&#39;
 </code></pre></div>
-<h3 id="425-manual-activation">4.2.5 Manual Activation<a class="headerlink" href="#425-manual-activation" title="Permanent link">&para;</a></h3>
+<h3 id="425-manual-activation">4.2.5 Manual Activation</h3>
 <p>You can instantiate <code>ConsoleLogging</code> directly and pass it to components.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.metabit.platform.support.config.impl.logging.ConsoleLogging</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.metabit.platform.support.config.ConfigFeature</span><span class="p">;</span>
@@ -1625,7 +1625,7 @@
 <span class="c1">// Use with a component that takes a logger</span>
 <span class="n">component</span><span class="p">.</span><span class="na">testComponent</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span><span class="w"> </span><span class="n">logger</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="426-usage-with-configfactorybuilder">4.2.6 Usage with ConfigFactoryBuilder<a class="headerlink" href="#426-usage-with-configfactorybuilder" title="Permanent link">&para;</a></h3>
+<h3 id="426-usage-with-configfactorybuilder">4.2.6 Usage with ConfigFactoryBuilder</h3>
 <p><code>ConfigFactoryBuilder</code> uses <code>ServiceLoader</code> to discover <code>ConfigLoggingInterface</code> implementations. </p>
 <p><strong>Note for Modular Projects:</strong> <code>ConsoleLogging</code> is fully supported via <code>provides</code> in the <code>mConfigCore</code> <code>module-info.java</code>.</p>
 <p>To force the use of <code>ConsoleLogging</code> when using <code>ConfigFactoryBuilder</code> in tests, you can set the feature:</p>
@@ -1633,19 +1633,19 @@
 <span class="n">builder</span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">LOGGING_TO_USE_IN_CONFIGLIB</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;console&quot;</span><span class="p">);</span>
 </code></pre></div>
 <p>This will only work if the <code>ConsoleLogging</code> class is discoverable by <code>ServiceLoader</code>. If discovery fails, it will fall back to <code>NullLogging</code>.</p>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<h3 id="log-levels">Log Levels<a class="headerlink" href="#log-levels" title="Permanent link">&para;</a></h3>
+<h2 id="configuration">Configuration</h2>
+<h3 id="log-levels">Log Levels</h3>
 <p>Available levels: <code>TRACE</code>, <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code>.
 Default level for <code>ConsoleLogging</code> is <code>INFO</code>.</p>
 <p>You can set the level via <code>setLevel(String)</code>:
 <div class="highlight"><pre><span></span><code><span class="n">logger</span><span class="p">.</span><span class="na">setLevel</span><span class="p">(</span><span class="s">&quot;TRACE&quot;</span><span class="p">);</span>
 </code></pre></div></p>
-<h3 id="output-redirection">Output Redirection<a class="headerlink" href="#output-redirection" title="Permanent link">&para;</a></h3>
+<h3 id="output-redirection">Output Redirection</h3>
 <ul>
 <li><code>INFO</code>, <code>DEBUG</code>, <code>TRACE</code> are printed to <code>System.out</code>.</li>
 <li><code>WARN</code>, <code>ERROR</code> are printed to <code>System.err</code>.</li>
 </ul>
-<h2 id="how-logging-is-discovered-and-selected">How Logging is Discovered and Selected<a class="headerlink" href="#how-logging-is-discovered-and-selected" title="Permanent link">&para;</a></h2>
+<h2 id="how-logging-is-discovered-and-selected">How Logging is Discovered and Selected</h2>
 <p>In <code>DefaultConfigFactoryBuilder.findLoggerForConfigUse()</code>:</p>
 <ol>
 <li>
