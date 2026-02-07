@@ -1322,8 +1322,8 @@
                   
 
 
-<h1 id="38-code-improvements-and-best-practices">3.8 Code Improvements and Best Practices</h1>
-<h2 id="defaults">Defaults</h2>
+<h1 id="38-code-improvements-and-best-practices">3.8 Code Improvements and Best Practices<a class="headerlink" href="#38-code-improvements-and-best-practices" title="Permanent link">&para;</a></h1>
+<h2 id="defaults">Defaults<a class="headerlink" href="#defaults" title="Permanent link">&para;</a></h2>
 <p>Replace code like
 <div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">Properties</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
 <span class="w">    </span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">classLoader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Thread</span><span class="p">.</span><span class="na">currentThread</span><span class="p">().</span><span class="na">getContextClassLoader</span><span class="p">();</span>
@@ -1340,7 +1340,7 @@
 defaults from .config/CONFIGNAME.EXTENSIONS in the resource folder of your JAR -
 besides all its other locations.</p>
 <p>So, you can remove blocks like the above entirely.</p>
-<h2 id="common-pitfalls-and-feature-flags">Common Pitfalls and Feature Flags</h2>
+<h2 id="common-pitfalls-and-feature-flags">Common Pitfalls and Feature Flags<a class="headerlink" href="#common-pitfalls-and-feature-flags" title="Permanent link">&para;</a></h2>
 <p>Common mistakes when starting with mConfig, and the feature flags that help avoid them:</p>
 <ul>
 <li><strong>Redundant Null Checks:</strong> By default, <code>EXCEPTION_ON_MISSING_ENTRY</code> is <code>true</code>, so getters throw <code>ConfigException</code> instead of returning <code>null</code>. This removes the need for <code>if (value == null) value = "placeholder"</code> boilerplate.</li>

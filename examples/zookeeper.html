@@ -1416,12 +1416,12 @@
                   
 
 
-<h1 id="zookeeper-configuration-source-experimental">ZooKeeper Configuration Source (Experimental)</h1>
+<h1 id="zookeeper-configuration-source-experimental">ZooKeeper Configuration Source (Experimental)<a class="headerlink" href="#zookeeper-configuration-source-experimental" title="Permanent link">&para;</a></h1>
 <p>The <code>mConfigSourceZooKeeper</code> module allows mConfig to retrieve configuration data from an Apache ZooKeeper ensemble. This is particularly useful for cluster-wide or organization-wide settings.</p>
-<h2 id="1-bootstrap-configuration">1. Bootstrap Configuration</h2>
+<h2 id="1-bootstrap-configuration">1. Bootstrap Configuration<a class="headerlink" href="#1-bootstrap-configuration" title="Permanent link">&para;</a></h2>
 <p>Following the "self-configuration" principle, the ZooKeeper source doesn't require hardcoded connection strings in your application code. Instead, it looks for its own settings in a configuration named <code>zookeeper</code>.</p>
 <p>You can provide these bootstrap settings in any standard mConfig location, such as a JAR resource (for defaults) or a local file (for overrides).</p>
-<h3 id="example-configzookeeperjson-bootstrap">Example: <code>.config/zookeeper.json</code> (Bootstrap)</h3>
+<h3 id="example-configzookeeperjson-bootstrap">Example: <code>.config/zookeeper.json</code> (Bootstrap)<a class="headerlink" href="#example-configzookeeperjson-bootstrap" title="Permanent link">&para;</a></h3>
 <p>Place this file in <code>src/main/resources/.config/zookeeper.json</code> or <code>/etc/metabit/myapp/zookeeper.json</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;zookeeper&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1431,13 +1431,13 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h2 id="2-data-structure-in-zookeeper">2. Data Structure in ZooKeeper</h2>
+<h2 id="2-data-structure-in-zookeeper">2. Data Structure in ZooKeeper<a class="headerlink" href="#2-data-structure-in-zookeeper" title="Permanent link">&para;</a></h2>
 <p>By default, the ZooKeeper source registers itself for the <code>CLUSTER</code> and <code>ORGANIZATION</code> scopes. It maps configuration names to ZNode paths relative to the <code>rootPath</code>.</p>
 <p>If your <code>rootPath</code> is <code>/mconfig/prod</code>, and you request a configuration named <code>database-settings</code>, the source will look at:
 - <code>/mconfig/prod/cluster/database-settings</code>
 - <code>/mconfig/prod/organization/database-settings</code></p>
 <p>The content of the ZNode should be in a supported format (like JSON or Java Properties).</p>
-<h3 id="example-znode-content-at-mconfigprodclusterapp-config">Example: ZNode content at <code>/mconfig/prod/cluster/app-config</code></h3>
+<h3 id="example-znode-content-at-mconfigprodclusterapp-config">Example: ZNode content at <code>/mconfig/prod/cluster/app-config</code><a class="headerlink" href="#example-znode-content-at-mconfigprodclusterapp-config" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prod-db-server&quot;</span><span class="p">,</span>
@@ -1448,7 +1448,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h2 id="3-usage-in-code">3. Usage in Code</h2>
+<h2 id="3-usage-in-code">3. Usage in Code<a class="headerlink" href="#3-usage-in-code" title="Permanent link">&para;</a></h2>
 <p>To use the ZooKeeper source, simply include the <code>mConfigSourceZooKeeper</code> module in your classpath. mConfig will automatically discover and initialize it.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Standard initialization</span>
 <span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
@@ -1461,7 +1461,7 @@
 <span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">useDashboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="s">&quot;features/enableNewDashboard&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<h2 id="4-how-it-works-self-configuration">4. How it Works (Self-Configuration)</h2>
+<h2 id="4-how-it-works-self-configuration">4. How it Works (Self-Configuration)<a class="headerlink" href="#4-how-it-works-self-configuration" title="Permanent link">&para;</a></h2>
 <p>The ZooKeeper source follows a specific startup sequence:</p>
 <ol>
 <li><strong>Local Initialization</strong>: <code>JARConfigSource</code> and <code>FileConfigStorage</code> are initialized first.</li>
@@ -1469,7 +1469,7 @@
 <li><strong>Activation</strong>: If a <code>connectString</code> is found, the storage connects to ZooKeeper and adds its networked locations to the global search list.</li>
 <li><strong>Transparent Layering</strong>: Subsequent calls to <code>factory.getConfig("app-config")</code> will now automatically include layers found in ZooKeeper, prioritized by scope (e.g., <code>CLUSTER</code> settings will override <code>DEFAULT</code> settings from the JAR).</li>
 </ol>
-<h2 id="5-test-mode-isolation">5. Test Mode Isolation</h2>
+<h2 id="5-test-mode-isolation">5. Test Mode Isolation<a class="headerlink" href="#5-test-mode-isolation" title="Permanent link">&para;</a></h2>
 <p>In <code>TEST_MODE</code>, the ZooKeeper source will naturally point to your test resources (e.g., <code>src/test/resources/.config/zookeeper.json</code>). This ensures that unit tests do not accidentally connect to production ZooKeeper ensembles.</p>
 <p>Related docs:
 - <a href="../15_test_mode.html">Test Mode</a></p>

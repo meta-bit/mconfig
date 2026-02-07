@@ -1540,13 +1540,13 @@
                   
 
 
-<h1 id="23-configuration-schemes">2.3 Configuration Schemes</h1>
+<h1 id="23-configuration-schemes">2.3 Configuration Schemes<a class="headerlink" href="#23-configuration-schemes" title="Permanent link">&para;</a></h1>
 <p>Configuration schemes define the contract for a set of configuration entries. 
 They specify what keys are expected, their data types, default values, validation rules, and other metadata.</p>
-<h2 id="231-overview">2.3.1 Overview</h2>
+<h2 id="231-overview">2.3.1 Overview<a class="headerlink" href="#231-overview" title="Permanent link">&para;</a></h2>
 <p>A scheme ensures that the configuration data used by the application is valid and consistent. 
 When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig attempts to bind it to a matching scheme.</p>
-<h3 id="2311-benefits-of-using-schemes">2.3.1.1 Benefits of using Schemes</h3>
+<h3 id="2311-benefits-of-using-schemes">2.3.1.1 Benefits of using Schemes<a class="headerlink" href="#2311-benefits-of-using-schemes" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Validation</strong>: Automatically check if values match expected types and patterns.</li>
 <li><strong>Defaults</strong>: Provide fallback values if none are found in any configuration layer.</li>
@@ -1554,7 +1554,7 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 <li><strong>Type Safety</strong>: Preserve data types (e.g., Integer, Boolean) throughout the configuration stack.</li>
 <li><strong>Security</strong>: Identify which entries contain sensitive data (secrets).</li>
 </ul>
-<h2 id="232-example">2.3.2 Example</h2>
+<h2 id="232-example">2.3.2 Example<a class="headerlink" href="#232-example" title="Permanent link">&para;</a></h2>
 <p>Minimal example (single scheme entry with a default):
 <div class="highlight"><pre><span></span><code><span class="p">[</span>
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/port&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NUMBER&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DESCRIPTION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Listening port&quot;</span><span class="w"> </span><span class="p">}</span>
@@ -1571,9 +1571,9 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<h2 id="233-scheme-structure">2.3.3 Scheme Structure</h2>
+<h2 id="233-scheme-structure">2.3.3 Scheme Structure<a class="headerlink" href="#233-scheme-structure" title="Permanent link">&para;</a></h2>
 <p>Schemes are typically defined in JSON format. A scheme file can contain a single scheme or multiple named schemes.</p>
-<h3 id="2331-scheme-entry-properties">2.3.3.1 Scheme Entry Properties</h3>
+<h3 id="2331-scheme-entry-properties">2.3.3.1 Scheme Entry Properties<a class="headerlink" href="#2331-scheme-entry-properties" title="Permanent link">&para;</a></h3>
 <p>Each entry in a scheme (within the <code>ENTRIES</code> list) can have the following properties:</p>
 <table>
 <thead>
@@ -1646,7 +1646,7 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 </tr>
 </tbody>
 </table>
-<h3 id="2332-arity-arity">2.3.3.2 Arity (<code>ARITY</code>)</h3>
+<h3 id="2332-arity-arity">2.3.3.2 Arity (<code>ARITY</code>)<a class="headerlink" href="#2332-arity-arity" title="Permanent link">&para;</a></h3>
 <p>The <code>ARITY</code> property defines the constraints on the number of elements for an entry. This is especially useful for <code>MULTIPLE_STRINGS</code> and <code>ENUM_SET</code> types.</p>
 <ul>
 <li><strong>Exact number</strong>: <code>"ARITY": "3"</code> (exactly 3 items required).</li>
@@ -1659,7 +1659,7 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 </ul>
 </li>
 </ul>
-<h3 id="2333-validation-patterns-pattern">2.3.3.3 Validation Patterns (<code>PATTERN</code>)</h3>
+<h3 id="2333-validation-patterns-pattern">2.3.3.3 Validation Patterns (<code>PATTERN</code>)<a class="headerlink" href="#2333-validation-patterns-pattern" title="Permanent link">&para;</a></h3>
 <p>Validation patterns depend on the <code>TYPE</code> of the entry:</p>
 <ul>
 <li><strong><code>STRING</code></strong>: A Java Regular Expression. Compiled with <code>Pattern.UNICODE_CHARACTER_CLASS</code> by default, supporting Unicode property escapes like <code>\p{L}</code>.</li>
@@ -1694,12 +1694,12 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 </ul>
 </li>
 </ul>
-<h3 id="2334-internationalization-i18n">2.3.3.4 Internationalization (I18N)</h3>
+<h3 id="2334-internationalization-i18n">2.3.3.4 Internationalization (I18N)<a class="headerlink" href="#2334-internationalization-i18n" title="Permanent link">&para;</a></h3>
 <p>The <code>DESCRIPTION</code> property can be a plain string or a key in a Resource Bundle.
 - mConfig looks for Resource Bundles named <code>messages</code> in the same locations as schemes (e.g., <code>.config/messages.properties</code>).
 - If a matching key is found in the bundle for the current locale (configured via <code>ConfigFeature.PREFERRED_LANGUAGE</code>), the localized string is used.
 - Otherwise, the raw <code>DESCRIPTION</code> string is used as a fallback.</p>
-<h2 id="234-configschemefactory">2.3.4 ConfigSchemeFactory</h2>
+<h2 id="234-configschemefactory">2.3.4 ConfigSchemeFactory<a class="headerlink" href="#234-configschemefactory" title="Permanent link">&para;</a></h2>
 <p>For 1.0 and better multi-language support (JNI/Rust/Python), use <code>ConfigSchemeFactory</code> to create schemes and entries programmatically:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigSchemeFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigSchemeFactory</span><span class="p">.</span><span class="na">create</span><span class="p">();</span>
 <span class="n">ConfigScheme</span><span class="w"> </span><span class="n">scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">createScheme</span><span class="p">();</span>
@@ -1708,7 +1708,7 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 <span class="w">    </span><span class="p">.</span><span class="na">setDefault</span><span class="p">(</span><span class="s">&quot;8080&quot;</span><span class="p">);</span>
 <span class="n">scheme</span><span class="p">.</span><span class="na">addSchemeEntry</span><span class="p">(</span><span class="n">entry</span><span class="p">);</span>
 </code></pre></div>
-<h2 id="235-future-proofing-with-the-mandatory-block">2.3.5 Future-Proofing with the <code>MANDATORY</code> block</h2>
+<h2 id="235-future-proofing-with-the-mandatory-block">2.3.5 Future-Proofing with the <code>MANDATORY</code> block<a class="headerlink" href="#235-future-proofing-with-the-mandatory-block" title="Permanent link">&para;</a></h2>
 <p>To ensure that future extensions to the scheme format do not break older versions of the library, or conversely, that newer schemes can demand features that older versions must respect, mConfig uses a <code>MANDATORY</code> sub-item.</p>
 <p>If a scheme entry contains a <code>MANDATORY</code> block, the library MUST understand all keys within that block. If any key inside <code>MANDATORY</code> is unknown to the current version of mConfig, the scheme loading will fail with an <code>UNKNOWN_MANDATORY_FEATURE</code> error.</p>
 <p><strong>Example:</strong>
@@ -1722,9 +1722,9 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 </code></pre></div>
 In this example, if a future version of mConfig introduces a <code>UNIT</code> feature and it's placed inside <code>MANDATORY</code>, an older version that doesn't know about <code>UNIT</code> will refuse to load the scheme, preventing potential misconfiguration (e.g., interpreting milliseconds as seconds).</p>
 <p>Features outside the <code>MANDATORY</code> block that are unknown to the library are silently ignored.</p>
-<h2 id="236-formats">2.3.6 Formats</h2>
+<h2 id="236-formats">2.3.6 Formats<a class="headerlink" href="#236-formats" title="Permanent link">&para;</a></h2>
 <p>mConfig supports several JSON structures for defining schemes:</p>
-<h3 id="2361-named-scheme-object">2.3.6.1 Named Scheme Object</h3>
+<h3 id="2361-named-scheme-object">2.3.6.1 Named Scheme Object<a class="headerlink" href="#2361-named-scheme-object" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;my-app-config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;NAME&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-app-config&quot;</span><span class="p">,</span>
@@ -1734,18 +1734,18 @@ In this example, if a future version of mConfig introduces a <code>UNIT</code> f
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="2362-list-of-entries-anonymous-scheme">2.3.6.2 List of Entries (Anonymous Scheme)</h3>
+<h3 id="2362-list-of-entries-anonymous-scheme">2.3.6.2 List of Entries (Anonymous Scheme)<a class="headerlink" href="#2362-list-of-entries-anonymous-scheme" title="Permanent link">&para;</a></h3>
 <p>If a JSON file contains only a list of entries, it is treated as a scheme for the configuration matching the filename (excluding <code>.scheme.json</code>).
 <div class="highlight"><pre><span></span><code><span class="p">[</span>
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;port&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NUMBER&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="w"> </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div></p>
-<h2 id="237-discovery">2.3.7 Discovery</h2>
+<h2 id="237-discovery">2.3.7 Discovery<a class="headerlink" href="#237-discovery" title="Permanent link">&para;</a></h2>
 <p>Schemes are automatically discovered from the classpath within <code>.config/</code> directories.
 - Filenames should follow the pattern <code>name.scheme.json</code>.
 - Schemes can also be provided manually via <code>ConfigFactoryBuilder.setSchemes()</code>.
 - Discovered schemes are registered in the <code>ConfigSchemeRepository</code>.</p>
-<h2 id="developer-notes">Developer Notes</h2>
+<h2 id="developer-notes">Developer Notes<a class="headerlink" href="#developer-notes" title="Permanent link">&para;</a></h2>
 <p>For internals/parsing/validation details, see project <code>devdocs/config_schemes_internals.md</code> (not included in public docs).</p>
 
 
