@@ -1418,13 +1418,13 @@
                   
 
 
-<h1 id="45-ai-guidance-notes-for-code-generating-tools">4.5 AI Guidance (Notes for Code-Generating Tools)</h1>
+<h1 id="45-ai-guidance-notes-for-code-generating-tools">4.5 AI Guidance (Notes for Code-Generating Tools)<a class="headerlink" href="#45-ai-guidance-notes-for-code-generating-tools" title="Permanent link">&para;</a></h1>
 <p>We just know people will use code generators.
 So it's probably for the best to give the AI some hints.</p>
 <hr />
 <p>This document summarizes mConfig behaviours that code generators often miss.
 The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</p>
-<h2 id="logging-and-runtime-debug-control">Logging and runtime debug control</h2>
+<h2 id="logging-and-runtime-debug-control">Logging and runtime debug control<a class="headerlink" href="#logging-and-runtime-debug-control" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Runtime logging overrides are provided by <code>mConfigSourceEnvVar</code> and are only
   enabled if <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is set to <code>true</code>.</li>
@@ -1438,7 +1438,7 @@ The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</
 <p>Related docs:
 - <a href="../../../../mConfigSourceEnvVar/README.md">mConfigSourceEnvVar README</a>
 - <a href="42_logging.html">logging</a></p>
-<h2 id="console-logging-for-devtests">Console logging for dev/tests</h2>
+<h2 id="console-logging-for-devtests">Console logging for dev/tests<a class="headerlink" href="#console-logging-for-devtests" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>ConsoleLogging</code> in <code>mConfigCore</code> main jar (service <code>"console"</code>).</li>
 <li>Production logging should use <code>mConfigLoggingSlf4j</code> or the default
@@ -1447,7 +1447,7 @@ The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</
 </ul>
 <p>Related docs:
 - <a href="42_logging.html">logging</a></p>
-<h2 id="defaults-belong-in-resources-not-in-code">Defaults belong in resources, not in code</h2>
+<h2 id="defaults-belong-in-resources-not-in-code">Defaults belong in resources, not in code<a class="headerlink" href="#defaults-belong-in-resources-not-in-code" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>mConfigSourceJAR</code> automatically loads defaults from resources located at
   <code>.config/&lt;company&gt;/&lt;app&gt;/&lt;config&gt;.&lt;ext&gt;</code>.</li>
@@ -1465,7 +1465,7 @@ The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</
 - <a href="examples/simple_configuration_loading.html">simple configuration loading</a>
 - <a href="38_code_improvements.html">3.8 code improvements</a>
 - <a href="14_regular_use.html">regular use</a></p>
-<h2 id="fallbacks-and-conversion-are-built-in">Fallbacks and conversion are built in</h2>
+<h2 id="fallbacks-and-conversion-are-built-in">Fallbacks and conversion are built in<a class="headerlink" href="#fallbacks-and-conversion-are-built-in" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Fallback across scopes is a first-class feature:</li>
 <li><code>FALLBACKS_ACROSS_SCOPES</code> controls reads (default: true)</li>
@@ -1480,7 +1480,7 @@ The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</
 - <a href="25_config_features.html">2.5 config features</a>
 - <a href="44_design_consolidated.html">design consolidated</a>
 - <a href="38_code_improvements.html">3.8 code improvements</a></p>
-<h3 id="converters-and-mappers">converters and mappers</h3>
+<h3 id="converters-and-mappers">converters and mappers<a class="headerlink" href="#converters-and-mappers" title="Permanent link">&para;</a></h3>
 <ul>
 <li>ConfigMapper is provided to map from and to POJOs.</li>
 <li>ConfigUtil.fromProperties(...) is a bridge to convert legacy <code>Properties</code>.</li>
@@ -1488,7 +1488,7 @@ The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</
 <li>ConfigUtil.remapped(...) is a bridge to prefix sub-configs.</li>
 <li>See <a href="examples/configuration_views.html">examples/configuration_views.md</a> for more.</li>
 </ul>
-<h2 id="overrides-use-scopes-not-ad-hoc-logic">Overrides: use scopes, not ad-hoc logic</h2>
+<h2 id="overrides-use-scopes-not-ad-hoc-logic">Overrides: use scopes, not ad-hoc logic<a class="headerlink" href="#overrides-use-scopes-not-ad-hoc-logic" title="Permanent link">&para;</a></h2>
 <ul>
 <li>For in-process overrides, prefer <code>ConfigScope.RUNTIME</code> via <code>put(...)</code>.
   It is the highest regular scope and overrides everything except <code>POLICY</code>.</li>
@@ -1498,7 +1498,7 @@ The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</
 <p>Related docs:
 - <a href="14_regular_use.html">regular use</a>
 - <a href="21_how_it_works.html">2.1 how it works</a></p>
-<h2 id="test-mode-is-a-first-class-feature">Test Mode is a first-class feature</h2>
+<h2 id="test-mode-is-a-first-class-feature">Test Mode is a first-class feature<a class="headerlink" href="#test-mode-is-a-first-class-feature" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Enable with <code>ConfigFactoryBuilder.setTestMode(true)</code> or via
   <code>MCONFIG_RUNTIME_TEST_MODE=true</code> when <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is on.</li>
@@ -1509,7 +1509,7 @@ The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</
 <p>Related docs:
 - <a href="15_test_mode.html">test mode</a>
 - <a href="examples/testing_configurations.html">testing configuration</a></p>
-<h2 id="prefer-mconfigutil-adapters-for-legacy-interop">Prefer mConfigUtil adapters for legacy interop</h2>
+<h2 id="prefer-mconfigutil-adapters-for-legacy-interop">Prefer mConfigUtil adapters for legacy interop<a class="headerlink" href="#prefer-mconfigutil-adapters-for-legacy-interop" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>ConfigUtil.withOverrides(...)</code>: immutable overlay; prefer over custom map merges.</li>
 <li><code>ConfigUtil.remapped(...)</code>: prefix remapping for sub-config views.</li>

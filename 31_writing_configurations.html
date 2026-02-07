@@ -1350,7 +1350,7 @@
                   
 
 
-<h1 id="31-writing-configurations">3.1 Writing Configurations</h1>
+<h1 id="31-writing-configurations">3.1 Writing Configurations<a class="headerlink" href="#31-writing-configurations" title="Permanent link">&para;</a></h1>
 <p>Most of the time, we just read configs from software. After all, they are how
 software gets told where to find things and how to behave.</p>
 <p>But if you want to make things more comfortable, you'd also want to write 
@@ -1359,7 +1359,7 @@ configs. </p>
 When writing a config, you must specify the Scope. Otherwise, we'd have the
 writes all over the place, users overwriting each other's settings, and so on.</p>
 <p>So, you specify which Scope you are about to write.</p>
-<h2 id="311-writing-priorities">3.1.1 Writing Priorities</h2>
+<h2 id="311-writing-priorities">3.1.1 Writing Priorities<a class="headerlink" href="#311-writing-priorities" title="Permanent link">&para;</a></h2>
 <p>mConfig follows the "principle of least surprise" when writing to a scope:
 1. <strong>Priority 1</strong>: If an entry for the key already exists in a writeable layer within the scope, that entry is updated.
 2. <strong>Priority 2</strong>: If the key is new, it is added to the highest-priority writeable layer already available in the scope.
@@ -1367,7 +1367,7 @@ writes all over the place, users overwriting each other's settings, and so on.</
 <p>What's half-automatic is the format and location. We can use the hierarchy used
 for reading in writing as well, and we have a default format preference list.</p>
 <p>But for your specific project, conventions may be different.</p>
-<h2 id="312-format-caveats-when-writing">3.1.2 Format caveats when writing</h2>
+<h2 id="312-format-caveats-when-writing">3.1.2 Format caveats when writing<a class="headerlink" href="#312-format-caveats-when-writing" title="Permanent link">&para;</a></h2>
 <p>Some formats allow extraneous information to be added manually, which is
 invisible from code.</p>
 <p>e.g. Java Properties allow comments, but its .load() function omits all of them.
@@ -1375,10 +1375,10 @@ So if you do a load() followed by a store(), the comments will be gone in the
 stored version.</p>
 <p>You may want to think about this aspect when designing your application.
 mConfig helps you in this regard with layers and Scopes. </p>
-<h2 id="313-type-preservation-planned">3.1.3 Type Preservation (Planned)</h2>
+<h2 id="313-type-preservation-planned">3.1.3 Type Preservation (Planned)<a class="headerlink" href="#313-type-preservation-planned" title="Permanent link">&para;</a></h2>
 <p><strong>Current</strong>: String-first impl (<code>String.valueOf(value)</code>) for simplicity.</p>
 <p><strong>Planned</strong>: Pass typed objects to formats (e.g., unquoted numbers/booleans in JSON/YAML). See <code>devdocs/type_preservation_plan.md</code>.</p>
-<h2 id="314-write-cache-planned">3.1.4 Write Cache (Planned)</h2>
+<h2 id="314-write-cache-planned">3.1.4 Write Cache (Planned)<a class="headerlink" href="#314-write-cache-planned" title="Permanent link">&para;</a></h2>
 <p>For batch writes, enable cache via future <code>ENABLE_CONFIG_CACHE</code> feature, then <code>flush()</code> to persist.</p>
 <p><code>flush()</code> will write cache and invalidate read cache.</p>
 

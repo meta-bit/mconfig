@@ -1364,9 +1364,9 @@
                   
 
 
-<h1 id="testing-configurations">Testing Configurations</h1>
+<h1 id="testing-configurations">Testing Configurations<a class="headerlink" href="#testing-configurations" title="Permanent link">&para;</a></h1>
 <p>This example shows how to enable Test Mode and point mConfig at test-specific directories.</p>
-<h2 id="1-enable-test-mode-in-code">1. Enable Test Mode in code</h2>
+<h2 id="1-enable-test-mode-in-code">1. Enable Test Mode in code<a class="headerlink" href="#1-enable-test-mode-in-code" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
@@ -1375,11 +1375,11 @@
 <span class="w">    </span><span class="c1">// ... test using cfg ...</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<h2 id="2-provide-test-only-config-files">2. Provide test-only config files</h2>
+<h2 id="2-provide-test-only-config-files">2. Provide test-only config files<a class="headerlink" href="#2-provide-test-only-config-files" title="Permanent link">&para;</a></h2>
 <p>Place test configurations in your test resources:
 - <code>src/test/resources/.config/ACME/ourApp/network.properties</code></p>
 <p>These take precedence in Test Mode, keeping production defaults intact.</p>
-<h2 id="3-junit-example">3. JUnit example</h2>
+<h2 id="3-junit-example">3. JUnit example<a class="headerlink" href="#3-junit-example" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import static</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Assertions.assertEquals</span><span class="p">;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
@@ -1401,7 +1401,7 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h2 id="4-override-test-directories-explicitly-optional">4. Override test directories explicitly (optional)</h2>
+<h2 id="4-override-test-directories-explicitly-optional">4. Override test directories explicitly (optional)<a class="headerlink" href="#4-override-test-directories-explicitly-optional" title="Permanent link">&para;</a></h2>
 <p>If you want to point to custom test directories, use <code>TESTMODE_DIRECTORIES</code>:
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
@@ -1413,7 +1413,7 @@
 <span class="w">    </span><span class="c1">// ...</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div></p>
-<h2 id="5-security-note">5. Security note</h2>
+<h2 id="5-security-note">5. Security note<a class="headerlink" href="#5-security-note" title="Permanent link">&para;</a></h2>
 <p>Test Mode can be disabled globally with <code>ConfigFactoryBuilder.forbidTestMode()</code>.
 If you do that, <code>TEST_MODE</code> and <code>setTestMode(true)</code> have no effect.</p>
 <p>Related docs:
