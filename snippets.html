@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Snippets: Quick Solutions to Common Config Problems - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Snippets: Quick Solutions to Common Config Problems";
+        var mkdocs_page_input_path = "snippets.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Snippets: Quick Solutions to Common Config Problems</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="snippets-quick-solutions-to-common-config-problems">Snippets: Quick Solutions to Common Config Problems<a class="headerlink" href="#snippets-quick-solutions-to-common-config-problems" title="Permanent link">&para;</a></h1>
+<p>mConfig shines for everyday config pains. Copy-paste these snippets—no setup hassles.</p>
+<p>Each solves a <strong>general problem</strong> using mConfig's magic (OS paths, layers, reloads, schemes).</p>
+<p><strong><a href="../../../../examples/starters/README.md">Starters</a> for full projects • <a href="43_faq.html">FAQ</a> for fixes • <a href="../../../../mConfigTools/README.md">CLI</a></strong></p>
+<h2 id="1-replace-hardcoded-stringsports-zero-magic-strings">1. Replace Hardcoded Strings/Ports (Zero Magic Strings)<a class="headerlink" href="#1-replace-hardcoded-stringsports-zero-magic-strings" title="Permanent link">&para;</a></h2>
+<p><strong>Problem:</strong> Ports, hosts scattered in code—hard to change/deploy.</p>
+<pre><code class="language-java">Config cfg = ConfigUtil.quickConfig(&quot;myco&quot;, &quot;myapp&quot;, &quot;network&quot;);
+String peer = cfg.getString(&quot;peer&quot;);  // localhost
+int port = cfg.getInteger(&quot;port&quot;);    // 8080
+double prob = cfg.getDouble(&quot;probability&quot;);  // 0.5
+</code></pre>
+<p><strong>Place:</strong> <code>~/.config/myco/myapp/network.properties</code> (auto-discovered).</p>
+<p><strong>Why mConfig?</strong> Searches OS standards (XDG, AppData), formats (properties/YAML/JSON), reloads live.</p>
+<p><a href="13_getting_started.html">Getting Started</a></p>
+<h2 id="2-env-vars-structured-config-no-manual-parsing">2. Env Vars → Structured Config (No Manual Parsing)<a class="headerlink" href="#2-env-vars-structured-config-no-manual-parsing" title="Permanent link">&para;</a></h2>
+<p><strong>Problem:</strong> <code>process.env</code> mess; want hierarchical config.</p>
+<p><em>Add dep:</em> <code>mConfigSourceEnvVar</code></p>
+<p>Env vars:</p>
+<pre><code>myapp_network_peer=localhost
+myapp_network_port=8080
+</code></pre>
+<pre><code class="language-java">try (ConfigFactory f = ConfigFactoryBuilder.create(&quot;myco&quot;, &quot;myapp&quot;).build()) {
+    String peer = f.getConfig(&quot;network&quot;).getString(&quot;peer&quot;);  // SESSION override
+}
+</code></pre>
+<p><strong>Why?</strong> <code>&lt;app&gt;_&lt;config&gt;_&lt;key&gt;</code> convention; layers over files.</p>
+<p><a href="../../../../mConfigSourceEnvVar/README.md">mConfigSourceEnvVar</a></p>
+<h2 id="3-type-safe-config-with-defaultsvalidation">3. Type-Safe Config with Defaults/Validation<a class="headerlink" href="#3-type-safe-config-with-defaultsvalidation" title="Permanent link">&para;</a></h2>
+<p><strong>Problem:</strong> Runtime <code>NumberFormatException</code>; scattered defaults.</p>
+<p><code>src/main/resources/.config/myco/myapp/network.scheme.json</code>:</p>
+<pre><code class="language-json">[{&quot;name&quot;:&quot;port&quot;,&quot;type&quot;:&quot;int&quot;,&quot;default&quot;:8080,&quot;min&quot;:1,&quot;max&quot;:65535}]
+</code></pre>
+<pre><code class="language-java">ConfigScheme scheme = ConfigScheme.fromClasspath(&quot;network.scheme.json&quot;);
+Config cfg = factory.getConfig(&quot;network&quot;, scheme);
+int port = cfg.getInteger(&quot;port&quot;);  // Validates!
+</code></pre>
+<p><strong>Why?</strong> Centralized scheme—no call-site defaults.</p>
+<p><a href="23_configuration_schemes.html">Configuration Schemes</a></p>
+<h2 id="4-hot-reload-on-file-changes">4. Hot-Reload on File Changes<a class="headerlink" href="#4-hot-reload-on-file-changes" title="Permanent link">&para;</a></h2>
+<p><strong>Problem:</strong> Restart for config tweaks? No thanks.</p>
+<pre><code class="language-java">Config cfg = factory.getConfig(&quot;network&quot;);  // Watches files
+// Edit network.properties → cfg.getInteger(&quot;port&quot;) updates instantly
+</code></pre>
+<p><strong>Why?</strong> Built-in watcher; no polling/Spring @Refresh.</p>
+<p><a href="22_priorities_and_hierarchies.html">Priorities</a></p>
+<h2 id="5-discover-available-configs-no-guesswork">5. Discover Available Configs (No Guesswork)<a class="headerlink" href="#5-discover-available-configs-no-guesswork" title="Permanent link">&para;</a></h2>
+<p><strong>Problem:</strong> "Where's my config?"</p>
+<pre><code class="language-java">factory.listAvailableConfigurations().forEach(cdi -&gt;
+    System.out.println(cdi.getConfigName() + &quot; @ &quot; + cdi.getUri())
+);
+</code></pre>
+<p><strong>Why?</strong> Traces sources/scopes; CLI equiv: <code>mconfig myco:myapp list</code></p>
+<h2 id="6-secrets-without-log-leaks">6. Secrets Without Log Leaks<a class="headerlink" href="#6-secrets-without-log-leaks" title="Permanent link">&para;</a></h2>
+<p><strong>Problem:</strong> Passwords in logs/heap.</p>
+<p>In scheme: <code>"type":"secret"</code></p>
+<pre><code class="language-java">SecretValue pw = (SecretValue) cfg.getEntry(&quot;db.password&quot;);  // Masked: ********
+String clear = pw.clearValue();  // JIT decrypt/use
+</code></pre>
+<p><a href="../../../../mConfigSecrets/README.md">mConfigSecrets</a></p>
+<h2 id="7-jpms-compatible-no-illegalaccesserror">7. JPMS-Compatible (No IllegalAccessError)<a class="headerlink" href="#7-jpms-compatible-no-illegalaccesserror" title="Permanent link">&para;</a></h2>
+<p><code>module-info.java</code>:</p>
+<pre><code class="language-java">module com.example {
+    requires metabit.mconfig.core;
+    requires metabit.mconfig.util;
+}
+</code></pre>
+<p><em>Deps:</em> <code>mConfigStandard</code> (BOM) or <code>mConfigBase</code>.</p>
+<p><a href="43_faq.html#jpms-module-access-errors">JPMS FAQ</a></p>
+<h2 id="8-tests-isolated-configs">8. Tests: Isolated Configs<a class="headerlink" href="#8-tests-isolated-configs" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">ConfigFactoryBuilder.setTestMode(true);
+ConfigFactoryBuilder.setTestConfigPaths(ConfigScope.USER, List.of(&quot;src/test/resources&quot;));
+Config cfg = ConfigFactoryBuilder.create(&quot;myco&quot;, &quot;myapp&quot;).build().getConfig(&quot;network&quot;);
+</code></pre>
+<p><code>src/test/resources/.config/myco/myapp/network.properties</code></p>
+<p><a href="15_test_mode.html">Test Mode</a></p>
+<p><strong>Pro Tip:</strong> Enable logging (<code>mConfigLoggingSlf4j</code> + DEBUG) for traces.</p>
+<p><a href="index.html">Full Docs</a></p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

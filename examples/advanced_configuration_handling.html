@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Advanced Configuration Handling - mConfig Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Advanced Configuration Handling";
+        var mkdocs_page_input_path = "examples/advanced_configuration_handling.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Advanced Configuration Handling</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-write-with-scope-control">1. Write with scope control</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-control-file-format-order">2. Control file format order</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-use-strict-schemes">3. Use strict schemes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-missing-values-behavior">4. Missing values behavior</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-subscribe-to-updates">5. Subscribe to updates</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-control-scope-fallbacks">6. Control scope fallbacks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-prioritize-storage-types">7. Prioritize storage types</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-use-secrets-providers">8. Use secrets providers</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Examples</li>
+      <li class="breadcrumb-item active">Advanced Configuration Handling</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="advanced-configuration-handling">Advanced Configuration Handling<a class="headerlink" href="#advanced-configuration-handling" title="Permanent link">&para;</a></h1>
+<p>This page collects higher-level patterns for controlling how mConfig resolves, validates, and writes configuration data.</p>
+<h2 id="1-write-with-scope-control">1. Write with scope control<a class="headerlink" href="#1-write-with-scope-control" title="Permanent link">&para;</a></h2>
+<p>Writes are scoped and follow a "least surprise" policy:</p>
+<pre><code class="language-java">Configuration cfg = factory.getConfiguration(&quot;network&quot;);
+
+cfg.put(&quot;server/port&quot;, 8081, ConfigScope.USER);
+</code></pre>
+<h2 id="2-control-file-format-order">2. Control file format order<a class="headerlink" href="#2-control-file-format-order" title="Permanent link">&para;</a></h2>
+<p>Reading and writing can use different format orders:</p>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES,
+            List.of(&quot;TOML&quot;, &quot;YAML&quot;, &quot;JSON&quot;, &quot;properties&quot;))
+        .setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES,
+            List.of(&quot;TOML&quot;, &quot;YAML&quot;, &quot;JSON&quot;));
+</code></pre>
+<h2 id="3-use-strict-schemes">3. Use strict schemes<a class="headerlink" href="#3-use-strict-schemes" title="Permanent link">&para;</a></h2>
+<p>To reject unknown keys, turn on strict mode:</p>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.SCHEME_STRICT_MODE, true);
+</code></pre>
+<h2 id="4-missing-values-behavior">4. Missing values behavior<a class="headerlink" href="#4-missing-values-behavior" title="Permanent link">&para;</a></h2>
+<p>If you want scheme defaults instead of exceptions:</p>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY, false)
+        .setFeature(ConfigFeature.DEFAULT_ON_MISSING_ENTRY, true);
+</code></pre>
+<h2 id="5-subscribe-to-updates">5. Subscribe to updates<a class="headerlink" href="#5-subscribe-to-updates" title="Permanent link">&para;</a></h2>
+<p>React when values change at runtime:</p>
+<pre><code class="language-java">Configuration cfg = factory.getConfiguration(&quot;network&quot;);
+
+cfg.subscribeToUpdates(location -&gt; {
+    System.out.println(&quot;Config changed in scope: &quot; + location.getScope());
+});
+</code></pre>
+<p>NB: The changes are automatically propagated to the mConfig Configurations anyhow.
+If you take the values from the Configurations directly, they will be up-to-date.
+Above subscription is to support triggering actions when the configuration changes,
+e.g. thread restarts.</p>
+<h2 id="6-control-scope-fallbacks">6. Control scope fallbacks<a class="headerlink" href="#6-control-scope-fallbacks" title="Permanent link">&para;</a></h2>
+<p>By default, mConfig falls back to less specific scopes when a value is missing. You can change that:</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.FALLBACKS_ACROSS_SCOPES, false)
+        .build())
+    {
+    Configuration cfg = factory.getConfiguration(&quot;network&quot;);
+    // Only the requested scope (plus PRODUCT defaults) is considered.
+    }
+</code></pre>
+<h2 id="7-prioritize-storage-types">7. Prioritize storage types<a class="headerlink" href="#7-prioritize-storage-types" title="Permanent link">&para;</a></h2>
+<p>If multiple storage backends are available, change their priority within a scope:</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES,
+            List.of(&quot;files&quot;, &quot;registry&quot;, &quot;JAR&quot;))
+        .build())
+    {
+    // Files override registry, registry overrides JAR defaults.
+    }
+</code></pre>
+<h2 id="8-use-secrets-providers">8. Use secrets providers<a class="headerlink" href="#8-use-secrets-providers" title="Permanent link">&para;</a></h2>
+<p>If you have secrets in schemes, add a secrets provider to resolve them:</p>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.SECRETS_PROVIDER_ID, &quot;my-secrets&quot;)
+        .setSecretsProviderConfig(Map.of(&quot;endpoint&quot;, &quot;https://vault.example&quot;));
+</code></pre>
+<p>Related docs:
+- <a href="../25_config_features.html">Config Features</a>
+- <a href="../22_priorities_and_hierarchies.html">Priorities and Hierarchies</a>
+- <a href="../31_writing_configurations.html">Writing Configurations</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="simple_configuration_loading.html" class="btn btn-neutral float-left" title="Simple Configuration Loading"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="integration_with_cicd.html" class="btn btn-neutral float-right" title="Integration with CI/CD">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="simple_configuration_loading.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="integration_with_cicd.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

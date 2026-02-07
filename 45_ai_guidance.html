@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>4.5 AI Guidance - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "4.5 AI Guidance";
+        var mkdocs_page_input_path = "45_ai_guidance.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">4.5 AI Guidance</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#logging-and-runtime-debug-control">Logging and runtime debug control</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#console-logging-for-devtests">Console logging for dev/tests</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#defaults-belong-in-resources-not-in-code">Defaults belong in resources, not in code</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fallbacks-and-conversion-are-built-in">Fallbacks and conversion are built in</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#converters-and-mappers">converters and mappers</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#overrides-use-scopes-not-ad-hoc-logic">Overrides: use scopes, not ad-hoc logic</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#test-mode-is-a-first-class-feature">Test Mode is a first-class feature</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#prefer-mconfigutil-adapters-for-legacy-interop">Prefer mConfigUtil adapters for legacy interop</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 4 Reference & Project</li>
+      <li class="breadcrumb-item active">4.5 AI Guidance</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="45-ai-guidance-notes-for-code-generating-tools">4.5 AI Guidance (Notes for Code-Generating Tools)<a class="headerlink" href="#45-ai-guidance-notes-for-code-generating-tools" title="Permanent link">&para;</a></h1>
+<p>We just know people will use code generators.
+So it's probably for the best to give the AI some hints.</p>
+<hr />
+<p>This document summarizes mConfig behaviours that code generators often miss.
+The goal is to prevent boilerplate, duplicate logic, or incorrect assumptions.</p>
+<h2 id="logging-and-runtime-debug-control">Logging and runtime debug control<a class="headerlink" href="#logging-and-runtime-debug-control" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Runtime logging overrides are provided by <code>mConfigSourceEnvVar</code> and are only
+  enabled if <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is set to <code>true</code>.</li>
+<li>Environment variables start with <code>MCONFIG_RUNTIME_</code>:</li>
+<li><code>MCONFIG_RUNTIME_DEBUG_LEVEL</code> = off|0, error|1, warn|2, info|3, debug|4, trace|5</li>
+<li><code>MCONFIG_RUNTIME_DEBUG_OUTPUT</code> = "stderr", "stdout", "quiet",
+    or <code>file:&lt;path&gt;</code> (appended if present, created if missing)</li>
+<li><code>MCONFIG_RUNTIME_DEBUG_OUTPUT</code> is handled internally by <code>InternalLogger</code>.
+  You do not need to implement a custom logger for this.</li>
+</ul>
+<p>Related docs:
+- <a href="../../../../mConfigSourceEnvVar/README.md">mConfigSourceEnvVar README</a>
+- <a href="42_logging.html">logging</a></p>
+<h2 id="console-logging-for-devtests">Console logging for dev/tests<a class="headerlink" href="#console-logging-for-devtests" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>ConsoleLogging</code> in <code>mConfigCore</code> main jar (service <code>"console"</code>).</li>
+<li>Production logging should use <code>mConfigLoggingSlf4j</code> or the default
+  <code>NullLogging</code>.</li>
+<li>Enable with <code>ConfigFeature.LOGGING_TO_USE_IN_CONFIGLIB = "console"</code>.</li>
+</ul>
+<p>Related docs:
+- <a href="42_logging.html">logging</a></p>
+<h2 id="defaults-belong-in-resources-not-in-code">Defaults belong in resources, not in code<a class="headerlink" href="#defaults-belong-in-resources-not-in-code" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>mConfigSourceJAR</code> automatically loads defaults from resources located at
+  <code>.config/&lt;company&gt;/&lt;app&gt;/&lt;config&gt;.&lt;ext&gt;</code>.</li>
+<li>For a standard Maven layout, the default location is:</li>
+<li><code>src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/&lt;config&gt;.properties</code></li>
+<li>Schemes (typed defaults and validation) live next to the config file:</li>
+<li><code>src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/&lt;config&gt;.scheme.json</code></li>
+<li>Avoid manual loading of <code>Properties</code> defaults. mConfig already layers JAR
+  defaults with filesystem, environment, and other sources.</li>
+<li>Avoid null checks. mConfig has ConfigFeature flags to control behaviour, 
+  whether to throw an exception or return a default value. Prefer setting defaults
+  as described above.</li>
+</ul>
+<p>Related docs:
+- <a href="examples/simple_configuration_loading.html">simple configuration loading</a>
+- <a href="38_code_improvements.html">3.8 code improvements</a>
+- <a href="14_regular_use.html">regular use</a></p>
+<h2 id="fallbacks-and-conversion-are-built-in">Fallbacks and conversion are built in<a class="headerlink" href="#fallbacks-and-conversion-are-built-in" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Fallback across scopes is a first-class feature:</li>
+<li><code>FALLBACKS_ACROSS_SCOPES</code> controls reads (default: true)</li>
+<li><code>WRITE_FALLBACK_ACROSS_SCOPES</code> controls writes (default: false)</li>
+<li>Typed getters (<code>getInteger</code>, <code>getBoolean</code>, etc.) perform conversion for you.
+  Do not parse values manually.</li>
+<li>To return scheme defaults on missing entries, use:</li>
+<li><code>EXCEPTION_ON_MISSING_ENTRY=false</code></li>
+<li><code>DEFAULT_ON_MISSING_ENTRY=true</code></li>
+</ul>
+<p>Related docs:
+- <a href="25_config_features.html">2.5 config features</a>
+- <a href="44_design_consolidated.html">design consolidated</a>
+- <a href="38_code_improvements.html">3.8 code improvements</a></p>
+<h3 id="converters-and-mappers">converters and mappers<a class="headerlink" href="#converters-and-mappers" title="Permanent link">&para;</a></h3>
+<ul>
+<li>ConfigMapper is provided to map from and to POJOs.</li>
+<li>ConfigUtil.fromProperties(...) is a bridge to convert legacy <code>Properties</code>.</li>
+<li>ConfigUtil.withOverrides(...) is a bridge to merge custom maps.</li>
+<li>ConfigUtil.remapped(...) is a bridge to prefix sub-configs.</li>
+<li>See <a href="examples/configuration_views.html">examples/configuration_views.md</a> for more.</li>
+</ul>
+<h2 id="overrides-use-scopes-not-ad-hoc-logic">Overrides: use scopes, not ad-hoc logic<a class="headerlink" href="#overrides-use-scopes-not-ad-hoc-logic" title="Permanent link">&para;</a></h2>
+<ul>
+<li>For in-process overrides, prefer <code>ConfigScope.RUNTIME</code> via <code>put(...)</code>.
+  It is the highest regular scope and overrides everything except <code>POLICY</code>.</li>
+<li>For environment/session overrides, use <code>ConfigScope.SESSION</code> (env vars and CLI).
+  Avoid custom precedence logic.</li>
+</ul>
+<p>Related docs:
+- <a href="14_regular_use.html">regular use</a>
+- <a href="21_how_it_works.html">2.1 how it works</a></p>
+<h2 id="test-mode-is-a-first-class-feature">Test Mode is a first-class feature<a class="headerlink" href="#test-mode-is-a-first-class-feature" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Enable with <code>ConfigFactoryBuilder.setTestMode(true)</code> or via
+  <code>MCONFIG_RUNTIME_TEST_MODE=true</code> when <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is on.</li>
+<li>Test Mode bypasses OS paths and prefers test resources such as
+  <code>src/test/resources/.config/&lt;company&gt;/&lt;app&gt;/</code> and <code>src/test/resources/config/{SCOPE}</code>.</li>
+<li>Test Mode can be locked down globally with <code>ConfigFactoryBuilder.forbidTestMode()</code>.</li>
+</ul>
+<p>Related docs:
+- <a href="15_test_mode.html">test mode</a>
+- <a href="examples/testing_configurations.html">testing configuration</a></p>
+<h2 id="prefer-mconfigutil-adapters-for-legacy-interop">Prefer mConfigUtil adapters for legacy interop<a class="headerlink" href="#prefer-mconfigutil-adapters-for-legacy-interop" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>ConfigUtil.withOverrides(...)</code>: immutable overlay; prefer over custom map merges.</li>
+<li><code>ConfigUtil.remapped(...)</code>: prefix remapping for sub-config views.</li>
+<li><code>ConfigUtil.fromProperties(...)</code>: bridge legacy <code>Properties</code> without re-parsing.</li>
+</ul>
+<p>Related docs:
+- <a href="examples/configuration_views.html">configuration views</a>
+- <code>mConfigUtil/src/main/java/org/metabit/platform/support/config/util/ConfigUtil.java</code></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="44_design_consolidated.html" class="btn btn-neutral float-left" title="4.4 Design Consolidated"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="46_versions.html" class="btn btn-neutral float-right" title="4.6 Versions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="44_design_consolidated.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="46_versions.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

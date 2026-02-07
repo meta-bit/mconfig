@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>1.3 Getting Started - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1.3 Getting Started";
+        var mkdocs_page_input_path = "13_getting_started.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">1.3 Getting Started</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#starters-recommended">Starters (Recommended)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#snippets-quick-wins">Snippets (Quick Wins 🚀)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#132-start-with-a-simple-use-case">1.3.2 Start with a simple use case</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#133-common-pitfalls">1.3.3 Common Pitfalls</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#134-resource-placement-the-config-folder">1.3.4 Resource Placement (the .config/ folder)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#135-search-list-and-priority">1.3.5 Search List and Priority</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#136-navigating-lists-with-configcursor">1.3.6 Navigating Lists with ConfigCursor</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#137-module-system-considerations">1.3.7 Module System Considerations</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 1 Introduction & Basics</li>
+      <li class="breadcrumb-item active">1.3 Getting Started</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="13-getting-started">1.3 Getting Started<a class="headerlink" href="#13-getting-started" title="Permanent link">&para;</a></h1>
+<h2 id="131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build<a class="headerlink" href="#131-include-the-library-in-your-project-build" title="Permanent link">&para;</a></h2>
+<p>For Java, start with adding the dependency to your project build:</p>
+<p>Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigStandard&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+    &lt;type&gt;pom&lt;/type&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Gradle:</p>
+<pre><code class="language-gradle">implementation 'org.metabit.platform.support.config:mConfigStandard:${mconfig.version}'
+</code></pre>
+<p>(update version as needed)</p>
+<p>In case you are defining an <code>module-info.java</code> in your project, add this to the <code>requires</code>
+section:</p>
+<pre><code class="language-java">    requires metabit.mconfig.core;
+    requires metabit.mconfig.util;
+</code></pre>
+<h3 id="starters-recommended">Starters (Recommended)<a class="headerlink" href="#starters-recommended" title="Permanent link">&para;</a></h3>
+<p>For instant frustration-free setup, copy from <a href="../../../../examples/starters/README.md">examples/starters</a>:</p>
+<ul>
+<li><a href="../../../../examples/starters/maven-minimal/README.md"><img alt="Maven" src="https://img.shields.io/badge/Maven-Minimal-blue" /></a> <code>mvn compile exec:java</code></li>
+<li><a href="../../../../examples/starters/gradle-kotlin/README.md"><img alt="Gradle" src="https://img.shields.io/badge/Gradle-Kotlin-green" /></a> <code>./gradlew run</code></li>
+<li><a href="../../../../examples/starters/jpms-maven/README.md"><img alt="JPMS" src="https://img.shields.io/badge/JPMS-Maven-orange" /></a> <code>mvn compile exec:java</code> (module-info included!)</li>
+</ul>
+<p>See each README for details.</p>
+<h3 id="snippets-quick-wins">Snippets (Quick Wins 🚀)<a class="headerlink" href="#snippets-quick-wins" title="Permanent link">&para;</a></h3>
+<p><a href="snippets.html"><img alt="Snippets" src="https://img.shields.io/badge/Snippets-quick-brightblue" /></a></p>
+<p>Copy-paste solutions for common config pains: hardcodes → env vars → secrets → tests.</p>
+<h2 id="132-start-with-a-simple-use-case">1.3.2 Start with a simple use case<a class="headerlink" href="#132-start-with-a-simple-use-case" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">    Config cfg = ConfigUtil.quickConfig(&quot;myCompany&quot;,&quot;myApplication&quot;,&quot;network&quot;);
+
+    String  peerName    = cfg.getString(&quot;peer&quot;);
+    int     portNumber  = cfg.getInteger(&quot;port&quot;);
+    double  probability = cfg.getDouble(&quot;probability&quot;);
+    //...
+</code></pre>
+<p>This will get you the requested values from the "network" configuration, 
+wherever in the standard directories or other places they are kept.</p>
+<p>If it's not working as expected, consult the <strong><a href="43_faq.html#quick-verification-checklist">Quick Verification Checklist</a></strong> in the FAQ.</p>
+<p>For more information on how to define the contract for your configurations (keys, types, defaults, and validation), see <strong><a href="23_configuration_schemes.html">Configuration Schemes</a></strong>.</p>
+<h2 id="133-common-pitfalls">1.3.3 Common Pitfalls<a class="headerlink" href="#133-common-pitfalls" title="Permanent link">&para;</a></h2>
+<p>For advice on avoiding typical mistakes and leveraging feature flags effectively, see <a href="38_code_improvements.html">Code Improvements and Best Practices</a>.</p>
+<h2 id="134-resource-placement-the-config-folder">1.3.4 Resource Placement (the .config/ folder)<a class="headerlink" href="#134-resource-placement-the-config-folder" title="Permanent link">&para;</a></h2>
+<p>To bundle configurations, schemes, or library settings with your application, 
+use the <code>.config/</code> resource folder in your classpath (e.g., <code>src/main/resources/.config/</code>).</p>
+<ul>
+<li><strong>Configurations</strong>: <code>.config/&lt;company&gt;/&lt;application&gt;/&lt;configName&gt;.&lt;ext&gt;</code></li>
+<li><strong>Schemes</strong>: <code>.config/&lt;company&gt;/&lt;application&gt;/&lt;configName&gt;.scheme.json</code></li>
+<li><strong>Library Self-Configuration</strong>: <code>.config/metabit/mConfig/mconfig.properties</code></li>
+</ul>
+<p>For testing, as a starting point, 
+you can create a <code>.config/myCompany/myApplication/network.properties</code> in subdirectories
+of your home directory, and see its contents turn up in your code.</p>
+<p>Regular paths would be in <code>/etc/myCompany/myApplication/network.properties</code> for Linux, <code>%AppData%\myCompany\myApplication\network.properties</code> for Windows, and so on -
+and taking care of all these different locations is part of the library. Also, parsing different formats like JSON, YAML, and so on.
+And much more.</p>
+<p>The cleaner way, without shortcuts, goes like this:</p>
+<pre><code class="language-java">   try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;).build())
+        {
+        Config cfg = factory.getConfiguration(&quot;network&quot;);
+
+        String  peerName    = cfg.getString(&quot;peer&quot;);
+        int     portNumber  = cfg.getInteger(&quot;port&quot;);
+        double  probability = cfg.getDouble(&quot;probability&quot;);
+        //...
+        }
+</code></pre>
+<p>The try-with-resources in the top line instantiates the library with all defaults;
+the getConfiguration() line asks for a specific configuration, and then you
+can get config entries, typesafe.</p>
+<p>You can also list all available configuration names:</p>
+<pre><code class="language-java">   try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;).build())
+        {
+        Set&lt;ConfigDiscoveryInfo&gt; info = factory.listAvailableConfigurations();
+        for (ConfigDiscoveryInfo c : info)
+            {
+            System.out.println(&quot;Found: &quot; + c.getConfigName() + &quot; in scope &quot; + c.getScope() + &quot; URL: &quot; + c.getUri());
+            }
+        }
+</code></pre>
+<p><strong>Caveat</strong>:
+When you use the values stored in your local variables, you miss out on receiving changes. 
+It is preferable to use the mConfig objects directly; they'll have the latest values.</p>
+<h2 id="135-search-list-and-priority">1.3.5 Search List and Priority<a class="headerlink" href="#135-search-list-and-priority" title="Permanent link">&para;</a></h2>
+<p>Everything should just work, by default. But in some environments, you may want to customize the search list,
+or the storage types priority, or the file format priority... </p>
+<p>You can add extra directories to the search list, or change the priority of the storage types.</p>
+<p>see <a href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a> for details.</p>
+<h2 id="136-navigating-lists-with-configcursor">1.3.6 Navigating Lists with ConfigCursor<a class="headerlink" href="#136-navigating-lists-with-configcursor" title="Permanent link">&para;</a></h2>
+<p>Configuration formats that support arrays (like YAML, JSON, or TOML)
+may have lists/sets where the entries are not named, have no key.</p>
+<p>So you can't access them by name. </p>
+<p>You can use the <code>ConfigCursor</code> to navigate through list items as individual nodes.</p>
+<p>(Actually, you can use the ConfigCursor for all the configuration; 
+it is just especially useful for navigating lists.)</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApp&quot;).build())
+    {
+    Config cfg = factory.getConfig(&quot;myConfig&quot;);
+    ConfigCursor cursor = cfg.getConfigCursor();
+
+    if (cursor.moveTo(&quot;servers&quot;) &amp;&amp; cursor.isOnList())
+        {
+        cursor.enter(); // Move into the array
+        while (cursor.moveNext())
+            {
+            // Now positioned on a list item.
+            // Items can be accessed as unnamed entries via virtual keys (indices).
+            ConfigEntry item = cursor.getCurrentElement();
+            System.out.println(&quot;Server: &quot; + item.getValueAsString());
+            }
+        cursor.leave(); // Move back up to the &quot;servers&quot; node
+        }
+    }
+</code></pre>
+<h2 id="137-module-system-considerations">1.3.7 Module System Considerations<a class="headerlink" href="#137-module-system-considerations" title="Permanent link">&para;</a></h2>
+<p>mConfig uses the Java Module System. The architecture is:</p>
+<ul>
+<li><code>mConfigBase</code>: Aggregator module that bundles some standard dependencies</li>
+<li><code>metabit.mconfig.core</code>: Core functionality</li>
+<li><code>metabit.mconfig.util</code>: Utility functions</li>
+<li>Additional modules (e.g. Formats and configuration sources)</li>
+</ul>
+<p>When using Java modules, you must:
+1. Include <code>mConfigBase</code> as a Maven/Gradle dependency
+2. Explicitly require the core modules in your <code>module-info.java</code>
+3. Require any additional modules you may need</p>
+<p>The internal modules are provided via services and do not have an API for your use,
+so you don't need to "require" them in your <code>module-info.java</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="12_features_and_use_cases.html" class="btn btn-neutral float-left" title="1.2 Features and Use Cases"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="14_regular_use.html" class="btn btn-neutral float-right" title="1.4 Regular Use">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="12_features_and_use_cases.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="14_regular_use.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

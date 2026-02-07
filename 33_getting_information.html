@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>3.3 Getting Information - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "3.3 Getting Information";
+        var mkdocs_page_input_path = "33_getting_information.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">3.3 Getting Information</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#331-locations">3.3.1 Locations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#332-legacy-support-blobs-and-where-to-put-files">3.3.2 Legacy support: BLOBs, and where to put files?</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#3321-raw-files-text-and-binary">3.3.2.1 Raw Files (Text and Binary)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3322-hierarchical-blobs">3.3.2.2 Hierarchical BLOBs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3323-legacy-blobs">3.3.2.3 Legacy BLOBs</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 3 Advanced Topics</li>
+      <li class="breadcrumb-item active">3.3 Getting Information</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="33-getting-information">3.3 Getting Information<a class="headerlink" href="#33-getting-information" title="Permanent link">&para;</a></h1>
+<h2 id="331-locations">3.3.1 Locations<a class="headerlink" href="#331-locations" title="Permanent link">&para;</a></h2>
+<p>So, where is my specific configuration looking for its contents?</p>
+<p>To see where a Configuration instance gets its contents from, you can use <code>getSourceLocations()</code> like this:</p>
+<pre><code class="language-java"> System.out.println(&quot;config locations: &quot;);
+ for (ConfigLocation location : cfg.getSourceLocations())
+     System.out.println(&quot;\t&quot; + location.getScope() + &quot;\t&quot; + location.getURI(&quot;entry&quot;, null));
+</code></pre>
+<p>And where is the overall mConfig factory instance looking, in general?
+There is <code>getSearchList()</code> from ConfigFactory.</p>
+<pre><code class="language-Java"> System.out.println(&quot;searchList: &quot;);
+ for (ConfigLocation location : searchList)
+     System.out.println(&quot;\t&quot; + location.getScope() + &quot;\t&quot; + location.getURI(&quot;entry&quot;, null));
+</code></pre>
+<p>Depending on your use case, you'll want different parts of the ConfigLocation entries.
+Above is just a little text dump.</p>
+<h2 id="332-legacy-support-blobs-and-where-to-put-files">3.3.2 Legacy support: BLOBs, and where to put files?<a class="headerlink" href="#332-legacy-support-blobs-and-where-to-put-files" title="Permanent link">&para;</a></h2>
+<p>Use Configuration mechanisms where possible; this enables all the features,
+including scheme checking, network storage, and so on.</p>
+<h3 id="3321-raw-files-text-and-binary">3.3.2.1 Raw Files (Text and Binary)<a class="headerlink" href="#3321-raw-files-text-and-binary" title="Permanent link">&para;</a></h3>
+<p>You may need to access the entire content of a file as a single String or byte array. mConfig provides two specialized formats for this purpose: <code>text_file</code> and <code>binary_file</code>.</p>
+<p><strong>Reading a text file as a single String:</strong>
+By using the <code>text_file</code> format, the entire file content is read into a single entry with an empty key <code>""</code>.</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;)
+        .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES, List.of(&quot;text_file&quot;))
+        .build())
+    {
+    Configuration cfg = factory.getConfiguration(&quot;myTextFile&quot;);
+    String content = cfg.getString(&quot;&quot;);
+    }
+</code></pre>
+<p><strong>Reading a binary file as a byte array:</strong>
+The <code>binary_file</code> format works similarly but provides the content as a byte array.</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;)
+        .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES, List.of(&quot;binary_file&quot;))
+        .build())
+    {
+    Configuration cfg = factory.getConfiguration(&quot;myBinaryFile&quot;);
+    byte[] content = cfg.getBytes(&quot;&quot;);
+    }
+</code></pre>
+<h3 id="3322-hierarchical-blobs">3.3.2.2 Hierarchical BLOBs<a class="headerlink" href="#3322-hierarchical-blobs" title="Permanent link">&para;</a></h3>
+<p>In modern formats like JSON and YAML, binary data can be part of the hierarchical structure.</p>
+<p><strong>JSON (Base64):</strong>
+If a <code>ConfigScheme</code> defines a key as type <code>BYTES</code>, mConfig will automatically decode a Base64-encoded string in a JSON file.</p>
+<p><strong>YAML (!!binary):</strong>
+YAML supports binary data natively using the <code>!!binary</code> tag. mConfig will correctly retrieve these as byte arrays.</p>
+<pre><code class="language-java">byte[] data = cfg.getBytes(&quot;server/certificate&quot;);
+</code></pre>
+<h3 id="3323-legacy-blobs">3.3.2.3 Legacy BLOBs<a class="headerlink" href="#3323-legacy-blobs" title="Permanent link">&para;</a></h3>
+<p>The second fallback for supporting legacy applications is that you can get
+filesystem paths for a given Scope. If there are several for the same Scope,
+mConfigUtil will prioritize the most specific entry, and prefer those which
+exist already over those which would need to be created.</p>
+<pre><code class="language-Java">Path localPath = ConfigUtil.whereToPutMyFiles(configFactory, ConfigScope.USER, false);
+</code></pre>
+<p>But please, consider using regular mConfig functionality instead where possible.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="32_updates.html" class="btn btn-neutral float-left" title="3.2 Updates"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="34_definitions_and_valid_values.html" class="btn btn-neutral float-right" title="3.4 Definitions and Valid Values">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="32_updates.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="34_definitions_and_valid_values.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

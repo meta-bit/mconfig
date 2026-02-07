@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>2.3 Configuration Schemes - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "2.3 Configuration Schemes";
+        var mkdocs_page_input_path = "23_configuration_schemes.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">2.3 Configuration Schemes</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#231-overview">2.3.1 Overview</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#2311-benefits-of-using-schemes">2.3.1.1 Benefits of using Schemes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#232-example">2.3.2 Example</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#233-scheme-structure">2.3.3 Scheme Structure</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#2331-scheme-entry-properties">2.3.3.1 Scheme Entry Properties</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2332-arity-arity">2.3.3.2 Arity (ARITY)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2333-validation-patterns-pattern">2.3.3.3 Validation Patterns (PATTERN)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2334-internationalization-i18n">2.3.3.4 Internationalization (I18N)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#234-configschemefactory">2.3.4 ConfigSchemeFactory</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#235-future-proofing-with-the-mandatory-block">2.3.5 Future-Proofing with the MANDATORY block</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#236-formats">2.3.6 Formats</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#2361-named-scheme-object">2.3.6.1 Named Scheme Object</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2362-list-of-entries-anonymous-scheme">2.3.6.2 List of Entries (Anonymous Scheme)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#237-discovery">2.3.7 Discovery</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#developer-notes">Developer Notes</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 2 Core Concepts</li>
+      <li class="breadcrumb-item active">2.3 Configuration Schemes</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="23-configuration-schemes">2.3 Configuration Schemes<a class="headerlink" href="#23-configuration-schemes" title="Permanent link">&para;</a></h1>
+<p>Configuration schemes define the contract for a set of configuration entries. 
+They specify what keys are expected, their data types, default values, validation rules, and other metadata.</p>
+<h2 id="231-overview">2.3.1 Overview<a class="headerlink" href="#231-overview" title="Permanent link">&para;</a></h2>
+<p>A scheme ensures that the configuration data used by the application is valid and consistent. 
+When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig attempts to bind it to a matching scheme.</p>
+<h3 id="2311-benefits-of-using-schemes">2.3.1.1 Benefits of using Schemes<a class="headerlink" href="#2311-benefits-of-using-schemes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Validation</strong>: Automatically check if values match expected types and patterns.</li>
+<li><strong>Defaults</strong>: Provide fallback values if none are found in any configuration layer.</li>
+<li><strong>Documentation</strong>: Automatically generate documentation for configuration entries.</li>
+<li><strong>Type Safety</strong>: Preserve data types (e.g., Integer, Boolean) throughout the configuration stack.</li>
+<li><strong>Security</strong>: Identify which entries contain sensitive data (secrets).</li>
+</ul>
+<h2 id="232-example">2.3.2 Example<a class="headerlink" href="#232-example" title="Permanent link">&para;</a></h2>
+<p>Minimal example (single scheme entry with a default):</p>
+<pre><code class="language-json">[
+  { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080, &quot;DESCRIPTION&quot;: &quot;Listening port&quot; }
+]
+</code></pre>
+<p>Named scheme example (multiple entries):</p>
+<pre><code class="language-json">{
+  &quot;my-app-config&quot;: {
+    &quot;NAME&quot;: &quot;my-app-config&quot;,
+    &quot;ENTRIES&quot;: [
+      { &quot;KEY&quot;: &quot;server/host&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;DEFAULT&quot;: &quot;127.0.0.1&quot; },
+      { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 }
+    ]
+  }
+}
+</code></pre>
+<h2 id="233-scheme-structure">2.3.3 Scheme Structure<a class="headerlink" href="#233-scheme-structure" title="Permanent link">&para;</a></h2>
+<p>Schemes are typically defined in JSON format. A scheme file can contain a single scheme or multiple named schemes.</p>
+<h3 id="2331-scheme-entry-properties">2.3.3.1 Scheme Entry Properties<a class="headerlink" href="#2331-scheme-entry-properties" title="Permanent link">&para;</a></h3>
+<p>Each entry in a scheme (within the <code>ENTRIES</code> list) can have the following properties:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>KEY</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">The hierarchical path of the entry (e.g., <code>database/host</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TYPE</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">The data type: <code>STRING</code>, <code>NUMBER</code>, <code>BOOLEAN</code>, <code>BYTES</code>, <code>MULTIPLE_STRINGS</code>, <code>ENUM</code>, <code>ENUM_SET</code>, <code>URI</code>, <code>FILEPATH</code>, <code>DATE</code>, <code>TIME</code>, <code>DATETIME</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DESCRIPTION</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">Human-readable description or Resource Bundle key for localized description. (Optional)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DEFAULT</code></td>
+<td style="text-align: left;">(any)</td>
+<td style="text-align: left;">The default value used if no other value is provided. (Optional)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PATTERN</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">A validation pattern (Regex, range specification, or enum list). (Optional)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SECRET</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;">If <code>true</code>, the entry is treated as sensitive data (redacted in logs). (Optional, defaults to <code>false</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>HIDDEN</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;">If <code>true</code>, the entry is hidden from automatic documentation. (Optional, defaults to <code>false</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ARITY</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">The number of allowed occurrences (e.g., <code>1</code>, <code>0..1</code>, <code>1..*</code>). (Optional; see defaults below)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MANDATORY</code></td>
+<td style="text-align: left;">Object</td>
+<td style="text-align: left;">(Optional) Block for future-proofing and strict requirements. See below.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>AFTER</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">(Optional) For temporal types, value must be after this (ISO format or <code>now</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BEFORE</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">(Optional) For temporal types, value must be before this (ISO format or <code>now</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>REQUIRE_OFFSET</code></td>
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;">(Optional) For <code>DATETIME</code>, requires an offset (e.g., <code>+02:00</code> or <code>Z</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2332-arity-arity">2.3.3.2 Arity (<code>ARITY</code>)<a class="headerlink" href="#2332-arity-arity" title="Permanent link">&para;</a></h3>
+<p>The <code>ARITY</code> property defines the constraints on the number of elements for an entry. This is especially useful for <code>MULTIPLE_STRINGS</code> and <code>ENUM_SET</code> types.</p>
+<ul>
+<li><strong>Exact number</strong>: <code>"ARITY": "3"</code> (exactly 3 items required).</li>
+<li><strong>Range</strong>: <code>"ARITY": "1..5"</code> (minimum 1, maximum 5 items).</li>
+<li><strong>Open-ended</strong>: <code>"ARITY": "1..*"</code> or <code>"ARITY": "1..n"</code> (at least 1 item, no upper limit).</li>
+<li><strong>Defaults</strong>:<ul>
+<li>Mandatory entries: <code>1</code></li>
+<li>Optional entries: <code>0..1</code></li>
+<li>List types (<code>MULTIPLE_STRINGS</code>, <code>ENUM_SET</code>): <code>0..*</code> (optional) or <code>1..*</code> (mandatory).</li>
+</ul>
+</li>
+</ul>
+<h3 id="2333-validation-patterns-pattern">2.3.3.3 Validation Patterns (<code>PATTERN</code>)<a class="headerlink" href="#2333-validation-patterns-pattern" title="Permanent link">&para;</a></h3>
+<p>Validation patterns depend on the <code>TYPE</code> of the entry:</p>
+<ul>
+<li><strong><code>STRING</code></strong>: A Java Regular Expression. Compiled with <code>Pattern.UNICODE_CHARACTER_CLASS</code> by default, supporting Unicode property escapes like <code>\p{L}</code>.</li>
+<li><strong><code>NUMBER</code></strong>:<ul>
+<li><strong>Mathematical Interval Notation</strong>: Supports <code>[min, max]</code>, <code>(min, max)</code>, <code>[min, max)</code>, and <code>(min, max]</code>. Example: <code>[1024, 65535]</code>.</li>
+<li><strong>Predefined Aliases</strong>:<ul>
+<li>Unsigned: <code>uint8</code> (0-255), <code>uint16</code>, <code>uint32</code>, <code>uint64</code>.</li>
+<li>Signed: <code>int8</code> (-128 to 127), <code>int16</code>, <code>int32</code>, <code>int64</code>, and custom bit-widths like <code>int7</code>, <code>int15</code>, <code>int31</code>, <code>int63</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>ENUM</code> / <code>ENUM_SET</code></strong>: A pipe-separated list of valid options. Example: <code>DEBUG|INFO|WARN|ERROR</code>.</li>
+<li><strong><code>URI</code></strong>: A valid URI string (RFC 3986).</li>
+<li><strong><code>FILEPATH</code></strong>: A valid path on the filesystem.<ul>
+<li><strong>Path Validation Flags</strong>: Can be placed inside the <code>MANDATORY</code> block for semantic checks:<ul>
+<li><code>EXISTS</code>: <code>true</code> (path must exist)</li>
+<li><code>IS_DIRECTORY</code>: <code>true</code> (path must be a directory)</li>
+<li><code>IS_FILE</code>: <code>true</code> (path must be a regular file)</li>
+<li><code>CAN_WRITE</code>: <code>true</code> (path must be writable)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>DATE</code> / <code>TIME</code> / <code>DATETIME</code></strong>: Temporal types in ISO-8601 format.<ul>
+<li><strong>Temporal Validation Flags</strong>: Can be used directly or inside <code>MANDATORY</code>:<ul>
+<li><code>AFTER</code>: Value must be chronologically after this (e.g., <code>"2020-01-01"</code>, <code>"now"</code>).</li>
+<li><code>BEFORE</code>: Value must be chronologically before this.</li>
+<li><code>REQUIRE_OFFSET</code>: (For <code>DATETIME</code> only) If <code>true</code>, requires the presence of a time zone offset (e.g., <code>+05:00</code> or <code>Z</code>).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2334-internationalization-i18n">2.3.3.4 Internationalization (I18N)<a class="headerlink" href="#2334-internationalization-i18n" title="Permanent link">&para;</a></h3>
+<p>The <code>DESCRIPTION</code> property can be a plain string or a key in a Resource Bundle.
+- mConfig looks for Resource Bundles named <code>messages</code> in the same locations as schemes (e.g., <code>.config/messages.properties</code>).
+- If a matching key is found in the bundle for the current locale (configured via <code>ConfigFeature.PREFERRED_LANGUAGE</code>), the localized string is used.
+- Otherwise, the raw <code>DESCRIPTION</code> string is used as a fallback.</p>
+<h2 id="234-configschemefactory">2.3.4 ConfigSchemeFactory<a class="headerlink" href="#234-configschemefactory" title="Permanent link">&para;</a></h2>
+<p>For 1.0 and better multi-language support (JNI/Rust/Python), use <code>ConfigSchemeFactory</code> to create schemes and entries programmatically:</p>
+<pre><code class="language-java">ConfigSchemeFactory factory = ConfigSchemeFactory.create();
+ConfigScheme scheme = factory.createScheme();
+ConfigSchemeEntry entry = factory.createEntry(&quot;port&quot;, ConfigEntryType.NUMBER)
+    .setValidationPattern(&quot;uint16&quot;)
+    .setDefault(&quot;8080&quot;);
+scheme.addSchemeEntry(entry);
+</code></pre>
+<h2 id="235-future-proofing-with-the-mandatory-block">2.3.5 Future-Proofing with the <code>MANDATORY</code> block<a class="headerlink" href="#235-future-proofing-with-the-mandatory-block" title="Permanent link">&para;</a></h2>
+<p>To ensure that future extensions to the scheme format do not break older versions of the library, or conversely, that newer schemes can demand features that older versions must respect, mConfig uses a <code>MANDATORY</code> sub-item.</p>
+<p>If a scheme entry contains a <code>MANDATORY</code> block, the library MUST understand all keys within that block. If any key inside <code>MANDATORY</code> is unknown to the current version of mConfig, the scheme loading will fail with an <code>UNKNOWN_MANDATORY_FEATURE</code> error.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-json">{
+  &quot;KEY&quot;: &quot;network/timeout&quot;,
+  &quot;TYPE&quot;: &quot;NUMBER&quot;,
+  &quot;MANDATORY&quot;: {
+    &quot;UNIT&quot;: &quot;milliseconds&quot;
+  }
+}
+</code></pre>
+<p>In this example, if a future version of mConfig introduces a <code>UNIT</code> feature and it's placed inside <code>MANDATORY</code>, an older version that doesn't know about <code>UNIT</code> will refuse to load the scheme, preventing potential misconfiguration (e.g., interpreting milliseconds as seconds).</p>
+<p>Features outside the <code>MANDATORY</code> block that are unknown to the library are silently ignored.</p>
+<h2 id="236-formats">2.3.6 Formats<a class="headerlink" href="#236-formats" title="Permanent link">&para;</a></h2>
+<p>mConfig supports several JSON structures for defining schemes:</p>
+<h3 id="2361-named-scheme-object">2.3.6.1 Named Scheme Object<a class="headerlink" href="#2361-named-scheme-object" title="Permanent link">&para;</a></h3>
+<pre><code class="language-json">{
+  &quot;my-app-config&quot;: {
+    &quot;NAME&quot;: &quot;my-app-config&quot;,
+    &quot;ENTRIES&quot;: [
+      { &quot;KEY&quot;: &quot;port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 }
+    ]
+  }
+}
+</code></pre>
+<h3 id="2362-list-of-entries-anonymous-scheme">2.3.6.2 List of Entries (Anonymous Scheme)<a class="headerlink" href="#2362-list-of-entries-anonymous-scheme" title="Permanent link">&para;</a></h3>
+<p>If a JSON file contains only a list of entries, it is treated as a scheme for the configuration matching the filename (excluding <code>.scheme.json</code>).</p>
+<pre><code class="language-json">[
+  { &quot;KEY&quot;: &quot;port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 }
+]
+</code></pre>
+<h2 id="237-discovery">2.3.7 Discovery<a class="headerlink" href="#237-discovery" title="Permanent link">&para;</a></h2>
+<p>Schemes are automatically discovered from the classpath within <code>.config/</code> directories.
+- Filenames should follow the pattern <code>name.scheme.json</code>.
+- Schemes can also be provided manually via <code>ConfigFactoryBuilder.setSchemes()</code>.
+- Discovered schemes are registered in the <code>ConfigSchemeRepository</code>.</p>
+<h2 id="developer-notes">Developer Notes<a class="headerlink" href="#developer-notes" title="Permanent link">&para;</a></h2>
+<p>For internals/parsing/validation details, see project <code>devdocs/config_schemes_internals.md</code> (not included in public docs).</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="22_priorities_and_hierarchies.html" class="btn btn-neutral float-left" title="2.2 Priorities and Hierarchies"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="24_comment_handling.html" class="btn btn-neutral float-right" title="2.4 Comment Handling">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="22_priorities_and_hierarchies.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="24_comment_handling.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

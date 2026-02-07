@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>4.2 Logging - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "4.2 Logging";
+        var mkdocs_page_input_path = "42_logging.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">4.2 Logging</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#available-implementations">Available Implementations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#internal-and-hidden-implementations">Internal and Hidden Implementations</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#using-slf4j2logger-in-production">Using SLF4J2Logger in Production</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#421-add-dependencies">4.2.1 Add Dependencies</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#422-auto-discovery">4.2.2 Auto-Discovery</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#423-configuration">4.2.3 Configuration</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#consolelogging-for-development-and-tests">ConsoleLogging for Development and Tests</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#424-build-configuration-maven-gradle">4.2.4 Build Configuration (Maven &amp; Gradle)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#425-manual-activation">4.2.5 Manual Activation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#426-usage-with-configfactorybuilder">4.2.6 Usage with ConfigFactoryBuilder</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#log-levels">Log Levels</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#output-redirection">Output Redirection</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-logging-is-discovered-and-selected">How Logging is Discovered and Selected</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 4 Reference & Project</li>
+      <li class="breadcrumb-item active">4.2 Logging</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="42-logging-in-mconfig">4.2 Logging in mConfig<a class="headerlink" href="#42-logging-in-mconfig" title="Permanent link">&para;</a></h1>
+<p>mConfig uses a custom logging abstraction defined by the <code>ConfigLoggingInterface</code>. This allows the library to remain independent of specific logging frameworks while still providing necessary diagnostic information.</p>
+<h2 id="available-implementations">Available Implementations<a class="headerlink" href="#available-implementations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Implementation</th>
+<th style="text-align: left;">Module</th>
+<th style="text-align: left;">Priority</th>
+<th style="text-align: left;">Service Name</th>
+<th style="text-align: left;">Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>NullLogging</code></td>
+<td style="text-align: left;"><code>mConfigCore</code></td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;"><code>null</code></td>
+<td style="text-align: left;">Default; silent operation.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ConsoleLogging</code></td>
+<td style="text-align: left;"><code>mConfigCore</code></td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"><code>console</code></td>
+<td style="text-align: left;">Dev/tests; prints to stdout/stderr. <strong>Not for production.</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Slf4j2Logger</code></td>
+<td style="text-align: left;"><code>mConfigLoggingSlf4j</code></td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;"><code>slf4j</code></td>
+<td style="text-align: left;">Production use; forwards to SLF4J.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="internal-and-hidden-implementations">Internal and Hidden Implementations<a class="headerlink" href="#internal-and-hidden-implementations" title="Permanent link">&para;</a></h3>
+<p><code>InternalLogger</code> (<code>mConfigCore</code>, <code>impl.core</code>): Activated if <code>ConfigFeature.LOGGING_REDIRECT_TARGET</code> is set. Redirects to specified target.</p>
+<h2 id="using-slf4j2logger-in-production">Using SLF4J2Logger in Production<a class="headerlink" href="#using-slf4j2logger-in-production" title="Permanent link">&para;</a></h2>
+<p><code>Slf4j2Logger</code> (priority 5) bridges mConfig logging to SLF4J.</p>
+<h3 id="421-add-dependencies">4.2.1 Add Dependencies<a class="headerlink" href="#421-add-dependencies" title="Permanent link">&para;</a></h3>
+<p>Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigLoggingSlf4j&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Gradle:</p>
+<pre><code class="language-gradle">implementation 'org.metabit.platform.support.config:mConfigLoggingSlf4j:${mconfig.version}'
+</code></pre>
+<p><strong>Note:</strong> Also need SLF4J API + impl (e.g., logback-classic).</p>
+<h3 id="422-auto-discovery">4.2.2 Auto-Discovery<a class="headerlink" href="#422-auto-discovery" title="Permanent link">&para;</a></h3>
+<p>With <code>mConfigLoggingSlf4j</code> on classpath, auto-selected (highest prio).</p>
+<p>Override with <code>ConfigFactoryBuilder.setFeature(ConfigFeature.LOGGING_TO_USE_IN_CONFIGLIB, "slf4j")</code>.</p>
+<h3 id="423-configuration">4.2.3 Configuration<a class="headerlink" href="#423-configuration" title="Permanent link">&para;</a></h3>
+<p>Configure SLF4J via <code>logback.xml</code>, etc. </p>
+<p><code>Slf4j2Logger</code> uses logger name from <code>ConfigFactoryBuilder</code> company/app or default "mConfig".</p>
+<h2 id="consolelogging-for-development-and-tests">ConsoleLogging for Development and Tests<a class="headerlink" href="#consolelogging-for-development-and-tests" title="Permanent link">&para;</a></h2>
+<p><code>ConsoleLogging</code> is a lightweight console logger (stdout for lower levels, stderr for WARN/ERROR) for debugging mConfig internals. No external dependencies required.</p>
+<h3 id="424-build-configuration-maven-gradle">4.2.4 Build Configuration (Maven &amp; Gradle)<a class="headerlink" href="#424-build-configuration-maven-gradle" title="Permanent link">&para;</a></h3>
+<p>To use <code>ConsoleLogging</code> in modules other than <code>mConfigCore</code>, you must include the <code>mConfigCore</code> <code>test-jar</code> dependency in your build:</p>
+<p>Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigCore&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+    &lt;type&gt;test-jar&lt;/type&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Gradle:</p>
+<pre><code class="language-gradle">testImplementation 'org.metabit.platform.support.config:mConfigCore:${mconfig.version}:tests'
+</code></pre>
+<h3 id="425-manual-activation">4.2.5 Manual Activation<a class="headerlink" href="#425-manual-activation" title="Permanent link">&para;</a></h3>
+<p>You can instantiate <code>ConsoleLogging</code> directly and pass it to components.</p>
+<pre><code class="language-java">import org.metabit.platform.support.config.impl.logging.ConsoleLogging;
+import org.metabit.platform.support.config.ConfigFeature;
+
+// ... in your test ...
+ConsoleLogging logger = new ConsoleLogging(&quot;MyModuleTest&quot;);
+logger.setLevel(&quot;DEBUG&quot;);
+
+// Use with a component that takes a logger
+component.testComponent(settings, logger);
+</code></pre>
+<h3 id="426-usage-with-configfactorybuilder">4.2.6 Usage with ConfigFactoryBuilder<a class="headerlink" href="#426-usage-with-configfactorybuilder" title="Permanent link">&para;</a></h3>
+<p><code>ConfigFactoryBuilder</code> uses <code>ServiceLoader</code> to discover <code>ConfigLoggingInterface</code> implementations. </p>
+<p><strong>Note for Modular Projects:</strong> <code>ConsoleLogging</code> is fully supported via <code>provides</code> in the <code>mConfigCore</code> <code>module-info.java</code>.</p>
+<p>To force the use of <code>ConsoleLogging</code> when using <code>ConfigFactoryBuilder</code> in tests, you can set the feature:</p>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;company&quot;, &quot;app&quot;);
+builder.setFeature(ConfigFeature.LOGGING_TO_USE_IN_CONFIGLIB, &quot;console&quot;);
+</code></pre>
+<p>This will only work if the <code>ConsoleLogging</code> class is discoverable by <code>ServiceLoader</code>. If discovery fails, it will fall back to <code>NullLogging</code>.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="log-levels">Log Levels<a class="headerlink" href="#log-levels" title="Permanent link">&para;</a></h3>
+<p>Available levels: <code>TRACE</code>, <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code>.
+Default level for <code>ConsoleLogging</code> is <code>INFO</code>.</p>
+<p>You can set the level via <code>setLevel(String)</code>:</p>
+<pre><code class="language-java">logger.setLevel(&quot;TRACE&quot;);
+</code></pre>
+<h3 id="output-redirection">Output Redirection<a class="headerlink" href="#output-redirection" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>INFO</code>, <code>DEBUG</code>, <code>TRACE</code> are printed to <code>System.out</code>.</li>
+<li><code>WARN</code>, <code>ERROR</code> are printed to <code>System.err</code>.</li>
+</ul>
+<h2 id="how-logging-is-discovered-and-selected">How Logging is Discovered and Selected<a class="headerlink" href="#how-logging-is-discovered-and-selected" title="Permanent link">&para;</a></h2>
+<p>In <code>DefaultConfigFactoryBuilder.findLoggerForConfigUse()</code>:</p>
+<ol>
+<li>
+<p>If <a href="25_config_features.html"><code>ConfigFeature.LOGGING_REDIRECT_TARGET</code></a> is set, instantiate <code>InternalLogger</code> with target and init.</p>
+</li>
+<li>
+<p>Load <code>ServiceLoader&lt;ConfigLoggingInterface&gt;</code>:</p>
+</li>
+<li>Prefer exact match to <a href="25_config_features.html"><code>ConfigFeature.LOGGING_TO_USE_IN_CONFIGLIB</code></a> by service name (case-insensitive).</li>
+<li>Otherwise, select highest priority (<code>getServiceModulePriority()</code>) among those that <code>init()</code> successfully.</li>
+<li>Fallback to <code>NullLogging</code>.</li>
+</ol>
+<p>All loggers must implement <code>init(ConfigFactorySettings)</code> (usually returns <code>true</code>) and <code>exit()</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="41_mconfig_tool.html" class="btn btn-neutral float-left" title="4.1 mConfig Tool"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="43_faq.html" class="btn btn-neutral float-right" title="4.3 FAQ">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="41_mconfig_tool.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="43_faq.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

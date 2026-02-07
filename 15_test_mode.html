@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>1.5 Test Mode - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1.5 Test Mode";
+        var mkdocs_page_input_path = "15_test_mode.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">1.5 Test Mode</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#goals">Goals</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#use">Use</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#activate-test-mode">Activate Test Mode</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#effects-of-test-mode">Effects of Test Mode</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#paths-for-test-mode">Paths for Test Mode</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#custom-test-directories">Custom test directories</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#set-your-own-paths-legacy-api-for-some-test-environments">Set your own paths (legacy API for some test environments)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#151-global-static-gate-forbidtestmode-permittestmode">1.5.1 Global Static Gate (forbidTestMode() / permitTestMode())</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#152-instance-dynamic-gate-permit_test_mode-feature">1.5.2 Instance Dynamic Gate (PERMIT_TEST_MODE Feature)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#productive-by-default">"Productive by Default"</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#test-mode-proofing-lockdown">"Test Mode Proofing" (Lockdown)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#activation-logic">Activation Logic</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#153-self-configuration-security">1.5.3 Self-Configuration Security</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 1 Introduction & Basics</li>
+      <li class="breadcrumb-item active">1.5 Test Mode</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="15-test-mode">1.5 Test Mode<a class="headerlink" href="#15-test-mode" title="Permanent link">&para;</a></h1>
+<p>mConfig has a test mode. This is to support software using mConfig
+in performing automated tests.</p>
+<p>Test mode supports:
+- manual tests by individual developers,
+- unit and integration testing,
+- the CI/CD pipeline test environment.</p>
+<p>One of the problems with tests is to replace the real, runtime environment
+with the test environment – preferably with as little residue in the actual
+code as possible.</p>
+<p>One of the solution approaches is to supply the code with different configurations,
+depending on whether it is run in test mode, or regular runtime mode.</p>
+<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<p>We want to allow testing configurations without modifying the actual code.</p>
+<p>The simple, straightforward way would be to provide <code>ConfigFactoryBuilder</code> instances
+to your code, set up differently depending on whether testing or not. But that's
+breaking encapsulation, and cumbersome.</p>
+<p>Instead, we provide a way to change the <code>ConfigFactoryBuilder</code> behaviour for the
+entire VM - "static"-like. This way, all instances in the respective JVM
+are turned to test mode or production mode, including the paths and settings
+you also specify.</p>
+<p>This way, your test code can set the test environment in a @BeforeAll/@BeforeEach
+function before the tests start, while tests and <strong>code stay free of test-specific
+modifications</strong> in regard to mConfig.</p>
+<h2 id="use">Use<a class="headerlink" href="#use" title="Permanent link">&para;</a></h2>
+<h3 id="activate-test-mode">Activate Test Mode<a class="headerlink" href="#activate-test-mode" title="Permanent link">&para;</a></h3>
+<p><code>ConfigFactoryBuilder.setTestMode(true);</code></p>
+<p>or with Environment Variables, e.g.
+<code>MCONFIG_RUNTIME_TEST_MODE=true</code></p>
+<p>(requirements for Environment Variables to have effect: 
+1. EnvVar source module present, 
+2. ALLOW_RUNTIME_FLAG set to true in the ConfigFactoryBuilder.
+)</p>
+<h4 id="effects-of-test-mode">Effects of Test Mode<a class="headerlink" href="#effects-of-test-mode" title="Permanent link">&para;</a></h4>
+<p>this will</p>
+<ul>
+<li>disable lookup in the regular file paths</li>
+<li>instead, use "./src/test/config" and "./src/test/resources/config" paths
+  relative to current working directory as base paths.
+  Resource-based configurations in <code>src/test/resources/config/{SCOPE}</code> 
+  take precedence over project-level test configurations in <code>src/test/config</code>.</li>
+</ul>
+<p>This is based on the standard maven test run setup,
+  where the tests are run from one level above the src directory.
+- disable lookup in default network environments, if network config sources are active
+- enable lookup in test network environments, if available/configured.
+- switch JAR lookup from regular resources folder to test resources.
+  Instead of <code>src/main/resources/config</code> from source,
+  in test mode <code>src/test/resources/config</code> becomes the starting point
+  for JAR-file resolution.</p>
+<ul>
+<li>NB: JARs rarely compile in test resources! The JAR aspect takes effect 
+  only if you are building test JARs in addition to the regular ones.</li>
+</ul>
+<h4 id="paths-for-test-mode">Paths for Test Mode<a class="headerlink" href="#paths-for-test-mode" title="Permanent link">&para;</a></h4>
+<p>Below the src/test/resources/config/ directory, we check for subdirectories with
+the scope names in all-caps, e.g. PRODUCT, APPLICATION, USER, to allow
+for placement of respective contents.</p>
+<p>In the other case, we go test/.config/<em>COMPANY</em>/<em>PRODUCTNAME</em>, to mirror such entries
+for production.</p>
+<p>So, activating test mode results in these directories searched for entries:</p>
+<h5 id="test-mode-search-paths">Test mode search paths<a class="headerlink" href="#test-mode-search-paths" title="Permanent link">&para;</a></h5>
+<p>In test mode, standard OS paths are bypassed. Use explicit paths via <code>ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of("USER:/tmp/test-user"))</code> <strong>or</strong> fallbacks like <code>src/test/resources/.config/&amp;lt;company&amp;gt;/&amp;lt;app&amp;gt;/</code> and <code>src/test/resources/config/{SCOPE}</code> (resources &gt; project configs).</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Path</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POLICY</td>
+<td>TESTMODE_DIRECTORIES "POLICY:/path" or src/test/resources/config/POLICY</td>
+<td>Highest</td>
+</tr>
+<tr>
+<td>RUNTIME</td>
+<td>src/test/resources/config/RUNTIME</td>
+<td></td>
+</tr>
+<tr>
+<td>SESSION</td>
+<td>src/test/resources/config/SESSION</td>
+<td></td>
+</tr>
+<tr>
+<td>USER</td>
+<td>src/test/resources/config/USER</td>
+<td></td>
+</tr>
+<tr>
+<td>APPLICATION</td>
+<td>src/test/config/&lt;company&gt;/&lt;app&gt;/ or src/test/resources/config/APPLICATION</td>
+<td></td>
+</tr>
+<tr>
+<td>HOST</td>
+<td>src/test/resources/config/HOST</td>
+<td></td>
+</tr>
+<tr>
+<td>CLUSTER</td>
+<td>src/test/resources/config/CLUSTER</td>
+<td></td>
+</tr>
+<tr>
+<td>CLOUD</td>
+<td>src/test/resources/config/CLOUD</td>
+<td></td>
+</tr>
+<tr>
+<td>ORGANIZATION</td>
+<td>src/test/resources/config/ORGANIZATION</td>
+<td></td>
+</tr>
+<tr>
+<td>PRODUCT</td>
+<td>src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/</td>
+<td>Lowest</td>
+</tr>
+</tbody>
+</table>
+<p>NB: "COMPANY" and "APP" placeholders replaced by code values. Scope dirs verbatim UPPERCASE. Resources override project configs; scopes follow enum priority (higher scopes override lower).</p>
+<h3 id="custom-test-directories">Custom test directories<a class="headerlink" href="#custom-test-directories" title="Permanent link">&para;</a></h3>
+<p>You can provide a list of directories for <code>TESTMODE_DIRECTORIES</code> with their respective scope.</p>
+<p>Format: <code>SCOPENAME ":" PATH</code>
+e.g. <code>USER:/~developer/mylocaltest</code> or <code>APPLICATION:/tmp/generatedautomatedtestingdir</code>.</p>
+<p>Multiple entries per scope are possible, and used in order.
+If the scope name is omitted or invalid, it defaults to <code>RUNTIME</code> scope.</p>
+<p><strong>Note</strong>:
+In <code>TEST_MODE</code>, <code>ADDITIONAL_RUNTIME_DIRECTORIES</code> and <code>ADDITIONAL_USER_DIRECTORIES</code> 
+are intentionally ignored to prevent tests from accidentally interacting with real production data.
+Only <code>TESTMODE_DIRECTORIES</code> and the default test resource locations are used.</p>
+<h3 id="set-your-own-paths-legacy-api-for-some-test-environments">Set your own paths (legacy API for some test environments)<a class="headerlink" href="#set-your-own-paths-legacy-api-for-some-test-environments" title="Permanent link">&para;</a></h3>
+<p>ConfigFactoryBuilder.setTestConfigPaths() allows you to set multiple paths for 
+each scope, to be used in test mode. Deprecated; use the custom test directories above.</p>
+<pre><code class="language-java">
+@BeforeAll
+void setUpTestEnvironment()
+    {
+    List&lt;String&gt; paths = List.of(&quot;/my/local/fixed/config/environment&quot;);
+    ConfigFactoryBuilder.setTestMode(true); // activate and set defaults
+    ConfigFactoryBuilder.setTestFilePaths(paths); // replace
+    ConfigFactoryBuilder.setTestJARURIs(null); // turn off
+    }
+</code></pre>
+<p><strong>Deprecated legacy API</strong>: Paths added at <code>RUNTIME</code> scope.</p>
+<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
+<p>To prevent accidental or malicious activation of test mode in production environments,
+mConfig employs a two-tier security gate system.</p>
+<h3 id="151-global-static-gate-forbidtestmode-permittestmode">1.5.1 Global Static Gate (<code>forbidTestMode()</code> / <code>permitTestMode()</code>)<a class="headerlink" href="#151-global-static-gate-forbidtestmode-permittestmode" title="Permanent link">&para;</a></h3>
+<p>This is a JVM-wide master switch. Calling <code>ConfigFactoryBuilder.forbidTestMode()</code> 
+ensures that no code within the JVM can activate <code>TEST_MODE</code>, 
+regardless of other settings. This is intended for production environments 
+to provide a hard security boundary.</p>
+<h3 id="152-instance-dynamic-gate-permit_test_mode-feature">1.5.2 Instance Dynamic Gate (<code>PERMIT_TEST_MODE</code> Feature)<a class="headerlink" href="#152-instance-dynamic-gate-permit_test_mode-feature" title="Permanent link">&para;</a></h3>
+<p>This is a per-builder configuration flag. It acts as a final check 
+before an instance activates test mode.</p>
+<h4 id="productive-by-default">"Productive by Default"<a class="headerlink" href="#productive-by-default" title="Permanent link">&para;</a></h4>
+<p>To simplify development, the <code>PERMIT_TEST_MODE</code> feature defaults to <code>true</code>. 
+This allows developers to activate <code>TEST_MODE</code> using a single flag 
+(via environment variables, system properties, or <code>setFeature</code>) 
+without needing to explicitly enable permissions in standard environments.</p>
+<h4 id="test-mode-proofing-lockdown">"Test Mode Proofing" (Lockdown)<a class="headerlink" href="#test-mode-proofing-lockdown" title="Permanent link">&para;</a></h4>
+<p>Despite with the default being <code>true</code>, <code>PERMIT_TEST_MODE</code> remains an useful security tool
+for some situations.
+In a complex process where <code>TEST_MODE</code> might be enabled globally
+(e.g., via <code>-DTEST_MODE=true</code>) to facilitate integration testing of some modules, a critical production-facing <code>ConfigFactory</code> can be locked down:</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;CRITICAL_APP&quot;)
+    .setFeature(ConfigFeature.PERMIT_TEST_MODE, false) // Lockdown this instance
+    .build())
+    {
+    // ...
+    }
+</code></pre>
+<p>Even if <code>TEST_MODE</code> is requested externally, this specific instance will remain in production mode, ensuring it never reads from <code>src/test/resources</code> or other untrusted test locations,
+like some dynamically generated test directories and -files.</p>
+<h3 id="activation-logic">Activation Logic<a class="headerlink" href="#activation-logic" title="Permanent link">&para;</a></h3>
+<p>Test mode is only enabled if <strong>both</strong> the global gate and the instance gate allow it. The following logic is enforced during the <code>build()</code> process:</p>
+<pre><code class="language-java">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.
+if (testModePermitted &amp;&amp; configFactorySettings.getBoolean(PERMIT_TEST_MODE)) 
+{
+    // Activation occurs if either the global trigger or instance trigger is set.
+    if (testModeActive || configFactorySettings.getBoolean(TEST_MODE)) 
+    {
+        configFactorySettings.setBoolean(TEST_MODE, true);
+    }
+}
+else 
+{
+    // If either permission gate is closed, test mode is forced to false.
+    configFactorySettings.setBoolean(TEST_MODE, false);
+}
+</code></pre>
+<h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security<a class="headerlink" href="#153-self-configuration-security" title="Permanent link">&para;</a></h3>
+<p>mConfig's self-configuration feature (loading <code>mconfig.properties</code> from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable it:</p>
+<pre><code class="language-java">ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;APP&quot;)
+    .setFeature(ConfigFeature.ENABLE_SELF_CONFIGURATION, false)
+    .build();
+</code></pre>
+<p>This is particularly important in security-sensitive applications to ensure that no unexpected features (like <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> or <code>TEST_MODE</code>) are enabled by a JAR file placed on the classpath.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="14_regular_use.html" class="btn btn-neutral float-left" title="1.4 Regular Use"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="21_how_it_works.html" class="btn btn-neutral float-right" title="2.1 How it Works">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="14_regular_use.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="21_how_it_works.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

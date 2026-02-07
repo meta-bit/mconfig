@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>mConfig Modules - mConfig Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "mConfig Modules";
+        var mkdocs_page_input_path = "examples/mconfig-modules.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">mConfig Modules</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#choosing-your-modules">Choosing Your Modules</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mconfigstandard-modules">mConfigStandard Modules</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#additional-mconfigfull-modules">Additional mConfigFull Modules</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#other-available-modules">Other Available Modules</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#planned-modules">planned Modules</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Examples</li>
+      <li class="breadcrumb-item active">mConfig Modules</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mconfig-modules">mConfig Modules<a class="headerlink" href="#mconfig-modules" title="Permanent link">&para;</a></h1>
+<p>mConfig is a modular library with which you can pick and choose the components you need.</p>
+<h2 id="choosing-your-modules">Choosing Your Modules<a class="headerlink" href="#choosing-your-modules" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Start simple</strong>: Use <code>mConfigStandard</code> for most applications</li>
+<li><strong>Need more formats?</strong>: Use <code>mConfigFull</code> to get JSON, YAML, and JSON5 support</li>
+<li><strong>Custom setup</strong>: Include only the specific modules you need</li>
+<li><strong>Reduce if needed</strong>: start with 'mConfigCore' and add only what you need</li>
+</ul>
+<p>All modules share the same version number and are designed to work together seamlessly.</p>
+<p>Just add the modules you need to your project's dependencies.
+mConfig will automatically load them at runtime, when they are in the classpath.</p>
+<p>Java JPMS (since Java 9) considerations: see <a href="java-modules.html">Java Platform Module System</a>.</p>
+<h2 id="mconfigstandard-modules">mConfigStandard Modules<a class="headerlink" href="#mconfigstandard-modules" title="Permanent link">&para;</a></h2>
+<p>The <code>mConfigStandard</code> module provides a sensible minimum configuration to get started quickly.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Artifact ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core API</td>
+<td>mConfigCore</td>
+<td>Core interfaces and base classes</td>
+</tr>
+<tr>
+<td>File Source</td>
+<td>mConfigSourceFile</td>
+<td>configuration from files in standard OS locations</td>
+</tr>
+<tr>
+<td>System Properties Source</td>
+<td>mConfigSourceSystemProperties</td>
+<td>configuration from Java system properties</td>
+</tr>
+<tr>
+<td>Properties Format</td>
+<td>mConfigFormatJavaProperties</td>
+<td>Support for Java .properties file format</td>
+</tr>
+</tbody>
+</table>
+<p>Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigStandard&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+    &lt;type&gt;pom&lt;/type&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Caveat: Do not omit/forget the type being <code>pom</code>.</p>
+<p>Gradle:</p>
+<pre><code class="language-gradle">implementation 'org.metabit.platform.support.config:mConfigStandard:${mconfig.version}'
+</code></pre>
+<h2 id="additional-mconfigfull-modules">Additional mConfigFull Modules<a class="headerlink" href="#additional-mconfigfull-modules" title="Permanent link">&para;</a></h2>
+<p>The <code>mConfigFull</code> module includes everything from <code>mConfigStandard</code> plus additional mature, stable modules:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Artifact ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Environment Variables Source</td>
+<td>mConfigSourceEnvVar</td>
+<td>Read configuration from environment variables</td>
+</tr>
+<tr>
+<td>Windows Registry Source</td>
+<td>mConfigWinRegistry</td>
+<td>Read configuration from Windows Registry (Windows only)</td>
+</tr>
+<tr>
+<td>JSON Format</td>
+<td>mConfigFormatJSONwithJackson</td>
+<td>Support for JSON configuration files using Jackson</td>
+</tr>
+<tr>
+<td>JSON5 Format</td>
+<td>mConfigFormatJSONwithJackson</td>
+<td>Support for JSON5 configuration files using Jackson</td>
+</tr>
+<tr>
+<td>YAML (Jackson) Format</td>
+<td>mConfigFormatYAMLwithJackson</td>
+<td>Support for YAML configuration files using Jackson</td>
+</tr>
+<tr>
+<td>YAML (SnakeYAML) Format</td>
+<td>mConfigFormatYAMLwithSnakeYAML</td>
+<td>Support for YAML configuration files using SnakeYAML</td>
+</tr>
+<tr>
+<td>TOML Format</td>
+<td>mConfigFormatTOMLwithJackson</td>
+<td>Support for TOML configuration files using Jackson</td>
+</tr>
+<tr>
+<td>INI Format</td>
+<td>mConfigFormatINI</td>
+<td>Support for INI configuration files</td>
+</tr>
+<tr>
+<td>Mapper</td>
+<td>mConfigMapper</td>
+<td>Map configuration to Java objects</td>
+</tr>
+<tr>
+<td>SLF4J Logging</td>
+<td>mConfigLoggingSlf4j</td>
+<td>Logging integration with SLF4J</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigFull&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+    &lt;type&gt;pom&lt;/type&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="other-available-modules">Other Available Modules<a class="headerlink" href="#other-available-modules" title="Permanent link">&para;</a></h2>
+<p>Additional modules that are not included in <code>mConfigStandard</code> or <code>mConfigFull</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Artifact ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cheese</td>
+<td>mConfigCheese</td>
+<td>some fragrant code for those with a taste for it</td>
+</tr>
+</tbody>
+</table>
+<h2 id="planned-modules">planned Modules<a class="headerlink" href="#planned-modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Artifact ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XML Format</td>
+<td>mConfigFormatXML</td>
+<td>Support for XML configuration files</td>
+</tr>
+<tr>
+<td>JUL Logging</td>
+<td>mConfigLoggingJUL</td>
+<td>Logging integration with Java Util Logging</td>
+</tr>
+<tr>
+<td>(Database Source)</td>
+<td>mConfigSource(DatabaseName)</td>
+<td>Read configuration from database</td>
+</tr>
+<tr>
+<td>(Remote Source)</td>
+<td>mConfigSource(NetworkService)</td>
+<td>Read configuration from remote servers</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="testing_configurations.html" class="btn btn-neutral float-left" title="Testing Configurations"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="java-modules.html" class="btn btn-neutral float-right" title="JPMS (Java Modules)">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="testing_configurations.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="java-modules.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

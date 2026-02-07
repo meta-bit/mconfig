@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Handling Crypto Keys and Certificates - mConfig Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Handling Crypto Keys and Certificates";
+        var mkdocs_page_input_path = "examples/handling_crypto_keys_and_certificates.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../23_configuration_schemes.html">2.3 Configuration Schemes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../25_config_features.html">2.5 Config Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../35_handling_secrets.html">3.5 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../36_windows_registry.html">3.6 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../37_extensions_and_advanced_use.html">3.7 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../38_code_improvements.html">3.8 Code Improvements</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference & Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../45_ai_guidance.html">4.5 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../46_versions.html">4.6 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../47_contributing.html">4.7 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../48_legal.html">4.8 Legal</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Handling Crypto Keys and Certificates</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-prerequisites">1. Prerequisites</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-setup-configfactory">2. Setup ConfigFactory</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-generate-and-store-rsa-keypair-jce">3. Generate and Store RSA Keypair (JCE)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-read-der-private-key-jce">4. Read DER Private Key (JCE)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-generate-and-store-self-signed-x509-certificate-bouncycastle">5. Generate and Store Self-Signed X.509 Certificate (BouncyCastle)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-read-x509-certificate-jce">6. Read X.509 Certificate (JCE)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-pem-handling-bouncycastle">7. PEM Handling (BouncyCastle)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#generate-pem-private-key">Generate PEM Private Key</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#read-pem-private-key">Read PEM Private Key</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-writing-to-specific-scopesdirs">8. Writing to Specific Scopes/Dirs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tips">Tips</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="schemes.html">Schemes</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Appendix</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../49_links.html">4.9 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Examples</li>
+      <li class="breadcrumb-item active">Handling Crypto Keys and Certificates</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="handling-cryptographic-keys-and-certificates-with-mconfig">Handling Cryptographic Keys and Certificates with mConfig<a class="headerlink" href="#handling-cryptographic-keys-and-certificates-with-mconfig" title="Permanent link">&para;</a></h1>
+<p>mConfig supports storing and retrieving cryptographic material (keys, certificates) securely using <code>SecretValue</code>. 
+Binary data (DER) is stored as <code>BYTES</code> entries marked as <code>SECRET</code> in schemes. 
+PEM can be stored as <code>STRING</code> or <code>BYTES</code> and parsed with BouncyCastle.</p>
+<p><strong>Note</strong>: Sensitive data is redacted in logs. Use <code>SecretValue.erase()</code> after use.</p>
+<h2 id="1-prerequisites">1. Prerequisites<a class="headerlink" href="#1-prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>JCE</strong>: Included in JDK.</li>
+<li><strong>BouncyCastle</strong> (optional, for PEM/EC/FIPS): Add to classpath:
+  Maven:
+  <code>xml
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.bouncycastle&lt;/groupId&gt;
+    &lt;artifactId&gt;bcprov-jdk18on&lt;/artifactId&gt;
+    &lt;version&gt;1.78&lt;/version&gt;
+  &lt;/dependency&gt;</code>
+  Gradle:
+  <code>gradle
+  implementation 'org.bouncycastle:bcprov-jdk18on:1.78'</code></li>
+<li>Mark scheme entries as <code>SECRET</code>:
+  <code>json
+  {
+    "keys/rsa/private": {
+      "type": "BYTES", 
+      "flags": ["SECRET"],
+      "secretType": "PRIVATE_KEY"
+    },
+    "certs/server": {
+      "type": "BYTES",
+      "flags": ["SECRET"],
+      "secretType": "CERTIFICATE"
+    }
+  }</code></li>
+</ul>
+<h2 id="2-setup-configfactory">2. Setup ConfigFactory<a class="headerlink" href="#2-setup-configfactory" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">ConfigScheme scheme = ConfigScheme.fromJSON(...) // load scheme
+ConfigFactory factory = ConfigFactoryBuilder.create(&quot;mycompany&quot;, &quot;myapp&quot;)
+  .setFeature(ConfigFeature.CONFIG_SCHEME_LIST, Map.of(&quot;crypto&quot;, scheme))
+  .build();
+Configuration config = factory.getConfig(&quot;crypto&quot;);
+</code></pre>
+<p>Instead of specifying the scheme programmatically, you can also 
+place the scheme file in the respective resource directory within the jar/classpath.
+(separate folders below "main" for production, below "test" for integration tests.)</p>
+<h2 id="3-generate-and-store-rsa-keypair-jce">3. Generate and Store RSA Keypair (JCE)<a class="headerlink" href="#3-generate-and-store-rsa-keypair-jce" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">import java.security.*;
+
+// Generate
+KeyPairGenerator kpg = KeyPairGenerator.getInstance(&quot;RSA&quot;);
+kpg.initialize(2048);
+KeyPair kp = kpg.generateKeyPair();
+
+// DER bytes
+byte[] privDer = kp.getPrivate().getEncoded();
+byte[] pubDer = kp.getPublic().getEncoded();
+
+// Store as SecretValue (auto-typed if scheme helps)
+config.put(&quot;keys/rsa/private&quot;, new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.USER);
+config.put(&quot;keys/rsa/public&quot;, pubDer, ConfigScope.USER); // Public OK as non-secret
+
+// To HOST scope (elevated privs may be needed)
+config.put(&quot;keys/rsa/private&quot;, new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.HOST);
+</code></pre>
+<h2 id="4-read-der-private-key-jce">4. Read DER Private Key (JCE)<a class="headerlink" href="#4-read-der-private-key-jce" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">SecretValue privSecret = config.getSecret(&quot;keys/rsa/private&quot;);
+if (privSecret != null) 
+    {
+    byte[] derBytes = privSecret.getValue();
+    KeyFactory kf = KeyFactory.getInstance(&quot;RSA&quot;);
+    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(derBytes);
+    PrivateKey privateKey = kf.generatePrivate(keySpec);
+    privSecret.erase(); // Secure wipe
+    }
+</code></pre>
+<h2 id="5-generate-and-store-self-signed-x509-certificate-bouncycastle">5. Generate and Store Self-Signed X.509 Certificate (BouncyCastle)<a class="headerlink" href="#5-generate-and-store-self-signed-x509-certificate-bouncycastle" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.cert.*; // etc.
+// ...
+Security.addProvider(new BouncyCastleProvider());
+
+KeyPairGenerator kpg = KeyPairGenerator.getInstance(&quot;RSA&quot;, &quot;BC&quot;);
+kpg.initialize(2048);
+KeyPair kp = kpg.generateKeyPair();
+
+long now = System.currentTimeMillis();
+X500Name issuer = new X500Name(&quot;CN=TestCA&quot;);
+BigInteger serial = BigInteger.valueOf(now);
+Date notBefore = new Date(now - 5000);
+Date notAfter = new Date(now + 365L * 24 * 3600 * 1000);
+
+ContentSigner signer = new JcaContentSignerBuilder(&quot;SHA256withRSA&quot;).setProvider(&quot;BC&quot;).build(kp.getPrivate());
+X509v3CertificateBuilder builder = new JcaX509v3CertificateBuilder(issuer, serial, notBefore, notAfter, issuer, kp.getPublic());
+X509CertificateHolder holder = builder.build(signer);
+X509Certificate cert = new JcaX509CertificateConverter().setProvider(&quot;BC&quot;).getCertificate(holder);
+
+// Store DER
+byte[] certDer = cert.getEncoded();
+config.put(&quot;certs/server&quot;, new BasicSecretValue(certDer, SecretType.CERTIFICATE), ConfigScope.USER);
+</code></pre>
+<h2 id="6-read-x509-certificate-jce">6. Read X.509 Certificate (JCE)<a class="headerlink" href="#6-read-x509-certificate-jce" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">SecretValue certSecret = config.getSecret(&quot;certs/server&quot;);
+if (certSecret != null)
+    {
+    byte[] derBytes = certSecret.getValue();
+    CertificateFactory cf = CertificateFactory.getInstance(&quot;X.509&quot;);
+    X509Certificate cert = (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(derBytes));
+    certSecret.erase();
+    }
+</code></pre>
+<h2 id="7-pem-handling-bouncycastle">7. PEM Handling (BouncyCastle)<a class="headerlink" href="#7-pem-handling-bouncycastle" title="Permanent link">&para;</a></h2>
+<h3 id="generate-pem-private-key">Generate PEM Private Key<a class="headerlink" href="#generate-pem-private-key" title="Permanent link">&para;</a></h3>
+<pre><code class="language-java">import org.bouncycastle.util.io.pem.PemWriter;
+import org.bouncycastle.openssl.PEMEncryptedKeyPair;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter; // Simpler
+
+try (StringWriter sw = new StringWriter(); JcaPEMWriter pemWriter = new JcaPEMWriter(sw)) {
+    pemWriter.writeObject(kp.getPrivate());
+    String pem = sw.toString();
+    config.put(&quot;keys/rsa/private.pem&quot;, pem, ConfigScope.USER); // STRING
+}
+</code></pre>
+<h3 id="read-pem-private-key">Read PEM Private Key<a class="headerlink" href="#read-pem-private-key" title="Permanent link">&para;</a></h3>
+<pre><code class="language-java">String pemStr = (String) config.getValue(&quot;keys/rsa/private.pem&quot;); // or SecretValue if marked
+try (PEMParser pemParser = new PEMParser(new StringReader(pemStr)))
+    {
+    Object obj = pemParser.readObject();
+    if (obj instanceof PEMKeyPair)
+        {
+        PEMKeyPair pemPair = (PEMKeyPair) obj;
+        JcaPEMKeyConverter conv = new JcaPEMKeyConverter().setProvider(&quot;BC&quot;);
+        PrivateKey privKey = conv.getPrivateKey(pemPair.getPrivateKeyInfo());
+        }
+    }
+</code></pre>
+<h2 id="8-writing-to-specific-scopesdirs">8. Writing to Specific Scopes/Dirs<a class="headerlink" href="#8-writing-to-specific-scopesdirs" title="Permanent link">&para;</a></h2>
+<p>mConfig writes to OS-standard paths:
+- <strong>USER</strong>: <code>~/.config/&lt;company&gt;/&lt;app&gt;/crypto</code> (JSON/TOML/etc.)
+- <strong>HOST</strong>: <code>/etc/&lt;app&gt;/crypto</code> (Linux; admin req'd)</p>
+<p>Use <code>config.put(key, value, scope)</code>.</p>
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Use <code>SecretType.PRIVATE_KEY</code>, <code>CERTIFICATE</code> for typing.</li>
+<li>Tests: integrationtestSecretsBC/JCE verify roundtrip.</li>
+<li>Prod: Rotate keys via CLI <code>mconfig set --scope USER</code>.</li>
+</ul>
+<p>See <a href="../44_design_consolidated.html">../44_design_consolidated.md</a> for more.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="zookeeper.html" class="btn btn-neutral float-left" title="ZooKeeper"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="schemes.html" class="btn btn-neutral float-right" title="Schemes">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="zookeeper.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="schemes.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
