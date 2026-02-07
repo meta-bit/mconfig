@@ -10,6 +10,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Create .nojekyll
+        run: touch documentation/target/mkdocs/.nojekyll
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
