@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.3</version>
+        <version>0.8.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>mconfigformatini</artifactId>
@@ -21,11 +21,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

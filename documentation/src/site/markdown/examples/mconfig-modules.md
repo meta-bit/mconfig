@@ -1,13 +1,13 @@
 # mConfig Modules
 
-mConfig is a modular library where you can pick and choose the components you need.
+mConfig is a modular library with which you can pick and choose the components you need.
 
 ## Choosing Your Modules
 
 - **Start simple**: Use `mConfigStandard` for most applications
 - **Need more formats?**: Use `mConfigFull` to get JSON, YAML, and JSON5 support
 - **Custom setup**: Include only the specific modules you need
-- **reduce if needed**: start with 'mConfigCore' and add only what you need
+- **Reduce if needed**: start with 'mConfigCore' and add only what you need
 
 All modules share the same version number and are designed to work together seamlessly.
 
@@ -60,7 +60,14 @@ The `mConfigFull` module includes everything from `mConfigStandard` plus additio
 | Mapper                       | mConfigMapper                  | Map configuration to Java objects                       |
 | SLF4J Logging                | mConfigLoggingSlf4j            | Logging integration with SLF4J                          |
 
-@TODO: add Maven dependency XML for `mConfigFull`
+```xml
+<dependency>
+    <groupId>org.metabit.platform.support.config</groupId>
+    <artifactId>mConfigFull</artifactId>
+    <version>${mconfig.version}</version>
+    <type>pom</type>
+</dependency>
+```
 
 ## Other Available Modules
 

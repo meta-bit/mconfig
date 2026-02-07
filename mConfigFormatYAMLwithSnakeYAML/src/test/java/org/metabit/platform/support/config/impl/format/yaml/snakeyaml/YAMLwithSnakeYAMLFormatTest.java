@@ -93,6 +93,6 @@ public class YAMLwithSnakeYAMLFormatTest
     public void testGetFormatID()
         {
         YAMLwithSnakeYAMLFormat format = new YAMLwithSnakeYAMLFormat();
-        assertEquals("YAML", format.getFormatID());
+        assertEquals("YAMLwithSnakeYAML", format.getFormatID());
         }
 }

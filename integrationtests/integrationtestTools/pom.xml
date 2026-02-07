@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.metabit.testing.platform.support.config.test</groupId>
+        <artifactId>integrationtests</artifactId>
+        <version>0.8.5-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>integrationtesttools</artifactId>
+    <name>integrationtestTools</name>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigtools</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigsourcefilesystem</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatjsonwithjackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatyamlwithjackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformattoml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatjavaproperties</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatini</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

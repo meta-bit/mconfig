@@ -24,6 +24,7 @@ public class ConfigEntryMetadata
 {
 private ConfigEntrySpecification specification;
 private ConfigSource             source;
+private String                   comment;
 
 /**
  * <p>Constructor for ConfigEntryMetadata.</p>
@@ -86,10 +87,30 @@ public ConfigEntrySpecification getSpecification()
  *
  * @param specification a {@link org.metabit.platform.support.config.interfaces.ConfigEntrySpecification} object
  */
-public void setSpecification(ConfigEntrySpecification specification)
-    {
-    this.specification = specification;
-    }
+    public void setSpecification(ConfigEntrySpecification specification)
+        {
+        this.specification = specification;
+        }
+
+    /**
+     * <p>Getter for the field <code>comment</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getComment()
+        {
+        return comment;
+        }
+
+    /**
+     * <p>Setter for the field <code>comment</code>.</p>
+     *
+     * @param comment a {@link java.lang.String} object
+     */
+    public void setComment(String comment)
+        {
+        this.comment = comment;
+        }
 // type
 // flags (e.g. "mandatory")
 // default value

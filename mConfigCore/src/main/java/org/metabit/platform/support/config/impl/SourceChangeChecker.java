@@ -121,7 +121,6 @@ public class SourceChangeChecker implements Runnable
             
             if (configLayer.getSource().hasChangedSincePreviousCheck())
                 {
-                System.out.println("[DEBUG_LOG] SourceChangeChecker: CHANGE detected in config layer " + configLayer);
                 logger.info("CHANGE detected in config layer " + configLayer);
                 
                 // if we have an iterator, check for individual entry changes

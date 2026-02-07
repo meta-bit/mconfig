@@ -113,7 +113,9 @@ public class SetCommand implements Callable<Integer>
             ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(ctx.company, ctx.application);
             if (fileFormat != null)
                 {
-                builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, Arrays.asList(fileFormat.name()));
+                // Try both the standard name and the withJackson variant
+                builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, 
+                        Arrays.asList(fileFormat.name(), fileFormat.name() + "withJackson"));
                 }
             String testDirs = System.getProperty("TESTMODE_DIRECTORIES");
             if (testDirs != null)

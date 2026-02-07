@@ -9,6 +9,8 @@ import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.nodes.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,14 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
             {
             return ((List<?>) data).isEmpty();
             }
+        if (data instanceof MappingNode)
+            {
+            return ((MappingNode) data).getValue().isEmpty();
+            }
+        if (data instanceof SequenceNode)
+            {
+            return ((SequenceNode) data).getValue().isEmpty();
+            }
         return data == null;
         }
 
@@ -68,7 +78,7 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
     @Override
     public boolean isWriteable()
         {
-        return data instanceof Map;
+        return data instanceof Map || data instanceof MappingNode;
         }
 
     @Override
@@ -80,28 +90,64 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
             throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.INVALID_USE);
             }
 
-        Map<String, Object> root = (Map<String, Object>) data;
         String fullKey = configEntry.getKey();
         String[] nodes = fullKey.split("/");
 
-        Map<String, Object> current = root;
-        for (int i = 0; i < nodes.length - 1; i++)
+        if (data instanceof Map)
             {
-            String node = nodes[i];
-            Object next = current.get(node);
-            if (!(next instanceof Map))
+            Map<String, Object> root = (Map<String, Object>) data;
+            Map<String, Object> current = root;
+            for (int i = 0; i < nodes.length - 1; i++)
                 {
-                next = new java.util.LinkedHashMap<String, Object>();
-                current.put(node, next);
+                String node = nodes[i];
+                Object next = current.get(node);
+                if (!(next instanceof Map))
+                    {
+                    next = new java.util.LinkedHashMap<String, Object>();
+                    current.put(node, next);
+                    }
+                current = (Map<String, Object>) next;
                 }
-            current = (Map<String, Object>) next;
-            }
 
-        String leafKey = nodes[nodes.length - 1];
-        writeTypedValue(current, leafKey, configEntry);
+            String leafKey = nodes[nodes.length - 1];
+            writeTypedValueToMap(current, leafKey, configEntry);
+            }
+        else if (data instanceof MappingNode)
+            {
+            MappingNode current = (MappingNode) data;
+            for (int i = 0; i < nodes.length - 1; i++)
+                {
+                String node = nodes[i];
+                MappingNode next = findMappingNode(current, node);
+                if (next == null)
+                    {
+                    next = new MappingNode(Tag.MAP, new java.util.ArrayList<>(), DumperOptions.FlowStyle.BLOCK);
+                    current.getValue().add(new NodeTuple(new ScalarNode(Tag.STR, node, null, null, DumperOptions.ScalarStyle.PLAIN), next));
+                    }
+                current = next;
+                }
+            String leafKey = nodes[nodes.length - 1];
+            writeTypedValueToNode(current, leafKey, configEntry);
+            }
         }
 
-    private void writeTypedValue(Map<String, Object> node, String key, ConfigEntry entry) throws ConfigCheckedException
+    private MappingNode findMappingNode(MappingNode parent, String key)
+        {
+        for (NodeTuple tuple : parent.getValue())
+            {
+            Node keyNode = tuple.getKeyNode();
+            if (keyNode instanceof ScalarNode && key.equals(((ScalarNode) keyNode).getValue()))
+                {
+                if (tuple.getValueNode() instanceof MappingNode)
+                    {
+                    return (MappingNode) tuple.getValueNode();
+                    }
+                }
+            }
+        return null;
+        }
+
+    private void writeTypedValueToMap(Map<String, Object> node, String key, ConfigEntry entry) throws ConfigCheckedException
         {
         switch (entry.getType())
             {
@@ -142,6 +188,41 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
             }
         }
 
+    private void writeTypedValueToNode(MappingNode node, String key, ConfigEntry entry) throws ConfigCheckedException
+        {
+        Node valueNode;
+        switch (entry.getType())
+            {
+            case BOOLEAN:
+                valueNode = new ScalarNode(Tag.BOOL, entry.getValueAsString(), null, null, DumperOptions.ScalarStyle.PLAIN);
+                break;
+            case NUMBER:
+                valueNode = new ScalarNode(Tag.INT, entry.getValueAsString(), null, null, DumperOptions.ScalarStyle.PLAIN);
+                break;
+            case BYTES:
+                // Base64 encode for bytes in YAML?
+                valueNode = new ScalarNode(Tag.BINARY, java.util.Base64.getEncoder().encodeToString(entry.getValueAsBytes()), null, null, DumperOptions.ScalarStyle.LITERAL);
+                break;
+            case STRING:
+            default:
+                valueNode = new ScalarNode(Tag.STR, entry.getValueAsString(), null, null, DumperOptions.ScalarStyle.PLAIN);
+                break;
+            }
+
+        // Find and replace or add
+        for (int i = 0; i < node.getValue().size(); i++)
+            {
+            NodeTuple tuple = node.getValue().get(i);
+            Node kn = tuple.getKeyNode();
+            if (kn instanceof ScalarNode && key.equals(((ScalarNode) kn).getValue()))
+                {
+                node.getValue().set(i, new NodeTuple(kn, valueNode));
+                return;
+                }
+            }
+        node.getValue().add(new NodeTuple(new ScalarNode(Tag.STR, key, null, null, DumperOptions.ScalarStyle.PLAIN), valueNode));
+        }
+
     @Override
     public int flush() throws ConfigCheckedException
         {
@@ -161,13 +242,19 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
         if (data instanceof Map)
             {
             java.util.List<String> keys = new java.util.ArrayList<>();
-            collectKeys((Map<String, Object>) data, "", keys);
+            collectKeysFromMap((Map<String, Object>) data, "", keys);
+            return keys.iterator();
+            }
+        else if (data instanceof MappingNode)
+            {
+            java.util.List<String> keys = new java.util.ArrayList<>();
+            collectKeysFromNode((MappingNode) data, "", keys);
             return keys.iterator();
             }
         return null;
         }
 
-    private void collectKeys(Map<String, Object> node, String prefix, java.util.List<String> keys)
+    private void collectKeysFromMap(Map<String, Object> node, String prefix, java.util.List<String> keys)
         {
         for (java.util.Map.Entry<String, Object> entry : node.entrySet())
             {
@@ -176,7 +263,7 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
             Object value = entry.getValue();
             if (value instanceof Map)
                 {
-                collectKeys((Map<String, Object>) value, fullKey, keys);
+                collectKeysFromMap((Map<String, Object>) value, fullKey, keys);
                 }
             else
                 {
@@ -185,25 +272,104 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
             }
         }
 
+    private void collectKeysFromNode(MappingNode node, String prefix, java.util.List<String> keys)
+        {
+        for (NodeTuple tuple : node.getValue())
+            {
+                Node kn = tuple.getKeyNode();
+                if (kn instanceof ScalarNode)
+                {
+                    String key = ((ScalarNode) kn).getValue();
+                    String fullKey = prefix.isEmpty() ? key : prefix + "/" + key;
+                    Node vn = tuple.getValueNode();
+                    if (vn instanceof MappingNode)
+                    {
+                        collectKeysFromNode((MappingNode) vn, fullKey, keys);
+                    }
+                    else
+                    {
+                        keys.add(fullKey);
+                    }
+                }
+            }
+        }
+
     @Override
     public ConfigEntry getEntry(final String hierarchicalKeyPath)
         {
         String[] nodes = hierarchicalKeyPath.split("/");
-        Object current = data;
-        for (int i = 0; i < nodes.length; i++)
+        if (data instanceof Map)
             {
-            if (!(current instanceof Map))
+            Object current = data;
+            for (int i = 0; i < nodes.length; i++)
                 {
-                return null;
+                if (!(current instanceof Map))
+                    {
+                    return null;
+                    }
+                current = ((Map<?, ?>) current).get(nodes[i]);
+                if (current == null)
+                    {
+                    return null;
+                    }
                 }
-            current = ((Map<?, ?>) current).get(nodes[i]);
-            if (current == null)
+            return snakeYamlObjectToConfigEntry(hierarchicalKeyPath, current);
+            }
+        else if (data instanceof MappingNode)
+            {
+            MappingNode current = (MappingNode) data;
+            for (int i = 0; i < nodes.length - 1; i++)
                 {
-                return null;
+                current = findMappingNode(current, nodes[i]);
+                if (current == null) return null;
                 }
+            Node leaf = findNode(current, nodes[nodes.length - 1]);
+            if (leaf == null) return null;
+            return snakeYamlNodeToConfigEntry(hierarchicalKeyPath, leaf);
             }
 
-        return snakeYamlObjectToConfigEntry(hierarchicalKeyPath, current);
+        return null;
+        }
+
+    private Node findNode(MappingNode parent, String key)
+        {
+        for (NodeTuple tuple : parent.getValue())
+            {
+            Node keyNode = tuple.getKeyNode();
+            if (keyNode instanceof ScalarNode && key.equals(((ScalarNode) keyNode).getValue()))
+                {
+                return tuple.getValueNode();
+                }
+            }
+        return null;
+        }
+
+    ConfigEntry snakeYamlNodeToConfigEntry(final String leafKey, final Node node)
+        {
+        if (node instanceof MappingNode || node instanceof SequenceNode)
+            {
+            return null; // Not a leaf
+            }
+        if (!(node instanceof ScalarNode)) return null;
+
+        ScalarNode scalar = (ScalarNode) node;
+        ConfigEntryMetadata meta = new ConfigEntryMetadata(this.source);
+        Tag tag = scalar.getTag();
+
+        if (Tag.BOOL.equals(tag))
+            {
+            return new TypedConfigEntryLeaf(leafKey, Boolean.valueOf(scalar.getValue()), ConfigEntryType.BOOLEAN, meta);
+            }
+        else if (Tag.INT.equals(tag) || Tag.FLOAT.equals(tag))
+            {
+            return new TypedConfigEntryLeaf(leafKey, scalar.getValue(), ConfigEntryType.NUMBER, meta);
+            }
+        else if (Tag.BINARY.equals(tag))
+            {
+            return new BlobConfigEntryLeaf(leafKey, java.util.Base64.getDecoder().decode(scalar.getValue()), meta);
+            }
+
+        return new TypedConfigEntryLeaf(leafKey, scalar.getValue(), ConfigEntryType.STRING, meta);
         }
 
     ConfigEntry snakeYamlObjectToConfigEntry(final String leafKey, final Object value)

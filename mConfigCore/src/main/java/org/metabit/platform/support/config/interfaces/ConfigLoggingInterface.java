@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2018-2026 metabit GmbH.
+ * Licensed under the mConfig Design Integrity License (v0.7.26 - 1.0.0-pre),
+ * based on the Polyform Shield License 1.0.0.
+ * See mConfigCore/LICENSE.md for details.
+ */
+
 package org.metabit.platform.support.config.interfaces;
 
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
@@ -5,7 +12,6 @@ import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 /**
  * an wrapper for external logging functions.
  * if no service provider for this is found, nothing is logged at all.
- * Copyright metabit
  * Created by jw on 2020-04-13, 2021-04-26, 2023-06-13
  * <p>
  * resembling an traditional logging API, so mConfig modules can use some simple logging.

@@ -13,7 +13,7 @@ class JSONwithJacksonFormatTest
     void getFormatID()
         {
         JSONwithJacksonFormat format = new JSONwithJacksonFormat();
-        assertEquals("JSON", format.getFormatID(), "getFormatID should return 'JSON'");
+        assertEquals("JSONwithJackson", format.getFormatID(), "getFormatID should return 'JSON'");
         }
 
     @Test

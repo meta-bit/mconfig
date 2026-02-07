@@ -57,8 +57,8 @@ mconfig mycompany:myapp:config set database/port=5432 --scope user
 
 ```bash
 # YAML and TOML output are supported alongside JSON/CSV/HUMAN
-mconfig mycompany:myapp:config show -o YAML
-mconfig mycompany:myapp:config show -o TOML
+mconfig mycompany:myapp:config show -f YAML
+mconfig mycompany:myapp:config show -f TOML
 ```
 
 ## Scope filtering and file format hints
@@ -107,7 +107,7 @@ The package installs:
 - `/usr/share/bash-completion/completions/mconfig`
 
 -------
-Depedencies:
+Dependencies:
 - Java 11
 - mConfig, of course
 - picocli

@@ -24,7 +24,7 @@ public class TOMLwithJacksonFormat extends JSONwithJacksonFormat
     @Override
     public String getFormatID()
         {
-        return "TOML";
+        return "TOMLwithJackson";
         }
 
     @Override

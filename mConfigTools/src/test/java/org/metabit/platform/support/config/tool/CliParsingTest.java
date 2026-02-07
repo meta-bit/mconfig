@@ -42,12 +42,12 @@ class CliParsingTest
         CommandLine cmd = new CommandLine(main);
         cmd.setCaseInsensitiveEnumValuesAllowed(true);
 
-        CommandLine.ParseResult yamlResult = cmd.parseArgs("get", "myco:myapp:myconfig:mykey", "-o", "yaml");
+        CommandLine.ParseResult yamlResult = cmd.parseArgs("get", "myco:myapp:myconfig:mykey", "-f", "yaml");
         CommandLine.ParseResult yamlSub = yamlResult.subcommand();
-        assertEquals(Main.OutputFormat.YAML, yamlSub.matchedOptionValue("-o", null));
+        assertEquals(Main.OutputFormat.YAML, yamlSub.matchedOptionValue("-f", null));
 
-        CommandLine.ParseResult tomlResult = cmd.parseArgs("get", "myco:myapp:myconfig:mykey", "-o", "Toml");
+        CommandLine.ParseResult tomlResult = cmd.parseArgs("get", "myco:myapp:myconfig:mykey", "-f", "Toml");
         CommandLine.ParseResult tomlSub = tomlResult.subcommand();
-        assertEquals(Main.OutputFormat.TOML, tomlSub.matchedOptionValue("-o", null));
+        assertEquals(Main.OutputFormat.TOML, tomlSub.matchedOptionValue("-f", null));
         }
 }

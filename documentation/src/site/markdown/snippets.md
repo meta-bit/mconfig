@@ -4,7 +4,7 @@ mConfig shines for everyday config pains. Copy-paste these snippets—no setup h
 
 Each solves a **general problem** using mConfig's magic (OS paths, layers, reloads, schemes).
 
-**[Starters](../../../examples/starters) for full projects • [FAQ](4_FAQ.md) for fixes • [CLI](../../../mConfigTools/README.md)**
+**[Starters](../../../../examples/starters/README.md) for full projects • [FAQ](43_faq.md) for fixes • [CLI](../../../../mConfigTools/README.md)**
 
 ## 1. Replace Hardcoded Strings/Ports (Zero Magic Strings)
 
@@ -21,7 +21,7 @@ double prob = cfg.getDouble("probability");  // 0.5
 
 **Why mConfig?** Searches OS standards (XDG, AppData), formats (properties/YAML/JSON), reloads live.
 
-[Getting Started](getting-started.md)
+[Getting Started](13_getting_started.md)
 
 ## 2. Env Vars → Structured Config (No Manual Parsing)
 
@@ -43,7 +43,7 @@ try (ConfigFactory f = ConfigFactoryBuilder.create("myco", "myapp").build()) {
 
 **Why?** `<app>_<config>_<key>` convention; layers over files.
 
-[mConfigSourceEnvVar](../../../mConfigSourceEnvVar/README.md)
+[mConfigSourceEnvVar](../../../../mConfigSourceEnvVar/README.md)
 
 ## 3. Type-Safe Config with Defaults/Validation
 
@@ -62,7 +62,7 @@ int port = cfg.getInteger("port");  // Validates!
 
 **Why?** Centralized scheme—no call-site defaults.
 
-[Configuration Schemes](configuration-schemes.md)
+[Configuration Schemes](23_configuration_schemes.md)
 
 ## 4. Hot-Reload on File Changes
 
@@ -75,7 +75,7 @@ Config cfg = factory.getConfig("network");  // Watches files
 
 **Why?** Built-in watcher; no polling/Spring @Refresh.
 
-[Priorities](3_2_priorities_and_hierarchies.md)
+[Priorities](22_priorities_and_hierarchies.md)
 
 ## 5. Discover Available Configs (No Guesswork)
 
@@ -100,7 +100,7 @@ SecretValue pw = (SecretValue) cfg.getEntry("db.password");  // Masked: ********
 String clear = pw.clearValue();  // JIT decrypt/use
 ```
 
-[mConfigSecrets](../../../mConfigSecrets/README.md)
+[mConfigSecrets](../../../../mConfigSecrets/README.md)
 
 ## 7. JPMS-Compatible (No IllegalAccessError)
 
@@ -114,7 +114,7 @@ module com.example {
 
 *Deps:* `mConfigStandard` (BOM) or `mConfigBase`.
 
-[JPMS FAQ](4_FAQ.md#jpms-module-access-errors)
+[JPMS FAQ](43_faq.md#jpms-module-access-errors)
 
 ## 8. Tests: Isolated Configs
 
@@ -126,7 +126,7 @@ Config cfg = ConfigFactoryBuilder.create("myco", "myapp").build().getConfig("net
 
 `src/test/resources/.config/myco/myapp/network.properties`
 
-[Test Mode](test-mode.md)
+[Test Mode](15_test_mode.md)
 
 **Pro Tip:** Enable logging (`mConfigLoggingSlf4j` + DEBUG) for traces.
 

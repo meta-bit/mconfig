@@ -1,16 +1,21 @@
 package org.metabit.platform.support.config.tool;
 
+import org.metabit.platform.support.config.ConfigFactory;
+import org.metabit.platform.support.config.ConfigFactoryBuilder;
+import org.metabit.platform.support.config.ConfigFeature;
+import org.metabit.platform.support.config.Configuration;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Parameters;
 
 import java.util.concurrent.Callable;
 
 /**
- * mConfig command line tool.
+ * mConfig command line tool. entry point.
  */
 @Command(name = "mconfig", mixinStandardHelpOptions = true,
-        version = "mconfig 0.8",
+        versionProvider = Main.VersionProvider.class,
         description = "mConfig command line tool.",
         subcommands = {
                 ListCommand.class,
@@ -36,9 +41,38 @@ public class Main implements Callable<Integer>
 
     public static void main(String[] args)
         {
-        CommandLine cmd = new CommandLine(new Main());
+        Main main = new Main();
+        CommandLine cmd = new CommandLine(main);
         cmd.setCaseInsensitiveEnumValuesAllowed(true);
         cmd.setUnmatchedArgumentsAllowed(true);
+
+        // Hide experimental commands by default
+        CommandLine proposeSub = cmd.getSubcommands().get("propose-scheme");
+        if (proposeSub != null) proposeSub.getCommandSpec().usageMessage().hidden(true);
+        CommandLine validateSub = cmd.getSubcommands().get("validate");
+        if (validateSub != null) validateSub.getCommandSpec().usageMessage().hidden(true);
+
+        // Parse just enough to see if experimental is set
+        CommandLine.ParseResult parseResult = cmd.parseArgs(args);
+        if (main.commonOptions.experimental)
+            {
+            if (proposeSub != null) proposeSub.getCommandSpec().usageMessage().hidden(false);
+            if (validateSub != null) validateSub.getCommandSpec().usageMessage().hidden(false);
+            }
+        else
+            {
+            // If not experimental, check if user tried to call hidden commands
+            if (parseResult.hasSubcommand())
+                {
+                String subName = parseResult.subcommand().commandSpec().name();
+                if ("propose-scheme".equals(subName) || "validate".equals(subName))
+                    {
+                    System.err.println("Command '" + subName + "' is experimental and requires --experimental (-X) flag.");
+                    System.exit(1);
+                    }
+                }
+            }
+
         int exitCode = cmd.execute(args);
         System.exit(exitCode);
         }
@@ -49,6 +83,27 @@ public class Main implements Callable<Integer>
         CommandLine.usage(this, System.out);
         return 0;
         }
+
+    public static class VersionProvider implements IVersionProvider
+    {
+        @Override
+        public String[] getVersion()
+            {
+            // Reads version from configuration; returns fallback on failure
+            try (ConfigFactory factory = ConfigFactoryBuilder
+                    .create("metabit", "mconfig")
+                    .setFeature(ConfigFeature.EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND, true)
+                    .setFeature(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY, true)
+                    .build())
+                {
+                Configuration config = factory.getConfig("version");
+                String version = config.getString("version");
+                return new String[]{"mconfig " + version};
+                }
+            catch (Exception e)
+                { return new String[]{"mconfig version unknown"}; }
+            }
+    }
 
     public static class ConfigContext
     {

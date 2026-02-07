@@ -1,6 +1,17 @@
 
-### 0.8.1
-* version bump to help github with its workflows.
+### 0.8.5
+* improved SnakeYAML module to persist comments in YAML files.
+* improved mConfig TOML module to fully persist comments
+* improved mConfig INI module to persist comments
+* enabled write support via ConfigCursor.
+
+### 0.8.4
+* new standalone TOML module (mConfigFormatTOML).
+* improved GitHub CI workflows for publication.
+* miscellaneous documentation fixes and build improvements.
+
+### 0.8.3
+* fixes for publication workflow; source unchanged.
 
 ### 0.8.0
 * public release now on github.

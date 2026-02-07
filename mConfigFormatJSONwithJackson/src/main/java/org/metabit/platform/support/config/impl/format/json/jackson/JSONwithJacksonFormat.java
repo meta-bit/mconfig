@@ -31,7 +31,7 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
     @Override
     public String getFormatID()
         {
-        return "JSON";
+        return "JSONwithJackson";
         }
 
     @Override

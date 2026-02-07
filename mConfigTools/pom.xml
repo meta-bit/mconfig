@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.3</version>
+        <version>0.8.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>mconfigtools</artifactId>
@@ -16,6 +16,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jackson.version>2.19.2</jackson.version>
         <mconfig.completion.shell>bash</mconfig.completion.shell>
         <mconfig.completion.names>mconfig</mconfig.completion.names>
     </properties>
@@ -57,6 +58,16 @@
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatini</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformattoml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigformatjsonwithjackson</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -66,9 +77,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigformattomlwithjackson</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-toml</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config.logging</groupId>
@@ -93,6 +104,12 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -269,7 +286,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.4</version>
+                        <version>0.11.4</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>
@@ -322,7 +339,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.5.0</version>
+                        <version>3.6.3</version>
                         <executions>
                             <execution>
                                 <id>jpackage</id>

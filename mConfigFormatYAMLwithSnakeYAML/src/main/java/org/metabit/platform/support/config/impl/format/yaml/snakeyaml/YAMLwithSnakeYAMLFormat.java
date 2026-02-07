@@ -8,7 +8,17 @@ import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.composer.Composer;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.emitter.Emitter;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.parser.ParserImpl;
+import org.yaml.snakeyaml.reader.StreamReader;
+import org.yaml.snakeyaml.representer.Representer;
+import org.yaml.snakeyaml.resolver.Resolver;
+import org.yaml.snakeyaml.serializer.Serializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -30,7 +40,7 @@ public class YAMLwithSnakeYAMLFormat implements ConfigFileFormatInterface
     @Override
     public String getFormatID()
         {
-        return "YAML";
+        return "YAMLwithSnakeYAML";
         }
 
     @Override
@@ -75,17 +85,23 @@ public class YAMLwithSnakeYAMLFormat implements ConfigFileFormatInterface
         {
         try
             {
-            Yaml yaml = new Yaml();
-            Object data = yaml.load(inputStream);
+            LoaderOptions loaderOptions = new LoaderOptions();
+            loaderOptions.setProcessComments(true);
+            Yaml yaml = new Yaml(new Constructor(loaderOptions), new Representer(new DumperOptions()), new DumperOptions(), loaderOptions);
+            
+            Object data;
+            Node node = yaml.compose(new InputStreamReader(inputStream));
+            data = node;
+
             if (data == null)
                 {
                 return new YAMLSnakeYAMLConfigLayer(settings, logger, configLocation, this, new LinkedHashMap<>(), storageInstanceHandle);
                 }
-            if (data instanceof Map || data instanceof List)
+            if (data instanceof Map || data instanceof List || data instanceof Node)
                 {
                 return new YAMLSnakeYAMLConfigLayer(settings, logger, configLocation, this, data, storageInstanceHandle);
                 }
-            logger.warn("YAML data having top-level type other than Map or List");
+            logger.warn("YAML data having top-level type other than Map, List or Node");
             }
         catch (Exception e)
             {
@@ -141,6 +157,7 @@ public class YAMLwithSnakeYAMLFormat implements ConfigFileFormatInterface
     private void saveYaml(Object data, Path path) throws IOException
         {
         DumperOptions options = new DumperOptions();
+        options.setProcessComments(true);
         if (settings.getBoolean(ConfigFeature.WRITE_CONDENSED_FORMAT))
             {
             options.setDefaultFlowStyle(DumperOptions.FlowStyle.FLOW);
@@ -150,10 +167,23 @@ public class YAMLwithSnakeYAMLFormat implements ConfigFileFormatInterface
             options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
             options.setPrettyFlow(true);
             }
-        Yaml yaml = new Yaml(options);
+        
         try (Writer writer = new FileWriter(path.toFile()))
             {
-            yaml.dump(data, writer);
+            if (data instanceof Node)
+                {
+                Serializer serializer = new Serializer(new Emitter(writer, options), new Resolver(), options, null);
+                serializer.open();
+                serializer.serialize((Node) data);
+                serializer.close();
+                }
+            else
+                {
+                LoaderOptions loaderOptions = new LoaderOptions();
+                loaderOptions.setProcessComments(true);
+                Yaml yaml = new Yaml(new Constructor(loaderOptions), new Representer(options), options, loaderOptions);
+                yaml.dump(data, writer);
+                }
             }
         }
 }

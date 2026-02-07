@@ -174,4 +174,4 @@ Use `config.put(key, value, scope)`.
 - Tests: integrationtestSecretsBC/JCE verify roundtrip.
 - Prod: Rotate keys via CLI `mconfig set --scope USER`.
 
-See [../design_consolidated.md] for more.
+See [../44_design_consolidated.md](../44_design_consolidated.md) for more.

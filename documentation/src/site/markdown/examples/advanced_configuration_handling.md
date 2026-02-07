@@ -93,6 +93,6 @@ ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
 ```
 
 Related docs:
-- [Config Features](../4_1_ConfigFeatures.md)
-- [Priorities and Hierarchies](../3_2_priorities_and_hierarchies.md)
-- [Writing Configurations](../writing-configurations.md)
+- [Config Features](../25_config_features.md)
+- [Priorities and Hierarchies](../22_priorities_and_hierarchies.md)
+- [Writing Configurations](../31_writing_configurations.md)

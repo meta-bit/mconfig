@@ -6,7 +6,7 @@ plugins {
 group = "com.example.starter"
 version = "1.0-SNAPSHOT"
 
-val mconfigVersion by extra("0.8.1")
+val mconfigVersion by extra("0.8.3")
 
 repositories {
     mavenCentral()

@@ -4,13 +4,19 @@ import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.ConfigEntry;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
-import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
-import org.mockito.Mockito;
+import org.metabit.platform.support.config.impl.ConfigLocationImpl;
+import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
+import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
+import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +28,9 @@ public class INIConfigLayerTest
     @Test
     public void testLoadAndGetEntry() throws Exception
         {
-        ConfigFactorySettings settings = Mockito.mock(ConfigFactorySettings.class);
-        Mockito.when(settings.getBoolean(Mockito.any())).thenReturn(true);
-        ConfigLocation location = Mockito.mock(ConfigLocation.class);
+        ConfigFactorySettings settings = new ConfigFactorySettings();
+        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
+        ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
         INIConfigLayer layer = new INIConfigLayer(settings, location, format, null);
 
@@ -62,9 +68,9 @@ public class INIConfigLayerTest
     @Test
     public void testGetKeyIterator() throws IOException
         {
-        ConfigFactorySettings settings = Mockito.mock(ConfigFactorySettings.class);
-        Mockito.when(settings.getBoolean(Mockito.any())).thenReturn(true);
-        ConfigLocation location = Mockito.mock(ConfigLocation.class);
+        ConfigFactorySettings settings = new ConfigFactorySettings();
+        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
+        ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
         INIConfigLayer layer = new INIConfigLayer(settings, location, format, null);
 
@@ -85,34 +91,147 @@ public class INIConfigLayerTest
     @Test
     public void testWriteEntry() throws Exception
         {
-        ConfigFactorySettings settings = Mockito.mock(ConfigFactorySettings.class);
-        Mockito.when(settings.getBoolean(ConfigFeature.TRIM_TEXTVALUE_SPACES)).thenReturn(true);
-        Mockito.when(settings.getBoolean(ConfigFeature.WRITE_SYNC)).thenReturn(true);
-        ConfigLocation location = Mockito.mock(ConfigLocation.class);
-        INIFileFormat format = Mockito.spy(new INIFileFormat());
-        
+        ConfigFactorySettings settings = new ConfigFactorySettings();
+        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
+        settings.put(ConfigFeature.WRITE_SYNC, Boolean.TRUE);
+        ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
+        INIFileFormat format = new INIFileFormat();
+
         java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("mConfigTest", ".ini");
-        try {
+        try
+            {
             INIConfigLayer layer = new INIConfigLayer(settings, location, format, tempFile);
-            
-            ConfigEntry entry = Mockito.mock(ConfigEntry.class);
-            Mockito.when(entry.getKey()).thenReturn("s1/k1");
-            Mockito.when(entry.getValueAsString()).thenReturn("v1");
-            
+
+            ConfigEntry entry = new StringConfigEntryLeaf("s1/k1", "v1", new ConfigEntryMetadata(layer.getSource()));
             layer.writeEntry(entry);
-            
+
             Map<String, Map<String, String>> data = layer.getData();
             assertTrue(data.containsKey("s1"));
             assertEquals("v1", data.get("s1").get("k1"));
-            
-            // Verify format.writeINI was called because WRITE_SYNC is true
-            Mockito.verify(format, Mockito.atLeastOnce()).writeINI(Mockito.any(), Mockito.any());
-            
+
             List<String> lines = java.nio.file.Files.readAllLines(tempFile);
             assertTrue(lines.contains("[s1]"));
             assertTrue(lines.contains("k1=v1"));
-        } finally {
+            }
+        finally
+            {
             java.nio.file.Files.deleteIfExists(tempFile);
+            }
         }
+
+    @Test
+    public void testCommentsRoundTrip() throws Exception
+        {
+        ConfigFactorySettings settings = new ConfigFactorySettings();
+        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
+        ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
+        INIFileFormat format = new INIFileFormat();
+
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("mConfigTest", ".ini");
+        try
+            {
+            INIConfigLayer layer = new INIConfigLayer(settings, location, format, tempFile);
+            String ini = ""
+                    + "# top comment\n"
+                    + "root=value # inline root\n"
+                    + "; section comment\n"
+                    + "[section] ; inline section\n"
+                    + "; key comment\n"
+                    + "key=value ; inline key\n"
+                    + "arr=1;notacomment\n";
+            layer.load(new BufferedReader(new StringReader(ini)));
+            format.writeFile(layer);
+
+            List<String> lines = java.nio.file.Files.readAllLines(tempFile);
+            String joined = String.join("\n", lines);
+            assertTrue(joined.contains("# top comment"));
+            assertTrue(joined.contains("root=value # inline root"));
+            assertTrue(joined.contains("; section comment"));
+            assertTrue(joined.contains("[section] ; inline section"));
+            assertTrue(joined.contains("; key comment"));
+            assertTrue(joined.contains("key=value ; inline key"));
+            assertTrue(joined.contains("arr=1;notacomment"));
+            }
+        finally
+            {
+            java.nio.file.Files.deleteIfExists(tempFile);
+            }
+        }
+
+    private static final class TestStorage implements ConfigStorageInterface
+        {
+        @Override
+        public String getStorageName()
+            {
+            return "test";
+            }
+
+        @Override
+        public String getStorageID()
+            {
+            return "test";
+            }
+
+        @Override
+        public boolean test(ConfigFactorySettings settings, org.metabit.platform.support.config.interfaces.ConfigLoggingInterface logger)
+            {
+            return true;
+            }
+
+        @Override
+        public boolean init(org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext ctx)
+            {
+            return true;
+            }
+
+        @Override
+        public void exit()
+            {
+            }
+
+        @Override
+        public boolean isGenerallyWriteable()
+            {
+            return true;
+            }
+
+        @Override
+        public URI getURIforConfigLocation(ConfigLocation configLocation, String key, String optionalFragment)
+            {
+            return URI.create("test://ini");
+            }
+
+        @Override
+        public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg)
+            {
+            }
+
+        @Override
+        public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, org.metabit.platform.support.config.scheme.ConfigScheme configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration)
+            {
+            return null;
+            }
+
+        @Override
+        public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig)
+            {
+            }
+
+        @Override
+        public java.util.Set<org.metabit.platform.support.config.ConfigDiscoveryInfo> listAvailableConfigurations(ConfigLocation location)
+            {
+            return Collections.emptySet();
+            }
+
+        @Override
+        public boolean hasChangedSincePreviousCheck(Object storageInstanceHandle)
+            {
+            return false;
+            }
+
+        @Override
+        public void triggerChangeCheck(Object storageInstanceHandle)
+            {
+            }
         }
 }

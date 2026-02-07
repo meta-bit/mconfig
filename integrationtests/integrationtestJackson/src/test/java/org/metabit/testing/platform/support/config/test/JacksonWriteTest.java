@@ -23,7 +23,8 @@ public class JacksonWriteTest
             {
             ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(COMPANY_NAME, APPLICATION_NAME);
             builder.setFeature(ConfigFeature.ADDITIONAL_USER_DIRECTORIES, List.of(tempDir.toString()));
-            builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, List.of("JSON"));
+            // specifically allow only the format module we're testing here.
+            builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, List.of("JSONwithJackson"));
             
             try (ConfigFactory factory = builder.build())
                 {

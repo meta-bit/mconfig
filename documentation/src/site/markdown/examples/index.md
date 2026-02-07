@@ -48,7 +48,7 @@ It's as simple as this:
     byte[]  myBinary = cfg.getBytes("theBinaryKey");
     List<String> myList = cfg.getStringList("theListKey");
 ```
-So, where to I put my configuration files?
+So, where do I put my configuration files?
 Before we get into the topic of Scopes, a quick answer:
 that depends on your OS; and
 `ConfigUtil.printConfigPaths(final String companyName, final String applicationName)` 

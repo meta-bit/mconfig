@@ -111,7 +111,7 @@ implementation 'org.metabit.platform.support.config:mConfigFull:${mconfig.versio
 
 ## quick links
 * [getting started - usage](documentation/src/site/markdown/2_how_do_I_use_it.md)
-* the [documentation](documentation/src/site/markdown/) - read from the start
+* the [documentation](documentation/src/site/markdown/index.md) - read from the start
 * [notes for code-generating tools](documentation/src/site/markdown/ai-guidance.md)
 * Jump to [design documentation](documentation/src/site/markdown/design_consolidated.md)
 

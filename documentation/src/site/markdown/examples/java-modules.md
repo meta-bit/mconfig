@@ -43,5 +43,5 @@ You do not need to `requires` them directly unless you reference their classes.
 But they must be on the classpath, and visible to the service loader.
 
 Related docs:
-- [Getting Started](../getting-started.md)
+- [Getting Started](../13_getting_started.md)
 - [mConfig Modules](mconfig-modules.md)

@@ -1,6 +1,7 @@
 package org.metabit.platform.support.config.mapper;
 
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigFormatInterface;
@@ -305,7 +306,11 @@ public class ConfigMapperImpl implements ConfigMapper
 
         // Ensure format is somewhat initialized if it's not already
         // (ServiceLoader instances might not be initialized)
-        format.testComponent(new org.metabit.platform.support.config.impl.ConfigFactorySettings(), org.metabit.platform.support.config.impl.core.NullLogging.getSingletonInstance());
+        ConfigFactorySettings settings = new ConfigFactorySettings();
+        // try to preserve comments by default
+        settings.put(ConfigFeature.COMMENTS_WRITING, true);
+        settings.put(ConfigFeature.COMMENTS_READING, true);
+        format.testComponent(settings, org.metabit.platform.support.config.impl.core.NullLogging.getSingletonInstance());
 
         // 2. Create the file and get a writeable layer for it
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new org.metabit.platform.support.config.source.core.InMemoryLayerSource(), null, targetFile);

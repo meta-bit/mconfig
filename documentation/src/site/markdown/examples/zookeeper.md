@@ -73,3 +73,6 @@ The ZooKeeper source follows a specific startup sequence:
 ## 5. Test Mode Isolation
 
 In `TEST_MODE`, the ZooKeeper source will naturally point to your test resources (e.g., `src/test/resources/.config/zookeeper.json`). This ensures that unit tests do not accidentally connect to production ZooKeeper ensembles.
+
+Related docs:
+- [Test Mode](../15_test_mode.md)

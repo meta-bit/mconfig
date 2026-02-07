@@ -227,6 +227,26 @@ public interface ConfigEntry
             throws ConfigCheckedException;
 
     /**
+     * get the comment associated with this entry.
+     * returning "null" instead of an empty string is intentional.
+     * software using this needs to be caredfully processing the result anyhow,
+     * since the comment-retrieval depends on heuristics.
+     * <br/>
+     * for comments to be read at all, set the ConfigFeature.COMMENTS_READING to true.
+     * @return comment, or null if none.
+     */
+    default String getComment() { return null; }
+
+    /**
+     * set the comment for this entry.
+     * Note: this does not automatically write the entry back to its source.
+     * <br/>
+     * for comments to be written at all, set the ConfigFeature.COMMENTS_WRITING to true.
+     * @param comment the comment to be set
+     */
+    default void setComment(String comment) { }
+
+    /**
      *  if isWritable - put a string.
      *
      * @param value the value to be written

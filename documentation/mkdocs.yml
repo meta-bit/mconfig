@@ -31,27 +31,36 @@ plugins:
 
 nav:
   - Home: index.md
-  - What is mConfig?: 0_what_is_this.md
-  - What does it do?: 1_what_does_it_do.md
-  - Getting Started: getting-started.md
-  - Regular Use: regular-use.md
-  - Test Mode: test-mode.md
-  - Core Concepts:
-      - How does it work?: 3_how_does_it_work.md
-      - Priorities and Hierarchies: 3_2_priorities_and_hierarchies.md
-      - Design Principles: design_consolidated.md
-      - Config Features: 4_1_ConfigFeatures.md
-      - Logging: logging.md
-      - Getting Information: 2_9_getting_information.md
-  - Operational Topics:
-      - Configuration Schemes: configuration-schemes.md
-      - Definitions and Valid Values: 2_10_definitions_and_valid_values.md
-      - Writing Configurations: writing-configurations.md
-      - Updates: 2_8_updates.md
-      - Handling Secrets: handling-secrets.md
-      - Windows Registry Access: windows-registry-access.md
-      - Extensions and Advanced Use: 2_6_extensions_and_advanced_use.md
-  - mConfig Tool: mconfig-tool.md
+  - Part 1 Introduction & Basics:
+      - 1.1 What is mConfig?: 11_what_is_mconfig.md
+      - 1.2 Features and Use Cases: 12_features_and_use_cases.md
+      - 1.3 Getting Started: 13_getting_started.md
+      - 1.4 Regular Use: 14_regular_use.md
+      - 1.5 Test Mode: 15_test_mode.md
+  - Part 2 Core Concepts:
+      - 2.1 How it Works: 21_how_it_works.md
+      - 2.2 Priorities and Hierarchies: 22_priorities_and_hierarchies.md
+      - 2.3 Configuration Schemes: 23_configuration_schemes.md
+      - 2.4 Comment Handling: 24_comment_handling.md
+      - 2.5 Config Features: 25_config_features.md
+  - Part 3 Advanced Topics:
+      - 3.1 Writing Configurations: 31_writing_configurations.md
+      - 3.2 Updates: 32_updates.md
+      - 3.3 Getting Information: 33_getting_information.md
+      - 3.4 Definitions and Valid Values: 34_definitions_and_valid_values.md
+      - 3.5 Handling Secrets: 35_handling_secrets.md
+      - 3.6 Windows Registry Access: 36_windows_registry.md
+      - 3.7 Extensions and Advanced Use: 37_extensions_and_advanced_use.md
+      - 3.8 Code Improvements: 38_code_improvements.md
+  - Part 4 Reference & Project:
+      - 4.1 mConfig Tool: 41_mconfig_tool.md
+      - 4.2 Logging: 42_logging.md
+      - 4.3 FAQ: 43_faq.md
+      - 4.4 Design Consolidated: 44_design_consolidated.md
+      - 4.5 AI Guidance: 45_ai_guidance.md
+      - 4.6 Versions: 46_versions.md
+      - 4.7 Contributing: 47_contributing.md
+      - 4.8 Legal: 48_legal.md
   - Examples:
       - Overview: examples/index.md
       - Simple Configuration Loading: examples/simple_configuration_loading.md
@@ -64,10 +73,5 @@ nav:
       - ZooKeeper: examples/zookeeper.md
       - Handling Crypto Keys and Certificates: examples/handling_crypto_keys_and_certificates.md
       - Schemes: examples/schemes.md
-  - Reference / Appendix:
-      - Code Improvements: 4_4_Code_Improvements.md
-      - FAQ: 4_FAQ.md
-      - Links: 5_links.md
-      - Legal: 6_legal.md
-      - Versions: 7_versions.md
-      - Contributing: 8_how_to_contribute.md
+  - Appendix:
+      - 4.9 Links: 49_links.md

@@ -38,5 +38,5 @@ Add a scheme next to the config file to define types and defaults:
 ```
 
 Related docs:
-- [Getting Started](../getting-started.md)
-- [Configuration Schemes](../configuration-schemes.md)
+- [Getting Started](../13_getting_started.md)
+- [Configuration Schemes](../23_configuration_schemes.md)

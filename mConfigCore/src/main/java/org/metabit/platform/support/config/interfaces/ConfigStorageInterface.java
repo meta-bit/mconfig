@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2018-2026 metabit GmbH.
+ * Licensed under the mConfig Design Integrity License (v0.7.26 - 1.0.0-pre),
+ * based on the Polyform Shield License 1.0.0.
+ * See mConfigCore/LICENSE.md for details.
+ */
+
 package org.metabit.platform.support.config.interfaces;
 
 import org.metabit.platform.support.config.ConfigLocation;
@@ -19,7 +26,6 @@ import java.net.URI;
  * and so on.
  *
  * <p>
- * Copyright metabit
  * Created by jw on 2019-12-28.
  * <p>
  * see old ConfigStorageAdapter (not ConfigStore)

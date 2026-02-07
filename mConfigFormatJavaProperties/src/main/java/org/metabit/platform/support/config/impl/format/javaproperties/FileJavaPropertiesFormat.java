@@ -28,8 +28,6 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
         return "properties";
         }
 
-
-    //@TODO this is more of an init, than test.
     @Override
     public boolean testComponent(ConfigFactorySettings configFactorySettings, ConfigLoggingInterface logger)
         {
@@ -48,10 +46,9 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
     public ConfigLayerInterface readFile(File file, ConfigLocation location)
         {
         JavaPropertiesConfigLayer instance = new JavaPropertiesConfigLayer(settings, location, this, file.toPath());
-        Properties properties = instance.internalGetProperties();
         try
             {
-            properties.load(new FileReader(file));
+            instance.load(new BufferedReader(new InputStreamReader(new FileInputStream(file), java.nio.charset.StandardCharsets.UTF_8)));
             }
         catch (FileNotFoundException ex)
             {
@@ -63,10 +60,6 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
             logger.warn("IOException when reading Java Properties");
             return null;
             }
-        // the source we set is derived from the location
-        // instance.setSource(new ConfigLocationImpl(location, instance, this, file.toPath()));
-        // instance.setWriteable(file.canWrite());
-        // this is done by the instances themselves instead! instance.setWriteable(file.canWrite());
         return instance;
         }
 
@@ -79,10 +72,9 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation location)
         {
         JavaPropertiesConfigLayer instance = new JavaPropertiesConfigLayer(settings, location, this, null);
-        Properties properties = instance.internalGetProperties();
         try
             {
-            properties.load(inputStream);
+            instance.load(new BufferedReader(new InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)));
             }
         catch (FileNotFoundException ex)
             {
@@ -94,8 +86,6 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
             logger.warn("IOException when reading Java Properties");
             return null;
             }
-        //instance.setSource(new ConfigLocationImpl(location, instance, this, null));
-        //instance.setWriteable(false); // can't write streams
         return instance;
         }
 
@@ -126,33 +116,138 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
             }
         }
 
-    public void writePropertiesToFile(ConfigSource source, final Properties props)
-            throws ConfigCheckedException
-        {
-        try
-            {
-            Path path = (Path) source.getStorageInstanceHandle();
-            FileWriter writer = new FileWriter(path.toFile());
-            String timestamp = ZonedDateTime.now( ZoneOffset.UTC ).format( DateTimeFormatter.ISO_INSTANT );
-            props.store(writer,"written by mConfig " + timestamp);
-            }
-        catch (Exception ex)
-            {
-            throw new ConfigCheckedException(ex);
-            }
-        return;
-        }
     @Override
     public void writeFile(ConfigLayerInterface layer) throws ConfigCheckedException
         {
         if (layer instanceof JavaPropertiesConfigLayer)
             {
             JavaPropertiesConfigLayer propsLayer = (JavaPropertiesConfigLayer) layer;
-            writePropertiesToFile(propsLayer.getSource(), propsLayer.internalGetProperties());
+            writeProperties(propsLayer);
             }
         else
             {
             throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.INVALID_USE);
             }
+        }
+
+    public void writeProperties(JavaPropertiesConfigLayer layer) throws ConfigCheckedException
+        {
+        try
+            {
+            Path path = (Path) layer.getSource().getStorageInstanceHandle();
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile()), java.nio.charset.StandardCharsets.UTF_8)))
+                {
+                for (String comment : layer.internalGetGlobalHeaderComments())
+                    {
+                    writer.write(comment);
+                    writer.newLine();
+                    }
+                if (!layer.internalGetGlobalHeaderComments().isEmpty())
+                    {
+                    writer.newLine();
+                    }
+                for (String key : layer.internalGetOrdered().keySet())
+                    {
+                    List<String> comments = layer.internalGetLeadingComments().get(key);
+                    if (comments != null)
+                        {
+                        for (String comment : comments)
+                            {
+                            writer.write(comment);
+                            writer.newLine();
+                            }
+                        }
+                    String value = layer.internalGetOrdered().get(key);
+                    writer.write(escapeKey(key));
+                    writer.write("=");
+                    writer.write(escapeValue(value));
+                    writer.newLine();
+                    }
+                for (String comment : layer.internalGetTrailingComments())
+                    {
+                    writer.write(comment);
+                    writer.newLine();
+                    }
+                }
+            }
+        catch (IOException ex)
+            {
+            throw new ConfigCheckedException(ex);
+            }
+        }
+
+    private String escapeKey(String key)
+        {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < key.length(); i++)
+            {
+            char ch = key.charAt(i);
+            switch (ch)
+                {
+                case ' ':
+                case '\\':
+                case '=':
+                case ':':
+                case '#':
+                case '!':
+                    sb.append('\\').append(ch);
+                    break;
+                case '\t':
+                    sb.append("\\t");
+                    break;
+                case '\n':
+                    sb.append("\\n");
+                    break;
+                case '\r':
+                    sb.append("\\r");
+                    break;
+                case '\f':
+                    sb.append("\\f");
+                    break;
+                default:
+                    sb.append(ch);
+                    break;
+                }
+            }
+        return sb.toString();
+        }
+
+    private String escapeValue(String value)
+        {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < value.length(); i++)
+            {
+            char ch = value.charAt(i);
+            switch (ch)
+                {
+                case '\\':
+                    sb.append("\\\\");
+                    break;
+                case '\t':
+                    sb.append("\\t");
+                    break;
+                case '\n':
+                    sb.append("\\n");
+                    break;
+                case '\r':
+                    sb.append("\\r");
+                    break;
+                case '\f':
+                    sb.append("\\f");
+                    break;
+                case ' ':
+                    if (i == 0)
+                        {
+                        sb.append("\\ ");
+                        break;
+                        }
+                    sb.append(' ');
+                    break;
+                default:
+                    sb.append(ch);
+                    break;
+                }
+            }
+        return sb.toString();
         }
 }

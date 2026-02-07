@@ -62,5 +62,5 @@ Test Mode can be disabled globally with `ConfigFactoryBuilder.forbidTestMode()`.
 If you do that, `TEST_MODE` and `setTestMode(true)` have no effect.
 
 Related docs:
-- [Test Mode](../test-mode.md)
-- [Configuration Schemes](../configuration-schemes.md)
+- [Test Mode](../15_test_mode.md)
+- [Configuration Schemes](../23_configuration_schemes.md)

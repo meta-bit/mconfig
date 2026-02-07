@@ -19,9 +19,12 @@ public class CommonOptions
     @Option(names = {"-v", "--verbose"}, description = "Verbose output")
     public boolean verbose;
 
-    @Option(names = {"-o", "--output"}, description = "Output format: HUMAN, JSON, CSV, YAML, TOML", defaultValue = "HUMAN")
+    @Option(names = {"-f", "--format"}, description = "Output format: HUMAN, JSON, CSV, YAML, TOML", defaultValue = "HUMAN")
     public Main.OutputFormat format;
 
     @Option(names = {"-l", "--lang"}, description = "Preferred language for descriptions", defaultValue = "en")
     public String language;
+
+    @Option(names = {"-X", "--experimental"}, description = "Enable experimental features")
+    public boolean experimental;
 }

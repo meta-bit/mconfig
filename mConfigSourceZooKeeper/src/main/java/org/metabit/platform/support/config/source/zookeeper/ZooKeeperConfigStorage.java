@@ -237,7 +237,7 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
 
             if (data != null && data.length > 0)
             {
-                System.out.println("[DEBUG_LOG] DATA FOUND at " + path + " length: " + data.length);
+                // **format detection heuristics**
                 // For now, we assume JSON if it starts with { or [, otherwise Properties.
                 // Ideally, we'd check all formats, but this is a simplified experimental version.
                 String content = new String(data, StandardCharsets.UTF_8).trim();
@@ -245,6 +245,7 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
                 if (content.startsWith("{") || content.startsWith("["))
                 {
                     format = layeredCfg.getContext().getConfigFormats().get("JSON");
+                    if (format == null) format = layeredCfg.getContext().getConfigFormats().get("JSONwithJackson");
                     if (format == null) format = layeredCfg.getContext().getConfigFormats().get("json");
                 }
                 else
@@ -255,7 +256,6 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
 
                 if (format instanceof ConfigFileFormatInterface)
                 {
-                    System.out.println("[DEBUG_LOG] USING FORMAT: " + format.getFormatID());
                     // Use the znode path as the storage instance handle, so we can track changes properly
                     ConfigLayerInterface layer = ((ConfigFileFormatInterface) format).readStream(
                             new java.io.ByteArrayInputStream(data), 
@@ -263,14 +263,9 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
                     );
                     if (layer != null)
                     {
-                        System.out.println("[DEBUG_LOG] ADDING LAYER from " + path + " to " + layeredCfg.getConfigName());
                         layeredCfg.add(layer, layer.getSource());
                     }
                 }
-            }
-            else
-            {
-                System.out.println("[DEBUG_LOG] NO DATA at " + path);
             }
         }
         catch (Exception e)
@@ -293,7 +288,6 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
     @Override
     public boolean hasChangedSincePreviousCheck(Object storageInstanceHandle)
     {
-        System.out.println("[DEBUG_LOG] hasChangedSincePreviousCheck called with handle: " + storageInstanceHandle + " (type: " + (storageInstanceHandle != null ? storageInstanceHandle.getClass().getName() : "null") + ")");
         String path = null;
         if (storageInstanceHandle instanceof String)
         {
@@ -304,7 +298,6 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
             // Fallback for stream-based handles: if ANY watched path in this storage changed, 
             // signal a potential change to trigger re-evaluation of the layer.
             boolean anyChanged = !changedPaths.isEmpty();
-            System.out.println("[DEBUG_LOG] hasChangedSincePreviousCheck (InputStream) anyChanged: " + anyChanged + ", changedPaths: " + changedPaths);
             if (anyChanged) {
                 changedPaths.clear(); // Prevent infinite re-read loops
                 logger.info("CHANGE detected in ZooKeeper (stream handle matched)");
@@ -315,7 +308,6 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
 
         if (path != null)
         {
-            System.out.println("[DEBUG_LOG] checking path: " + path + " in changedPaths: " + changedPaths);
             // Exact path match
             boolean changed = changedPaths.remove(path);
             
@@ -337,7 +329,6 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
 
             if (changed) {
                 logger.info("CHANGE detected in ZooKeeper path " + path);
-                System.out.println("[DEBUG_LOG] MATCH FOUND for path: " + path);
             }
             return changed;
         }
@@ -347,7 +338,6 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
     @Override
     public void triggerChangeCheck(Object storageInstanceHandle)
     {
-        System.out.println("[DEBUG_LOG] triggerChangeCheck called with handle: " + storageInstanceHandle);
         if (storageInstanceHandle instanceof String)
         {
             changedPaths.add((String) storageInstanceHandle);
@@ -357,22 +347,18 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
     private void ensureWatcher(String path)
     {
         caches.computeIfAbsent(path, p -> {
-            System.out.println("[DEBUG_LOG] ensureWatcher creating cache for path: " + p);
             logger.debug("Creating ZooKeeper watcher for " + p);
             CuratorCache cache = CuratorCache.build(client, p, CuratorCache.Options.SINGLE_NODE_CACHE);
             cache.listenable().addListener(CuratorCacheListener.builder()
                     .forChanges((oldNode, newNode) -> {
-                        System.out.println("[DEBUG_LOG] Watcher event: changed for path: " + p);
                         logger.debug("ZooKeeper node changed: " + p);
                         changedPaths.add(p);
                     })
                     .forCreates(node -> {
-                        System.out.println("[DEBUG_LOG] Watcher event: created for path: " + p);
                         logger.debug("ZooKeeper node created: " + p);
                         changedPaths.add(p);
                     })
                     .forDeletes(node -> {
-                        System.out.println("[DEBUG_LOG] Watcher event: deleted for path: " + p);
                         logger.debug("ZooKeeper node deleted: " + p);
                         changedPaths.add(p);
                     })

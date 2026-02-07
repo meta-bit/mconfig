@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) metabit 2018-2026. placed under CC-BY-ND-4.0 license.
-  ~ Full license text available at https://tldrlegal.com/license/creative-commons-attribution-noderivatives-4.0-international-(cc-by-nd-4.0)#fulltext
+  ~ Copyright (c) metabit 2018-2026.
+  ~ license see LICENSE file
   ~ You may: distribute, use for commercial and non-commercial purposes
   ~ You must: give credit, include/keep copyright, state any changes
   ~ You mustn't: distribute modified versions, sublicense
@@ -9,7 +9,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,13 +18,13 @@
         <!-- Ensure UTF-8 encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Skip site generation by default; documentation module overrides this. -->
+        <!-- Skip site generation by default; the documentation module overrides this. -->
         <maven.site.skip>true</maven.site.skip>
     </properties>
 
     <groupId>org.metabit.platform.support.config</groupId>
     <artifactId>mconfig</artifactId>
-    <version>0.8.3</version>
+    <version>0.8.5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>mConfig</name>
     <description>
@@ -37,8 +36,8 @@
     <url>https://metabit.org/software/API/</url>
     <licenses>
         <license>
-            <name>CC-BY-ND 4.0</name>
-            <url>http://creativecommons.org/licenses/by-nd/4.0/</url>
+            <name>Polyform Shield License 1.0.0</name>
+            <url>https://polyformproject.org/licenses/shield/1.0.0/</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -67,6 +66,7 @@
         <module>mConfigFormatYAMLwithSnakeYAML</module>
         <module>mConfigFormatINI</module>
         <module>mConfigFormatTOMLwithJackson</module>
+        <module>mConfigFormatTOML</module>
         <module>mConfigSourceZooKeeper</module>
         <module>documentation</module>
     </modules>
@@ -85,11 +85,10 @@
 
 
     <!-- deployment only configuration settings -->
-
     <scm>
         <connection>scm:git:https://github.com/meta-bit/mconfig.git</connection>
         <developerConnection>scm:git:git@github.com:meta-bit/mconfig.git</developerConnection>
-        <!-- human-useable link -->
+        <!-- human-usable link -->
         <url>https://github.com/meta-bit/mconfig</url>
     </scm>
 

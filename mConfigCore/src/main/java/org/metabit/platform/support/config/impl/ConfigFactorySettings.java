@@ -1,9 +1,8 @@
 /*
- * Copyright (c) metabit 2018-2026. placed under CC-BY-ND-4.0 license.
- * Full license text available at https://tldrlegal.com/license/creative-commons-attribution-noderivatives-4.0-international-(cc-by-nd-4.0)#fulltext
- * You may: distribute, use for commercial and non-commercial purposes
- * You must: give credit, include/keep copyright, state any changes
- * You mustn't: distribute modified versions, sublicense
+ * Copyright (c) 2018-2026 metabit GmbH.
+ * Licensed under the mConfig Design Integrity License (v0.7.26 - 1.0.0-pre),
+ * based on the Polyform Shield License 1.0.0.
+ * See mConfigCore/LICENSE.md for details.
  */
 
 package org.metabit.platform.support.config.impl;

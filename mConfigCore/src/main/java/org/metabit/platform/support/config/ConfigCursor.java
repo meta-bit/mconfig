@@ -1,7 +1,5 @@
 package org.metabit.platform.support.config;
 
-import java.util.List;
-
 /**
  * multidimensional iterator (here: two-dimensional) for access within a Configuration.
  * see metabit TLVIterator
@@ -164,8 +162,6 @@ public interface ConfigCursor // extends Iterable<ConfigEntry>
    void remove();
 
    // --------------------------------------------------------------------------
-    // writing via ConfigCursor not supported in current version.
-
    /**
     * Writes a value to the configuration at the current cursor position.
     *
@@ -177,6 +173,17 @@ public interface ConfigCursor // extends Iterable<ConfigEntry>
    default void put(String key, Object value, ConfigScope scope) throws ConfigException
    {
        throw new UnsupportedOperationException("put is not implemented for this cursor");
+   }
+
+   /**
+    * Writes a value to the configuration at the current cursor position.
+    *
+    * @param value the value to be written
+    * @throws ConfigException on failure
+    */
+   default void setValue(Object value) throws ConfigException
+   {
+       throw new UnsupportedOperationException("setValue is not implemented for this cursor");
    }
 
 

@@ -62,6 +62,6 @@ ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
 ```
 
 Related docs:
-- [Test Mode](../test-mode.md)
-- [Configuration Schemes](../configuration-schemes.md)
-- [Config Features](../4_1_ConfigFeatures.md)
+- [Test Mode](../15_test_mode.md)
+- [Configuration Schemes](../23_configuration_schemes.md)
+- [Config Features](../25_config_features.md)

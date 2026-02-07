@@ -362,7 +362,21 @@ public class JsonConfigSchemeParser
                     }
                 }
             
-            if (norm.containsKey("DESCRIPTION")) entry.description = String.valueOf(norm.get("DESCRIPTION"));
+            if (norm.containsKey("DESCRIPTION"))
+                {
+                Object desc = norm.get("DESCRIPTION");
+                if (desc instanceof Map)
+                    {
+                    Map<?, ?> m = (Map<?, ?>) desc;
+                    Map<String, String> descriptions = new HashMap<>();
+                    m.forEach((k, v) -> descriptions.put(String.valueOf(k), String.valueOf(v)));
+                    entry.setDescriptions(descriptions);
+                    }
+                else
+                    {
+                    entry.description = String.valueOf(desc);
+                    }
+                }
             if (norm.containsKey("DEFAULT")) entry.defaultValue = (String) norm.get("DEFAULT");
             
             if (norm.containsKey("PATTERN"))

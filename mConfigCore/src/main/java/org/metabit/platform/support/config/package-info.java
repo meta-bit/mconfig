@@ -6,6 +6,9 @@
  * <p/>
  * ConfigFactoryBuilder -> ConfigFactory -> Configuration
  * <p/>
- * (c) metabit 2018-2026, CC-BY-ND 4.0
+ * Copyright (c) 2018-2026 metabit GmbH.
+ * Licensed under the mConfig Design Integrity License (v0.7.26 - 1.0.0-pre),
+ * based on the Polyform Shield License 1.0.0.
+ * See mConfigCore/LICENSE.md for details.
  */
 package org.metabit.platform.support.config;

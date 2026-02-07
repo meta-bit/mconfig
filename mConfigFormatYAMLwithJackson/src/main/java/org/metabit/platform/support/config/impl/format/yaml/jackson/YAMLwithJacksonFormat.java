@@ -32,7 +32,7 @@ public class YAMLwithJacksonFormat implements ConfigFileFormatInterface
     @Override
     public String getFormatID()
         {
-        return "YAML";
+        return "YAMLwithJackson";
         }
 
     @Override

@@ -15,7 +15,7 @@ public class JSON5withJacksonFormat extends JSONwithJacksonFormat
     @Override
     public String getFormatID()
         {
-        return "JSON5";
+        return "JSON5witJackson";
         }
 
     @Override

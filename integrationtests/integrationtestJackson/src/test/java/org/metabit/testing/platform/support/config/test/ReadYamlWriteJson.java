@@ -29,7 +29,7 @@ public class ReadYamlWriteJson
             ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(COMPANY_NAME, APPLICATION_NAME);
             builder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of(tempDir.toString()));
             builder.setFeature(ConfigFeature.TEST_MODE, true);
-            builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, List.of("JSON"));
+            builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, List.of("JSONwithJackson"));
             // builder.setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES, List.of("YAML"));
 
             try (ConfigFactory factory = builder.build())

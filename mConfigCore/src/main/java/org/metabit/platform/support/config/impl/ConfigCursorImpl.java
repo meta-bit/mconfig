@@ -362,9 +362,18 @@ public class ConfigCursorImpl implements ConfigCursor
             {
             throw new IllegalStateException("remove() called without current element (call moveNext() first)");
             }
+        
+        ConfigEntry entry = getCurrentElement();
+        ConfigScope scope = (entry != null && entry.getScope() != null) ? entry.getScope() : ConfigScope.USER;
+
         String key = currentLevelKeys.get(currentIndex);
         String fullPath = currentLevelPath.isEmpty() ? key : currentLevelPath + "/" + key;
-        layeredConfig.put(fullPath, "", ConfigScope.USER);
+        
+        // In mConfig, removing an entry often means setting it to null or empty in a writable layer,
+        // or actually removing it from the storage if supported.
+        // LayeredConfiguration.put with null/empty value might be used for removal.
+        layeredConfig.put(fullPath, "", scope);
+        
         // Refresh after modification
         currentLevelKeys = collectKeysAtCurrentLevel();
         }
@@ -374,9 +383,73 @@ public class ConfigCursorImpl implements ConfigCursor
     public void put(String key, Object value, ConfigScope scope) throws ConfigException
     {
         String fullPath = currentLevelPath.isEmpty() ? key : currentLevelPath + "/" + key;
-        layeredConfig.put(fullPath, String.valueOf(value), scope);
+        if (value instanceof List)
+            {
+            @SuppressWarnings("unchecked")
+            List<String> list = (List<String>) value;
+            layeredConfig.put(fullPath, list, scope);
+            }
+        else if (value instanceof byte[])
+            {
+            layeredConfig.put(fullPath, (byte[]) value, scope);
+            }
+        else
+            {
+            layeredConfig.put(fullPath, String.valueOf(value), scope);
+            }
         // Refresh keys if we added a new one
         currentLevelKeys = collectKeysAtCurrentLevel();
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setValue(Object value) throws ConfigException
+    {
+        if (inListMode)
+            {
+            throw new ConfigException(ConfigException.ConfigExceptionReason.NOT_WRITEABLE, "Writing to list items via cursor is not yet supported");
+            }
+        
+        if (currentIndex < 0 || currentIndex >= currentLevelKeys.size())
+            {
+            throw new IllegalStateException("setValue() called without current element (call moveNext() first)");
+            }
+
+        String key = currentLevelKeys.get(currentIndex);
+        String fullPath = currentLevelPath.isEmpty() ? key : currentLevelPath + "/" + key;
+        
+        ConfigEntry entry = getCurrentElement();
+        if (entry != null && entry.getScope() != null)
+            {
+            try
+                {
+                entry.putValue(value, determineEntryType(value));
+                }
+            catch (ConfigCheckedException e)
+                {
+                throw new ConfigException(e);
+                }
+            }
+        else
+            {
+            // Fallback to layeredConfig.put if entry not found or scope unknown
+            // We use RUNTIME as a safe default for cursors if no other scope is known, 
+            // but SESSION or USER might also be appropriate depending on context.
+            // For general library use, USER is the standard writable scope.
+            // @TODO discuss this preliminary plan
+            put(key, value, ConfigScope.RUNTIME);
+            layeredConfig.logger.warn("put falling back to RUNTIME scope");
+            }
+    }
+
+    private ConfigEntryType determineEntryType(Object value)
+        {
+        if (value instanceof String) return ConfigEntryType.STRING;
+        if (value instanceof Boolean) return ConfigEntryType.BOOLEAN;
+        if (value instanceof Number) return ConfigEntryType.NUMBER;
+        if (value instanceof List) return ConfigEntryType.MULTIPLE_STRINGS;
+        if (value instanceof byte[]) return ConfigEntryType.BYTES;
+        return ConfigEntryType.STRING;
+        }
 }
 //___EOF___

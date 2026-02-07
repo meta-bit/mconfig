@@ -348,6 +348,23 @@ public enum ConfigFeature
      * Each entry is a map containing "id", "provider", "config" (optional), and "scope" (optional).
      */
     ADDITIONAL_SECRETS_PROVIDERS,
+    /**
+     * whether to read comments from configuration files.
+     * default: false.
+     * Note: mConfig does not guarantee that all comments will be read.
+     */
+    COMMENTS_READING,
+    /**
+     * whether to write comments to configuration files.
+     * default: false.
+     */
+    COMMENTS_WRITING,
+    /**
+     * whether to write the description from the config scheme as a comment
+     * when an entry is created.
+     * default: false.
+     */
+    DESCRIPTION_ON_CREATE,
     //------------------------------------------------------------------------------------------------------------------
     // features which are under review; may be removed or changed in future versions before 1.0
     /**
@@ -509,12 +526,12 @@ public enum ConfigFeature
 
         //----------------------------------------------------------------------
         FILE_FORMAT_READING_PRIORITIES.valueType = ValueType.STRINGLIST; // for writing
-        FILE_FORMAT_READING_PRIORITIES.defaultValue = new ArrayList<String>(Arrays.asList("DHALL", "TOML", "YAML", "JSON5", "JSON", "ASN1", "properties", "INI"));
+        FILE_FORMAT_READING_PRIORITIES.defaultValue = new ArrayList<String>(Arrays.asList("DHALL", "TOML", "TOMLwithJackson", "YAML", "YAMLwithJackson", "JSON5", "JSON5withJackson", "JSON", "JSONwithJackson", "ASN1", "properties", "INI"));
 
         // we should not write DHALL; it is too complex, and we're likely to mess up the "source of truth". So we don't.
         // and we don't want to write INI unless explicitly asked for
         FILE_FORMAT_WRITING_PRIORITIES.valueType = ValueType.STRINGLIST; // for reading
-        FILE_FORMAT_WRITING_PRIORITIES.defaultValue = new ArrayList<String>(Arrays.asList("TOML", "YAML", "JSON5", "JSON", "properties"));
+        FILE_FORMAT_WRITING_PRIORITIES.defaultValue = new ArrayList<String>(Arrays.asList("TOML", "TOMLwithJackson", "YAML", "YAMLwithJackson", "JSON5", "JSON5withJackson", "JSON", "JSONwithJackson", "properties"));
 
         FILE_FORMAT_READING_ALLOW_ALL_FORMATS.valueType = ValueType.BOOLEAN;
         FILE_FORMAT_READING_ALLOW_ALL_FORMATS.defaultValue = Boolean.TRUE;
@@ -550,6 +567,15 @@ public enum ConfigFeature
         SECRETS_PROVIDER_CONFIG.classType = Map.class;
         ADDITIONAL_SECRETS_PROVIDERS.valueType = ValueType.SPECIAL_CLASS;
         ADDITIONAL_SECRETS_PROVIDERS.classType = List.class;
+
+        COMMENTS_READING.valueType = ValueType.BOOLEAN;
+        COMMENTS_READING.defaultValue = Boolean.FALSE;
+
+        COMMENTS_WRITING.valueType = ValueType.BOOLEAN;
+        COMMENTS_WRITING.defaultValue = Boolean.FALSE;
+
+        DESCRIPTION_ON_CREATE.valueType = ValueType.BOOLEAN;
+        DESCRIPTION_ON_CREATE.defaultValue = Boolean.FALSE;
         }
 
     private ValueType valueType;

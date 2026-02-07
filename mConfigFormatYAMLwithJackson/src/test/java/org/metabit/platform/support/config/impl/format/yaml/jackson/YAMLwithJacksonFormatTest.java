@@ -98,6 +98,6 @@ public class YAMLwithJacksonFormatTest
     public void testGetFormatID()
         {
         YAMLwithJacksonFormat format = new YAMLwithJacksonFormat();
-        assertEquals("YAML", format.getFormatID());
+        assertEquals("YAMLwithJackson", format.getFormatID());
         }
 }

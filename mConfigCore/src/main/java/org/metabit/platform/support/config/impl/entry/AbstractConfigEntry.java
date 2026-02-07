@@ -161,6 +161,21 @@ public abstract class AbstractConfigEntry implements ConfigEntry
         }
 
     @Override
+    public String getComment()
+        {
+        return (meta != null) ? meta.getComment() : null;
+        }
+
+    @Override
+    public void setComment(String comment)
+        {
+        if (meta != null)
+            {
+            meta.setComment(comment);
+            }
+        }
+
+    @Override
     public abstract ConfigEntryType getType();
 
     public ConfigEntryMetadata getMeta()

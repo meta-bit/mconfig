@@ -7,10 +7,7 @@ import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.scheme.impl.*;
 
 import java.time.format.DateTimeParseException;
-import java.util.EnumSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -23,6 +20,7 @@ public class ConfigSchemeEntry implements ConfigEntrySpecification
     public  ConfigEntryType                                                   type;   // from enum
     public  String                                                            key; // the name/key this is referenced by
     public  String                                                            description;
+    private Map<String, String>                                               descriptions;
     public  EnumSet<ConfigEntry.ConfigEntryFlags>                             flags;
     public  Pattern                                                           validationPattern;
     public  String                                                            defaultValue;
@@ -34,6 +32,7 @@ public class ConfigSchemeEntry implements ConfigEntrySpecification
     private int                                                               maxArity                    = 0;  // 0 means use default from type
     private RangeValidator                                                    rangeValidator;
     private EnumValidator                                                     enumValidator;
+    private String                                                            enumPattern;
     private FilePathValidator                                                 filePathValidator;
     private org.metabit.platform.support.config.scheme.impl.TemporalValidator temporalValidator;
     private Map<String, Object>                                               temporalValidationFlags;
@@ -314,6 +313,12 @@ public class ConfigSchemeEntry implements ConfigEntrySpecification
     @Override
     public String getDescription(Locale locale)
         {
+        if (descriptions != null && locale != null)
+            {
+            String localized = descriptions.get(locale.getLanguage());
+            if (localized != null) return localized;
+            }
+
         if (description == null || description.isEmpty()) return description;
         try
             {
@@ -348,6 +353,35 @@ public class ConfigSchemeEntry implements ConfigEntrySpecification
     public ConfigSchemeEntry setDescription(final String description)
         {
         this.description = (description != null) ? description : "";
+        return this;
+        }
+
+    /**
+     * <p>Set description for a specific language.</p>
+     *
+     * @param lang language code (e.g. "en", "de")
+     * @param text description text
+     * @return this entry
+     */
+    public ConfigSchemeEntry setDescription(String lang, String text)
+        {
+        if (descriptions == null)
+            {
+            descriptions = new HashMap<>();
+            }
+        descriptions.put(lang, text);
+        return this;
+        }
+
+    /**
+     * <p>Set multiple localized descriptions at once.</p>
+     *
+     * @param descriptions map of language codes to description texts
+     * @return this entry
+     */
+    public ConfigSchemeEntry setDescriptions(Map<String, String> descriptions)
+        {
+        this.descriptions = descriptions;
         return this;
         }
 
@@ -419,6 +453,7 @@ public class ConfigSchemeEntry implements ConfigEntrySpecification
             }
         else if (type == ConfigEntryType.ENUM || type == ConfigEntryType.ENUM_SET)
             {
+            this.enumPattern = pattern;
             this.enumValidator = new EnumValidator(pattern, type == ConfigEntryType.ENUM_SET);
             return this;
             }
@@ -436,6 +471,10 @@ public class ConfigSchemeEntry implements ConfigEntrySpecification
     @Override
     public String getValueLimitations()
         {
+        if (type == ConfigEntryType.ENUM || type == ConfigEntryType.ENUM_SET)
+            {
+            return enumPattern;
+            }
         return getValidationPattern();
         }
 

@@ -36,6 +36,8 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
     private final                        ConfigFactoryInstanceContext ctx;
     private final DefaultLayer           defaultLayer; // permanent default
     private final                        ConfigEventList events;
+    private final                        boolean descriptionOnCreateFlag;
+    private final                        boolean writeCommentsFlag;
     private       boolean                closed = false;
 
     /**
@@ -52,6 +54,8 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         this.logger = ctx.getLogger();
         // this.events = new ConfigEventList();
         this.exceptionOnNullFlag = ctx.getSettings().getBoolean(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY);
+        this.descriptionOnCreateFlag = ctx.getSettings().getBoolean(ConfigFeature.DESCRIPTION_ON_CREATE);
+        this.writeCommentsFlag = ctx.getSettings().getBoolean(ConfigFeature.COMMENTS_WRITING);
         this.configName = sanitizedConfigName;
         this.defaultLayer = new DefaultLayer(ctx);
         this.configFactory = configFactory;
@@ -441,6 +445,17 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
     @Override
     public void putGeneric(String fullKey, Object value, ConfigEntryType type, ConfigScope scope) throws ConfigCheckedException
         {
+        // Validate against scheme before any write attempt (only when a real spec exists).
+        ConfigEntrySpecification spec = (configScheme != null) ? configScheme.getSpecification(fullKey) : null;
+        if (spec != null && !(spec instanceof org.metabit.platform.support.config.scheme.NullConfigEntrySpecification))
+            {
+            ConfigEntry entryToValidate = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, null);
+            if (!spec.validateEntry(entryToValidate))
+                {
+                throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.INPUT_INVALID);
+                }
+            }
+
         // Priority 1: Update existing entry in the scope (highest priority writeable layer first)
         synchronized(configs)
             {
@@ -454,7 +469,9 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
                 ConfigEntry entry = configLayer.getEntry(fullKey);
                 if (entry != null)
                     {
-                    entry.putValue(value, type);
+                    // Update: do not auto-add description on update
+                    ConfigEntry updatedEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, configLayer.getSource());
+                    configLayer.writeEntry(updatedEntry);
                     return;
                     }
                 }
@@ -468,6 +485,17 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
                     { continue; }
 
                 ConfigEntry newEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, configLayer.getSource());
+                if (descriptionOnCreateFlag && spec != null)
+                    {
+                    String desc = null;
+                    try { desc = spec.getDescription(java.util.Locale.getDefault()); } catch (Throwable t) { desc = spec.getDescription(); }
+                    if (desc == null || desc.isEmpty()) { desc = spec.getDescription(); }
+                    if (desc != null && !desc.isEmpty())
+                        {
+                        String existingComment = newEntry.getComment();
+                        newEntry.setComment(mergeDescriptionBeforeComment(desc, existingComment));
+                        }
+                    }
                 configLayer.writeEntry(newEntry);
                 return;
                 }
@@ -476,6 +504,17 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         // Priority 3: Create a new configuration layer instance
         ConfigLayerInterface newLayer = tryToCreateConfigLayer(this.configName, scope, this.configScheme);
         ConfigEntry newEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, newLayer.getSource());
+        if (descriptionOnCreateFlag && spec != null)
+            {
+            String desc = null;
+            try { desc = spec.getDescription(java.util.Locale.getDefault()); } catch (Throwable t) { desc = spec.getDescription(); }
+            if (desc == null || desc.isEmpty()) { desc = spec.getDescription(); }
+            if (desc != null && !desc.isEmpty())
+                {
+                String existingComment = newEntry.getComment();
+                newEntry.setComment(mergeDescriptionBeforeComment(desc, existingComment));
+                }
+            }
         newLayer.writeEntry(newEntry);
         }
 
@@ -530,6 +569,21 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
     public Iterator<String> getEntryKeyTreeIterator()
         {
         return getAllConfigurationKeysFlattened(EnumSet.allOf(ConfigScope.class)).iterator();
+        }
+
+    private String mergeDescriptionBeforeComment(String description, String comment)
+        {
+        if (comment == null || comment.isEmpty())
+            { return description; }
+        if (description == null || description.isEmpty())
+            { return comment; }
+        // Avoid duplicate lines exactly matching either set
+        java.util.LinkedHashSet<String> lines = new java.util.LinkedHashSet<>();
+        for (String dline : description.split("\n", -1))
+            { lines.add(dline); }
+        for (String cline : comment.split("\n", -1))
+            { lines.add(cline); }
+        return String.join("\n", lines);
         }
 
     /**

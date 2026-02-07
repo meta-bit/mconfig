@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.3</version>
+        <version>0.8.5-SNAPSHOT</version>
     </parent>
 
     <groupId>org.metabit.platform.support.config.logging</groupId>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigcore</artifactId>
-            <version>0.8.3</version>
+            <version>0.8.5-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

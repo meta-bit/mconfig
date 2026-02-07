@@ -24,7 +24,6 @@ Frustration-free boilerplates to start with mConfig in seconds.
 
 More coming (Full, Secrets, EnvVar...)!
 
-[![CLI](https://img.shields.io/badge/CLI-mconfig-brightgreen)](../../../mConfigTools/README.md)
-
+[![CLI](https://img.shields.io/badge/CLI-mconfig-brightgreen)](../../mConfigTools/README.md)
 
 **Pro Tip:** Update `mconfig.version` (Maven) or `mconfigVersion` (Gradle) to the [latest release](https://github.com/meta-bit/mconfig/releases).

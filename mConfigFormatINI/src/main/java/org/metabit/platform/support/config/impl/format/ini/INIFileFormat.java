@@ -95,7 +95,7 @@ public class INIFileFormat implements ConfigFileFormatInterface
         if (layer instanceof INIConfigLayer)
             {
             INIConfigLayer iniLayer = (INIConfigLayer) layer;
-            writeINI(iniLayer.getSource(), iniLayer.getData());
+            writeINI(iniLayer);
             }
         else
             {
@@ -103,22 +103,60 @@ public class INIFileFormat implements ConfigFileFormatInterface
             }
         }
 
-    public void writeINI(ConfigSource source, Map<String, Map<String, String>> data) throws ConfigCheckedException
+    public void writeINI(INIConfigLayer layer) throws ConfigCheckedException
         {
-        Path path = (Path) source.getStorageInstanceHandle();
+        Path path = (Path) layer.getSource().getStorageInstanceHandle();
+        Map<String, Map<String, String>> data = layer.getData();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile())))
             {
+            for (String comment : layer.getGlobalHeaderComments())
+                {
+                writer.write(comment);
+                writer.newLine();
+                }
+            if (!layer.getGlobalHeaderComments().isEmpty())
+                {
+                writer.newLine();
+                }
             for (Map.Entry<String, Map<String, String>> sectionEntry : data.entrySet())
                 {
                 String sectionName = sectionEntry.getKey();
+                List<String> sectionLeading = layer.getSectionLeadingComments(sectionName);
+                if (sectionLeading != null)
+                    {
+                    for (String comment : sectionLeading)
+                        {
+                        writer.write(comment);
+                        writer.newLine();
+                        }
+                    }
                 if (!sectionName.isEmpty())
                     {
                     writer.write("[" + sectionName + "]");
+                    String sectionInline = layer.getSectionInlineComment(sectionName);
+                    if (sectionInline != null)
+                        {
+                        writer.write(" " + sectionInline);
+                        }
                     writer.newLine();
                     }
                 for (Map.Entry<String, String> entry : sectionEntry.getValue().entrySet())
                     {
+                    List<String> keyLeading = layer.getKeyLeadingComments(sectionName, entry.getKey());
+                    if (keyLeading != null)
+                        {
+                        for (String comment : keyLeading)
+                            {
+                            writer.write(comment);
+                            writer.newLine();
+                            }
+                        }
                     writer.write(entry.getKey() + "=" + entry.getValue());
+                    String inlineComment = layer.getKeyInlineComment(sectionName, entry.getKey());
+                    if (inlineComment != null)
+                        {
+                        writer.write(" " + inlineComment);
+                        }
                     writer.newLine();
                     }
                 writer.newLine();
@@ -129,4 +167,5 @@ public class INIFileFormat implements ConfigFileFormatInterface
             throw new ConfigCheckedException(ex);
             }
         }
+
 }
