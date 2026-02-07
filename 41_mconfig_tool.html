@@ -1890,7 +1890,7 @@
 <p>The <code>mconfig</code> tool provides a command-line interface for inspecting and managing configurations. It allows you to list available configurations, show effective values, get detailed metadata for specific keys, search for configuration paths, and more.</p>
 <h2 id="411-installation">4.1.1 Installation<a class="headerlink" href="#411-installation" title="Permanent link">&para;</a></h2>
 <p>The tool is available as a "fat JAR" in the <code>mConfigTools</code> module. You can run it using:</p>
-<div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>mConfigTools-*.jar<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>COMMAND<span class="o">]</span><span class="w"> </span><span class="o">[</span>COMMAND_OPTIONS<span class="o">]</span>
+<div class="highlight"><span class="filename">Bash</span><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>mConfigTools-*.jar<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>COMMAND<span class="o">]</span><span class="w"> </span><span class="o">[</span>COMMAND_OPTIONS<span class="o">]</span>
 </code></pre></div>
 <h2 id="412-subcommands">4.1.2 Subcommands<a class="headerlink" href="#412-subcommands" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1944,51 +1944,51 @@ extra information you can get out of it.</p>
 <ol>
 <li>
 <p>List configurations:
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>--company<span class="w"> </span>mycomp<span class="w"> </span>--app<span class="w"> </span>myapp<span class="w"> </span>list
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>--company<span class="w"> </span>mycomp<span class="w"> </span>--app<span class="w"> </span>myapp<span class="w"> </span>list
 </code></pre></div></p>
 </li>
 <li>
 <p>Show effective configuration:
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>show
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>show
 <span class="c1"># OR</span>
 mconfig<span class="w"> </span>show<span class="w"> </span>--company<span class="w"> </span>mycomp<span class="w"> </span>--app<span class="w"> </span>myapp<span class="w"> </span>--config<span class="w"> </span>settings
 </code></pre></div></p>
 </li>
 <li>
 <p>Get value and metadata for a specific key:
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:db:password<span class="w"> </span>get
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:db:password<span class="w"> </span>get
 </code></pre></div></p>
 </li>
 <li>
 <p>Change output to JSON for scripting:
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>show<span class="w"> </span>-o<span class="w"> </span>JSON
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>show<span class="w"> </span>-o<span class="w"> </span>JSON
 </code></pre></div></p>
 </li>
 <li>
 <p>See where the values in your configuration are coming from:
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>show<span class="w"> </span>-v
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>show<span class="w"> </span>-v
 </code></pre></div></p>
 </li>
 <li>
 <p>Set a configuration value:
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:db:user<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--value<span class="o">=</span><span class="s2">&quot;dbuser&quot;</span><span class="w"> </span>--scope<span class="o">=</span>USER
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:db:user<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--value<span class="o">=</span><span class="s2">&quot;dbuser&quot;</span><span class="w"> </span>--scope<span class="o">=</span>USER
 </code></pre></div></p>
 </li>
 <li>
 <p>Update a configuration value with dry-run and validation:
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings:timeout<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-V<span class="w"> </span><span class="m">30</span><span class="w"> </span>-S<span class="w"> </span>HOST<span class="w"> </span>-T<span class="w"> </span>NUMBER<span class="w"> </span>--dry-run
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings:timeout<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-V<span class="w"> </span><span class="m">30</span><span class="w"> </span>-S<span class="w"> </span>HOST<span class="w"> </span>-T<span class="w"> </span>NUMBER<span class="w"> </span>--dry-run
 </code></pre></div></p>
 </li>
 <li>
 <p>Monitor configuration changes:
   This one's for you, SRE and developers!
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>monitor<span class="w"> </span>--dump<span class="w"> </span>-v
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>mycomp:myapp:settings<span class="w"> </span>monitor<span class="w"> </span>--dump<span class="w"> </span>-v
 mconfig<span class="w"> </span>:myapp:settings<span class="w"> </span>monitor<span class="w"> </span>--dump<span class="w"> </span>-v<span class="w">  </span><span class="c1"># app-only</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>App-only examples (omit company segment):
-   <div class="highlight"><pre><span></span><code>mconfig<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>myapp<span class="w"> </span>list
+   <div class="highlight"><span class="filename">Bash</span><pre><span></span><code>mconfig<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>myapp<span class="w"> </span>list
 mconfig<span class="w"> </span>:myapp:db<span class="w"> </span>get<span class="w"> </span>password
 </code></pre></div></p>
 </li>

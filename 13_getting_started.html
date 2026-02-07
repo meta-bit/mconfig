@@ -1912,7 +1912,7 @@
 <h2 id="131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build<a class="headerlink" href="#131-include-the-library-in-your-project-build" title="Permanent link">&para;</a></h2>
 <p>For Java, start with adding the dependency to your project build:</p>
 <p>Maven:
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<div class="highlight"><span class="filename">XML</span><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigStandard<span class="nt">&lt;/artifactId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
@@ -1920,12 +1920,12 @@
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div></p>
 <p>Gradle:
-<div class="highlight"><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
 </code></pre></div>
 (update version as needed)</p>
 <p>In case you are defining an <code>module-info.java</code> in your project, add this to the <code>requires</code>
 section:
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
 <span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
 </code></pre></div></p>
 <h3 id="starters-recommended">Starters (Recommended)<a class="headerlink" href="#starters-recommended" title="Permanent link">&para;</a></h3>
@@ -1940,7 +1940,7 @@ section:
 <p><a href="snippets.html"><img alt="Snippets" src="https://img.shields.io/badge/Snippets-quick-brightblue" /></a></p>
 <p>Copy-paste solutions for common config pains: hardcodes → env vars → secrets → tests.</p>
 <h2 id="132-start-with-a-simple-use-case">1.3.2 Start with a simple use case<a class="headerlink" href="#132-start-with-a-simple-use-case" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">quickConfig</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="s">&quot;myApplication&quot;</span><span class="p">,</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">quickConfig</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="s">&quot;myApplication&quot;</span><span class="p">,</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
 
 <span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">peerName</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kt">int</span><span class="w">     </span><span class="n">portNumber</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span>
@@ -1968,7 +1968,7 @@ of your home directory, and see its contents turn up in your code.</p>
 and taking care of all these different locations is part of the library. Also, parsing different formats like JSON, YAML, and so on.
 And much more.</p>
 <p>The cleaner way, without shortcuts, goes like this:</p>
-<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">        </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
 
@@ -1982,7 +1982,7 @@ And much more.</p>
 the getConfiguration() line asks for a specific configuration, and then you
 can get config entries, typesafe.</p>
 <p>You can also list all available configuration names:</p>
-<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">ConfigDiscoveryInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">listAvailableConfigurations</span><span class="p">();</span>
 <span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigDiscoveryInfo</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">info</span><span class="p">)</span>
@@ -2006,7 +2006,7 @@ may have lists/sets where the entries are not named, have no key.</p>
 <p>You can use the <code>ConfigCursor</code> to navigate through list items as individual nodes.</p>
 <p>(Actually, you can use the ConfigCursor for all the configuration; 
 it is just especially useful for navigating lists.)</p>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;myConfig&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">ConfigCursor</span><span class="w"> </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getConfigCursor</span><span class="p">();</span>

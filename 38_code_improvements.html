@@ -1745,7 +1745,7 @@
 <h1 id="38-code-improvements-and-best-practices">3.8 Code Improvements and Best Practices<a class="headerlink" href="#38-code-improvements-and-best-practices" title="Permanent link">&para;</a></h1>
 <h2 id="defaults">Defaults<a class="headerlink" href="#defaults" title="Permanent link">&para;</a></h2>
 <p>Replace code like
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">Properties</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">    </span><span class="n">Properties</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
 <span class="w">    </span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">classLoader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Thread</span><span class="p">.</span><span class="na">currentThread</span><span class="p">().</span><span class="na">getContextClassLoader</span><span class="p">();</span>
 <span class="w">    </span><span class="n">InputStream</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">classLoader</span><span class="p">.</span><span class="na">getResourceAsStream</span><span class="p">(</span><span class="s">&quot;defaultconfig.properties&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">       </span>
@@ -1766,13 +1766,13 @@ besides all its other locations.</p>
 <li><strong>Redundant Null Checks:</strong> By default, <code>EXCEPTION_ON_MISSING_ENTRY</code> is <code>true</code>, so getters throw <code>ConfigException</code> instead of returning <code>null</code>. This removes the need for <code>if (value == null) value = "placeholder"</code> boilerplate.</li>
 </ul>
 <p>Replace:
-<div class="highlight"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;unknown&quot;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <p>With:
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;version&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="c1">// use version</span>
 <span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>

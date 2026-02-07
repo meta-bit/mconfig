@@ -1800,14 +1800,14 @@ mConfig modules you depend on.</p>
 </ul>
 <h2 id="minimal-module-infojava">Minimal <code>module-info.java</code><a class="headerlink" href="#minimal-module-infojava" title="Permanent link">&para;</a></h2>
 <p>If you only use the core and utility APIs:
-<div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
 <span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <h2 id="typical-setup">Typical setup<a class="headerlink" href="#typical-setup" title="Permanent link">&para;</a></h2>
 <p>If you use the standard bundle:
-<div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">// ...</span>
 <span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
 <span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">scheme</span><span class="p">;</span>

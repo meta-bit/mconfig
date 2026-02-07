@@ -2382,7 +2382,7 @@ refresh automatically. → <code>ConfigFeature.UPDATE_CHECK_FREQUENCY_MS</code><
 </li>
 </ul>
 <p>This is how it is supposed to be (and as of 0.6.x, isn't yet!)
-<div class="highlight"><pre><span></span><code>erDiagram
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>erDiagram
     Configuration    }|--|| ConfigFactory : &quot;comes from&quot;
     ConfigFactory    ||--|| ConfigSearchList : has
     Configuration    ||--|| ConfigSearchList : uses
@@ -2428,7 +2428,7 @@ instantiated, for active use. It can produce Configuration instances, which link
    specific. How to match them, and link them in a general way? ))
 
 Situation as of 0.6
-<div class="highlight"><pre><span></span><code>flowchart LR
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>flowchart LR
     ConfigSearchList --&gt;|contains several| ConfigLocationImpl
     ConfigLocationImpl --&gt;|adds properties to| ConfigSourceInterface
     ConfigLocationImpl --&gt; location
@@ -2439,7 +2439,7 @@ Situation as of 0.6
 </blockquote>
 
 <p>Planned for 0.7</p>
-<div class="highlight"><pre><span></span><code>flowchart LR    
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>flowchart LR    
     ConfigSearchList --&gt; ConfigSource
     ConfigSource  --&gt; ConfigStorage
     ConfigStorage -..-&gt; ConfigFormat
@@ -2462,7 +2462,7 @@ and so on - it is an internally shared resource.</p>
 <h3 id="the-secretvalue-api">The SecretValue API<a class="headerlink" href="#the-secretvalue-api" title="Permanent link">&para;</a></h3>
 <p>For programmatically accessing secrets, mConfig provides the <code>SecretValue</code> interface. 
 This allows retrieving the sensitive data without it being accidentally converted to a standard <code>String</code> that might linger in the Java String Pool.</p>
-<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;database/password&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;database/password&quot;</span><span class="p">);</span>
 <span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">rawBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
 <span class="c1">// ... use and then potentially clear the bytes</span>
 </code></pre></div>
@@ -2474,7 +2474,7 @@ This allows retrieving the sensitive data without it being accidentally converte
 - <strong>JSON</strong> uses Base64 encoded strings. If a <code>ConfigScheme</code> is provided that marks a key as <code>BYTES</code> type, mConfig will automatically decode the Base64 string into a byte array.</p>
 <h3 id="flat-binary-files">Flat Binary Files<a class="headerlink" href="#flat-binary-files" title="Permanent link">&para;</a></h3>
 <p>For legacy support or specific use cases, an entire file can be treated as a single binary blob. This uses the <code>binary_file</code> format and is accessed via the empty string key (<code>""</code>).</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Retrieving an entire .bin file as a single blob</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="c1">// Retrieving an entire .bin file as a single blob</span>
 <span class="n">Configuration</span><span class="w"> </span><span class="n">licenseCfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;license&quot;</span><span class="p">);</span>
 <span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">licenseData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">licenseCfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
 </code></pre></div>

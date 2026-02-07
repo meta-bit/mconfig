@@ -2226,7 +2226,7 @@ Only <code>TESTMODE_DIRECTORIES</code> and the default test resource locations a
 <h3 id="set-your-own-paths-legacy-api-for-some-test-environments">Set your own paths (legacy API for some test environments)<a class="headerlink" href="#set-your-own-paths-legacy-api-for-some-test-environments" title="Permanent link">&para;</a></h3>
 <p>ConfigFactoryBuilder.setTestConfigPaths() allows you to set multiple paths for 
 each scope, to be used in test mode. Deprecated; use the custom test directories above.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@BeforeAll</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="nd">@BeforeAll</span>
 <span class="kt">void</span><span class="w"> </span><span class="nf">setUpTestEnvironment</span><span class="p">()</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/my/local/fixed/config/environment&quot;</span><span class="p">);</span>
@@ -2257,7 +2257,7 @@ without needing to explicitly enable permissions in standard environments.</p>
 for some situations.
 In a complex process where <code>TEST_MODE</code> might be enabled globally
 (e.g., via <code>-DTEST_MODE=true</code>) to facilitate integration testing of some modules, a critical production-facing <code>ConfigFactory</code> can be locked down:</p>
-<p><div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CRITICAL_APP&quot;</span><span class="p">)</span>
+<p><div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CRITICAL_APP&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">PERMIT_TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="c1">// Lockdown this instance</span>
 <span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
 <span class="w">    </span><span class="p">{</span>
@@ -2268,7 +2268,7 @@ Even if <code>TEST_MODE</code> is requested externally, this specific instance w
 like some dynamically generated test directories and -files.</p>
 <h3 id="activation-logic">Activation Logic<a class="headerlink" href="#activation-logic" title="Permanent link">&para;</a></h3>
 <p>Test mode is only enabled if <strong>both</strong> the global gate and the instance gate allow it. The following logic is enforced during the <code>build()</code> process:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="c1">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModePermitted</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">PERMIT_TEST_MODE</span><span class="p">))</span><span class="w"> </span>
 <span class="p">{</span>
 <span class="w">    </span><span class="c1">// Activation occurs if either the global trigger or instance trigger is set.</span>
@@ -2285,7 +2285,7 @@ like some dynamically generated test directories and -files.</p>
 </code></pre></div>
 <h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security<a class="headerlink" href="#153-self-configuration-security" title="Permanent link">&para;</a></h3>
 <p>mConfig's self-configuration feature (loading <code>mconfig.properties</code> from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable it:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ENABLE_SELF_CONFIGURATION</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </code></pre></div>

@@ -1962,17 +1962,17 @@ PEM can be stored as <code>STRING</code> or <code>BYTES</code> and parsed with B
 <li><strong>JCE</strong>: Included in JDK.</li>
 <li><strong>BouncyCastle</strong> (optional, for PEM/EC/FIPS): Add to classpath:
   Maven:
-  <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+  <div class="highlight"><span class="filename">XML</span><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">  </span><span class="nt">&lt;groupId&gt;</span>org.bouncycastle<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>bcprov-jdk18on<span class="nt">&lt;/artifactId&gt;</span>
 <span class="w">  </span><span class="nt">&lt;version&gt;</span>1.78<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
   Gradle:
-  <div class="highlight"><pre><span></span><code>implementation &#39;org.bouncycastle:bcprov-jdk18on:1.78&#39;
+  <div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>implementation &#39;org.bouncycastle:bcprov-jdk18on:1.78&#39;
 </code></pre></div></li>
 <li>Mark scheme entries as <code>SECRET</code>:
-  <div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <div class="highlight"><span class="filename">JSON</span><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;keys/rsa/private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BYTES&quot;</span><span class="p">,</span><span class="w"> </span>
 <span class="w">    </span><span class="nt">&quot;flags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;SECRET&quot;</span><span class="p">],</span>
@@ -1987,7 +1987,7 @@ PEM can be stored as <code>STRING</code> or <code>BYTES</code> and parsed with B
 </code></pre></div></li>
 </ul>
 <h2 id="2-setup-configfactory">2. Setup ConfigFactory<a class="headerlink" href="#2-setup-configfactory" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigScheme</span><span class="w"> </span><span class="n">scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigScheme</span><span class="p">.</span><span class="na">fromJSON</span><span class="p">(...)</span><span class="w"> </span><span class="c1">// load scheme</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">ConfigScheme</span><span class="w"> </span><span class="n">scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigScheme</span><span class="p">.</span><span class="na">fromJSON</span><span class="p">(...)</span><span class="w"> </span><span class="c1">// load scheme</span>
 <span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;mycompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">CONFIG_SCHEME_LIST</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;crypto&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scheme</span><span class="p">))</span>
 <span class="w">  </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
@@ -1997,7 +1997,7 @@ PEM can be stored as <code>STRING</code> or <code>BYTES</code> and parsed with B
 place the scheme file in the respective resource directory within the jar/classpath.
 (separate folders below "main" for production, below "test" for integration tests.)</p>
 <h2 id="3-generate-and-store-rsa-keypair-jce">3. Generate and Store RSA Keypair (JCE)<a class="headerlink" href="#3-generate-and-store-rsa-keypair-jce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.security.*</span><span class="p">;</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.security.*</span><span class="p">;</span>
 
 <span class="c1">// Generate</span>
 <span class="n">KeyPairGenerator</span><span class="w"> </span><span class="n">kpg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KeyPairGenerator</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">&quot;RSA&quot;</span><span class="p">);</span>
@@ -2016,7 +2016,7 @@ place the scheme file in the respective resource directory within the jar/classp
 <span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;keys/rsa/private&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BasicSecretValue</span><span class="p">(</span><span class="n">privDer</span><span class="p">,</span><span class="w"> </span><span class="n">SecretType</span><span class="p">.</span><span class="na">PRIVATE_KEY</span><span class="p">),</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">HOST</span><span class="p">);</span>
 </code></pre></div>
 <h2 id="4-read-der-private-key-jce">4. Read DER Private Key (JCE)<a class="headerlink" href="#4-read-der-private-key-jce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">privSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;keys/rsa/private&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">privSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;keys/rsa/private&quot;</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">privSecret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">derBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">privSecret</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
@@ -2027,7 +2027,7 @@ place the scheme file in the respective resource directory within the jar/classp
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 <h2 id="5-generate-and-store-self-signed-x509-certificate-bouncycastle">5. Generate and Store Self-Signed X.509 Certificate (BouncyCastle)<a class="headerlink" href="#5-generate-and-store-self-signed-x509-certificate-bouncycastle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.jce.provider.BouncyCastleProvider</span><span class="p">;</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.jce.provider.BouncyCastleProvider</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.cert.*</span><span class="p">;</span><span class="w"> </span><span class="c1">// etc.</span>
 <span class="c1">// ...</span>
 <span class="n">Security</span><span class="p">.</span><span class="na">addProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BouncyCastleProvider</span><span class="p">());</span>
@@ -2052,7 +2052,7 @@ place the scheme file in the respective resource directory within the jar/classp
 <span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;certs/server&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BasicSecretValue</span><span class="p">(</span><span class="n">certDer</span><span class="p">,</span><span class="w"> </span><span class="n">SecretType</span><span class="p">.</span><span class="na">CERTIFICATE</span><span class="p">),</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">);</span>
 </code></pre></div>
 <h2 id="6-read-x509-certificate-jce">6. Read X.509 Certificate (JCE)<a class="headerlink" href="#6-read-x509-certificate-jce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">certSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;certs/server&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">certSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;certs/server&quot;</span><span class="p">);</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">certSecret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">derBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">certSecret</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
@@ -2063,7 +2063,7 @@ place the scheme file in the respective resource directory within the jar/classp
 </code></pre></div>
 <h2 id="7-pem-handling-bouncycastle">7. PEM Handling (BouncyCastle)<a class="headerlink" href="#7-pem-handling-bouncycastle" title="Permanent link">&para;</a></h2>
 <h3 id="generate-pem-private-key">Generate PEM Private Key<a class="headerlink" href="#generate-pem-private-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.util.io.pem.PemWriter</span><span class="p">;</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.util.io.pem.PemWriter</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.openssl.PEMEncryptedKeyPair</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.openssl.jcajce.JcaPEMWriter</span><span class="p">;</span><span class="w"> </span><span class="c1">// Simpler</span>
 
@@ -2074,7 +2074,7 @@ place the scheme file in the respective resource directory within the jar/classp
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="read-pem-private-key">Read PEM Private Key<a class="headerlink" href="#read-pem-private-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">pemStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getValue</span><span class="p">(</span><span class="s">&quot;keys/rsa/private.pem&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// or SecretValue if marked</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">pemStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getValue</span><span class="p">(</span><span class="s">&quot;keys/rsa/private.pem&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// or SecretValue if marked</span>
 <span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">PEMParser</span><span class="w"> </span><span class="n">pemParser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PEMParser</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">StringReader</span><span class="p">(</span><span class="n">pemStr</span><span class="p">)))</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pemParser</span><span class="p">.</span><span class="na">readObject</span><span class="p">();</span>

@@ -3087,7 +3087,7 @@ Keys (ignoring case) are matched against <code>ConfigFeature</code> constants.</
 </ul>
 <h3 id="4442-self-configuration-security">4.4.4.2 Self-Configuration Security<a class="headerlink" href="#4442-self-configuration-security" title="Permanent link">&para;</a></h3>
 <p>Self-configuration (see section 2.2.1) automatically applies settings from the classpath. In environments where the classpath might contain untrusted JARs, this feature can be disabled:
-<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ENABLE_SELF_CONFIGURATION</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </code></pre></div>
@@ -3189,7 +3189,7 @@ partially loaded configurations for their own initialization
 </ul>
 <h3 id="44102-discovery-and-binding-flow-mermaid">4.4.10.2 Discovery and Binding Flow (Mermaid)<a class="headerlink" href="#44102-discovery-and-binding-flow-mermaid" title="Permanent link">&para;</a></h3>
 <p>The following diagram illustrates how schemes are discovered by storages, registered in the factory, and finally bound to configuration instances.</p>
-<div class="highlight"><pre><span></span><code>sequenceDiagram
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>sequenceDiagram
     participant S as ConfigStorage (e.g. JAR)
     participant C as ConfigFactoryInstanceContext
     participant F as ConfigFactory
@@ -3208,7 +3208,7 @@ partially loaded configurations for their own initialization
     L-&gt;&gt;DL: transferDefaults(scheme)
 </code></pre></div>
 <h3 id="layered-configuration-mermaid">Layered Configuration (Mermaid)<a class="headerlink" href="#layered-configuration-mermaid" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>%%{init: {&#39;theme&#39;:&#39;neutral&#39;}}%%
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>%%{init: {&#39;theme&#39;:&#39;neutral&#39;}}%%
 erDiagram
     Configuration ||--|| BasicConfiguration : &quot;facade for&quot;
     BasicConfiguration ||--|| LayeredConfiguration : &quot;implemented by&quot;

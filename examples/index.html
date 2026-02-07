@@ -1768,20 +1768,20 @@
 <h2 id="getting-started">getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <p>First, include the following dependency in your project:</p>
 <p>Maven:
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<div class="highlight"><span class="filename">XML</span><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigStandard<span class="nt">&lt;/artifactId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div></p>
 <p>Gradle:
-<div class="highlight"><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
 </code></pre></div></p>
 <p>Next, in your code, instantiate a Configuration object/handle.</p>
 <p>The shortcut is something like
 <code>Configuration cfg = ConfigUtil.quickConfig("ACME", "ourApp", "itsConfig")</code>
 but the proper, recommended way is to go like this:
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">        </span><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;itsConfig&quot;</span><span class="p">);</span><span class="w"> </span>
 <span class="w">        </span><span class="c1">// ... use cfg ...</span>
@@ -1797,7 +1797,7 @@ This way, you can set features for the factory, and get different configurations
 </ul>
 <p>From the <strong>Configuation</strong>, you then get the values you need.
 It's as simple as this:
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">myString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;theStringKey&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">myString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;theStringKey&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">Integer</span><span class="w"> </span><span class="n">myInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;theIntKey&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w">  </span><span class="n">myBinary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;theBinaryKey&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">myList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getStringList</span><span class="p">(</span><span class="s">&quot;theListKey&quot;</span><span class="p">);</span>

@@ -2080,12 +2080,12 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 </ul>
 <h2 id="232-example">2.3.2 Example<a class="headerlink" href="#232-example" title="Permanent link">&para;</a></h2>
 <p>Minimal example (single scheme entry with a default):
-<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<div class="highlight"><span class="filename">JSON</span><pre><span></span><code><span class="p">[</span>
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/port&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NUMBER&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DESCRIPTION&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Listening port&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div></p>
 <p>Named scheme example (multiple entries):
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><span class="filename">JSON</span><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;my-app-config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;NAME&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-app-config&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;ENTRIES&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2225,7 +2225,7 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 - Otherwise, the raw <code>DESCRIPTION</code> string is used as a fallback.</p>
 <h2 id="234-configschemefactory">2.3.4 ConfigSchemeFactory<a class="headerlink" href="#234-configschemefactory" title="Permanent link">&para;</a></h2>
 <p>For 1.0 and better multi-language support (JNI/Rust/Python), use <code>ConfigSchemeFactory</code> to create schemes and entries programmatically:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigSchemeFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigSchemeFactory</span><span class="p">.</span><span class="na">create</span><span class="p">();</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">ConfigSchemeFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigSchemeFactory</span><span class="p">.</span><span class="na">create</span><span class="p">();</span>
 <span class="n">ConfigScheme</span><span class="w"> </span><span class="n">scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">createScheme</span><span class="p">();</span>
 <span class="n">ConfigSchemeEntry</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">createEntry</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ConfigEntryType</span><span class="p">.</span><span class="na">NUMBER</span><span class="p">)</span>
 <span class="w">    </span><span class="p">.</span><span class="na">setValidationPattern</span><span class="p">(</span><span class="s">&quot;uint16&quot;</span><span class="p">)</span>
@@ -2236,7 +2236,7 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 <p>To ensure that future extensions to the scheme format do not break older versions of the library, or conversely, that newer schemes can demand features that older versions must respect, mConfig uses a <code>MANDATORY</code> sub-item.</p>
 <p>If a scheme entry contains a <code>MANDATORY</code> block, the library MUST understand all keys within that block. If any key inside <code>MANDATORY</code> is unknown to the current version of mConfig, the scheme loading will fail with an <code>UNKNOWN_MANDATORY_FEATURE</code> error.</p>
 <p><strong>Example:</strong>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><span class="filename">JSON</span><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;network/timeout&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NUMBER&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;MANDATORY&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2249,7 +2249,7 @@ In this example, if a future version of mConfig introduces a <code>UNIT</code> f
 <h2 id="236-formats">2.3.6 Formats<a class="headerlink" href="#236-formats" title="Permanent link">&para;</a></h2>
 <p>mConfig supports several JSON structures for defining schemes:</p>
 <h3 id="2361-named-scheme-object">2.3.6.1 Named Scheme Object<a class="headerlink" href="#2361-named-scheme-object" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><span class="filename">JSON</span><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;my-app-config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;NAME&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-app-config&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;ENTRIES&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -2260,7 +2260,7 @@ In this example, if a future version of mConfig introduces a <code>UNIT</code> f
 </code></pre></div>
 <h3 id="2362-list-of-entries-anonymous-scheme">2.3.6.2 List of Entries (Anonymous Scheme)<a class="headerlink" href="#2362-list-of-entries-anonymous-scheme" title="Permanent link">&para;</a></h3>
 <p>If a JSON file contains only a list of entries, it is treated as a scheme for the configuration matching the filename (excluding <code>.scheme.json</code>).
-<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<div class="highlight"><span class="filename">JSON</span><pre><span></span><code><span class="p">[</span>
 <span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;port&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NUMBER&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="w"> </span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div></p>

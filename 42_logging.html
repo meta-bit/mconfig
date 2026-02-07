@@ -2097,14 +2097,14 @@
 <p><code>Slf4j2Logger</code> (priority 5) bridges mConfig logging to SLF4J.</p>
 <h3 id="421-add-dependencies">4.2.1 Add Dependencies<a class="headerlink" href="#421-add-dependencies" title="Permanent link">&para;</a></h3>
 <p>Maven:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<div class="highlight"><span class="filename">XML</span><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigLoggingSlf4j<span class="nt">&lt;/artifactId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>Gradle:</p>
-<div class="highlight"><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigLoggingSlf4j:${mconfig.version}&#39;
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigLoggingSlf4j:${mconfig.version}&#39;
 </code></pre></div>
 <p><strong>Note:</strong> Also need SLF4J API + impl (e.g., logback-classic).</p>
 <h3 id="422-auto-discovery">4.2.2 Auto-Discovery<a class="headerlink" href="#422-auto-discovery" title="Permanent link">&para;</a></h3>
@@ -2118,7 +2118,7 @@
 <h3 id="424-build-configuration-maven-gradle">4.2.4 Build Configuration (Maven &amp; Gradle)<a class="headerlink" href="#424-build-configuration-maven-gradle" title="Permanent link">&para;</a></h3>
 <p>To use <code>ConsoleLogging</code> in modules other than <code>mConfigCore</code>, you must include the <code>mConfigCore</code> <code>test-jar</code> dependency in your build:</p>
 <p>Maven:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<div class="highlight"><span class="filename">XML</span><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
 <span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigCore<span class="nt">&lt;/artifactId&gt;</span>
 <span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
@@ -2127,11 +2127,11 @@
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div>
 <p>Gradle:</p>
-<div class="highlight"><pre><span></span><code>testImplementation &#39;org.metabit.platform.support.config:mConfigCore:${mconfig.version}:tests&#39;
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>testImplementation &#39;org.metabit.platform.support.config:mConfigCore:${mconfig.version}:tests&#39;
 </code></pre></div>
 <h3 id="425-manual-activation">4.2.5 Manual Activation<a class="headerlink" href="#425-manual-activation" title="Permanent link">&para;</a></h3>
 <p>You can instantiate <code>ConsoleLogging</code> directly and pass it to components.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.metabit.platform.support.config.impl.logging.ConsoleLogging</span><span class="p">;</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.metabit.platform.support.config.impl.logging.ConsoleLogging</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">org.metabit.platform.support.config.ConfigFeature</span><span class="p">;</span>
 
 <span class="c1">// ... in your test ...</span>
@@ -2145,7 +2145,7 @@
 <p><code>ConfigFactoryBuilder</code> uses <code>ServiceLoader</code> to discover <code>ConfigLoggingInterface</code> implementations. </p>
 <p><strong>Note for Modular Projects:</strong> <code>ConsoleLogging</code> is fully supported via <code>provides</code> in the <code>mConfigCore</code> <code>module-info.java</code>.</p>
 <p>To force the use of <code>ConsoleLogging</code> when using <code>ConfigFactoryBuilder</code> in tests, you can set the feature:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;company&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;app&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;company&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;app&quot;</span><span class="p">);</span>
 <span class="n">builder</span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">LOGGING_TO_USE_IN_CONFIGLIB</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;console&quot;</span><span class="p">);</span>
 </code></pre></div>
 <p>This will only work if the <code>ConsoleLogging</code> class is discoverable by <code>ServiceLoader</code>. If discovery fails, it will fall back to <code>NullLogging</code>.</p>
@@ -2154,7 +2154,7 @@
 <p>Available levels: <code>TRACE</code>, <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code>.
 Default level for <code>ConsoleLogging</code> is <code>INFO</code>.</p>
 <p>You can set the level via <code>setLevel(String)</code>:
-<div class="highlight"><pre><span></span><code><span class="n">logger</span><span class="p">.</span><span class="na">setLevel</span><span class="p">(</span><span class="s">&quot;TRACE&quot;</span><span class="p">);</span>
+<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="n">logger</span><span class="p">.</span><span class="na">setLevel</span><span class="p">(</span><span class="s">&quot;TRACE&quot;</span><span class="p">);</span>
 </code></pre></div></p>
 <h3 id="output-redirection">Output Redirection<a class="headerlink" href="#output-redirection" title="Permanent link">&para;</a></h3>
 <ul>
