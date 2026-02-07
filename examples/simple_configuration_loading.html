@@ -1339,32 +1339,32 @@
 <h1 id="simple-configuration-loading">Simple Configuration Loading<a class="headerlink" href="#simple-configuration-loading" title="Permanent link">&para;</a></h1>
 <p>This example shows the minimal setup for loading a configuration and reading a few values.</p>
 <h2 id="1-create-a-factory-and-configuration">1. Create a factory and configuration<a class="headerlink" href="#1-create-a-factory-and-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;).build())
+    {
+    Configuration cfg = factory.getConfiguration(&quot;network&quot;);
 
-<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;server/host&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;server/port&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">tls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="s">&quot;server/tls&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
+    String host = cfg.getString(&quot;server/host&quot;);
+    int port = cfg.getInteger(&quot;server/port&quot;);
+    boolean tls = cfg.getBoolean(&quot;server/tls&quot;);
+    }
+</code></pre>
 <h2 id="2-provide-defaults-recommended">2. Provide defaults (recommended)<a class="headerlink" href="#2-provide-defaults-recommended" title="Permanent link">&para;</a></h2>
 <p>Add defaults in your resources so the configuration works out of the box:
 <code>src/main/resources/.config/ACME/ourApp/network.properties</code></p>
-<p>Example contents:
-<div class="highlight"><pre><span></span><code><span class="na">server.host</span><span class="o">=</span><span class="s">127.0.0.1</span>
-<span class="na">server.port</span><span class="o">=</span><span class="s">8080</span>
-<span class="na">server.tls</span><span class="o">=</span><span class="s">false</span>
-</code></pre></div></p>
+<p>Example contents:</p>
+<pre><code class="language-properties">server.host=127.0.0.1
+server.port=8080
+server.tls=false
+</code></pre>
 <h2 id="3-optional-add-a-scheme">3. Optional: add a scheme<a class="headerlink" href="#3-optional-add-a-scheme" title="Permanent link">&para;</a></h2>
 <p>Add a scheme next to the config file to define types and defaults:
 <code>src/main/resources/.config/ACME/ourApp/network.scheme.json</code></p>
-<div class="highlight"><pre><span></span><code><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/host&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;STRING&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;127.0.0.1&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/port&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NUMBER&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="w"> </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/tls&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BOOLEAN&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
-<span class="p">]</span>
-</code></pre></div>
+<pre><code class="language-json">[
+  { &quot;KEY&quot;: &quot;server/host&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;DEFAULT&quot;: &quot;127.0.0.1&quot; },
+  { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 },
+  { &quot;KEY&quot;: &quot;server/tls&quot;, &quot;TYPE&quot;: &quot;BOOLEAN&quot;, &quot;DEFAULT&quot;: false }
+]
+</code></pre>
 <p>Related docs:
 - <a href="../13_getting_started.html">Getting Started</a>
 - <a href="../23_configuration_schemes.html">Configuration Schemes</a></p>

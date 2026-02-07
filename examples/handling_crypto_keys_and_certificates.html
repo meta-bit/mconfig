@@ -1470,130 +1470,130 @@ PEM can be stored as <code>STRING</code> or <code>BYTES</code> and parsed with B
 <li><strong>JCE</strong>: Included in JDK.</li>
 <li><strong>BouncyCastle</strong> (optional, for PEM/EC/FIPS): Add to classpath:
   Maven:
-  <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">  </span><span class="nt">&lt;groupId&gt;</span>org.bouncycastle<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">  </span><span class="nt">&lt;artifactId&gt;</span>bcprov-jdk18on<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">  </span><span class="nt">&lt;version&gt;</span>1.78<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
+  <code>xml
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.bouncycastle&lt;/groupId&gt;
+    &lt;artifactId&gt;bcprov-jdk18on&lt;/artifactId&gt;
+    &lt;version&gt;1.78&lt;/version&gt;
+  &lt;/dependency&gt;</code>
   Gradle:
-  <div class="highlight"><pre><span></span><code>implementation &#39;org.bouncycastle:bcprov-jdk18on:1.78&#39;
-</code></pre></div></li>
+  <code>gradle
+  implementation 'org.bouncycastle:bcprov-jdk18on:1.78'</code></li>
 <li>Mark scheme entries as <code>SECRET</code>:
-  <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;keys/rsa/private&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BYTES&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">    </span><span class="nt">&quot;flags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;SECRET&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;secretType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PRIVATE_KEY&quot;</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;certs/server&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BYTES&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;flags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;SECRET&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;secretType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CERTIFICATE&quot;</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></li>
+  <code>json
+  {
+    "keys/rsa/private": {
+      "type": "BYTES", 
+      "flags": ["SECRET"],
+      "secretType": "PRIVATE_KEY"
+    },
+    "certs/server": {
+      "type": "BYTES",
+      "flags": ["SECRET"],
+      "secretType": "CERTIFICATE"
+    }
+  }</code></li>
 </ul>
 <h2 id="2-setup-configfactory">2. Setup ConfigFactory<a class="headerlink" href="#2-setup-configfactory" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigScheme</span><span class="w"> </span><span class="n">scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigScheme</span><span class="p">.</span><span class="na">fromJSON</span><span class="p">(...)</span><span class="w"> </span><span class="c1">// load scheme</span>
-<span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;mycompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">CONFIG_SCHEME_LIST</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;crypto&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scheme</span><span class="p">))</span>
-<span class="w">  </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-<span class="n">Configuration</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;crypto&quot;</span><span class="p">);</span>
-</code></pre></div>
+<pre><code class="language-java">ConfigScheme scheme = ConfigScheme.fromJSON(...) // load scheme
+ConfigFactory factory = ConfigFactoryBuilder.create(&quot;mycompany&quot;, &quot;myapp&quot;)
+  .setFeature(ConfigFeature.CONFIG_SCHEME_LIST, Map.of(&quot;crypto&quot;, scheme))
+  .build();
+Configuration config = factory.getConfig(&quot;crypto&quot;);
+</code></pre>
 <p>Instead of specifying the scheme programmatically, you can also 
 place the scheme file in the respective resource directory within the jar/classpath.
 (separate folders below "main" for production, below "test" for integration tests.)</p>
 <h2 id="3-generate-and-store-rsa-keypair-jce">3. Generate and Store RSA Keypair (JCE)<a class="headerlink" href="#3-generate-and-store-rsa-keypair-jce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.security.*</span><span class="p">;</span>
+<pre><code class="language-java">import java.security.*;
 
-<span class="c1">// Generate</span>
-<span class="n">KeyPairGenerator</span><span class="w"> </span><span class="n">kpg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KeyPairGenerator</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">&quot;RSA&quot;</span><span class="p">);</span>
-<span class="n">kpg</span><span class="p">.</span><span class="na">initialize</span><span class="p">(</span><span class="mi">2048</span><span class="p">);</span>
-<span class="n">KeyPair</span><span class="w"> </span><span class="n">kp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kpg</span><span class="p">.</span><span class="na">generateKeyPair</span><span class="p">();</span>
+// Generate
+KeyPairGenerator kpg = KeyPairGenerator.getInstance(&quot;RSA&quot;);
+kpg.initialize(2048);
+KeyPair kp = kpg.generateKeyPair();
 
-<span class="c1">// DER bytes</span>
-<span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">privDer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kp</span><span class="p">.</span><span class="na">getPrivate</span><span class="p">().</span><span class="na">getEncoded</span><span class="p">();</span>
-<span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">pubDer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kp</span><span class="p">.</span><span class="na">getPublic</span><span class="p">().</span><span class="na">getEncoded</span><span class="p">();</span>
+// DER bytes
+byte[] privDer = kp.getPrivate().getEncoded();
+byte[] pubDer = kp.getPublic().getEncoded();
 
-<span class="c1">// Store as SecretValue (auto-typed if scheme helps)</span>
-<span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;keys/rsa/private&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BasicSecretValue</span><span class="p">(</span><span class="n">privDer</span><span class="p">,</span><span class="w"> </span><span class="n">SecretType</span><span class="p">.</span><span class="na">PRIVATE_KEY</span><span class="p">),</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">);</span>
-<span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;keys/rsa/public&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">pubDer</span><span class="p">,</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">);</span><span class="w"> </span><span class="c1">// Public OK as non-secret</span>
+// Store as SecretValue (auto-typed if scheme helps)
+config.put(&quot;keys/rsa/private&quot;, new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.USER);
+config.put(&quot;keys/rsa/public&quot;, pubDer, ConfigScope.USER); // Public OK as non-secret
 
-<span class="c1">// To HOST scope (elevated privs may be needed)</span>
-<span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;keys/rsa/private&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BasicSecretValue</span><span class="p">(</span><span class="n">privDer</span><span class="p">,</span><span class="w"> </span><span class="n">SecretType</span><span class="p">.</span><span class="na">PRIVATE_KEY</span><span class="p">),</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">HOST</span><span class="p">);</span>
-</code></pre></div>
+// To HOST scope (elevated privs may be needed)
+config.put(&quot;keys/rsa/private&quot;, new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.HOST);
+</code></pre>
 <h2 id="4-read-der-private-key-jce">4. Read DER Private Key (JCE)<a class="headerlink" href="#4-read-der-private-key-jce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">privSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;keys/rsa/private&quot;</span><span class="p">);</span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">privSecret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">derBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">privSecret</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
-<span class="w">    </span><span class="n">KeyFactory</span><span class="w"> </span><span class="n">kf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KeyFactory</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">&quot;RSA&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">PKCS8EncodedKeySpec</span><span class="w"> </span><span class="n">keySpec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PKCS8EncodedKeySpec</span><span class="p">(</span><span class="n">derBytes</span><span class="p">);</span>
-<span class="w">    </span><span class="n">PrivateKey</span><span class="w"> </span><span class="n">privateKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kf</span><span class="p">.</span><span class="na">generatePrivate</span><span class="p">(</span><span class="n">keySpec</span><span class="p">);</span>
-<span class="w">    </span><span class="n">privSecret</span><span class="p">.</span><span class="na">erase</span><span class="p">();</span><span class="w"> </span><span class="c1">// Secure wipe</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
+<pre><code class="language-java">SecretValue privSecret = config.getSecret(&quot;keys/rsa/private&quot;);
+if (privSecret != null) 
+    {
+    byte[] derBytes = privSecret.getValue();
+    KeyFactory kf = KeyFactory.getInstance(&quot;RSA&quot;);
+    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(derBytes);
+    PrivateKey privateKey = kf.generatePrivate(keySpec);
+    privSecret.erase(); // Secure wipe
+    }
+</code></pre>
 <h2 id="5-generate-and-store-self-signed-x509-certificate-bouncycastle">5. Generate and Store Self-Signed X.509 Certificate (BouncyCastle)<a class="headerlink" href="#5-generate-and-store-self-signed-x509-certificate-bouncycastle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.jce.provider.BouncyCastleProvider</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.cert.*</span><span class="p">;</span><span class="w"> </span><span class="c1">// etc.</span>
-<span class="c1">// ...</span>
-<span class="n">Security</span><span class="p">.</span><span class="na">addProvider</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BouncyCastleProvider</span><span class="p">());</span>
+<pre><code class="language-java">import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.cert.*; // etc.
+// ...
+Security.addProvider(new BouncyCastleProvider());
 
-<span class="n">KeyPairGenerator</span><span class="w"> </span><span class="n">kpg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KeyPairGenerator</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">&quot;RSA&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BC&quot;</span><span class="p">);</span>
-<span class="n">kpg</span><span class="p">.</span><span class="na">initialize</span><span class="p">(</span><span class="mi">2048</span><span class="p">);</span>
-<span class="n">KeyPair</span><span class="w"> </span><span class="n">kp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kpg</span><span class="p">.</span><span class="na">generateKeyPair</span><span class="p">();</span>
+KeyPairGenerator kpg = KeyPairGenerator.getInstance(&quot;RSA&quot;, &quot;BC&quot;);
+kpg.initialize(2048);
+KeyPair kp = kpg.generateKeyPair();
 
-<span class="kt">long</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
-<span class="n">X500Name</span><span class="w"> </span><span class="n">issuer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">X500Name</span><span class="p">(</span><span class="s">&quot;CN=TestCA&quot;</span><span class="p">);</span>
-<span class="n">BigInteger</span><span class="w"> </span><span class="n">serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigInteger</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">now</span><span class="p">);</span>
-<span class="n">Date</span><span class="w"> </span><span class="n">notBefore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Date</span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5000</span><span class="p">);</span>
-<span class="n">Date</span><span class="w"> </span><span class="n">notAfter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Date</span><span class="p">(</span><span class="n">now</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">365L</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">24</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3600</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p">);</span>
+long now = System.currentTimeMillis();
+X500Name issuer = new X500Name(&quot;CN=TestCA&quot;);
+BigInteger serial = BigInteger.valueOf(now);
+Date notBefore = new Date(now - 5000);
+Date notAfter = new Date(now + 365L * 24 * 3600 * 1000);
 
-<span class="n">ContentSigner</span><span class="w"> </span><span class="n">signer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JcaContentSignerBuilder</span><span class="p">(</span><span class="s">&quot;SHA256withRSA&quot;</span><span class="p">).</span><span class="na">setProvider</span><span class="p">(</span><span class="s">&quot;BC&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">(</span><span class="n">kp</span><span class="p">.</span><span class="na">getPrivate</span><span class="p">());</span>
-<span class="n">X509v3CertificateBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JcaX509v3CertificateBuilder</span><span class="p">(</span><span class="n">issuer</span><span class="p">,</span><span class="w"> </span><span class="n">serial</span><span class="p">,</span><span class="w"> </span><span class="n">notBefore</span><span class="p">,</span><span class="w"> </span><span class="n">notAfter</span><span class="p">,</span><span class="w"> </span><span class="n">issuer</span><span class="p">,</span><span class="w"> </span><span class="n">kp</span><span class="p">.</span><span class="na">getPublic</span><span class="p">());</span>
-<span class="n">X509CertificateHolder</span><span class="w"> </span><span class="n">holder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="na">build</span><span class="p">(</span><span class="n">signer</span><span class="p">);</span>
-<span class="n">X509Certificate</span><span class="w"> </span><span class="n">cert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JcaX509CertificateConverter</span><span class="p">().</span><span class="na">setProvider</span><span class="p">(</span><span class="s">&quot;BC&quot;</span><span class="p">).</span><span class="na">getCertificate</span><span class="p">(</span><span class="n">holder</span><span class="p">);</span>
+ContentSigner signer = new JcaContentSignerBuilder(&quot;SHA256withRSA&quot;).setProvider(&quot;BC&quot;).build(kp.getPrivate());
+X509v3CertificateBuilder builder = new JcaX509v3CertificateBuilder(issuer, serial, notBefore, notAfter, issuer, kp.getPublic());
+X509CertificateHolder holder = builder.build(signer);
+X509Certificate cert = new JcaX509CertificateConverter().setProvider(&quot;BC&quot;).getCertificate(holder);
 
-<span class="c1">// Store DER</span>
-<span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">certDer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cert</span><span class="p">.</span><span class="na">getEncoded</span><span class="p">();</span>
-<span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;certs/server&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BasicSecretValue</span><span class="p">(</span><span class="n">certDer</span><span class="p">,</span><span class="w"> </span><span class="n">SecretType</span><span class="p">.</span><span class="na">CERTIFICATE</span><span class="p">),</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">);</span>
-</code></pre></div>
+// Store DER
+byte[] certDer = cert.getEncoded();
+config.put(&quot;certs/server&quot;, new BasicSecretValue(certDer, SecretType.CERTIFICATE), ConfigScope.USER);
+</code></pre>
 <h2 id="6-read-x509-certificate-jce">6. Read X.509 Certificate (JCE)<a class="headerlink" href="#6-read-x509-certificate-jce" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">certSecret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;certs/server&quot;</span><span class="p">);</span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">certSecret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">derBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">certSecret</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
-<span class="w">    </span><span class="n">CertificateFactory</span><span class="w"> </span><span class="n">cf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CertificateFactory</span><span class="p">.</span><span class="na">getInstance</span><span class="p">(</span><span class="s">&quot;X.509&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">X509Certificate</span><span class="w"> </span><span class="n">cert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">X509Certificate</span><span class="p">)</span><span class="w"> </span><span class="n">cf</span><span class="p">.</span><span class="na">generateCertificate</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteArrayInputStream</span><span class="p">(</span><span class="n">derBytes</span><span class="p">));</span>
-<span class="w">    </span><span class="n">certSecret</span><span class="p">.</span><span class="na">erase</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
+<pre><code class="language-java">SecretValue certSecret = config.getSecret(&quot;certs/server&quot;);
+if (certSecret != null)
+    {
+    byte[] derBytes = certSecret.getValue();
+    CertificateFactory cf = CertificateFactory.getInstance(&quot;X.509&quot;);
+    X509Certificate cert = (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(derBytes));
+    certSecret.erase();
+    }
+</code></pre>
 <h2 id="7-pem-handling-bouncycastle">7. PEM Handling (BouncyCastle)<a class="headerlink" href="#7-pem-handling-bouncycastle" title="Permanent link">&para;</a></h2>
 <h3 id="generate-pem-private-key">Generate PEM Private Key<a class="headerlink" href="#generate-pem-private-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.util.io.pem.PemWriter</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.openssl.PEMEncryptedKeyPair</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">org.bouncycastle.openssl.jcajce.JcaPEMWriter</span><span class="p">;</span><span class="w"> </span><span class="c1">// Simpler</span>
+<pre><code class="language-java">import org.bouncycastle.util.io.pem.PemWriter;
+import org.bouncycastle.openssl.PEMEncryptedKeyPair;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter; // Simpler
 
-<span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">StringWriter</span><span class="w"> </span><span class="n">sw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringWriter</span><span class="p">();</span><span class="w"> </span><span class="n">JcaPEMWriter</span><span class="w"> </span><span class="n">pemWriter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JcaPEMWriter</span><span class="p">(</span><span class="n">sw</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">pemWriter</span><span class="p">.</span><span class="na">writeObject</span><span class="p">(</span><span class="n">kp</span><span class="p">.</span><span class="na">getPrivate</span><span class="p">());</span>
-<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">pem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sw</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span>
-<span class="w">    </span><span class="n">config</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;keys/rsa/private.pem&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">pem</span><span class="p">,</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">);</span><span class="w"> </span><span class="c1">// STRING</span>
-<span class="p">}</span>
-</code></pre></div>
+try (StringWriter sw = new StringWriter(); JcaPEMWriter pemWriter = new JcaPEMWriter(sw)) {
+    pemWriter.writeObject(kp.getPrivate());
+    String pem = sw.toString();
+    config.put(&quot;keys/rsa/private.pem&quot;, pem, ConfigScope.USER); // STRING
+}
+</code></pre>
 <h3 id="read-pem-private-key">Read PEM Private Key<a class="headerlink" href="#read-pem-private-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">pemStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getValue</span><span class="p">(</span><span class="s">&quot;keys/rsa/private.pem&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// or SecretValue if marked</span>
-<span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">PEMParser</span><span class="w"> </span><span class="n">pemParser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PEMParser</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">StringReader</span><span class="p">(</span><span class="n">pemStr</span><span class="p">)))</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pemParser</span><span class="p">.</span><span class="na">readObject</span><span class="p">();</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">obj</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">PEMKeyPair</span><span class="p">)</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">        </span><span class="n">PEMKeyPair</span><span class="w"> </span><span class="n">pemPair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">PEMKeyPair</span><span class="p">)</span><span class="w"> </span><span class="n">obj</span><span class="p">;</span>
-<span class="w">        </span><span class="n">JcaPEMKeyConverter</span><span class="w"> </span><span class="n">conv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JcaPEMKeyConverter</span><span class="p">().</span><span class="na">setProvider</span><span class="p">(</span><span class="s">&quot;BC&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="n">PrivateKey</span><span class="w"> </span><span class="n">privKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">conv</span><span class="p">.</span><span class="na">getPrivateKey</span><span class="p">(</span><span class="n">pemPair</span><span class="p">.</span><span class="na">getPrivateKeyInfo</span><span class="p">());</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
+<pre><code class="language-java">String pemStr = (String) config.getValue(&quot;keys/rsa/private.pem&quot;); // or SecretValue if marked
+try (PEMParser pemParser = new PEMParser(new StringReader(pemStr)))
+    {
+    Object obj = pemParser.readObject();
+    if (obj instanceof PEMKeyPair)
+        {
+        PEMKeyPair pemPair = (PEMKeyPair) obj;
+        JcaPEMKeyConverter conv = new JcaPEMKeyConverter().setProvider(&quot;BC&quot;);
+        PrivateKey privKey = conv.getPrivateKey(pemPair.getPrivateKeyInfo());
+        }
+    }
+</code></pre>
 <h2 id="8-writing-to-specific-scopesdirs">8. Writing to Specific Scopes/Dirs<a class="headerlink" href="#8-writing-to-specific-scopesdirs" title="Permanent link">&para;</a></h2>
 <p>mConfig writes to OS-standard paths:
 - <strong>USER</strong>: <code>~/.config/&lt;company&gt;/&lt;app&gt;/crypto</code> (JSON/TOML/etc.)

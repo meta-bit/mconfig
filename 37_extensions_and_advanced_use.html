@@ -1533,7 +1533,7 @@ DEFINED_AS_IN_FORMAT_1
   FULL_CONFIG_SCHEME_AS_DEFINED_IN_FORMAT_3
 ]
 </code></pre>
-<div class="highlight"><pre><span></span><code>stateDiagram-v2
+<pre><code class="language-mermaid">stateDiagram-v2
     direction LR
     [*] --&gt; UNDECIDED
     UNDECIDED --&gt; ARRAY : on [
@@ -1541,20 +1541,21 @@ DEFINED_AS_IN_FORMAT_1
     SCHEME --&gt; SCHEME_ENDED : on }
     SCHEME --&gt; ENTRY_KEY: on string
     ENTRY  --&gt; SCHEME: on next value
-</code></pre></div>
+
+</code></pre>
 <h3 id="374-configure-priorities">3.7.4 configure priorities<a class="headerlink" href="#374-configure-priorities" title="Permanent link">&para;</a></h3>
 <h4 id="3741-file-type-priority">3.7.4.1 File Type Priority<a class="headerlink" href="#3741-file-type-priority" title="Permanent link">&para;</a></h4>
 <p>You can control the resolution priority between different file types (e.g., JSON, YAML) using the <code>FILE_TYPE_PRIORITIES</code> feature. This re-orders the search list within each scope.</p>
 <h4 id="3742-storage-type-priority">3.7.4.2 Storage Type Priority<a class="headerlink" href="#3742-storage-type-priority" title="Permanent link">&para;</a></h4>
 <p>You can control the resolution priority between different storage types (e.g., Files vs. Registry) using the <code>STORAGE_TYPE_PRIORITIES</code> feature. This re-orders the search list within each scope.</p>
-<p><div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;company&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;app&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">STORAGE_TYPE_PRIORITIES</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;files&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;registryjni&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;JAR&quot;</span><span class="p">));</span>
-<span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="na">build</span><span class="p">())</span><span class="w"> </span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// ...</span>
-<span class="w">        </span><span class="p">}</span>
-</code></pre></div>
-Default IDs include: <code>RAM</code>, <code>secrets</code>, <code>files</code>, <code>registry</code>, <code>registryjni</code>, <code>JAR</code>.</p>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;company&quot;, &quot;app&quot;)
+        .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES, List.of(&quot;files&quot;, &quot;registry&quot;, &quot;registryjni&quot;, &quot;JAR&quot;));
+try (ConfigFactory factory = builder.build()) 
+        {
+        // ...
+        }
+</code></pre>
+<p>Default IDs include: <code>RAM</code>, <code>secrets</code>, <code>files</code>, <code>registry</code>, <code>registryjni</code>, <code>JAR</code>.</p>
 <p>Additional directories provided via features like <code>ADDITIONAL_USER_DIRECTORIES</code> are typically <strong>prepended</strong> to the search list for their scope. This makes them the preferred location for creating new configuration files, while still allowing default files in standard locations to provide values (unless the same key is defined in the additional directory).</p>
 
 

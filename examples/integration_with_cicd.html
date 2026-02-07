@@ -1368,17 +1368,17 @@
 <p>This example shows how to make mConfig predictable in CI/CD and automated pipelines.</p>
 <h2 id="1-enable-test-mode-via-environment-variables">1. Enable Test Mode via environment variables<a class="headerlink" href="#1-enable-test-mode-via-environment-variables" title="Permanent link">&para;</a></h2>
 <p>mConfig can enable Test Mode without code changes when <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is on.</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MCONFIG_RUNTIME_TEST_MODE</span><span class="o">=</span><span class="nb">true</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">MCONFIG_RUNTIME_DEBUG_LEVEL</span><span class="o">=</span>debug
-</code></pre></div>
-<p>In code, allow runtime settings:
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ALLOW_MCONFIG_RUNTIME_SETTINGS</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div></p>
+<pre><code class="language-bash">export MCONFIG_RUNTIME_TEST_MODE=true
+export MCONFIG_RUNTIME_DEBUG_LEVEL=debug
+</code></pre>
+<p>In code, allow runtime settings:</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS, true)
+        .build())
+    {
+    Configuration cfg = factory.getConfiguration(&quot;network&quot;);
+    }
+</code></pre>
 <h2 id="2-keep-test-configs-in-test-resources">2. Keep test configs in test resources<a class="headerlink" href="#2-keep-test-configs-in-test-resources" title="Permanent link">&para;</a></h2>
 <p>CI usually runs tests from the build tree. Keep your test configs here:
 - <code>src/test/resources/.config/ACME/ourApp/network.properties</code></p>
@@ -1388,27 +1388,27 @@
 2. Enforce mandatory values and validation rules early.</p>
 <p>Add a scheme in test resources:
 - <code>src/test/resources/.config/ACME/ourApp/network.scheme.json</code></p>
-<div class="highlight"><pre><span></span><code><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/host&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;STRING&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;127.0.0.1&quot;</span><span class="w"> </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/port&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NUMBER&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="w"> </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;server/tls&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;TYPE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BOOLEAN&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;DEFAULT&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span>
-<span class="p">]</span>
-</code></pre></div>
+<pre><code class="language-json">[
+  { &quot;KEY&quot;: &quot;server/host&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;DEFAULT&quot;: &quot;127.0.0.1&quot; },
+  { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 },
+  { &quot;KEY&quot;: &quot;server/tls&quot;, &quot;TYPE&quot;: &quot;BOOLEAN&quot;, &quot;DEFAULT&quot;: false }
+]
+</code></pre>
 <h2 id="4-use-explicit-test-directories-optional">4. Use explicit test directories (optional)<a class="headerlink" href="#4-use-explicit-test-directories-optional" title="Permanent link">&para;</a></h2>
 <p>If your CI environment mounts a special directory, point mConfig at it:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">TESTMODE_DIRECTORIES</span><span class="p">,</span>
-<span class="w">            </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;USER:/mnt/ci/config/user&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APPLICATION:/mnt/ci/config/app&quot;</span><span class="p">));</span>
-</code></pre></div>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setTestMode(true)
+        .setFeature(ConfigFeature.TESTMODE_DIRECTORIES,
+            List.of(&quot;USER:/mnt/ci/config/user&quot;, &quot;APPLICATION:/mnt/ci/config/app&quot;));
+</code></pre>
 <h2 id="5-pin-formats-and-storage-priority-optional">5. Pin formats and storage priority (optional)<a class="headerlink" href="#5-pin-formats-and-storage-priority-optional" title="Permanent link">&para;</a></h2>
 <p>Avoid surprises from environment changes by pinning priorities:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">FILE_FORMAT_READING_PRIORITIES</span><span class="p">,</span>
-<span class="w">            </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;TOML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;YAML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;JSON&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;properties&quot;</span><span class="p">))</span>
-<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">STORAGE_TYPE_PRIORITIES</span><span class="p">,</span>
-<span class="w">            </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;files&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;JAR&quot;</span><span class="p">));</span>
-</code></pre></div>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+        .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES,
+            List.of(&quot;TOML&quot;, &quot;YAML&quot;, &quot;JSON&quot;, &quot;properties&quot;))
+        .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES,
+            List.of(&quot;files&quot;, &quot;JAR&quot;));
+</code></pre>
 <p>Related docs:
 - <a href="../15_test_mode.html">Test Mode</a>
 - <a href="../23_configuration_schemes.html">Configuration Schemes</a>

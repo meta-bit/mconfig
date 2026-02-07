@@ -1410,18 +1410,18 @@ mConfig will automatically load them at runtime, when they are in the classpath.
 </tr>
 </tbody>
 </table>
-<p>Maven:
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigStandard<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
-<span class="w">    </span><span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
-Caveat: Do not omit/forget the type being <code>pom</code>.</p>
-<p>Gradle:
-<div class="highlight"><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
-</code></pre></div></p>
+<p>Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigStandard&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+    &lt;type&gt;pom&lt;/type&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Caveat: Do not omit/forget the type being <code>pom</code>.</p>
+<p>Gradle:</p>
+<pre><code class="language-gradle">implementation 'org.metabit.platform.support.config:mConfigStandard:${mconfig.version}'
+</code></pre>
 <h2 id="additional-mconfigfull-modules">Additional mConfigFull Modules<a class="headerlink" href="#additional-mconfigfull-modules" title="Permanent link">&para;</a></h2>
 <p>The <code>mConfigFull</code> module includes everything from <code>mConfigStandard</code> plus additional mature, stable modules:</p>
 <table>
@@ -1485,13 +1485,13 @@ Caveat: Do not omit/forget the type being <code>pom</code>.</p>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigFull<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
-<span class="w">    </span><span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigFull&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+    &lt;type&gt;pom&lt;/type&gt;
+&lt;/dependency&gt;
+</code></pre>
 <h2 id="other-available-modules">Other Available Modules<a class="headerlink" href="#other-available-modules" title="Permanent link">&para;</a></h2>
 <p>Additional modules that are not included in <code>mConfigStandard</code> or <code>mConfigFull</code>:</p>
 <table>
