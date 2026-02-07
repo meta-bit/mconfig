@@ -1339,32 +1339,16 @@
 <h1 id="simple-configuration-loading">Simple Configuration Loading<a class="headerlink" href="#simple-configuration-loading" title="Permanent link">&para;</a></h1>
 <p>This example shows the minimal setup for loading a configuration and reading a few values.</p>
 <h2 id="1-create-a-factory-and-configuration">1. Create a factory and configuration<a class="headerlink" href="#1-create-a-factory-and-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;).build())
-    {
-    Configuration cfg = factory.getConfiguration(&quot;network&quot;);
-
-    String host = cfg.getString(&quot;server/host&quot;);
-    int port = cfg.getInteger(&quot;server/port&quot;);
-    boolean tls = cfg.getBoolean(&quot;server/tls&quot;);
-    }
-</code></pre>
+<p></p>
 <h2 id="2-provide-defaults-recommended">2. Provide defaults (recommended)<a class="headerlink" href="#2-provide-defaults-recommended" title="Permanent link">&para;</a></h2>
 <p>Add defaults in your resources so the configuration works out of the box:
 <code>src/main/resources/.config/ACME/ourApp/network.properties</code></p>
-<p>Example contents:</p>
-<pre><code class="language-properties">server.host=127.0.0.1
-server.port=8080
-server.tls=false
-</code></pre>
+<p>Example contents:
+</p>
 <h2 id="3-optional-add-a-scheme">3. Optional: add a scheme<a class="headerlink" href="#3-optional-add-a-scheme" title="Permanent link">&para;</a></h2>
 <p>Add a scheme next to the config file to define types and defaults:
 <code>src/main/resources/.config/ACME/ourApp/network.scheme.json</code></p>
-<pre><code class="language-json">[
-  { &quot;KEY&quot;: &quot;server/host&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;DEFAULT&quot;: &quot;127.0.0.1&quot; },
-  { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 },
-  { &quot;KEY&quot;: &quot;server/tls&quot;, &quot;TYPE&quot;: &quot;BOOLEAN&quot;, &quot;DEFAULT&quot;: false }
-]
-</code></pre>
+<p></p>
 <p>Related docs:
 - <a href="../13_getting_started.html">Getting Started</a>
 - <a href="../23_configuration_schemes.html">Configuration Schemes</a></p>

@@ -1368,17 +1368,9 @@
 <p>This example shows how to make mConfig predictable in CI/CD and automated pipelines.</p>
 <h2 id="1-enable-test-mode-via-environment-variables">1. Enable Test Mode via environment variables<a class="headerlink" href="#1-enable-test-mode-via-environment-variables" title="Permanent link">&para;</a></h2>
 <p>mConfig can enable Test Mode without code changes when <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> is on.</p>
-<pre><code class="language-bash">export MCONFIG_RUNTIME_TEST_MODE=true
-export MCONFIG_RUNTIME_DEBUG_LEVEL=debug
-</code></pre>
-<p>In code, allow runtime settings:</p>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
-        .setFeature(ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS, true)
-        .build())
-    {
-    Configuration cfg = factory.getConfiguration(&quot;network&quot;);
-    }
-</code></pre>
+<p></p>
+<p>In code, allow runtime settings:
+</p>
 <h2 id="2-keep-test-configs-in-test-resources">2. Keep test configs in test resources<a class="headerlink" href="#2-keep-test-configs-in-test-resources" title="Permanent link">&para;</a></h2>
 <p>CI usually runs tests from the build tree. Keep your test configs here:
 - <code>src/test/resources/.config/ACME/ourApp/network.properties</code></p>
@@ -1388,27 +1380,13 @@ export MCONFIG_RUNTIME_DEBUG_LEVEL=debug
 2. Enforce mandatory values and validation rules early.</p>
 <p>Add a scheme in test resources:
 - <code>src/test/resources/.config/ACME/ourApp/network.scheme.json</code></p>
-<pre><code class="language-json">[
-  { &quot;KEY&quot;: &quot;server/host&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;DEFAULT&quot;: &quot;127.0.0.1&quot; },
-  { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 },
-  { &quot;KEY&quot;: &quot;server/tls&quot;, &quot;TYPE&quot;: &quot;BOOLEAN&quot;, &quot;DEFAULT&quot;: false }
-]
-</code></pre>
+<p></p>
 <h2 id="4-use-explicit-test-directories-optional">4. Use explicit test directories (optional)<a class="headerlink" href="#4-use-explicit-test-directories-optional" title="Permanent link">&para;</a></h2>
 <p>If your CI environment mounts a special directory, point mConfig at it:</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
-        .setTestMode(true)
-        .setFeature(ConfigFeature.TESTMODE_DIRECTORIES,
-            List.of(&quot;USER:/mnt/ci/config/user&quot;, &quot;APPLICATION:/mnt/ci/config/app&quot;));
-</code></pre>
+<p></p>
 <h2 id="5-pin-formats-and-storage-priority-optional">5. Pin formats and storage priority (optional)<a class="headerlink" href="#5-pin-formats-and-storage-priority-optional" title="Permanent link">&para;</a></h2>
 <p>Avoid surprises from environment changes by pinning priorities:</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
-        .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES,
-            List.of(&quot;TOML&quot;, &quot;YAML&quot;, &quot;JSON&quot;, &quot;properties&quot;))
-        .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES,
-            List.of(&quot;files&quot;, &quot;JAR&quot;));
-</code></pre>
+<p></p>
 <p>Related docs:
 - <a href="../15_test_mode.html">Test Mode</a>
 - <a href="../23_configuration_schemes.html">Configuration Schemes</a>

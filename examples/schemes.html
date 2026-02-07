@@ -1354,107 +1354,16 @@
 <p>This page provides various examples of configuration schemes, ranging from simple key-value pairs to complex nested structures with validation.</p>
 <h2 id="1-simple-application-configuration">1. Simple Application Configuration<a class="headerlink" href="#1-simple-application-configuration" title="Permanent link">&para;</a></h2>
 <p>A basic scheme for a small application with a few parameters.</p>
-<pre><code class="language-json">[
-  {
-    &quot;KEY&quot;: &quot;app/name&quot;,
-    &quot;TYPE&quot;: &quot;STRING&quot;,
-    &quot;DESCRIPTION&quot;: &quot;The name of the application.&quot;,
-    &quot;DEFAULT&quot;: &quot;My Awesome App&quot;
-  },
-  {
-    &quot;KEY&quot;: &quot;app/version&quot;,
-    &quot;TYPE&quot;: &quot;STRING&quot;,
-    &quot;PATTERN&quot;: &quot;\\d+\\.\\d+\\.\\d+&quot;,
-    &quot;DESCRIPTION&quot;: &quot;Application version (SemVer).&quot;,
-    &quot;MANDATORY&quot;: true
-  },
-  {
-    &quot;KEY&quot;: &quot;app/debug&quot;,
-    &quot;TYPE&quot;: &quot;BOOLEAN&quot;,
-    &quot;DEFAULT&quot;: false
-  }
-]
-</code></pre>
+<p></p>
 <h2 id="2-network-and-server-settings">2. Network and Server Settings<a class="headerlink" href="#2-network-and-server-settings" title="Permanent link">&para;</a></h2>
 <p>Using numeric ranges, enums, and list types.</p>
-<pre><code class="language-json">{
-  &quot;network-settings&quot;: {
-    &quot;NAME&quot;: &quot;network-settings&quot;,
-    &quot;ENTRIES&quot;: [
-      {
-        &quot;KEY&quot;: &quot;server/host&quot;,
-        &quot;TYPE&quot;: &quot;STRING&quot;,
-        &quot;DEFAULT&quot;: &quot;localhost&quot;,
-        &quot;DESCRIPTION&quot;: &quot;Hostname or IP address.&quot;
-      },
-      {
-        &quot;KEY&quot;: &quot;server/port&quot;,
-        &quot;TYPE&quot;: &quot;NUMBER&quot;,
-        &quot;PATTERN&quot;: &quot;uint16&quot;,
-        &quot;DEFAULT&quot;: 8080,
-        &quot;DESCRIPTION&quot;: &quot;Port number (0-65535).&quot;
-      },
-      {
-        &quot;KEY&quot;: &quot;server/logLevel&quot;,
-        &quot;TYPE&quot;: &quot;ENUM&quot;,
-        &quot;PATTERN&quot;: &quot;DEBUG|INFO|WARN|ERROR&quot;,
-        &quot;DEFAULT&quot;: &quot;INFO&quot;
-      },
-      {
-        &quot;KEY&quot;: &quot;server/allowedIps&quot;,
-        &quot;TYPE&quot;: &quot;MULTIPLE_STRINGS&quot;,
-        &quot;ARITY&quot;: &quot;1..*&quot;,
-        &quot;DESCRIPTION&quot;: &quot;A list of IP addresses that are allowed to connect.&quot;
-      }
-    ]
-  }
-}
-</code></pre>
+<p></p>
 <h2 id="3-database-configuration-with-secrets">3. Database Configuration with Secrets<a class="headerlink" href="#3-database-configuration-with-secrets" title="Permanent link">&para;</a></h2>
 <p>Handling sensitive data and mandatory fields.</p>
-<pre><code class="language-json">[
-  {
-    &quot;KEY&quot;: &quot;db/url&quot;,
-    &quot;TYPE&quot;: &quot;STRING&quot;,
-    &quot;MANDATORY&quot;: true,
-    &quot;DESCRIPTION&quot;: &quot;JDBC connection URL.&quot;
-  },
-  {
-    &quot;KEY&quot;: &quot;db/username&quot;,
-    &quot;TYPE&quot;: &quot;STRING&quot;,
-    &quot;DEFAULT&quot;: &quot;admin&quot;
-  },
-  {
-    &quot;KEY&quot;: &quot;db/password&quot;,
-    &quot;TYPE&quot;: &quot;STRING&quot;,
-    &quot;SECRET&quot;: true,
-    &quot;DESCRIPTION&quot;: &quot;Database password (will be redacted in logs).&quot;
-  },
-  {
-    &quot;KEY&quot;: &quot;db/poolSize&quot;,
-    &quot;TYPE&quot;: &quot;NUMBER&quot;,
-    &quot;PATTERN&quot;: &quot;[1, 50]&quot;,
-    &quot;DEFAULT&quot;: 10
-  }
-]
-</code></pre>
+<p></p>
 <h2 id="4-complex-validation-with-arity">4. Complex Validation with Arity<a class="headerlink" href="#4-complex-validation-with-arity" title="Permanent link">&para;</a></h2>
 <p>Using <code>ENUM_SET</code> and arity constraints.</p>
-<pre><code class="language-json">{
-  &quot;advanced-features&quot;: {
-    &quot;ENTRIES&quot;: [
-      {
-        &quot;KEY&quot;: &quot;features/enabled&quot;,
-        &quot;TYPE&quot;: &quot;ENUM_SET&quot;,
-        &quot;PATTERN&quot;: &quot;LOGGING|METRICS|TRACING|AUTH&quot;,
-        &quot;ARITY&quot;: &quot;1..3&quot;,
-        &quot;DEFAULT&quot;: [&quot;LOGGING&quot;, &quot;METRICS&quot;],
-        &quot;DESCRIPTION&quot;: &quot;Select up to 3 features to enable.&quot;
-      }
-    ]
-  }
-}
-</code></pre>
+<p></p>
 
 
 

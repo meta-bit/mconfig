@@ -1376,9 +1376,7 @@ these, or do similar things.</p>
 <p>For this purpose, you can subscribe to changes, providing a callback which will
 get executed when a change occurs.</p>
 <h3 id="3211-location-level-updates">3.2.1.1 Location-level updates<a class="headerlink" href="#3211-location-level-updates" title="Permanent link">&para;</a></h3>
-<pre><code class="language-java">Configuration.subscribeToUpdates(Consumer&lt;ConfigLocation&gt; listener)
-Configuration.unsubscribeFromUpdates(Consumer&lt;ConfigLocation&gt; listener)
-</code></pre>
+<p></p>
 <p>The callback will be executed when any of the Configuration layers in the specified scopes gets
 changed content.</p>
 <p><strong>Note on initial discovery:</strong> For subscribers, the transition from a non-existent entry
@@ -1388,9 +1386,8 @@ This ensures that dynamic entry creation is captured correctly.</p>
 <p>The callback is provided as parameter with the <code>ConfigLocation</code> where the change occurred.
 (You can get the scope from it, e.g.)</p>
 <h3 id="3212-entry-level-updates">3.2.1.2 Entry-level updates<a class="headerlink" href="#3212-entry-level-updates" title="Permanent link">&para;</a></h3>
-<pre><code class="language-java">Configuration.subscribeToUpdates(String fullKey, Consumer&lt;ConfigLocation&gt; listener)
-</code></pre>
-<p>Subscribe to changes of individual entries by their full key. </p>
+<p>
+Subscribe to changes of individual entries by their full key. </p>
 <p>The callback is called with the <code>ConfigLocation</code> where the entry change was detected.</p>
 <p>Unsubscribe with <code>Configuration.unsubscribeFromUpdates(Consumer&lt;ConfigLocation&gt; listener)</code>
 when you don't need it anymore; this feature requires a bit of CPU time when active.</p>

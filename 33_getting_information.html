@@ -1379,17 +1379,11 @@
 <h1 id="33-getting-information">3.3 Getting Information<a class="headerlink" href="#33-getting-information" title="Permanent link">&para;</a></h1>
 <h2 id="331-locations">3.3.1 Locations<a class="headerlink" href="#331-locations" title="Permanent link">&para;</a></h2>
 <p>So, where is my specific configuration looking for its contents?</p>
-<p>To see where a Configuration instance gets its contents from, you can use <code>getSourceLocations()</code> like this:</p>
-<pre><code class="language-java"> System.out.println(&quot;config locations: &quot;);
- for (ConfigLocation location : cfg.getSourceLocations())
-     System.out.println(&quot;\t&quot; + location.getScope() + &quot;\t&quot; + location.getURI(&quot;entry&quot;, null));
-</code></pre>
+<p>To see where a Configuration instance gets its contents from, you can use <code>getSourceLocations()</code> like this:
+</p>
 <p>And where is the overall mConfig factory instance looking, in general?
-There is <code>getSearchList()</code> from ConfigFactory.</p>
-<pre><code class="language-Java"> System.out.println(&quot;searchList: &quot;);
- for (ConfigLocation location : searchList)
-     System.out.println(&quot;\t&quot; + location.getScope() + &quot;\t&quot; + location.getURI(&quot;entry&quot;, null));
-</code></pre>
+There is <code>getSearchList()</code> from ConfigFactory.
+</p>
 <p>Depending on your use case, you'll want different parts of the ConfigLocation entries.
 Above is just a little text dump.</p>
 <h2 id="332-legacy-support-blobs-and-where-to-put-files">3.3.2 Legacy support: BLOBs, and where to put files?<a class="headerlink" href="#332-legacy-support-blobs-and-where-to-put-files" title="Permanent link">&para;</a></h2>
@@ -1399,39 +1393,23 @@ including scheme checking, network storage, and so on.</p>
 <p>You may need to access the entire content of a file as a single String or byte array. mConfig provides two specialized formats for this purpose: <code>text_file</code> and <code>binary_file</code>.</p>
 <p><strong>Reading a text file as a single String:</strong>
 By using the <code>text_file</code> format, the entire file content is read into a single entry with an empty key <code>""</code>.</p>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;)
-        .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES, List.of(&quot;text_file&quot;))
-        .build())
-    {
-    Configuration cfg = factory.getConfiguration(&quot;myTextFile&quot;);
-    String content = cfg.getString(&quot;&quot;);
-    }
-</code></pre>
+<p></p>
 <p><strong>Reading a binary file as a byte array:</strong>
 The <code>binary_file</code> format works similarly but provides the content as a byte array.</p>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;)
-        .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES, List.of(&quot;binary_file&quot;))
-        .build())
-    {
-    Configuration cfg = factory.getConfiguration(&quot;myBinaryFile&quot;);
-    byte[] content = cfg.getBytes(&quot;&quot;);
-    }
-</code></pre>
+<p></p>
 <h3 id="3322-hierarchical-blobs">3.3.2.2 Hierarchical BLOBs<a class="headerlink" href="#3322-hierarchical-blobs" title="Permanent link">&para;</a></h3>
 <p>In modern formats like JSON and YAML, binary data can be part of the hierarchical structure.</p>
 <p><strong>JSON (Base64):</strong>
 If a <code>ConfigScheme</code> defines a key as type <code>BYTES</code>, mConfig will automatically decode a Base64-encoded string in a JSON file.</p>
 <p><strong>YAML (!!binary):</strong>
 YAML supports binary data natively using the <code>!!binary</code> tag. mConfig will correctly retrieve these as byte arrays.</p>
-<pre><code class="language-java">byte[] data = cfg.getBytes(&quot;server/certificate&quot;);
-</code></pre>
+<p></p>
 <h3 id="3323-legacy-blobs">3.3.2.3 Legacy BLOBs<a class="headerlink" href="#3323-legacy-blobs" title="Permanent link">&para;</a></h3>
 <p>The second fallback for supporting legacy applications is that you can get
 filesystem paths for a given Scope. If there are several for the same Scope,
 mConfigUtil will prioritize the most specific entry, and prefer those which
 exist already over those which would need to be created.</p>
-<pre><code class="language-Java">Path localPath = ConfigUtil.whereToPutMyFiles(configFactory, ConfigScope.USER, false);
-</code></pre>
+<p></p>
 <p>But please, consider using regular mConfig functionality instead where possible.</p>
 
 

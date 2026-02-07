@@ -1324,17 +1324,8 @@
 
 <h1 id="38-code-improvements-and-best-practices">3.8 Code Improvements and Best Practices<a class="headerlink" href="#38-code-improvements-and-best-practices" title="Permanent link">&para;</a></h1>
 <h2 id="defaults">Defaults<a class="headerlink" href="#defaults" title="Permanent link">&para;</a></h2>
-<p>Replace code like</p>
-<pre><code class="language-java">    Properties defaults = new Properties();
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    InputStream input = classLoader.getResourceAsStream(&quot;defaultconfig.properties&quot;);
-    try {       
-        defaults.load(input);
-        }
-    catch (IOException e) {
-        e.printStackTrace();        
-        }
-</code></pre>
+<p>Replace code like
+</p>
 <p>with simply using mConfig.</p>
 <p>Its module mConfigSourceJAR automatically loads
 defaults from .config/CONFIGNAME.EXTENSIONS in the resource folder of your JAR -
@@ -1345,21 +1336,11 @@ besides all its other locations.</p>
 <ul>
 <li><strong>Redundant Null Checks:</strong> By default, <code>EXCEPTION_ON_MISSING_ENTRY</code> is <code>true</code>, so getters throw <code>ConfigException</code> instead of returning <code>null</code>. This removes the need for <code>if (value == null) value = "placeholder"</code> boilerplate.</li>
 </ul>
-<p>Replace:</p>
-<pre><code class="language-java">String version = config.getString(&quot;version&quot;);
-if (version == null) {
-    version = &quot;unknown&quot;;
-}
-</code></pre>
-<p>With:</p>
-<pre><code class="language-java">try {
-    String version = config.getString(&quot;version&quot;);
-    // use version
-} catch (ConfigException e) {
-    // handle missing value once
-}
-</code></pre>
-<p>Reminder: You can provide defaults in the resource folder of your JAR.</p>
+<p>Replace:
+</p>
+<p>With:
+
+ Reminder: You can provide defaults in the resource folder of your JAR.</p>
 <ul>
 <li>
 <p><strong>Manual null handling for missing values:</strong> Alternatively, use <code>EXCEPTION_ON_MISSING_ENTRY=false</code> and <code>DEFAULT_ON_MISSING_ENTRY=true</code> to automatically return scheme defaults instead of <code>null</code>.</p>

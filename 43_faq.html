@@ -1549,16 +1549,11 @@ there is the mConfigCheese module - for those who like their code a bit pungent.
 <li>
 <p><strong>Place a test config file:</strong>
    Create <code>~/.config/myCompany/myApplication/network.properties</code> (Linux/Mac) or <code>%APPDATA%\myCompany\myApplication\network.properties</code> (Windows):
-   <code>peer = localhost
-   port = 8080
-   probability = 0.5</code></p>
+   </p>
 </li>
 <li>
 <p><strong>List discovered configs:</strong>
-   <code>java
-   try (ConfigFactory factory = ConfigFactoryBuilder.create("myCompany", "myApplication").build()) {
-       factory.listAvailableConfigurations().forEach(System.out::println);
-   }</code></p>
+   </p>
 </li>
 <li>
 <p><strong>Enable logging:</strong> Add <code>mConfigLoggingSlf4j</code> dep + SLF4J config (see <a href="#no-mconfig-logging-output">No mConfig logging output</a> below).</p>
@@ -1591,13 +1586,10 @@ current build, it won't be read.</li>
 </ol>
 <h3 id="jpms-module-access-errors">JPMS Module Access Errors<a class="headerlink" href="#jpms-module-access-errors" title="Permanent link">&para;</a></h3>
 <p>If your application uses JPMS (named <code>module-info.java</code>) but omits <code>requires</code> for mConfig modules, you will see access errors.</p>
-<p><strong>Compile-time (javac):</strong></p>
-<pre><code>cannot access metabit.mconfig.core.ConfigFactory
-  module your.module does not read module metabit.mconfig.core
-</code></pre>
-<p><strong>Runtime (java):</strong></p>
-<pre><code>java.lang.IllegalAccessError: class your.package.YourClass cannot access class metabit.mconfig.core.ConfigFactory (in module metabit.mconfig.core) because module your.module does not read module metabit.mconfig.core
-</code></pre>
+<p><strong>Compile-time (javac):</strong>
+</p>
+<p><strong>Runtime (java):</strong>
+</p>
 <p><strong>Fix:</strong>
 Add the required <code>requires</code> directives to your <code>module-info.java</code>.</p>
 <p>The list depends on the mConfig variant:</p>
@@ -1636,8 +1628,7 @@ Add the required <code>requires</code> directives to your <code>module-info.java
 <p><strong>Fix:</strong>
 1. Add dependency: <code>mConfigLoggingSlf4j</code>.
 2. Configure SLF4J backend (e.g., Logback <code>logback.xml</code>):
-   <code>xml
-   &lt;logger name="metabit.config" level="DEBUG"/&gt;</code>
+   
 3. Ensure SLF4J implementation (logback-classic, log4j-slf4j) on classpath.
 See <a href="42_logging.html">Logging</a>.</p>
 <h3 id="environment-variables-dont-provide-config-values">Environment variables don't provide config values<a class="headerlink" href="#environment-variables-dont-provide-config-values" title="Permanent link">&para;</a></h3>

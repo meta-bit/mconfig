@@ -1363,26 +1363,11 @@ mConfig modules you depend on.</p>
 <li><strong>Service loading:</strong> mConfig uses the service loader to discover formats and sources.</li>
 </ul>
 <h2 id="minimal-module-infojava">Minimal <code>module-info.java</code><a class="headerlink" href="#minimal-module-infojava" title="Permanent link">&para;</a></h2>
-<p>If you only use the core and utility APIs:</p>
-<pre><code class="language-java">module my.app {
-    requires metabit.mconfig.core;
-    requires metabit.mconfig.util;
-}
-</code></pre>
+<p>If you only use the core and utility APIs:
+</p>
 <h2 id="typical-setup">Typical setup<a class="headerlink" href="#typical-setup" title="Permanent link">&para;</a></h2>
-<p>If you use the standard bundle:</p>
-<pre><code class="language-java">module my.app {
-// ...
-requires metabit.mconfig.core;
-requires metabit.mconfig.scheme;
-requires metabit.mconfig.secrets;
-requires metabit.mconfig.util;
-requires metabit.mconfig.modules.jar;
-requires metabit.mconfig.modules.filesystem;
-requires metabit.mconfig.format.javaproperties;
-// ...
-}
-</code></pre>
+<p>If you use the standard bundle:
+</p>
 <h2 id="notes-on-auto-discovery">Notes on auto-discovery<a class="headerlink" href="#notes-on-auto-discovery" title="Permanent link">&para;</a></h2>
 <p>Most format and source modules are discovered via the service loader.
 You do not need to <code>requires</code> them directly unless you reference their classes.

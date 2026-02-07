@@ -1367,52 +1367,16 @@
 <h1 id="testing-configurations">Testing Configurations<a class="headerlink" href="#testing-configurations" title="Permanent link">&para;</a></h1>
 <p>This example shows how to enable Test Mode and point mConfig at test-specific directories.</p>
 <h2 id="1-enable-test-mode-in-code">1. Enable Test Mode in code<a class="headerlink" href="#1-enable-test-mode-in-code" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
-        .setTestMode(true)
-        .build())
-    {
-    Configuration cfg = factory.getConfiguration(&quot;network&quot;);
-    // ... test using cfg ...
-    }
-</code></pre>
+<p></p>
 <h2 id="2-provide-test-only-config-files">2. Provide test-only config files<a class="headerlink" href="#2-provide-test-only-config-files" title="Permanent link">&para;</a></h2>
 <p>Place test configurations in your test resources:
 - <code>src/test/resources/.config/ACME/ourApp/network.properties</code></p>
 <p>These take precedence in Test Mode, keeping production defaults intact.</p>
 <h2 id="3-junit-example">3. JUnit example<a class="headerlink" href="#3-junit-example" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
-import org.metabit.platform.support.config.*;
-
-class NetworkConfigTest {
-
-    @Test
-    void loadsTestConfigDefaults() throws Exception {
-        try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
-                .setTestMode(true)
-                .build())
-            {
-            Configuration cfg = factory.getConfiguration(&quot;network&quot;);
-
-            assertEquals(&quot;127.0.0.1&quot;, cfg.getString(&quot;server/host&quot;));
-            assertEquals(8080, cfg.getInteger(&quot;server/port&quot;));
-            }
-    }
-}
-</code></pre>
+<p></p>
 <h2 id="4-override-test-directories-explicitly-optional">4. Override test directories explicitly (optional)<a class="headerlink" href="#4-override-test-directories-explicitly-optional" title="Permanent link">&para;</a></h2>
-<p>If you want to point to custom test directories, use <code>TESTMODE_DIRECTORIES</code>:</p>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
-        .setTestMode(true)
-        .setFeature(ConfigFeature.TESTMODE_DIRECTORIES,
-            List.of(&quot;USER:/tmp/mconfig-tests/user&quot;, &quot;APPLICATION:/tmp/mconfig-tests/app&quot;))
-        .build())
-    {
-    Configuration cfg = factory.getConfiguration(&quot;network&quot;);
-    // ...
-    }
-</code></pre>
+<p>If you want to point to custom test directories, use <code>TESTMODE_DIRECTORIES</code>:
+</p>
 <h2 id="5-security-note">5. Security note<a class="headerlink" href="#5-security-note" title="Permanent link">&para;</a></h2>
 <p>Test Mode can be disabled globally with <code>ConfigFactoryBuilder.forbidTestMode()</code>.
 If you do that, <code>TEST_MODE</code> and <code>setTestMode(true)</code> have no effect.</p>
