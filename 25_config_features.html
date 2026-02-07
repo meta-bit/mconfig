@@ -17,8 +17,11 @@
         <link rel="next" href="31_writing_configurations.html">
       
       
+        
+      
+      
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -26,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.9f615399.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
       
       
 
@@ -45,11 +48,10 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
-    
     
     
   </head>
@@ -57,9 +59,6 @@
   
     <body dir="ltr">
   
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -86,12 +85,12 @@
     <a href="index.html" title="mConfig Documentation" class="md-header__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -111,33 +110,38 @@
     </div>
     
     
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
-      <label class="md-header__button md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
         
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -148,6 +152,7 @@
     </div>
   </div>
 </div>
+      
     
     
   </nav>
@@ -178,7 +183,7 @@
     <a href="index.html" title="mConfig Documentation" class="md-nav__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     mConfig Documentation
@@ -191,13 +196,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="index.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Home
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -210,6 +223,9 @@
   
   
   
+  
+    
+    
     
     
     
@@ -217,16 +233,22 @@
       
         
         
-        
-        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
+          
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
+  
   <span class="md-ellipsis">
+    
+  
     Part 1 Introduction & Basics
+  
+
+    
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -235,7 +257,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Part 1 Introduction & Basics
+            
+  
+    Part 1 Introduction & Basics
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -244,13 +270,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="11_what_is_mconfig.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     1.1 What is mConfig?
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -261,6 +295,7 @@
             
               
                 
+  
   
   
   
@@ -268,9 +303,16 @@
       <a href="12_features_and_use_cases.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     1.2 Features and Use Cases
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -281,6 +323,7 @@
             
               
                 
+  
   
   
   
@@ -288,9 +331,16 @@
       <a href="13_getting_started.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     1.3 Getting Started
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -301,6 +351,7 @@
             
               
                 
+  
   
   
   
@@ -308,9 +359,16 @@
       <a href="14_regular_use.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     1.4 Regular Use
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -324,13 +382,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="15_test_mode.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     1.5 Test Mode
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -353,6 +419,9 @@
     
   
   
+  
+    
+    
     
     
     
@@ -360,16 +429,22 @@
       
         
         
-        
-        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
+          
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
+  
   <span class="md-ellipsis">
+    
+  
     Part 2 Core Concepts
+  
+
+    
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -378,7 +453,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Part 2 Core Concepts
+            
+  
+    Part 2 Core Concepts
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -387,13 +466,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="21_how_it_works.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     2.1 How it Works
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -404,6 +491,7 @@
             
               
                 
+  
   
   
   
@@ -411,9 +499,16 @@
       <a href="22_priorities_and_hierarchies.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     2.2 Priorities and Hierarchies
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -424,6 +519,7 @@
             
               
                 
+  
   
   
   
@@ -431,9 +527,16 @@
       <a href="23_configuration_schemes.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     2.3 Configuration Schemes
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -447,13 +550,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="24_comment_handling.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     2.4 Comment Handling
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -467,6 +578,7 @@
   
   
     
+  
   
   
     <li class="md-nav__item md-nav__item--active">
@@ -480,9 +592,16 @@
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
+  
   <span class="md-ellipsis">
+    
+  
     2.5 Config Features
+  
+
+    
   </span>
+  
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -491,9 +610,16 @@
       <a href="25_config_features.html" class="md-nav__link md-nav__link--active">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     2.5 Config Features
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -515,14 +641,22 @@
       
         <li class="md-nav__item">
   <a href="#runtime-overrides" class="md-nav__link">
-    Runtime overrides
+    <span class="md-ellipsis">
+      
+        Runtime overrides
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#feature-reference" class="md-nav__link">
-    Feature reference
+    <span class="md-ellipsis">
+      
+        Feature reference
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Feature reference">
@@ -530,91 +664,143 @@
         
           <li class="md-nav__item">
   <a href="#test-mode" class="md-nav__link">
-    Test mode
+    <span class="md-ellipsis">
+      
+        Test mode
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#logging" class="md-nav__link">
-    Logging
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#filesystem-and-registry-paths" class="md-nav__link">
-    Filesystem and registry paths
+    <span class="md-ellipsis">
+      
+        Filesystem and registry paths
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#format-priorities" class="md-nav__link">
-    Format priorities
+    <span class="md-ellipsis">
+      
+        Format priorities
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#storage-type-priorities" class="md-nav__link">
-    Storage type priorities
+    <span class="md-ellipsis">
+      
+        Storage type priorities
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#schemes-and-defaults" class="md-nav__link">
-    Schemes and defaults
+    <span class="md-ellipsis">
+      
+        Schemes and defaults
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#missing-entry-behavior" class="md-nav__link">
-    Missing entry behavior
+    <span class="md-ellipsis">
+      
+        Missing entry behavior
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#cache-and-update-checks" class="md-nav__link">
-    Cache and update checks
+    <span class="md-ellipsis">
+      
+        Cache and update checks
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#modules-and-runtime-configuration" class="md-nav__link">
-    Modules and runtime configuration
+    <span class="md-ellipsis">
+      
+        Modules and runtime configuration
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#secrets-providers-mconfigsecrets" class="md-nav__link">
-    Secrets providers (mConfigSecrets)
+    <span class="md-ellipsis">
+      
+        Secrets providers (mConfigSecrets)
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#zookeeper-mconfigsourcezookeeper" class="md-nav__link">
-    ZooKeeper (mConfigSourceZooKeeper)
+    <span class="md-ellipsis">
+      
+        ZooKeeper (mConfigSourceZooKeeper)
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#class-loading" class="md-nav__link">
-    Class loading
+    <span class="md-ellipsis">
+      
+        Class loading
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#identity-and-context" class="md-nav__link">
-    Identity and context
+    <span class="md-ellipsis">
+      
+        Identity and context
+      
+    </span>
   </a>
   
 </li>
@@ -626,7 +812,11 @@
       
         <li class="md-nav__item">
   <a href="#patterns-to-avoid-boilerplate" class="md-nav__link">
-    Patterns to avoid boilerplate
+    <span class="md-ellipsis">
+      
+        Patterns to avoid boilerplate
+      
+    </span>
   </a>
   
 </li>
@@ -652,6 +842,9 @@
   
   
   
+  
+    
+    
     
     
     
@@ -659,16 +852,22 @@
       
         
         
-        
-        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
+          
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
+  
   <span class="md-ellipsis">
+    
+  
     Part 3 Advanced Topics
+  
+
+    
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -677,7 +876,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            Part 3 Advanced Topics
+            
+  
+    Part 3 Advanced Topics
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -686,13 +889,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="31_writing_configurations.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.1 Writing Configurations
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -703,6 +914,7 @@
             
               
                 
+  
   
   
   
@@ -710,9 +922,16 @@
       <a href="32_updates.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.2 Updates
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -723,6 +942,7 @@
             
               
                 
+  
   
   
   
@@ -730,9 +950,16 @@
       <a href="33_getting_information.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.3 Getting Information
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -743,6 +970,7 @@
             
               
                 
+  
   
   
   
@@ -750,9 +978,16 @@
       <a href="34_definitions_and_valid_values.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.4 Definitions and Valid Values
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -763,6 +998,7 @@
             
               
                 
+  
   
   
   
@@ -770,9 +1006,16 @@
       <a href="35_handling_secrets.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.5 Handling Secrets
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -783,6 +1026,7 @@
             
               
                 
+  
   
   
   
@@ -790,9 +1034,16 @@
       <a href="36_windows_registry.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.6 Windows Registry Access
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -803,6 +1054,7 @@
             
               
                 
+  
   
   
   
@@ -810,9 +1062,16 @@
       <a href="37_extensions_and_advanced_use.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.7 Extensions and Advanced Use
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -826,13 +1085,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="38_code_improvements.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     3.8 Code Improvements
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -853,6 +1120,9 @@
   
   
   
+  
+    
+    
     
     
     
@@ -860,16 +1130,22 @@
       
         
         
-        
-        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
+          
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
+  
   <span class="md-ellipsis">
+    
+  
     Part 4 Reference & Project
+  
+
+    
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -878,7 +1154,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Part 4 Reference & Project
+            
+  
+    Part 4 Reference & Project
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -887,13 +1167,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="41_mconfig_tool.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.1 mConfig Tool
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -904,6 +1192,7 @@
             
               
                 
+  
   
   
   
@@ -911,9 +1200,16 @@
       <a href="42_logging.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.2 Logging
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -924,6 +1220,7 @@
             
               
                 
+  
   
   
   
@@ -931,9 +1228,16 @@
       <a href="43_faq.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.3 FAQ
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -944,6 +1248,7 @@
             
               
                 
+  
   
   
   
@@ -951,9 +1256,16 @@
       <a href="44_design_consolidated.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.4 Design Consolidated
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -964,6 +1276,7 @@
             
               
                 
+  
   
   
   
@@ -971,9 +1284,16 @@
       <a href="45_ai_guidance.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.5 AI Guidance
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -984,6 +1304,7 @@
             
               
                 
+  
   
   
   
@@ -991,9 +1312,16 @@
       <a href="46_versions.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.6 Versions
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1004,6 +1332,7 @@
             
               
                 
+  
   
   
   
@@ -1011,9 +1340,16 @@
       <a href="47_contributing.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.7 Contributing
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1027,13 +1363,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="48_legal.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.8 Legal
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1054,6 +1398,9 @@
   
   
   
+  
+    
+    
     
     
     
@@ -1061,16 +1408,22 @@
       
         
         
-        
-        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
+          
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
+  
   <span class="md-ellipsis">
+    
+  
     Examples
+  
+
+    
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1079,7 +1432,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
-            Examples
+            
+  
+    Examples
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1088,13 +1445,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="examples/index.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Overview
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1105,6 +1470,7 @@
             
               
                 
+  
   
   
   
@@ -1112,9 +1478,16 @@
       <a href="examples/simple_configuration_loading.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Simple Configuration Loading
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1125,6 +1498,7 @@
             
               
                 
+  
   
   
   
@@ -1132,9 +1506,16 @@
       <a href="examples/advanced_configuration_handling.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Advanced Configuration Handling
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1145,6 +1526,7 @@
             
               
                 
+  
   
   
   
@@ -1152,9 +1534,16 @@
       <a href="examples/integration_with_cicd.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Integration with CI/CD
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1165,6 +1554,7 @@
             
               
                 
+  
   
   
   
@@ -1172,9 +1562,16 @@
       <a href="examples/testing_configurations.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Testing Configurations
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1185,6 +1582,7 @@
             
               
                 
+  
   
   
   
@@ -1192,9 +1590,16 @@
       <a href="examples/mconfig-modules.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     mConfig Modules
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1205,6 +1610,7 @@
             
               
                 
+  
   
   
   
@@ -1212,9 +1618,16 @@
       <a href="examples/java-modules.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     JPMS (Java Modules)
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1225,6 +1638,7 @@
             
               
                 
+  
   
   
   
@@ -1232,9 +1646,16 @@
       <a href="examples/configuration_views.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Configuration Views
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1245,6 +1666,7 @@
             
               
                 
+  
   
   
   
@@ -1252,9 +1674,16 @@
       <a href="examples/zookeeper.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     ZooKeeper
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1265,6 +1694,7 @@
             
               
                 
+  
   
   
   
@@ -1272,9 +1702,16 @@
       <a href="examples/handling_crypto_keys_and_certificates.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Handling Crypto Keys and Certificates
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1288,13 +1725,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="examples/schemes.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     Schemes
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1315,6 +1760,9 @@
   
   
   
+  
+    
+    
     
     
     
@@ -1322,16 +1770,22 @@
       
         
         
-        
-        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
+          
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
+  
   <span class="md-ellipsis">
+    
+  
     Appendix
+  
+
+    
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1340,7 +1794,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Appendix
+            
+  
+    Appendix
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1349,13 +1807,21 @@
   
   
   
+  
     <li class="md-nav__item">
       <a href="49_links.html" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
+    
+  
     4.9 Links
+  
+
+    
   </span>
+  
   
 
       </a>
@@ -1399,14 +1865,22 @@
       
         <li class="md-nav__item">
   <a href="#runtime-overrides" class="md-nav__link">
-    Runtime overrides
+    <span class="md-ellipsis">
+      
+        Runtime overrides
+      
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#feature-reference" class="md-nav__link">
-    Feature reference
+    <span class="md-ellipsis">
+      
+        Feature reference
+      
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="Feature reference">
@@ -1414,91 +1888,143 @@
         
           <li class="md-nav__item">
   <a href="#test-mode" class="md-nav__link">
-    Test mode
+    <span class="md-ellipsis">
+      
+        Test mode
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#logging" class="md-nav__link">
-    Logging
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#filesystem-and-registry-paths" class="md-nav__link">
-    Filesystem and registry paths
+    <span class="md-ellipsis">
+      
+        Filesystem and registry paths
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#format-priorities" class="md-nav__link">
-    Format priorities
+    <span class="md-ellipsis">
+      
+        Format priorities
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#storage-type-priorities" class="md-nav__link">
-    Storage type priorities
+    <span class="md-ellipsis">
+      
+        Storage type priorities
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#schemes-and-defaults" class="md-nav__link">
-    Schemes and defaults
+    <span class="md-ellipsis">
+      
+        Schemes and defaults
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#missing-entry-behavior" class="md-nav__link">
-    Missing entry behavior
+    <span class="md-ellipsis">
+      
+        Missing entry behavior
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#cache-and-update-checks" class="md-nav__link">
-    Cache and update checks
+    <span class="md-ellipsis">
+      
+        Cache and update checks
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#modules-and-runtime-configuration" class="md-nav__link">
-    Modules and runtime configuration
+    <span class="md-ellipsis">
+      
+        Modules and runtime configuration
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#secrets-providers-mconfigsecrets" class="md-nav__link">
-    Secrets providers (mConfigSecrets)
+    <span class="md-ellipsis">
+      
+        Secrets providers (mConfigSecrets)
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#zookeeper-mconfigsourcezookeeper" class="md-nav__link">
-    ZooKeeper (mConfigSourceZooKeeper)
+    <span class="md-ellipsis">
+      
+        ZooKeeper (mConfigSourceZooKeeper)
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#class-loading" class="md-nav__link">
-    Class loading
+    <span class="md-ellipsis">
+      
+        Class loading
+      
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#identity-and-context" class="md-nav__link">
-    Identity and context
+    <span class="md-ellipsis">
+      
+        Identity and context
+      
+    </span>
   </a>
   
 </li>
@@ -1510,7 +2036,11 @@
       
         <li class="md-nav__item">
   <a href="#patterns-to-avoid-boilerplate" class="md-nav__link">
-    Patterns to avoid boilerplate
+    <span class="md-ellipsis">
+      
+        Patterns to avoid boilerplate
+      
+    </span>
   </a>
   
 </li>
@@ -1525,9 +2055,11 @@
           
           
             <div class="md-content" data-md-component="content">
+              
               <article class="md-content__inner md-typeset">
                 
                   
+
 
 
 <h1 id="25-config-features">2.5 Config Features<a class="headerlink" href="#25-config-features" title="Permanent link">&para;</a></h1>
@@ -1667,11 +2199,19 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
 
 
 
+
+
+
+
+
+
+
                 
               </article>
             </div>
           
           
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
       </main>
@@ -1683,10 +2223,10 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="24_comment_handling.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2.4 Comment Handling" rel="prev">
+          <a href="24_comment_handling.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2.4 Comment Handling">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
@@ -1700,7 +2240,7 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
         
         
           
-          <a href="31_writing_configurations.html" class="md-footer__link md-footer__link--next" aria-label="Next: 3.1 Writing Configurations" rel="next">
+          <a href="31_writing_configurations.html" class="md-footer__link md-footer__link--next" aria-label="Next: 3.1 Writing Configurations">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
@@ -1711,7 +2251,7 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
             </div>
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
             </div>
           </a>
         
@@ -1739,12 +2279,14 @@ settings via environment variables with the prefix <code>MCONFIG_RUNTIME_</code>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.footer"], "search": "assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js"></script>
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.footer"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
