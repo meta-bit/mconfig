@@ -1764,29 +1764,29 @@
 
 
 
-<h1 id="mconfig-examples">mConfig Examples<a class="headerlink" href="#mconfig-examples" title="Permanent link">&para;</a></h1>
-<h2 id="getting-started">getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h1 id="mconfig-examples">mConfig Examples</h1>
+<h2 id="getting-started">getting started</h2>
 <p>First, include the following dependency in your project:</p>
 <p>Maven:
-<div class="highlight"><span class="filename">XML</span><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigStandard<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div></p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;dependency&gt;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigStandard<span class="nt">&lt;/artifactId&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">&lt;/dependency&gt;</span>
+</span></code></pre></div></p>
 <p>Gradle:
-<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
-</code></pre></div></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
+</span></code></pre></div></p>
 <p>Next, in your code, instantiate a Configuration object/handle.</p>
 <p>The shortcut is something like
 <code>Configuration cfg = ConfigUtil.quickConfig("ACME", "ourApp", "itsConfig")</code>
 but the proper, recommended way is to go like this:
-<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;itsConfig&quot;</span><span class="p">);</span><span class="w"> </span>
-<span class="w">        </span><span class="c1">// ... use cfg ...</span>
-<span class="w">        </span><span class="p">}</span>
-</code></pre></div>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;itsConfig&quot;</span><span class="p">);</span><span class="w"> </span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="c1">// ... use cfg ...</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="p">}</span>
+</span></code></pre></div>
 This way, you can set features for the factory, and get different configurations for different purposes.</p>
 <p>Supplying your company name (in this example, "ACME") and application name ("ourApp") is expected minimum.</p>
 <p>These two are used across OS to differentiate between different applications, and avoid conflicts.</p>
@@ -1797,11 +1797,11 @@ This way, you can set features for the factory, and get different configurations
 </ul>
 <p>From the <strong>Configuation</strong>, you then get the values you need.
 It's as simple as this:
-<div class="highlight"><span class="filename">Java</span><pre><span></span><code><span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">myString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;theStringKey&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">Integer</span><span class="w"> </span><span class="n">myInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;theIntKey&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w">  </span><span class="n">myBinary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;theBinaryKey&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">myList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getStringList</span><span class="p">(</span><span class="s">&quot;theListKey&quot;</span><span class="p">);</span>
-</code></pre></div>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">myString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;theStringKey&quot;</span><span class="p">);</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="n">Integer</span><span class="w"> </span><span class="n">myInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;theIntKey&quot;</span><span class="p">);</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w">  </span><span class="n">myBinary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;theBinaryKey&quot;</span><span class="p">);</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">myList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getStringList</span><span class="p">(</span><span class="s">&quot;theListKey&quot;</span><span class="p">);</span>
+</span></code></pre></div>
 So, where do I put my configuration files?
 Before we get into the topic of Scopes, a quick answer:
 that depends on your OS; and
@@ -1810,7 +1810,7 @@ will print you to stdout all the paths where you can find them in your OS.</p>
 <p>In a regular maven project, you can put the defaults in <code>src/main/resources/.config/</code> and <code>src/test/resources/.config/</code> for development and testing respectively.
 For above example <code>ACME.ourApp.itsConfig</code> would be in <code>src/main/resources/.config/ACME/ourApp/itsConfig.properties</code>.</p>
 <p>Also, it doesn't have to be files, but we get to that later.</p>
-<h2 id="scopes-and-overrides">Scopes and Overrides<a class="headerlink" href="#scopes-and-overrides" title="Permanent link">&para;</a></h2>
+<h2 id="scopes-and-overrides">Scopes and Overrides</h2>
 <p>Some config entries are for the installed application, some are for the current user.
 Some are for the current machine. And some are your defaults. </p>
 <p>You can change that (as a lot of things), but out of the box, mConfig uses a
@@ -1826,7 +1826,7 @@ But if you want to, you can do that too - there's the "cheese" module for that.<
 The mConfigFull module has everything (stable), and in between, your choice.</p>
 <p>mConfig is <em>not a framework</em>, it is a modular library. You pick and choose what you need.
 See the <a href="mconfig-modules.html">mConfig Modules</a> page for more details.</p>
-<h2 id="specific-examples">Specific Examples<a class="headerlink" href="#specific-examples" title="Permanent link">&para;</a></h2>
+<h2 id="specific-examples">Specific Examples</h2>
 <ul>
 <li><a href="simple_configuration_loading.html">Simple Configuration Loading</a></li>
 <li><a href="testing_configurations.html">Testing Configurations</a></li>
