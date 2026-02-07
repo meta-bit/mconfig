@@ -24,7 +24,7 @@
 
     <groupId>org.metabit.platform.support.config</groupId>
     <artifactId>mconfig</artifactId>
-    <version>0.8.5-SNAPSHOT</version>
+    <version>0.8.5</version>
     <packaging>pom</packaging>
     <name>mConfig</name>
     <description>
