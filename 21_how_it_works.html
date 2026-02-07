@@ -58,7 +58,7 @@
               </ul>
               <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">2.1 How it Works</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="21_how_it_works.html">2.1 How it Works</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#self-configuration">Self-Configuration</a>
     </li>
@@ -436,20 +436,19 @@ refresh automatically. → <code>ConfigFeature.UPDATE_CHECK_FREQUENCY_MS</code><
 <p>ConfigLocation: Represents the specific path/handle (the "Directory" part).</p>
 </li>
 </ul>
-<p>This is how it is supposed to be (and as of 0.6.x, isn't yet!)</p>
-<pre><code class="language-mermaid">erDiagram
-    Configuration    }|--|| ConfigFactory : &quot;comes from&quot;
+<p>This is how it is supposed to be (and as of 0.6.x, isn't yet!)
+<pre class="mermaid"><code>erDiagram
+    Configuration    }|--|| ConfigFactory : "comes from"
     ConfigFactory    ||--|| ConfigSearchList : has
     Configuration    ||--|| ConfigSearchList : uses
     ConfigSearchList ||--|{ ConfigSource : contains
-    ConfigSource     ||--|| ConfigLocation : &quot;has a specific&quot;
-    ConfigSource     ||--|| ConfigStorage : &quot;reads from&quot;
-    ConfigSource     ||--|| ConfigFormat : &quot;uses a specific&quot;
-    ConfigStorage    ||--|{ ConfigFormat : &quot;compatible with&quot;
+    ConfigSource     ||--|| ConfigLocation : "has a specific"
+    ConfigSource     ||--|| ConfigStorage : "reads from"
+    ConfigSource     ||--|| ConfigFormat : "uses a specific"
+    ConfigStorage    ||--|{ ConfigFormat : "compatible with"
 
-    Configuration    ||--o| ConfigScheme : &quot;may use&quot;
-    ConfigScheme     ||--o{ ConfigSchemeEntry : contains 
-</code></pre>
+    Configuration    ||--o| ConfigScheme : "may use"
+    ConfigScheme     ||--o{ ConfigSchemeEntry : contains </code></pre></p>
 <p><strong>Configuration</strong> : the API interface to access configurations; produces/keeps ConfigEntry instances,
 and provides simple access to the values.
 They use their respective ConfigFactory search list, which consists of hierarchical and scoped
@@ -483,26 +482,22 @@ instantiated, for active use. It can produce Configuration instances, which link
    specific. How to match them, and link them in a general way? ))
 
 Situation as of 0.6
-
-<pre><code class="language-mermaid">flowchart LR
+<pre class="mermaid"><code>flowchart LR
     ConfigSearchList --&gt;|contains several| ConfigLocationImpl
     ConfigLocationImpl --&gt;|adds properties to| ConfigSourceInterface
     ConfigLocationImpl --&gt; location
     ConfigLocationImpl --&gt; flags
     ConfigSourceInterface --&gt; FileConfigSource
-    ConfigSourceInterface --&gt; SchemeDefaultConfigSource
-</code></pre>
-
+    ConfigSourceInterface --&gt; SchemeDefaultConfigSource</code></pre>
 </blockquote>
 
 <p>Planned for 0.7</p>
-<pre><code class="language-mermaid">flowchart LR    
+<pre class="mermaid"><code>flowchart LR    
     ConfigSearchList --&gt; ConfigSource
     ConfigSource  --&gt; ConfigStorage
     ConfigStorage -..-&gt; ConfigFormat
     ConfigStorage &lt;--&gt; ConfigLocation
-    Configuration --&gt; ConfigLocation
-</code></pre>
+    Configuration --&gt; ConfigLocation</code></pre>
 <h4 id="anchor">Anchor<a class="headerlink" href="#anchor" title="Permanent link">&para;</a></h4>
 <p>The ConfigFactoryBuilder gathers and combines all the settings.
 It creates a <strong>ConfigFactoryInstanceContext</strong> and a ConfigFactory to use it.</p>
@@ -519,10 +514,10 @@ and so on - it is an internally shared resource.</p>
 <h3 id="the-secretvalue-api">The SecretValue API<a class="headerlink" href="#the-secretvalue-api" title="Permanent link">&para;</a></h3>
 <p>For programmatically accessing secrets, mConfig provides the <code>SecretValue</code> interface. 
 This allows retrieving the sensitive data without it being accidentally converted to a standard <code>String</code> that might linger in the Java String Pool.</p>
-<pre><code class="language-java">SecretValue password = config.getSecret(&quot;database/password&quot;);
-byte[] rawBytes = password.getValue();
-// ... use and then potentially clear the bytes
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;database/password&quot;</span><span class="p">);</span>
+<span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">rawBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
+<span class="c1">// ... use and then potentially clear the bytes</span>
+</code></pre></div>
 <h2 id="binary-data-blobs">Binary Data (BLOBs)<a class="headerlink" href="#binary-data-blobs" title="Permanent link">&para;</a></h2>
 <p>Not all configuration is text-based. mConfig supports Binary Large Objects (BLOBs) for things like license files, binary keys, or certificates.</p>
 <h3 id="hierarchical-blobs">Hierarchical BLOBs<a class="headerlink" href="#hierarchical-blobs" title="Permanent link">&para;</a></h3>
@@ -531,10 +526,10 @@ byte[] rawBytes = password.getValue();
 - <strong>JSON</strong> uses Base64 encoded strings. If a <code>ConfigScheme</code> is provided that marks a key as <code>BYTES</code> type, mConfig will automatically decode the Base64 string into a byte array.</p>
 <h3 id="flat-binary-files">Flat Binary Files<a class="headerlink" href="#flat-binary-files" title="Permanent link">&para;</a></h3>
 <p>For legacy support or specific use cases, an entire file can be treated as a single binary blob. This uses the <code>binary_file</code> format and is accessed via the empty string key (<code>""</code>).</p>
-<pre><code class="language-java">// Retrieving an entire .bin file as a single blob
-Configuration licenseCfg = factory.getConfig(&quot;license&quot;);
-byte[] licenseData = licenseCfg.getBytes(&quot;&quot;);
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// Retrieving an entire .bin file as a single blob</span>
+<span class="n">Configuration</span><span class="w"> </span><span class="n">licenseCfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;license&quot;</span><span class="p">);</span>
+<span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">licenseData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">licenseCfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+</code></pre></div>
 <h3 id="failure-handling">Failure Handling<a class="headerlink" href="#failure-handling" title="Permanent link">&para;</a></h3>
 <p>If there is no ConfigEntry found at any layer, and no specific default is found,
 the reaction is determined by the ConfigFeature flags set.</p>

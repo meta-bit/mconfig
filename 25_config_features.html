@@ -66,7 +66,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">2.5 Config Features</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="25_config_features.html">2.5 Config Features</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#runtime-overrides">Runtime overrides</a>
     </li>
@@ -200,12 +200,12 @@
                 <h1 id="25-config-features">2.5 Config Features<a class="headerlink" href="#25-config-features" title="Permanent link">&para;</a></h1>
 <p>ConfigFeature flags tune how a ConfigFactory is built and how it behaves.
 Set them on the ConfigFactoryBuilder before calling <code>build()</code>.</p>
-<p>Example:</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
-        .setFeature(ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS, true)
-        .setFeature(ConfigFeature.DEFAULT_ON_MISSING_ENTRY, true)
-        .setFeature(ConfigFeature.ADDITIONAL_USER_DIRECTORIES, List.of(&quot;/opt/acme/overrides&quot;));
-</code></pre>
+<p>Example:
+<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ALLOW_MCONFIG_RUNTIME_SETTINGS</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">DEFAULT_ON_MISSING_ENTRY</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ADDITIONAL_USER_DIRECTORIES</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/opt/acme/overrides&quot;</span><span class="p">));</span>
+</code></pre></div></p>
 <p>Notes:
 - Booleans default to <code>false</code> unless a default is explicitly listed below.
 - Some features are only used when the corresponding module is on the classpath

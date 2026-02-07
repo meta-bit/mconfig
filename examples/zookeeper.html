@@ -125,7 +125,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="configuration_views.html">Configuration Views</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">ZooKeeper</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="zookeeper.html">ZooKeeper</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#1-bootstrap-configuration">1. Bootstrap Configuration</a>
         <ul>
@@ -188,14 +188,14 @@
 <p>You can provide these bootstrap settings in any standard mConfig location, such as a JAR resource (for defaults) or a local file (for overrides).</p>
 <h3 id="example-configzookeeperjson-bootstrap">Example: <code>.config/zookeeper.json</code> (Bootstrap)<a class="headerlink" href="#example-configzookeeperjson-bootstrap" title="Permanent link">&para;</a></h3>
 <p>Place this file in <code>src/main/resources/.config/zookeeper.json</code> or <code>/etc/metabit/myapp/zookeeper.json</code>.</p>
-<pre><code class="language-json">{
-  &quot;zookeeper&quot;: {
-    &quot;connectString&quot;: &quot;zk-node-1:2181,zk-node-2:2181,zk-node-3:2181&quot;,
-    &quot;rootPath&quot;: &quot;/mconfig/prod&quot;,
-    &quot;sessionTimeoutMs&quot;: 30000
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;zookeeper&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;connectString&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;zk-node-1:2181,zk-node-2:2181,zk-node-3:2181&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;rootPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/mconfig/prod&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sessionTimeoutMs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30000</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="2-data-structure-in-zookeeper">2. Data Structure in ZooKeeper<a class="headerlink" href="#2-data-structure-in-zookeeper" title="Permanent link">&para;</a></h2>
 <p>By default, the ZooKeeper source registers itself for the <code>CLUSTER</code> and <code>ORGANIZATION</code> scopes. It maps configuration names to ZNode paths relative to the <code>rootPath</code>.</p>
 <p>If your <code>rootPath</code> is <code>/mconfig/prod</code>, and you request a configuration named <code>database-settings</code>, the source will look at:
@@ -203,29 +203,29 @@
 - <code>/mconfig/prod/organization/database-settings</code></p>
 <p>The content of the ZNode should be in a supported format (like JSON or Java Properties).</p>
 <h3 id="example-znode-content-at-mconfigprodclusterapp-config">Example: ZNode content at <code>/mconfig/prod/cluster/app-config</code><a class="headerlink" href="#example-znode-content-at-mconfigprodclusterapp-config" title="Permanent link">&para;</a></h3>
-<pre><code class="language-json">{
-  &quot;database&quot;: {
-    &quot;host&quot;: &quot;prod-db-server&quot;,
-    &quot;port&quot;: 5432
-  },
-  &quot;features&quot;: {
-    &quot;enableNewDashboard&quot;: true
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prod-db-server&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5432</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;features&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;enableNewDashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="3-usage-in-code">3. Usage in Code<a class="headerlink" href="#3-usage-in-code" title="Permanent link">&para;</a></h2>
 <p>To use the ZooKeeper source, simply include the <code>mConfigSourceZooKeeper</code> module in your classpath. mConfig will automatically discover and initialize it.</p>
-<pre><code class="language-java">// Standard initialization
-try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;myapp&quot;).build())
-    {
-    // Requesting a configuration that might be in ZooKeeper
-    Configuration config = factory.getConfig(&quot;app-config&quot;);
+<div class="highlight"><pre><span></span><code><span class="c1">// Standard initialization</span>
+<span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Requesting a configuration that might be in ZooKeeper</span>
+<span class="w">    </span><span class="n">Configuration</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;app-config&quot;</span><span class="p">);</span>
 
-    // Accessing values (mConfig handles the layering)
-    String dbHost = config.getString(&quot;database/host&quot;);
-    boolean useDashboard = config.getBoolean(&quot;features/enableNewDashboard&quot;);
-    }
-</code></pre>
+<span class="w">    </span><span class="c1">// Accessing values (mConfig handles the layering)</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">dbHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;database/host&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">useDashboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="s">&quot;features/enableNewDashboard&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
 <h2 id="4-how-it-works-self-configuration">4. How it Works (Self-Configuration)<a class="headerlink" href="#4-how-it-works-self-configuration" title="Permanent link">&para;</a></h2>
 <p>The ZooKeeper source follows a specific startup sequence:</p>
 <ol>

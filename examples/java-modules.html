@@ -121,7 +121,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="mconfig-modules.html">mConfig Modules</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">JPMS (Java Modules)</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="java-modules.html">JPMS (Java Modules)</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#why-this-matters">Why this matters</a>
     </li>
@@ -184,26 +184,26 @@ mConfig modules you depend on.</p>
 <li><strong>Service loading:</strong> mConfig uses the service loader to discover formats and sources.</li>
 </ul>
 <h2 id="minimal-module-infojava">Minimal <code>module-info.java</code><a class="headerlink" href="#minimal-module-infojava" title="Permanent link">&para;</a></h2>
-<p>If you only use the core and utility APIs:</p>
-<pre><code class="language-java">module my.app {
-    requires metabit.mconfig.core;
-    requires metabit.mconfig.util;
-}
-</code></pre>
+<p>If you only use the core and utility APIs:
+<div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
+<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <h2 id="typical-setup">Typical setup<a class="headerlink" href="#typical-setup" title="Permanent link">&para;</a></h2>
-<p>If you use the standard bundle:</p>
-<pre><code class="language-java">module my.app {
-// ...
-requires metabit.mconfig.core;
-requires metabit.mconfig.scheme;
-requires metabit.mconfig.secrets;
-requires metabit.mconfig.util;
-requires metabit.mconfig.modules.jar;
-requires metabit.mconfig.modules.filesystem;
-requires metabit.mconfig.format.javaproperties;
-// ...
-}
-</code></pre>
+<p>If you use the standard bundle:
+<div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
+<span class="c1">// ...</span>
+<span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
+<span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">scheme</span><span class="p">;</span>
+<span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">secrets</span><span class="p">;</span>
+<span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
+<span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">modules</span><span class="p">.</span><span class="na">jar</span><span class="p">;</span>
+<span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">modules</span><span class="p">.</span><span class="na">filesystem</span><span class="p">;</span>
+<span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">format</span><span class="p">.</span><span class="na">javaproperties</span><span class="p">;</span>
+<span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <h2 id="notes-on-auto-discovery">Notes on auto-discovery<a class="headerlink" href="#notes-on-auto-discovery" title="Permanent link">&para;</a></h2>
 <p>Most format and source modules are discovered via the service loader.
 You do not need to <code>requires</code> them directly unless you reference their classes.

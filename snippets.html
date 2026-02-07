@@ -166,73 +166,73 @@
 <p><strong><a href="../../../../examples/starters/README.md">Starters</a> for full projects • <a href="43_faq.html">FAQ</a> for fixes • <a href="../../../../mConfigTools/README.md">CLI</a></strong></p>
 <h2 id="1-replace-hardcoded-stringsports-zero-magic-strings">1. Replace Hardcoded Strings/Ports (Zero Magic Strings)<a class="headerlink" href="#1-replace-hardcoded-stringsports-zero-magic-strings" title="Permanent link">&para;</a></h2>
 <p><strong>Problem:</strong> Ports, hosts scattered in code—hard to change/deploy.</p>
-<pre><code class="language-java">Config cfg = ConfigUtil.quickConfig(&quot;myco&quot;, &quot;myapp&quot;, &quot;network&quot;);
-String peer = cfg.getString(&quot;peer&quot;);  // localhost
-int port = cfg.getInteger(&quot;port&quot;);    // 8080
-double prob = cfg.getDouble(&quot;probability&quot;);  // 0.5
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">quickConfig</span><span class="p">(</span><span class="s">&quot;myco&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+<span class="n">String</span><span class="w"> </span><span class="n">peer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// localhost</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span><span class="w">    </span><span class="c1">// 8080</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">prob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getDouble</span><span class="p">(</span><span class="s">&quot;probability&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 0.5</span>
+</code></pre></div>
 <p><strong>Place:</strong> <code>~/.config/myco/myapp/network.properties</code> (auto-discovered).</p>
 <p><strong>Why mConfig?</strong> Searches OS standards (XDG, AppData), formats (properties/YAML/JSON), reloads live.</p>
 <p><a href="13_getting_started.html">Getting Started</a></p>
 <h2 id="2-env-vars-structured-config-no-manual-parsing">2. Env Vars → Structured Config (No Manual Parsing)<a class="headerlink" href="#2-env-vars-structured-config-no-manual-parsing" title="Permanent link">&para;</a></h2>
 <p><strong>Problem:</strong> <code>process.env</code> mess; want hierarchical config.</p>
 <p><em>Add dep:</em> <code>mConfigSourceEnvVar</code></p>
-<p>Env vars:</p>
-<pre><code>myapp_network_peer=localhost
+<p>Env vars:
+<div class="highlight"><pre><span></span><code>myapp_network_peer=localhost
 myapp_network_port=8080
-</code></pre>
-<pre><code class="language-java">try (ConfigFactory f = ConfigFactoryBuilder.create(&quot;myco&quot;, &quot;myapp&quot;).build()) {
-    String peer = f.getConfig(&quot;network&quot;).getString(&quot;peer&quot;);  // SESSION override
-}
-</code></pre>
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myco&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">peer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">).</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// SESSION override</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><strong>Why?</strong> <code>&lt;app&gt;_&lt;config&gt;_&lt;key&gt;</code> convention; layers over files.</p>
 <p><a href="../../../../mConfigSourceEnvVar/README.md">mConfigSourceEnvVar</a></p>
 <h2 id="3-type-safe-config-with-defaultsvalidation">3. Type-Safe Config with Defaults/Validation<a class="headerlink" href="#3-type-safe-config-with-defaultsvalidation" title="Permanent link">&para;</a></h2>
 <p><strong>Problem:</strong> Runtime <code>NumberFormatException</code>; scattered defaults.</p>
-<p><code>src/main/resources/.config/myco/myapp/network.scheme.json</code>:</p>
-<pre><code class="language-json">[{&quot;name&quot;:&quot;port&quot;,&quot;type&quot;:&quot;int&quot;,&quot;default&quot;:8080,&quot;min&quot;:1,&quot;max&quot;:65535}]
-</code></pre>
-<pre><code class="language-java">ConfigScheme scheme = ConfigScheme.fromClasspath(&quot;network.scheme.json&quot;);
-Config cfg = factory.getConfig(&quot;network&quot;, scheme);
-int port = cfg.getInteger(&quot;port&quot;);  // Validates!
-</code></pre>
+<p><code>src/main/resources/.config/myco/myapp/network.scheme.json</code>:
+<div class="highlight"><pre><span></span><code><span class="p">[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;port&quot;</span><span class="p">,</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int&quot;</span><span class="p">,</span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="nt">&quot;min&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="mi">65535</span><span class="p">}]</span>
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="n">ConfigScheme</span><span class="w"> </span><span class="n">scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigScheme</span><span class="p">.</span><span class="na">fromClasspath</span><span class="p">(</span><span class="s">&quot;network.scheme.json&quot;</span><span class="p">);</span>
+<span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scheme</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Validates!</span>
+</code></pre></div>
 <p><strong>Why?</strong> Centralized scheme—no call-site defaults.</p>
 <p><a href="23_configuration_schemes.html">Configuration Schemes</a></p>
 <h2 id="4-hot-reload-on-file-changes">4. Hot-Reload on File Changes<a class="headerlink" href="#4-hot-reload-on-file-changes" title="Permanent link">&para;</a></h2>
 <p><strong>Problem:</strong> Restart for config tweaks? No thanks.</p>
-<pre><code class="language-java">Config cfg = factory.getConfig(&quot;network&quot;);  // Watches files
-// Edit network.properties → cfg.getInteger(&quot;port&quot;) updates instantly
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Watches files</span>
+<span class="c1">// Edit network.properties → cfg.getInteger(&quot;port&quot;) updates instantly</span>
+</code></pre></div>
 <p><strong>Why?</strong> Built-in watcher; no polling/Spring @Refresh.</p>
 <p><a href="22_priorities_and_hierarchies.html">Priorities</a></p>
 <h2 id="5-discover-available-configs-no-guesswork">5. Discover Available Configs (No Guesswork)<a class="headerlink" href="#5-discover-available-configs-no-guesswork" title="Permanent link">&para;</a></h2>
 <p><strong>Problem:</strong> "Where's my config?"</p>
-<pre><code class="language-java">factory.listAvailableConfigurations().forEach(cdi -&gt;
-    System.out.println(cdi.getConfigName() + &quot; @ &quot; + cdi.getUri())
-);
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">factory</span><span class="p">.</span><span class="na">listAvailableConfigurations</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">cdi</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">cdi</span><span class="p">.</span><span class="na">getConfigName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; @ &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cdi</span><span class="p">.</span><span class="na">getUri</span><span class="p">())</span>
+<span class="p">);</span>
+</code></pre></div>
 <p><strong>Why?</strong> Traces sources/scopes; CLI equiv: <code>mconfig myco:myapp list</code></p>
 <h2 id="6-secrets-without-log-leaks">6. Secrets Without Log Leaks<a class="headerlink" href="#6-secrets-without-log-leaks" title="Permanent link">&para;</a></h2>
 <p><strong>Problem:</strong> Passwords in logs/heap.</p>
 <p>In scheme: <code>"type":"secret"</code></p>
-<pre><code class="language-java">SecretValue pw = (SecretValue) cfg.getEntry(&quot;db.password&quot;);  // Masked: ********
-String clear = pw.clearValue();  // JIT decrypt/use
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">pw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">SecretValue</span><span class="p">)</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getEntry</span><span class="p">(</span><span class="s">&quot;db.password&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Masked: ********</span>
+<span class="n">String</span><span class="w"> </span><span class="n">clear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pw</span><span class="p">.</span><span class="na">clearValue</span><span class="p">();</span><span class="w">  </span><span class="c1">// JIT decrypt/use</span>
+</code></pre></div>
 <p><a href="../../../../mConfigSecrets/README.md">mConfigSecrets</a></p>
 <h2 id="7-jpms-compatible-no-illegalaccesserror">7. JPMS-Compatible (No IllegalAccessError)<a class="headerlink" href="#7-jpms-compatible-no-illegalaccesserror" title="Permanent link">&para;</a></h2>
-<p><code>module-info.java</code>:</p>
-<pre><code class="language-java">module com.example {
-    requires metabit.mconfig.core;
-    requires metabit.mconfig.util;
-}
-</code></pre>
+<p><code>module-info.java</code>:
+<div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="na">example</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
+<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <p><em>Deps:</em> <code>mConfigStandard</code> (BOM) or <code>mConfigBase</code>.</p>
 <p><a href="43_faq.html#jpms-module-access-errors">JPMS FAQ</a></p>
 <h2 id="8-tests-isolated-configs">8. Tests: Isolated Configs<a class="headerlink" href="#8-tests-isolated-configs" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">ConfigFactoryBuilder.setTestMode(true);
-ConfigFactoryBuilder.setTestConfigPaths(ConfigScope.USER, List.of(&quot;src/test/resources&quot;));
-Config cfg = ConfigFactoryBuilder.create(&quot;myco&quot;, &quot;myapp&quot;).build().getConfig(&quot;network&quot;);
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestConfigPaths</span><span class="p">(</span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;src/test/resources&quot;</span><span class="p">));</span>
+<span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myco&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">().</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+</code></pre></div>
 <p><code>src/test/resources/.config/myco/myapp/network.properties</code></p>
 <p><a href="15_test_mode.html">Test Mode</a></p>
 <p><strong>Pro Tip:</strong> Enable logging (<code>mConfigLoggingSlf4j</code> + DEBUG) for traces.</p>

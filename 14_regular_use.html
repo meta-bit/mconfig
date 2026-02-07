@@ -51,7 +51,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">1.4 Regular Use</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="14_regular_use.html">1.4 Regular Use</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#141-providing-a-default-configuration-product-scope">1.4.1 Providing a default configuration (PRODUCT scope)</a>
     </li>
@@ -257,10 +257,10 @@ and apply it to the respective Configuration
 <p>Note: default values in your scheme will replace potentially existing defaults.</p>
 <h2 id="144-runtime-dynamic-configurations">1.4.4 Runtime Dynamic Configurations<a class="headerlink" href="#144-runtime-dynamic-configurations" title="Permanent link">&para;</a></h2>
 <p>Mutable Puts: you can change the values of existing entries at runtime.
-Example:</p>
-<pre><code class="language-java">configFactory.put(&quot;voting.database.name&quot;, &quot;dynamicDB&quot;, ConfigScope.RUNTIME);
-</code></pre>
-<p>The RUNTIME scope is at the highest priority ¹, so it overrides all others.</p>
+Example:
+<div class="highlight"><pre><span></span><code><span class="n">configFactory</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;voting.database.name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dynamicDB&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">);</span>
+</code></pre></div>
+The RUNTIME scope is at the highest priority ¹, so it overrides all others.</p>
 <p>So dynamically changing the configuration at runtime is quite possible.</p>
 <p>¹: the highest priority of all regular scopes, that is. the POLICY scope
 can enforce its settings over everything else; that's for security reasons.</p>
