@@ -1418,30 +1418,30 @@
                   
 
 
-<h1 id="24-comment-handling-in-mconfig">2.4 Comment Handling in mConfig<a class="headerlink" href="#24-comment-handling-in-mconfig" title="Permanent link">&para;</a></h1>
+<h1 id="24-comment-handling-in-mconfig">2.4 Comment Handling in mConfig</h1>
 <p>Of the possible configuration sources, files are the ones that support comments. 
 Comments in configuration files are an important source of information for users. They can be used to explain configuration options, document decisions, provide context, or include relevant links.</p>
 <p>mConfig aims to keep comments intact in configuration files to ensure that human-readable information is not lost during programmatic updates.</p>
-<h2 id="core-principles">Core Principles<a class="headerlink" href="#core-principles" title="Permanent link">&para;</a></h2>
+<h2 id="core-principles">Core Principles</h2>
 <ul>
 <li><strong>Write-Preservation</strong>: Writing to a configuration file should not erase existing comments.</li>
 <li><strong>Read-Write Symmetry</strong>: Maintaining the original structure and documentation of the file is a priority.</li>
 <li><strong>Human-Centric</strong>: Comments are for humans. They should not be used for machine processing or "shebang" style logic.</li>
 </ul>
-<h2 id="programmatic-comments">Programmatic Comments<a class="headerlink" href="#programmatic-comments" title="Permanent link">&para;</a></h2>
+<h2 id="programmatic-comments">Programmatic Comments</h2>
 <p>While mConfig prioritizes preserving existing comments, it also supports adding comments programmatically:</p>
 <ol>
 <li><strong>Description from Scheme</strong>: When an entry is first created, mConfig can automatically include the description defined in the <code>ConfigScheme</code> as a comment. This is controlled by the <code>ConfigFeature.DESCRIPTION_ON_CREATE</code> feature.</li>
 <li><strong>Explicit Comments</strong>: Developers can add comments to a <code>ConfigEntry</code> using the <code>setComment(String)</code> method. This is useful for documenting automated changes (e.g., "# AUTO-REDUCED: Disk space was below 5%").</li>
 </ol>
-<h2 id="configuration-features">Configuration Features<a class="headerlink" href="#configuration-features" title="Permanent link">&para;</a></h2>
+<h2 id="configuration-features">Configuration Features</h2>
 <p>The behavior of comment handling is governed by several <code>ConfigFeature</code> flags:</p>
 <ul>
 <li><strong><code>ConfigFeature.COMMENTS_WRITING</code></strong> (default: <code>false</code>): When set to <code>true</code>, mConfig will write programmatic comments to the configuration. Even when <code>false</code>, the library still attempts to preserve <em>existing</em> comments for supported formats.</li>
 <li><strong><code>ConfigFeature.COMMENTS_READING</code></strong> (default: <code>false</code>): Enables reading comments from files into the <code>ConfigEntry</code> objects. Note that determining exactly which lines belong to which key is heuristic-based and may not be perfect for all formats.</li>
 <li><strong><code>ConfigFeature.DESCRIPTION_ON_CREATE</code></strong> (default: <code>false</code>): When <code>true</code>, uses the <code>description</code> field from the <code>ConfigSchemeEntry</code> to populate comments for new entries.</li>
 </ul>
-<h2 id="format-support-matrix">Format Support Matrix<a class="headerlink" href="#format-support-matrix" title="Permanent link">&para;</a></h2>
+<h2 id="format-support-matrix">Format Support Matrix</h2>
 <p>Preservation of comments depends on the underlying format module. Some high-level libraries (like Jackson) may strip comments by design.</p>
 <table>
 <thead>
@@ -1494,20 +1494,20 @@ Comments in configuration files are an important source of information for users
 </tr>
 </tbody>
 </table>
-<h2 id="implementation-details">Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">&para;</a></h2>
-<h3 id="multi-line-comments">Multi-line Comments<a class="headerlink" href="#multi-line-comments" title="Permanent link">&para;</a></h3>
+<h2 id="implementation-details">Implementation Details</h2>
+<h3 id="multi-line-comments">Multi-line Comments</h3>
 <ul>
 <li><strong>Representation</strong>: Represented as a single <code>String</code> with <code>\n</code> line separators.</li>
 <li><strong>Markers</strong>: On reading, format-specific markers (e.g., <code>#</code>, <code>!</code>, <code>;</code>) are preserved.</li>
 <li><strong>Writing</strong>: mConfig ensures each line is correctly prefixed with the format's primary marker if it's missing.</li>
 </ul>
-<h3 id="heuristics-and-association">Heuristics and Association<a class="headerlink" href="#heuristics-and-association" title="Permanent link">&para;</a></h3>
+<h3 id="heuristics-and-association">Heuristics and Association</h3>
 <ul>
 <li><strong>Leading Comments</strong>: Consecutive comment lines immediately preceding a key are associated with that key.</li>
 <li><strong>Global Headers</strong>: Comment blocks at the top of a file (or between entries) separated by empty lines are treated as "Global Headers". They are preserved and rewritten at the top of the file but are not attached to any specific <code>ConfigEntry</code>.</li>
 <li><strong>Inline Comments</strong>: Comments on the same line as a value are appended to the entry's comment string on a best-effort basis.</li>
 </ul>
-<h3 id="priority-and-merging">Priority and Merging<a class="headerlink" href="#priority-and-merging" title="Permanent link">&para;</a></h3>
+<h3 id="priority-and-merging">Priority and Merging</h3>
 <p>When writing an entry, comments are merged based on the following priority (top to bottom):
 1.  <strong>Description from Scheme</strong>: If <code>DESCRIPTION_ON_CREATE=true</code> and the entry is new.
 2.  <strong>Existing Comments</strong>: Preserved from the original file.
@@ -1595,7 +1595,7 @@ Comments in configuration files are an important source of information for users
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>

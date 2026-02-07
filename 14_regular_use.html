@@ -1418,8 +1418,8 @@
                   
 
 
-<h1 id="14-regular-use">1.4 Regular Use<a class="headerlink" href="#14-regular-use" title="Permanent link">&para;</a></h1>
-<h2 id="141-providing-a-default-configuration-product-scope">1.4.1 Providing a default configuration (PRODUCT scope)<a class="headerlink" href="#141-providing-a-default-configuration-product-scope" title="Permanent link">&para;</a></h2>
+<h1 id="14-regular-use">1.4 Regular Use</h1>
+<h2 id="141-providing-a-default-configuration-product-scope">1.4.1 Providing a default configuration (PRODUCT scope)</h2>
 <p>The lowest-priority layer is <code>PRODUCT</code> scope. Defaults come from two places:
 - <strong>ConfigScheme defaults</strong> (recommended for typed, documented defaults)
 - <strong>JAR resources</strong> (optional: ship default config files inside the JAR)</p>
@@ -1441,7 +1441,7 @@ Some environments may use no company name by convention, but developing multi-pl
 to <em>replace</em> existing defaults rather than merge them, use <code>SCHEME_RESETS_DEFAULTS</code>.</p>
 <p><strong>Note:</strong> JAR defaults are active when running from a JAR, but during development
 the JAR source still reads resources from the classpath, so the same paths work in IDE runs.</p>
-<h2 id="142-configuration-schemes-discovery">1.4.2 Configuration Schemes Discovery<a class="headerlink" href="#142-configuration-schemes-discovery" title="Permanent link">&para;</a></h2>
+<h2 id="142-configuration-schemes-discovery">1.4.2 Configuration Schemes Discovery</h2>
 <p>Config Schemes (<code>*.scheme.json</code>) are automatically discovered from the <code>.config/</code> directory on the classpath.</p>
 <ul>
 <li><strong>Development Time:</strong> Both <code>src/main/resources/.config/</code> and <code>src/test/resources/.config/</code> are searched.</li>
@@ -1458,8 +1458,8 @@ its default values; either the files are within the JAR, or it refuses to use
 them. That is intentional behaviour for security and safety purposes.</p>
 <p>You can activate <a href="15_test_mode.html">Test Mode</a>, however: In Test Mode, the relative paths are 
 accepted (along with all the other directories test mode uses).</p>
-<h2 id="143-use-a-config-scheme">1.4.3 Use a config scheme<a class="headerlink" href="#143-use-a-config-scheme" title="Permanent link">&para;</a></h2>
-<h3 id="1431-reasons">1.4.3.1 Reasons<a class="headerlink" href="#1431-reasons" title="Permanent link">&para;</a></h3>
+<h2 id="143-use-a-config-scheme">1.4.3 Use a config scheme</h2>
+<h3 id="1431-reasons">1.4.3.1 Reasons</h3>
 <p>There are some benefits to declaring the contents of your configurations
 separately from the code.
 - better maintenance (all in one place, instead of scattered)
@@ -1472,7 +1472,7 @@ the sole connection between the code and the values should be the keys it asks f
 <p>(In the API, we stick with String keys for ease of use.
  If you want to be strict in your development, you can declare an enum and use
  its names as keys.)</p>
-<h3 id="1432-normal-use">1.4.3.2 Normal use<a class="headerlink" href="#1432-normal-use" title="Permanent link">&para;</a></h3>
+<h3 id="1432-normal-use">1.4.3.2 Normal use</h3>
 <p>Normally, you'll place a JSON file in a subfolder of your resource directory, 
 and that's it. </p>
 <p>The file name is the name of the Configuration you want to use,
@@ -1484,7 +1484,7 @@ mConfig will automatically detect and use these files.</p>
 Company "MyCompany" and Application "MyApplication",
 you would place the corresponding scheme file in
 <code>src/main/resources/.config/MyCompany/MyApplication/MyConfig.scheme.json</code></p>
-<h3 id="1433-explicit-setting">1.4.3.3 Explicit setting<a class="headerlink" href="#1433-explicit-setting" title="Permanent link">&para;</a></h3>
+<h3 id="1433-explicit-setting">1.4.3.3 Explicit setting</h3>
 <p>If, for reasons whatsoever, you want to provide the configuration scheme yourself,
 prepare the JSON string according to the format.
 Convert it to a ConfigScheme
@@ -1492,7 +1492,7 @@ Convert it to a ConfigScheme
 and apply it to the respective Configuration
 <code>cfg.setConfigScheme(testScheme);</code>.</p>
 <p>Note: default values in your scheme will replace potentially existing defaults.</p>
-<h2 id="144-runtime-dynamic-configurations">1.4.4 Runtime Dynamic Configurations<a class="headerlink" href="#144-runtime-dynamic-configurations" title="Permanent link">&para;</a></h2>
+<h2 id="144-runtime-dynamic-configurations">1.4.4 Runtime Dynamic Configurations</h2>
 <p>Mutable Puts: you can change the values of existing entries at runtime.
 Example:
 <div class="highlight"><pre><span></span><code><span class="n">configFactory</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;voting.database.name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dynamicDB&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">);</span>
@@ -1501,7 +1501,7 @@ The RUNTIME scope is at the highest priority ¹, so it overrides all others.</p>
 <p>So dynamically changing the configuration at runtime is quite possible.</p>
 <p>¹: the highest priority of all regular scopes, that is. the POLICY scope
 can enforce its settings over everything else; that's for security reasons.</p>
-<h2 id="145-put-and-write">1.4.5 Put and write<a class="headerlink" href="#145-put-and-write" title="Permanent link">&para;</a></h2>
+<h2 id="145-put-and-write">1.4.5 Put and write</h2>
 <p>Configurations can be written to; the put operation is the same for all scopes.
 The puts are typed.
 You can pick either a single scope, or an enum set of scopes.
@@ -1593,7 +1593,7 @@ if there is a writeable layer available within the scope or scopes specified.
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>

@@ -1350,10 +1350,10 @@
                   
 
 
-<h1 id="immutable-configuration-views">Immutable Configuration Views<a class="headerlink" href="#immutable-configuration-views" title="Permanent link">&para;</a></h1>
+<h1 id="immutable-configuration-views">Immutable Configuration Views</h1>
 <p>These utility methods in <code>ConfigUtil</code> create lightweight, immutable <code>Configuration</code> views for overrides, prefix remapping,
 and <code>Properties</code> adaptation. They support chaining and inherit scheme validation where applicable.</p>
-<h2 id="withoverrides">withOverrides<a class="headerlink" href="#withoverrides" title="Permanent link">&para;</a></h2>
+<h2 id="withoverrides">withOverrides</h2>
 <p>Overlay in-memory overrides on a parent <code>Configuration</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;app&quot;</span><span class="p">);</span>
 <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">overrides</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
@@ -1371,7 +1371,7 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
 <li>If <code>parent</code> has <code>ConfigScheme</code>, validates overrides (throws <code>IllegalArgumentException</code> on mismatch).</li>
 <li><code>getAllConfigurationKeysFlattened()</code>: union of keys.</li>
 </ul>
-<h2 id="remapped">remapped<a class="headerlink" href="#remapped" title="Permanent link">&para;</a></h2>
+<h2 id="remapped">remapped</h2>
 <p>Remap prefixed keys for sub-config views (e.g., DB modules):</p>
 <div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">remapped</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;super_db.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;db.&quot;</span><span class="p">);</span>
 <span class="n">String</span><span class="w"> </span><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;db.host&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// → parent.getString(&quot;super_db.host&quot;)</span>
@@ -1384,7 +1384,7 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
 <li>Uniform for all typed getters; projects <code>getAll*</code>.</li>
 <li>Inherits scheme.</li>
 </ul>
-<h2 id="fromproperties">fromProperties<a class="headerlink" href="#fromproperties" title="Permanent link">&para;</a></h2>
+<h2 id="fromproperties">fromProperties</h2>
 <p>Adapt legacy <code>java.util.Properties</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Properties</span><span class="w"> </span><span class="n">props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
 <span class="n">props</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="s">&quot;key1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;value1&quot;</span><span class="p">);</span>
@@ -1399,7 +1399,7 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
 <li>No scheme.</li>
 <li><code>getAllConfigurationKeysFlattened()</code>: props keys.</li>
 </ul>
-<h2 id="chaining">Chaining<a class="headerlink" href="#chaining" title="Permanent link">&para;</a></h2>
+<h2 id="chaining">Chaining</h2>
 <p>Combine freely:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">dbView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">withOverrides</span><span class="p">(</span>
 <span class="w">    </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">remapped</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;legacy_db.&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;db.&quot;</span><span class="p">),</span><span class="w"> </span>
@@ -1489,7 +1489,7 @@ and <code>Properties</code> adaptation. They support chaining and inherit scheme
     
       <script src="../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>

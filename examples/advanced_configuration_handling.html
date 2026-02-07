@@ -1406,15 +1406,15 @@
                   
 
 
-<h1 id="advanced-configuration-handling">Advanced Configuration Handling<a class="headerlink" href="#advanced-configuration-handling" title="Permanent link">&para;</a></h1>
+<h1 id="advanced-configuration-handling">Advanced Configuration Handling</h1>
 <p>This page collects higher-level patterns for controlling how mConfig resolves, validates, and writes configuration data.</p>
-<h2 id="1-write-with-scope-control">1. Write with scope control<a class="headerlink" href="#1-write-with-scope-control" title="Permanent link">&para;</a></h2>
+<h2 id="1-write-with-scope-control">1. Write with scope control</h2>
 <p>Writes are scoped and follow a "least surprise" policy:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
 
 <span class="n">cfg</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;server/port&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">8081</span><span class="p">,</span><span class="w"> </span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">);</span>
 </code></pre></div>
-<h2 id="2-control-file-format-order">2. Control file format order<a class="headerlink" href="#2-control-file-format-order" title="Permanent link">&para;</a></h2>
+<h2 id="2-control-file-format-order">2. Control file format order</h2>
 <p>Reading and writing can use different format orders:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">FILE_FORMAT_READING_PRIORITIES</span><span class="p">,</span>
@@ -1422,18 +1422,18 @@
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">FILE_FORMAT_WRITING_PRIORITIES</span><span class="p">,</span>
 <span class="w">            </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;TOML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;YAML&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;JSON&quot;</span><span class="p">));</span>
 </code></pre></div>
-<h2 id="3-use-strict-schemes">3. Use strict schemes<a class="headerlink" href="#3-use-strict-schemes" title="Permanent link">&para;</a></h2>
+<h2 id="3-use-strict-schemes">3. Use strict schemes</h2>
 <p>To reject unknown keys, turn on strict mode:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">SCHEME_STRICT_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
 </code></pre></div>
-<h2 id="4-missing-values-behavior">4. Missing values behavior<a class="headerlink" href="#4-missing-values-behavior" title="Permanent link">&para;</a></h2>
+<h2 id="4-missing-values-behavior">4. Missing values behavior</h2>
 <p>If you want scheme defaults instead of exceptions:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">EXCEPTION_ON_MISSING_ENTRY</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">DEFAULT_ON_MISSING_ENTRY</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
 </code></pre></div>
-<h2 id="5-subscribe-to-updates">5. Subscribe to updates<a class="headerlink" href="#5-subscribe-to-updates" title="Permanent link">&para;</a></h2>
+<h2 id="5-subscribe-to-updates">5. Subscribe to updates</h2>
 <p>React when values change at runtime:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
 
@@ -1445,7 +1445,7 @@
 If you take the values from the Configurations directly, they will be up-to-date.
 Above subscription is to support triggering actions when the configuration changes,
 e.g. thread restarts.</p>
-<h2 id="6-control-scope-fallbacks">6. Control scope fallbacks<a class="headerlink" href="#6-control-scope-fallbacks" title="Permanent link">&para;</a></h2>
+<h2 id="6-control-scope-fallbacks">6. Control scope fallbacks</h2>
 <p>By default, mConfig falls back to less specific scopes when a value is missing. You can change that:</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">FALLBACKS_ACROSS_SCOPES</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
@@ -1455,7 +1455,7 @@ e.g. thread restarts.</p>
 <span class="w">    </span><span class="c1">// Only the requested scope (plus PRODUCT defaults) is considered.</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<h2 id="7-prioritize-storage-types">7. Prioritize storage types<a class="headerlink" href="#7-prioritize-storage-types" title="Permanent link">&para;</a></h2>
+<h2 id="7-prioritize-storage-types">7. Prioritize storage types</h2>
 <p>If multiple storage backends are available, change their priority within a scope:</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">STORAGE_TYPE_PRIORITIES</span><span class="p">,</span>
@@ -1465,7 +1465,7 @@ e.g. thread restarts.</p>
 <span class="w">    </span><span class="c1">// Files override registry, registry overrides JAR defaults.</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<h2 id="8-use-secrets-providers">8. Use secrets providers<a class="headerlink" href="#8-use-secrets-providers" title="Permanent link">&para;</a></h2>
+<h2 id="8-use-secrets-providers">8. Use secrets providers</h2>
 <p>If you have secrets in schemes, add a secrets provider to resolve them:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">SECRETS_PROVIDER_ID</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;my-secrets&quot;</span><span class="p">)</span>
@@ -1557,7 +1557,7 @@ e.g. thread restarts.</p>
     
       <script src="../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>

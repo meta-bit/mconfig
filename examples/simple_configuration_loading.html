@@ -1336,9 +1336,9 @@
                   
 
 
-<h1 id="simple-configuration-loading">Simple Configuration Loading<a class="headerlink" href="#simple-configuration-loading" title="Permanent link">&para;</a></h1>
+<h1 id="simple-configuration-loading">Simple Configuration Loading</h1>
 <p>This example shows the minimal setup for loading a configuration and reading a few values.</p>
-<h2 id="1-create-a-factory-and-configuration">1. Create a factory and configuration<a class="headerlink" href="#1-create-a-factory-and-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="1-create-a-factory-and-configuration">1. Create a factory and configuration</h2>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;ACME&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ourApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
 <span class="w">    </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Configuration</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
@@ -1348,7 +1348,7 @@
 <span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">tls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="s">&quot;server/tls&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 </code></pre></div>
-<h2 id="2-provide-defaults-recommended">2. Provide defaults (recommended)<a class="headerlink" href="#2-provide-defaults-recommended" title="Permanent link">&para;</a></h2>
+<h2 id="2-provide-defaults-recommended">2. Provide defaults (recommended)</h2>
 <p>Add defaults in your resources so the configuration works out of the box:
 <code>src/main/resources/.config/ACME/ourApp/network.properties</code></p>
 <p>Example contents:
@@ -1356,7 +1356,7 @@
 <span class="na">server.port</span><span class="o">=</span><span class="s">8080</span>
 <span class="na">server.tls</span><span class="o">=</span><span class="s">false</span>
 </code></pre></div></p>
-<h2 id="3-optional-add-a-scheme">3. Optional: add a scheme<a class="headerlink" href="#3-optional-add-a-scheme" title="Permanent link">&para;</a></h2>
+<h2 id="3-optional-add-a-scheme">3. Optional: add a scheme</h2>
 <p>Add a scheme next to the config file to define types and defaults:
 <code>src/main/resources/.config/ACME/ourApp/network.scheme.json</code></p>
 <div class="highlight"><pre><span></span><code><span class="p">[</span>
@@ -1450,7 +1450,7 @@
     
       <script src="../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>

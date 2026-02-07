@@ -1484,9 +1484,9 @@
                   
 
 
-<h1 id="37-extensions-and-advanced-use">3.7 Extensions and Advanced Use<a class="headerlink" href="#37-extensions-and-advanced-use" title="Permanent link">&para;</a></h1>
-<h2 id="371-using-extensions">3.7.1 Using extensions<a class="headerlink" href="#371-using-extensions" title="Permanent link">&para;</a></h2>
-<h2 id="372-advanced-use">3.7.2 Advanced use<a class="headerlink" href="#372-advanced-use" title="Permanent link">&para;</a></h2>
+<h1 id="37-extensions-and-advanced-use">3.7 Extensions and Advanced Use</h1>
+<h2 id="371-using-extensions">3.7.1 Using extensions</h2>
+<h2 id="372-advanced-use">3.7.2 Advanced use</h2>
 <p>Why perform</p>
 <ul>
 <li>parameter validation, </li>
@@ -1496,9 +1496,9 @@ yourself? mConfig has a built-in facility for this and more. </li>
 </ul>
 <p>You describe all the entries your configuration can have,
 and mConfig takes care of the checking. </p>
-<h2 id="373-data-types">3.7.3 Data types<a class="headerlink" href="#373-data-types" title="Permanent link">&para;</a></h2>
-<h3 id="3731-config-scheme-formats">3.7.3.1 Config scheme formats<a class="headerlink" href="#3731-config-scheme-formats" title="Permanent link">&para;</a></h3>
-<h4 id="37311-internal-format-0-single-configschemeentry">3.7.3.1.1 Internal format 0: single ConfigSchemeEntry<a class="headerlink" href="#37311-internal-format-0-single-configschemeentry" title="Permanent link">&para;</a></h4>
+<h2 id="373-data-types">3.7.3 Data types</h2>
+<h3 id="3731-config-scheme-formats">3.7.3.1 Config scheme formats</h3>
+<h4 id="37311-internal-format-0-single-configschemeentry">3.7.3.1.1 Internal format 0: single ConfigSchemeEntry</h4>
 <pre><code>{
 "key":"mandatory key / configuration entry name",
 "TYPE":"mandatory type",
@@ -1515,20 +1515,20 @@ and mConfig takes care of the checking. </p>
 <p>Multi-language descriptions are supported by providing a map of language codes to description texts. When requested via <code>getDescription(Locale)</code>, the library will first check this map, then fall back to standard <code>ResourceBundle</code> lookup (using <code>.config/messages.properties</code>), and finally fall back to the single string description if provided.</p>
 <p><strong>PLAN</strong>: For FLAGS, in the future we may chose an alternative form - each being a pair with string
 key and boolean value.</p>
-<h4 id="37312-internal-format-1-configschemes-in-an-array-internal-use-only">3.7.3.1.2 Internal format 1:  ConfigSchemes, in an array. internal use only!<a class="headerlink" href="#37312-internal-format-1-configschemes-in-an-array-internal-use-only" title="Permanent link">&para;</a></h4>
+<h4 id="37312-internal-format-1-configschemes-in-an-array-internal-use-only">3.7.3.1.2 Internal format 1:  ConfigSchemes, in an array. internal use only!</h4>
 <pre><code>[ 
 SCHEME_ENTRIES,
 GO_HERE,
 DEFINED_AS_IN_FORMAT_1
 ]
 </code></pre>
-<h4 id="37313-format-2-full-single-configscheme">3.7.3.1.3 Format 2: full single ConfigScheme<a class="headerlink" href="#37313-format-2-full-single-configscheme" title="Permanent link">&para;</a></h4>
+<h4 id="37313-format-2-full-single-configscheme">3.7.3.1.3 Format 2: full single ConfigScheme</h4>
 <pre><code>{
  "name":"mandatory name the Configuration is identified by",
  "entries":[ ENTRIES_AS_DEFINED_IN_FORMAT_2 ],
 }
 </code></pre>
-<h4 id="37314-format-3-multiple-full-configschemes">3.7.3.1.4 Format 3: multiple full ConfigSchemes<a class="headerlink" href="#37314-format-3-multiple-full-configschemes" title="Permanent link">&para;</a></h4>
+<h4 id="37314-format-3-multiple-full-configschemes">3.7.3.1.4 Format 3: multiple full ConfigSchemes</h4>
 <pre><code>[
   FULL_CONFIG_SCHEME_AS_DEFINED_IN_FORMAT_3
 ]
@@ -1542,10 +1542,10 @@ DEFINED_AS_IN_FORMAT_1
     SCHEME --&gt; ENTRY_KEY: on string
     ENTRY  --&gt; SCHEME: on next value
 </code></pre>
-<h3 id="374-configure-priorities">3.7.4 configure priorities<a class="headerlink" href="#374-configure-priorities" title="Permanent link">&para;</a></h3>
-<h4 id="3741-file-type-priority">3.7.4.1 File Type Priority<a class="headerlink" href="#3741-file-type-priority" title="Permanent link">&para;</a></h4>
+<h3 id="374-configure-priorities">3.7.4 configure priorities</h3>
+<h4 id="3741-file-type-priority">3.7.4.1 File Type Priority</h4>
 <p>You can control the resolution priority between different file types (e.g., JSON, YAML) using the <code>FILE_TYPE_PRIORITIES</code> feature. This re-orders the search list within each scope.</p>
-<h4 id="3742-storage-type-priority">3.7.4.2 Storage Type Priority<a class="headerlink" href="#3742-storage-type-priority" title="Permanent link">&para;</a></h4>
+<h4 id="3742-storage-type-priority">3.7.4.2 Storage Type Priority</h4>
 <p>You can control the resolution priority between different storage types (e.g., Files vs. Registry) using the <code>STORAGE_TYPE_PRIORITIES</code> feature. This re-orders the search list within each scope.</p>
 <p><div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;company&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;app&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">STORAGE_TYPE_PRIORITIES</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;files&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;registryjni&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;JAR&quot;</span><span class="p">));</span>
@@ -1638,7 +1638,7 @@ Default IDs include: <code>RAM</code>, <code>secrets</code>, <code>files</code>,
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>

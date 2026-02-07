@@ -1350,26 +1350,26 @@
                   
 
 
-<h1 id="java-platform-module-system-jpms">Java Platform Module System (JPMS)<a class="headerlink" href="#java-platform-module-system-jpms" title="Permanent link">&para;</a></h1>
+<h1 id="java-platform-module-system-jpms">Java Platform Module System (JPMS)</h1>
 <p>Java 9 introduced the Java Platform Module System (JPMS), often referred to as "Java Modules".
 JPMS adds strong encapsulation and explicit dependencies between modules.</p>
 <p>mConfig is modular and uses JPMS so you can choose only the parts you need.
 If your application uses <code>module-info.java</code>, you should explicitly declare the
 mConfig modules you depend on.</p>
-<h2 id="why-this-matters">Why this matters<a class="headerlink" href="#why-this-matters" title="Permanent link">&para;</a></h2>
+<h2 id="why-this-matters">Why this matters</h2>
 <ul>
 <li><strong>Stronger encapsulation:</strong> internal packages are hidden unless exported.</li>
 <li><strong>Explicit dependencies:</strong> missing <code>requires</code> entries cause compile-time errors.</li>
 <li><strong>Service loading:</strong> mConfig uses the service loader to discover formats and sources.</li>
 </ul>
-<h2 id="minimal-module-infojava">Minimal <code>module-info.java</code><a class="headerlink" href="#minimal-module-infojava" title="Permanent link">&para;</a></h2>
+<h2 id="minimal-module-infojava">Minimal <code>module-info.java</code></h2>
 <p>If you only use the core and utility APIs:
 <div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
 <span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<h2 id="typical-setup">Typical setup<a class="headerlink" href="#typical-setup" title="Permanent link">&para;</a></h2>
+<h2 id="typical-setup">Typical setup</h2>
 <p>If you use the standard bundle:
 <div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">my</span><span class="p">.</span><span class="na">app</span><span class="w"> </span><span class="p">{</span>
 <span class="c1">// ...</span>
@@ -1383,7 +1383,7 @@ mConfig modules you depend on.</p>
 <span class="c1">// ...</span>
 <span class="p">}</span>
 </code></pre></div></p>
-<h2 id="notes-on-auto-discovery">Notes on auto-discovery<a class="headerlink" href="#notes-on-auto-discovery" title="Permanent link">&para;</a></h2>
+<h2 id="notes-on-auto-discovery">Notes on auto-discovery</h2>
 <p>Most format and source modules are discovered via the service loader.
 You do not need to <code>requires</code> them directly unless you reference their classes.
 But they must be on the classpath, and visible to the service loader.</p>
@@ -1472,7 +1472,7 @@ But they must be on the classpath, and visible to the service loader.</p>
     
       <script src="../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>

@@ -1418,13 +1418,13 @@
                   
 
 
-<h1 id="41-mconfig-tool-mconfig">4.1 mConfig Tool (<code>mconfig</code>)<a class="headerlink" href="#41-mconfig-tool-mconfig" title="Permanent link">&para;</a></h1>
+<h1 id="41-mconfig-tool-mconfig">4.1 mConfig Tool (<code>mconfig</code>)</h1>
 <p>The <code>mconfig</code> tool provides a command-line interface for inspecting and managing configurations. It allows you to list available configurations, show effective values, get detailed metadata for specific keys, search for configuration paths, and more.</p>
-<h2 id="411-installation">4.1.1 Installation<a class="headerlink" href="#411-installation" title="Permanent link">&para;</a></h2>
+<h2 id="411-installation">4.1.1 Installation</h2>
 <p>The tool is available as a "fat JAR" in the <code>mConfigTools</code> module. You can run it using:</p>
 <div class="highlight"><pre><span></span><code>java<span class="w"> </span>-jar<span class="w"> </span>mConfigTools-*.jar<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span><span class="o">[</span>COMMAND<span class="o">]</span><span class="w"> </span><span class="o">[</span>COMMAND_OPTIONS<span class="o">]</span>
 </code></pre></div>
-<h2 id="412-subcommands">4.1.2 Subcommands<a class="headerlink" href="#412-subcommands" title="Permanent link">&para;</a></h2>
+<h2 id="412-subcommands">4.1.2 Subcommands</h2>
 <ul>
 <li><code>list</code>: List all available configurations for the given company and application.</li>
 <li><code>show</code>: Print the effective configuration (all keys and values).</li>
@@ -1435,19 +1435,19 @@
 <li><code>set</code>: Set or update a configuration entry. Requires <code>--value</code> and <code>--scope</code>.</li>
 <li><code>monitor</code>: Monitor a configuration for real-time changes. Keeps running until interrupted.</li>
 </ul>
-<h3 id="4121-set-command-options">4.1.2.1 <code>set</code> command options:<a class="headerlink" href="#4121-set-command-options" title="Permanent link">&para;</a></h3>
+<h3 id="4121-set-command-options">4.1.2.1 <code>set</code> command options:</h3>
 <ul>
 <li><code>-V, --value=&lt;value&gt;</code>: The value to set.</li>
 <li><code>-S, --scope=&lt;scope&gt;</code>: Target <code>ConfigScope</code> (<code>USER</code>, <code>HOST</code>, <code>SESSION</code>, <code>RUNTIME</code>, etc.).</li>
 <li><code>-T, --type=&lt;type&gt;</code>: <code>ConfigEntryType</code> (optional, inferred from scheme if available).</li>
 <li><code>-d, --dry-run</code>: Display what would be changed without performing the actual write.</li>
 </ul>
-<h3 id="4122-monitor-command-options">4.1.2.2 <code>monitor</code> command options:<a class="headerlink" href="#4122-monitor-command-options" title="Permanent link">&para;</a></h3>
+<h3 id="4122-monitor-command-options">4.1.2.2 <code>monitor</code> command options:</h3>
 <ul>
 <li><code>--dump</code>: Print the full effective configuration before starting the monitor loop.</li>
 <li><code>-v, --verbose</code>: Provide more detail about changes (e.g., the scope of the change).</li>
 </ul>
-<h2 id="413-global-options-and-commands">4.1.3 Global Options and Commands<a class="headerlink" href="#413-global-options-and-commands" title="Permanent link">&para;</a></h2>
+<h2 id="413-global-options-and-commands">4.1.3 Global Options and Commands</h2>
 <p>Options can be placed both before and after the command (verb).</p>
 <ul>
 <li><code>-c, --company=&lt;name&gt;</code>: Company name (default: <code>MCONFIG_COMPANY</code> env var). Use <code>""</code> (empty string) intentionally to omit the company segment in all paths/sources (e.g., <code>~/.config/myapp/</code>).</li>
@@ -1460,19 +1460,19 @@
 </ul>
 <p>Do not underestimate the power of "-v" verbose mode! Try it and see which
 extra information you can get out of it.</p>
-<h2 id="414-shortened-syntax">4.1.4 Shortened Syntax<a class="headerlink" href="#414-shortened-syntax" title="Permanent link">&para;</a></h2>
+<h2 id="414-shortened-syntax">4.1.4 Shortened Syntax</h2>
 <p>For quick interactive use, the tool supports a positional argument in the format:
 <code>[COMPANY:]APPLICATION[:CONFIGNAME[:KEY]]</code> where <code>COMPANY</code> can be empty <code>""</code> to omit the company segment in paths (use leading <code>:</code> e.g. <code>:myapp:settings</code>).</p>
 <p>Examples:
 - <code>mconfig mycompany:myapp:database show</code> (with company)
 - <code>mconfig :myapp:database show</code> (app-only)
   Both equivalent to <code>mconfig --company [""""] --app myapp --config database show</code>.</p>
-<h2 id="415-environment-variables">4.1.5 Environment Variables<a class="headerlink" href="#415-environment-variables" title="Permanent link">&para;</a></h2>
+<h2 id="415-environment-variables">4.1.5 Environment Variables</h2>
 <p>The tool automatically picks up the following environment variables if the corresponding options are not provided:
 - <code>MCONFIG_COMPANY</code>
 - <code>MCONFIG_APP</code>
 - <code>MCONFIG_CONFIG</code></p>
-<h2 id="416-examples">4.1.6 Examples<a class="headerlink" href="#416-examples" title="Permanent link">&para;</a></h2>
+<h2 id="416-examples">4.1.6 Examples</h2>
 <ol>
 <li>
 <p>List configurations:
@@ -1607,7 +1607,7 @@ mconfig<span class="w"> </span>:myapp:db<span class="w"> </span>get<span class="
     
       <script src="assets/javascripts/bundle.4e0fa4ba.min.js"></script>
       
-        <script src="https://unpkg.com/mermaid@8.8.2/dist/mermaid.min.js"></script>
+        <script src="https://unpkg.com/mermaid@10.4.0/dist/mermaid.min.js"></script>
       
     
   </body>
