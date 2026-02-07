@@ -2382,19 +2382,18 @@ refresh automatically. → <code>ConfigFeature.UPDATE_CHECK_FREQUENCY_MS</code><
 </li>
 </ul>
 <p>This is how it is supposed to be (and as of 0.6.x, isn't yet!)
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>erDiagram
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    Configuration    }|--|| ConfigFactory : &quot;comes from&quot;
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ConfigFactory    ||--|| ConfigSearchList : has
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    Configuration    ||--|| ConfigSearchList : uses
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ConfigSearchList ||--|{ ConfigSource : contains
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ConfigSource     ||--|| ConfigLocation : &quot;has a specific&quot;
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    ConfigSource     ||--|| ConfigStorage : &quot;reads from&quot;
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    ConfigSource     ||--|| ConfigFormat : &quot;uses a specific&quot;
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    ConfigStorage    ||--|{ ConfigFormat : &quot;compatible with&quot;
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    Configuration    ||--o| ConfigScheme : &quot;may use&quot;
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ConfigScheme     ||--o{ ConfigSchemeEntry : contains 
-</span></code></pre></div></p>
+<pre class="mermaid"><code>erDiagram
+    Configuration    }|--|| ConfigFactory : "comes from"
+    ConfigFactory    ||--|| ConfigSearchList : has
+    Configuration    ||--|| ConfigSearchList : uses
+    ConfigSearchList ||--|{ ConfigSource : contains
+    ConfigSource     ||--|| ConfigLocation : "has a specific"
+    ConfigSource     ||--|| ConfigStorage : "reads from"
+    ConfigSource     ||--|| ConfigFormat : "uses a specific"
+    ConfigStorage    ||--|{ ConfigFormat : "compatible with"
+
+    Configuration    ||--o| ConfigScheme : "may use"
+    ConfigScheme     ||--o{ ConfigSchemeEntry : contains </code></pre></p>
 <p><strong>Configuration</strong> : the API interface to access configurations; produces/keeps ConfigEntry instances,
 and provides simple access to the values.
 They use their respective ConfigFactory search list, which consists of hierarchical and scoped
@@ -2428,24 +2427,22 @@ instantiated, for active use. It can produce Configuration instances, which link
    specific. How to match them, and link them in a general way? ))
 
 Situation as of 0.6
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>flowchart LR
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    ConfigSearchList --&gt;|contains several| ConfigLocationImpl
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ConfigLocationImpl --&gt;|adds properties to| ConfigSourceInterface
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ConfigLocationImpl --&gt; location
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    ConfigLocationImpl --&gt; flags
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    ConfigSourceInterface --&gt; FileConfigSource
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    ConfigSourceInterface --&gt; SchemeDefaultConfigSource
-</span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    ConfigSearchList --&gt;|contains several| ConfigLocationImpl
+    ConfigLocationImpl --&gt;|adds properties to| ConfigSourceInterface
+    ConfigLocationImpl --&gt; location
+    ConfigLocationImpl --&gt; flags
+    ConfigSourceInterface --&gt; FileConfigSource
+    ConfigSourceInterface --&gt; SchemeDefaultConfigSource</code></pre>
 </blockquote>
 
 <p>Planned for 0.7</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>flowchart LR    
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    ConfigSearchList --&gt; ConfigSource
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    ConfigSource  --&gt; ConfigStorage
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    ConfigStorage -..-&gt; ConfigFormat
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    ConfigStorage &lt;--&gt; ConfigLocation
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    Configuration --&gt; ConfigLocation
-</span></code></pre></div>
+<pre class="mermaid"><code>flowchart LR    
+    ConfigSearchList --&gt; ConfigSource
+    ConfigSource  --&gt; ConfigStorage
+    ConfigStorage -..-&gt; ConfigFormat
+    ConfigStorage &lt;--&gt; ConfigLocation
+    Configuration --&gt; ConfigLocation</code></pre>
 <h4 id="anchor">Anchor</h4>
 <p>The ConfigFactoryBuilder gathers and combines all the settings.
 It creates a <strong>ConfigFactoryInstanceContext</strong> and a ConfigFactory to use it.</p>
@@ -2462,10 +2459,10 @@ and so on - it is an internally shared resource.</p>
 <h3 id="the-secretvalue-api">The SecretValue API</h3>
 <p>For programmatically accessing secrets, mConfig provides the <code>SecretValue</code> interface. 
 This allows retrieving the sensitive data without it being accidentally converted to a standard <code>String</code> that might linger in the Java String Pool.</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">SecretValue</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;database/password&quot;</span><span class="p">);</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">rawBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// ... use and then potentially clear the bytes</span>
-</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getSecret</span><span class="p">(</span><span class="s">&quot;database/password&quot;</span><span class="p">);</span>
+<span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">rawBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span>
+<span class="c1">// ... use and then potentially clear the bytes</span>
+</code></pre></div>
 <h2 id="binary-data-blobs">Binary Data (BLOBs)</h2>
 <p>Not all configuration is text-based. mConfig supports Binary Large Objects (BLOBs) for things like license files, binary keys, or certificates.</p>
 <h3 id="hierarchical-blobs">Hierarchical BLOBs</h3>
@@ -2474,10 +2471,10 @@ This allows retrieving the sensitive data without it being accidentally converte
 - <strong>JSON</strong> uses Base64 encoded strings. If a <code>ConfigScheme</code> is provided that marks a key as <code>BYTES</code> type, mConfig will automatically decode the Base64 string into a byte array.</p>
 <h3 id="flat-binary-files">Flat Binary Files</h3>
 <p>For legacy support or specific use cases, an entire file can be treated as a single binary blob. This uses the <code>binary_file</code> format and is accessed via the empty string key (<code>""</code>).</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Retrieving an entire .bin file as a single blob</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">Configuration</span><span class="w"> </span><span class="n">licenseCfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;license&quot;</span><span class="p">);</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">licenseData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">licenseCfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
-</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Retrieving an entire .bin file as a single blob</span>
+<span class="n">Configuration</span><span class="w"> </span><span class="n">licenseCfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;license&quot;</span><span class="p">);</span>
+<span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">licenseData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">licenseCfg</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+</code></pre></div>
 <h3 id="failure-handling">Failure Handling</h3>
 <p>If there is no ConfigEntry found at any layer, and no specific default is found,
 the reaction is determined by the ConfigFeature flags set.</p>

@@ -1812,9 +1812,9 @@ these, or do similar things.</p>
 <p>For this purpose, you can subscribe to changes, providing a callback which will
 get executed when a change occurs.</p>
 <h3 id="3211-location-level-updates">3.2.1.1 Location-level updates</h3>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">Configuration</span><span class="p">.</span><span class="na">unsubscribeFromUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
-</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
+<span class="n">Configuration</span><span class="p">.</span><span class="na">unsubscribeFromUpdates</span><span class="p">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
+</code></pre></div>
 <p>The callback will be executed when any of the Configuration layers in the specified scopes gets
 changed content.</p>
 <p><strong>Note on initial discovery:</strong> For subscribers, the transition from a non-existent entry
@@ -1824,8 +1824,8 @@ This ensures that dynamic entry creation is captured correctly.</p>
 <p>The callback is provided as parameter with the <code>ConfigLocation</code> where the change occurred.
 (You can get the scope from it, e.g.)</p>
 <h3 id="3212-entry-level-updates">3.2.1.2 Entry-level updates</h3>
-<p><div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fullKey</span><span class="p">,</span><span class="w"> </span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
-</span></code></pre></div>
+<p><div class="highlight"><pre><span></span><code><span class="n">Configuration</span><span class="p">.</span><span class="na">subscribeToUpdates</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fullKey</span><span class="p">,</span><span class="w"> </span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ConfigLocation</span><span class="o">&gt;</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span>
+</code></pre></div>
 Subscribe to changes of individual entries by their full key. </p>
 <p>The callback is called with the <code>ConfigLocation</code> where the entry change was detected.</p>
 <p>Unsubscribe with <code>Configuration.unsubscribeFromUpdates(Consumer&lt;ConfigLocation&gt; listener)</code>

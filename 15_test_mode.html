@@ -2226,15 +2226,15 @@ Only <code>TESTMODE_DIRECTORIES</code> and the default test resource locations a
 <h3 id="set-your-own-paths-legacy-api-for-some-test-environments">Set your own paths (legacy API for some test environments)</h3>
 <p>ConfigFactoryBuilder.setTestConfigPaths() allows you to set multiple paths for 
 each scope, to be used in test mode. Deprecated; use the custom test directories above.</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@BeforeAll</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kt">void</span><span class="w"> </span><span class="nf">setUpTestEnvironment</span><span class="p">()</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/my/local/fixed/config/environment&quot;</span><span class="p">);</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// activate and set defaults</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestFilePaths</span><span class="p">(</span><span class="n">paths</span><span class="p">);</span><span class="w"> </span><span class="c1">// replace</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestJARURIs</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span><span class="w"> </span><span class="c1">// turn off</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="p">}</span>
-</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@BeforeAll</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">setUpTestEnvironment</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/my/local/fixed/config/environment&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// activate and set defaults</span>
+<span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestFilePaths</span><span class="p">(</span><span class="n">paths</span><span class="p">);</span><span class="w"> </span><span class="c1">// replace</span>
+<span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestJARURIs</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span><span class="w"> </span><span class="c1">// turn off</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
 <p><strong>Deprecated legacy API</strong>: Paths added at <code>RUNTIME</code> scope.</p>
 <h2 id="security-considerations">Security Considerations</h2>
 <p>To prevent accidental or malicious activation of test mode in production environments,
@@ -2257,38 +2257,38 @@ without needing to explicitly enable permissions in standard environments.</p>
 for some situations.
 In a complex process where <code>TEST_MODE</code> might be enabled globally
 (e.g., via <code>-DTEST_MODE=true</code>) to facilitate integration testing of some modules, a critical production-facing <code>ConfigFactory</code> can be locked down:</p>
-<p><div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CRITICAL_APP&quot;</span><span class="p">)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">PERMIT_TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="c1">// Lockdown this instance</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="c1">// ...</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">}</span>
-</span></code></pre></div>
+<p><div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CRITICAL_APP&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">PERMIT_TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="c1">// Lockdown this instance</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
 Even if <code>TEST_MODE</code> is requested externally, this specific instance will remain in production mode, ensuring it never reads from <code>src/test/resources</code> or other untrusted test locations,
 like some dynamically generated test directories and -files.</p>
 <h3 id="activation-logic">Activation Logic</h3>
 <p>Test mode is only enabled if <strong>both</strong> the global gate and the instance gate allow it. The following logic is enforced during the <code>build()</code> process:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModePermitted</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">PERMIT_TEST_MODE</span><span class="p">))</span><span class="w"> </span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">{</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="c1">// Activation occurs if either the global trigger or instance trigger is set.</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModeActive</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">))</span><span class="w"> </span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">setBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">else</span><span class="w"> </span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">{</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="c1">// If either permission gate is closed, test mode is forced to false.</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">setBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">}</span>
-</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModePermitted</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">PERMIT_TEST_MODE</span><span class="p">))</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Activation occurs if either the global trigger or instance trigger is set.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModeActive</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">))</span><span class="w"> </span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">setBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">else</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// If either permission gate is closed, test mode is forced to false.</span>
+<span class="w">    </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">setBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security</h3>
 <p>mConfig's self-configuration feature (loading <code>mconfig.properties</code> from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable it:</p>
-<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ENABLE_SELF_CONFIGURATION</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ENABLE_SELF_CONFIGURATION</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</code></pre></div>
 <p>This is particularly important in security-sensitive applications to ensure that no unexpected features (like <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> or <code>TEST_MODE</code>) are enabled by a JAR file placed on the classpath.</p>
 
 
