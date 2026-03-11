@@ -4,7 +4,7 @@ import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -75,7 +75,7 @@ public class BlobConfiguration implements LayeredConfigurationInterface
         find the most specific scope
 */
         // if we don't have any existing match that's OK to! So we can create it
-        // when there is write access. (dont forget dummy byte[0] contents)
+        // when there is write access. (remember dummy byte[0] contents)
         // there is always ONE entry we pick and prefer; writing to a different
         // scope than the one it has may cause that to switch, though.
 
@@ -130,7 +130,7 @@ public class BlobConfiguration implements LayeredConfigurationInterface
 
     /** {@inheritDoc} */
     @Override
-    public void setConfigScheme(ConfigScheme scheme)
+    public void setConfigSchema(ConfigSchema scheme)
         {
         logger.warn("no config schemes for BLOBs");
         // ignore the attempt.
@@ -202,7 +202,7 @@ this is called from the Storage instances, function "tryToReadConfigurationLayer
 which, in turn, is called from line ~258 in the DefaultConfigFactory:
             ConfigStorageInterface storage = location.getStorage();
             storage.tryToReadConfigurationLayers(sanitizedConfigName, location, layeredCfg);
-within the     private Configuration getConfig(String configName, ConfigScheme configScheme, EnumSet<ConfigScope> scopes)
+within the     private Configuration getConfig(String configName, ConfigSchema configSchema, EnumSet<ConfigScope> scopes)
 function.
 
 so, for blobs, we need a corresponding getConfig() thing which calls corresponding

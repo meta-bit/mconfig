@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.6</version>
+        <version>0.8.8</version>
     </parent>
 
     <artifactId>documentation</artifactId>
@@ -25,7 +25,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.site.skip>false</maven.site.skip>
         <maven.source.skip>true</maven.source.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
         <!-- no binary distribution in JAR repositories -->
         <skipPublishing>true</skipPublishing>
     </properties>
@@ -38,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigscheme</artifactId>
+            <artifactId>mconfigschema</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

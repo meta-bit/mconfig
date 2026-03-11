@@ -1,5 +1,26 @@
 # mConfigFull
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigFull",
+  "description": "Full-featured mConfig distribution including core, mature sources (Filesystem, JAR, EnvVar, WinRegistry), multiple formats (Properties, JSON, YAML, TOML, INI), mapper, and SLF4J support.",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "runtimePlatform": "Java 11+",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "full-distribution, multi-format, slf4j-logging, mapper"
+}
+</script>
+
 mConfigFull is the "everything included" distribution: it aggregates mConfigStandard
 plus mature sources, formats, mapper, and SLF4J logging.
 
@@ -51,7 +72,7 @@ JPMS `requires` (modules with explicit `module-info.java`):
 
 ```java
 requires metabit.mconfig.core;
-requires metabit.mconfig.scheme;
+requires metabit.mconfig.schema;
 requires metabit.mconfig.secrets;
 requires metabit.mconfig.util;
 requires metabit.mconfig.modules.jar;

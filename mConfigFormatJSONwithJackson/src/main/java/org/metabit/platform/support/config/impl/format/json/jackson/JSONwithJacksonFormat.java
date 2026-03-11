@@ -3,9 +3,11 @@ package org.metabit.platform.support.config.impl.format.json.jackson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.metabit.platform.support.config.ConfigFeature;
-import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
+import org.metabit.platform.support.config.impl.EventRecorder;
+import org.metabit.platform.support.config.impl.ConfigEventImpl;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
@@ -16,7 +18,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * read and write JSON configuration files.
@@ -24,9 +28,10 @@ import java.util.List;
  */
 public class JSONwithJacksonFormat implements ConfigFileFormatInterface
 {
-    protected ConfigLoggingInterface logger;
-    protected ConfigFactorySettings  settings;
-    protected ObjectMapper           mapper;
+    protected ConfigLoggingInterface      logger;
+    protected ConfigFactorySettings       settings;
+    protected ConfigFactoryInstanceContext ctx;
+    protected ObjectMapper                mapper;
 
     @Override
     public String getFormatID()
@@ -47,6 +52,12 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
         this.settings = configFactorySettings;
         this.mapper = createObjectMapper();
         return true;
+        }
+
+    @Override
+    public void initialize(ConfigFactoryInstanceContext ctx)
+        {
+        this.ctx = ctx;
         }
 
     protected ObjectMapper createObjectMapper()
@@ -78,6 +89,43 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
             // looks like this is not a valid JSON file!
             String msgstring = MessageFormat.format("not a valid JSON file: {0}:[{1},{2}] because of {3}", file.getAbsolutePath(), ex.getLocation().getLineNr(), ex.getLocation().getColumnNr(), ex.getOriginalMessage());
             logger.warn(msgstring);
+
+            // Emit structured event
+            Map<String, String> attrs = new HashMap<>();
+            if (ex.getLocation() != null)
+                {
+                attrs.put("line", String.valueOf(ex.getLocation().getLineNr()));
+                attrs.put("column", String.valueOf(ex.getLocation().getColumnNr()));
+                }
+            attrs.put("filePath", file.getAbsolutePath());
+            attrs.put("extension", ".json");
+            String message = "JSON parse failed; likely non-standard syntax (e.g., comments)";
+            ConfigEvent.Kind kind = ConfigEvent.Kind.FAILED_GENERIC;
+            ConfigEvent.Remediation remediation = ConfigEvent.Remediation.FIX_SYNTAX;
+            if (ex.getOriginalMessage() != null && ex.getOriginalMessage().contains("'/'"))
+                {
+                kind = ConfigEvent.Kind.UNSUPPORTED_SYNTAX;
+                remediation = ConfigEvent.Remediation.CHANGE_FORMAT;
+                }
+
+            ConfigEventImpl event = ConfigEventImpl.builder()
+                    .severity(ConfigEvent.Severity.WARNING)
+                    .domain(ConfigEvent.Domain.PARSE)
+                    .kind(kind)
+                    .detailCode(kind == ConfigEvent.Kind.UNSUPPORTED_SYNTAX ? "JSON_PARSE_UNSUPPORTED_SYNTAX" : "JSON_PARSE_FAILED")
+                    .message(message)
+                    .formatId(getFormatID())
+                    .location(configLocation)
+                    .scope(configLocation != null ? configLocation.getScope() : null)
+                    .attributes(attrs)
+                    .cause(ex)
+                    .remediation(remediation)
+                    .remediationMessage(remediation == ConfigEvent.Remediation.CHANGE_FORMAT ? "File may contain comments; consider using JSON5 or removing comments." : "Fix invalid JSON syntax.")
+                    .build();
+            if (ctx != null)
+                {
+                EventRecorder.record(event, ctx);
+                }
             }
         catch (Exception e)
             {
@@ -98,6 +146,40 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
         catch (JsonProcessingException ex)
             {
             logger.warn(ex.getMessage(), ex);
+
+            Map<String, String> attrs = new HashMap<>();
+            if (ex.getLocation() != null)
+                {
+                attrs.put("line", String.valueOf(ex.getLocation().getLineNr()));
+                attrs.put("column", String.valueOf(ex.getLocation().getColumnNr()));
+                }
+            String message = "JSON parse failed; likely non-standard syntax (e.g., comments)";
+            ConfigEvent.Kind kind = ConfigEvent.Kind.FAILED_GENERIC;
+            ConfigEvent.Remediation remediation = ConfigEvent.Remediation.FIX_SYNTAX;
+            if (ex.getOriginalMessage() != null && ex.getOriginalMessage().contains("'/'"))
+                {
+                kind = ConfigEvent.Kind.UNSUPPORTED_SYNTAX;
+                remediation = ConfigEvent.Remediation.CHANGE_FORMAT;
+                }
+
+            ConfigEventImpl event = ConfigEventImpl.builder()
+                    .severity(ConfigEvent.Severity.WARNING)
+                    .domain(ConfigEvent.Domain.PARSE)
+                    .kind(kind)
+                    .detailCode(kind == ConfigEvent.Kind.UNSUPPORTED_SYNTAX ? "JSON_PARSE_UNSUPPORTED_SYNTAX" : "JSON_PARSE_FAILED")
+                    .message(message)
+                    .formatId(getFormatID())
+                    .location(configLocation)
+                    .scope(configLocation != null ? configLocation.getScope() : null)
+                    .attributes(attrs)
+                    .cause(ex)
+                    .remediation(remediation)
+                    .remediationMessage(remediation == ConfigEvent.Remediation.CHANGE_FORMAT ? "File may contain comments; consider using JSON5 or removing comments." : "Fix invalid JSON syntax.")
+                    .build();
+            if (ctx != null)
+                {
+                EventRecorder.record(event, ctx);
+                }
             }
         catch (Exception e)
             {

@@ -5,11 +5,15 @@ mConfig is a modular configuration library for Java, designed for flexibility,
 extensibility, and standardized configuration management 
 across different operating systems and environments.
 
-### 4.4.1.1 Multi-Platform Portability Goal
+### 4.4.1.1 Multi-Platform and Environment Portability Goal
 While the primary implementation is in Java, mConfig is designed 
-with future ports to other languages (e.g., C, Rust, Python) in mind.
+with future ports to other languages (e.g., C, Rust, Python) and varied deployment environments in mind.
 - **Abstraction over Platform Specifics**: Core logic (in `mConfigCore`) MUST 
 remain agnostic of specific packaging formats (like JARs) or environment-specific APIs (like Java ClassLoaders).
+- **Embedded and Filesystem-less Systems**: mConfigCore is designed to be fully functional on embedded systems where a traditional filesystem might be absent. 
+  - **No Filesystem Assumption**: Core logic MUST NOT assume the presence of a filesystem or writeable persistent storage. 
+  - **Modular IO**: All filesystem-specific operations (like reading/writing configuration files or exporting schemas to local storage) are isolated in separate modules (like `mConfigSourceFilesystem`).
+  - **Plugin-based Initialization**: Administrative tasks requiring filesystem access (e.g., auto-exporting schemas) use the `ConfigFactoryComponent` SPI, ensuring they only run if the relevant modules are present.
 - **Module Isolation**: Platform-specific logic (e.g., scanning Java classpath for resources)
 must be isolated in dedicated modules (like `mConfigSourceJAR`).
 - **Standardized Interfaces**: Use generic interfaces for discovery and storage
@@ -163,9 +167,9 @@ mConfig provides specialized handling for sensitive data (API keys, passwords, c
 - `toString()` implementation of secret entries is automatically redacted (`[REDACTED]`).
 - `ConfigFacadeImpl.getSecret(key)` is the preferred API to retrieve a `SecretValue`.
 
-### 4.4.6.2 Scheme-Driven Secrets
-A `ConfigEntry` is treated as a secret if its `ConfigEntrySpecification` (from a `ConfigScheme`) has the `SECRET` flag set.
-- `ConfigEntryFactory` automatically creates a `SecretConfigEntryLeaf` if the scheme marks the key as a secret.
+### 4.4.6.2 Schema-Driven Secrets
+A `ConfigEntry` is treated as a secret if its `ConfigEntrySpecification` (from a `ConfigSchema`) has the `SECRET` flag set.
+- `ConfigEntryFactory` automatically creates a `SecretConfigEntryLeaf` if the schema marks the key as a secret.
 - **Intelligent Type Selection**: When creating a secret entry, the factory chooses a `SecretType` (e.g., `PLAIN_TEXT` vs `SYMMETRIC_KEY`) based on the requested `ConfigEntryType`.
 
 ### 4.4.6.3 External Secrets Providers
@@ -209,7 +213,7 @@ mConfig supports Binary Large Objects (certs, licenses, keys) in two distinct wa
 ### 4.4.8.1 Hierarchical BLOBs (Keyed Leaves)
 In hierarchical formats like JSON and YAML, binary data can exist as a leaf node with a specific key (e.g., `server/certificate`).
 - **YAML**: Native support via the `!!binary` tag.
-- **JSON**: Supported via Base64 encoding. If a `ConfigScheme` marks a key as `BYTES`, the JSON format will automatically decode the Base64 string into a `BlobConfigEntryLeaf`.
+- **JSON**: Supported via Base64 encoding. If a `ConfigSchema` marks a key as `BYTES`, the JSON format will automatically decode the Base64 string into a `BlobConfigEntryLeaf`.
 - These entries are part of the regular configuration tree and can be accessed via `getValueAsBytes()`.
 
 ### 4.4.8.2 Flat BLOBs (Opaque Files)
@@ -225,24 +229,24 @@ mConfig is designed to work seamlessly with standard Java crypto libraries (JCE)
 - **BouncyCastle**: Can be used to process `SecretValue` contents (e.g., parsing a PEM-encoded certificate stored as a `BYTES` entry).
 - **Test Strategy**: Integration tests (`SecretsJCETest`, `SecretsBCTest`) verify that low-level binary secrets are preserved exactly as they move through the configuration stack.
 
-## 4.4.10 Configuration Schemes
-Configuration Schemes define the contract for a set of configuration entries, specifying keys, types, defaults, and validation rules.
+## 4.4.10 Configuration Schemas
+Configuration Schemas define the contract for a set of configuration entries, specifying keys, types, defaults, and validation rules.
 
-See the detailed **[Configuration Schemes](23_configuration_schemes.md)** for information on:
-- Scheme structure and properties
+See the detailed **[Configuration Schemas](23_configuration_schemas.md)** for information on:
+- Schema structure and properties
 - Future-proofing with the `MANDATORY` block
 - JSON format variants
-- Discovery and registration via `ConfigSchemeRepository`
+- Discovery and registration via `ConfigSchemaRepository`
 
 ### 4.4.10.1 Discovery and Precedence
-Schemes are automatically discovered from the classpath (specifically within `.config/` directories) if the `JARConfigSource` is active.
+Schemas are automatically discovered from the classpath (specifically within `.config/` directories) if the `JARConfigSource` is active.
 
 - **Unified Discovery:** Discovery is performed across all classpath resources, including both `main` and `test` resource directories.
-- **Precedence:** If multiple scheme files for the same configuration name are discovered, a "Last-One-Wins" strategy is applied based on the order returned by the `ClassLoader`. In typical development environments (Maven/Gradle), this means production resources might overwrite test resources if they appear later in the classpath enumeration.
-- **Scope Agnosticism:** Unlike configuration data (layers), schemes are not scope-isolated in `TEST_MODE`. Production schemes are always loaded to ensure a consistent contract.
+- **Precedence:** If multiple schema files for the same configuration name are discovered, a "Last-One-Wins" strategy is applied based on the order returned by the `ClassLoader`. In typical development environments (Maven/Gradle), this means production resources might overwrite test resources if they appear later in the classpath enumeration.
+- **Scope Agnosticism:** Unlike configuration data (layers), schemas are not scope-isolated in `TEST_MODE`. Production schemas are always loaded to ensure a consistent contract.
 
 ### 4.4.10.2 Discovery and Binding Flow (Mermaid)
-The following diagram illustrates how schemes are discovered by storages, registered in the factory, and finally bound to configuration instances.
+The following diagram illustrates how schemas are discovered by storages, registered in the factory, and finally bound to configuration instances.
 
 ```mermaid
 sequenceDiagram
@@ -253,15 +257,15 @@ sequenceDiagram
     participant DL as DefaultLayer
 
     Note over S, C: Discovery Phase (during Storage.init)
-    S->>C: registerDiscoveredScheme(name, json)
+    S->>C: registerDiscoveredSchema(name, json)
     
     Note over C, F: Registration Phase (during Factory.init)
-    F->>C: getDiscoveredSchemes()
-    F->>F: addConfigScheme(name, scheme)
+    F->>C: getDiscoveredSchemas()
+    F->>F: addConfigSchema(name, schema)
     
     Note over F, L: Binding Phase (during factory.getConfig)
-    F->>L: instantiate with matching scheme
-    L->>DL: transferDefaults(scheme)
+    F->>L: instantiate with matching schema
+    L->>DL: transferDefaults(schema)
 ```
 
 ### Layered Configuration (Mermaid)
@@ -273,9 +277,9 @@ erDiagram
     LayeredConfiguration ||--o| CacheLayer : "at top"
     LayeredConfiguration ||--o{ ConfigSource : "stacked in the middle"
     LayeredConfiguration ||--|| DefaultLayer : "at bottom"
-    LayeredConfiguration ||--o| ConfigScheme : "bound to"
-    ConfigScheme ||--|| DefaultLayer : "populates"
-    ConfigScheme ||--o{ ConfigEntrySpecification : "contains"
+    LayeredConfiguration ||--o| ConfigSchema : "bound to"
+    ConfigSchema ||--|| DefaultLayer : "populates"
+    ConfigSchema ||--o{ ConfigEntrySpecification : "contains"
     ConfigEntry }|--o| ConfigEntrySpecification : "validated by"
     ConfigSource }|--|| ConfigScope : "belongs to"
     ConfigSource ||--|| ConfigLocation : "where to look"
@@ -316,7 +320,7 @@ When adding a new constant to the `ConfigFeature` enum in `mConfigCore`, you MUS
 ### Classpath Layout
 - **Production Defaults**: `src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/&lt;config&gt;.&lt;ext&gt;` (JARConfigSource).
 - **Test Mode**: `src/test/resources/.config/&lt;company&gt;/&lt;app&gt;/` + `config/{SCOPE}` (overrides project).
-- **Schemes**: Same path + `.scheme.json`.
+- **Schemas**: Same path + `.schema.json`.
 
 ### Logging
 - Implement `ConfigLoggingInterface` for structured logs (SLF4J/JUL/Logback).
@@ -324,7 +328,7 @@ When adding a new constant to the `ConfigFeature` enum in `mConfigCore`, you MUS
 - Secrets auto-redacted.
 
 ### Secrets Handling
-- Retrieve: `SecretValue sv = config.getSecret(key)` (scheme-marked SECRET).
+- Retrieve: `SecretValue sv = config.getSecret(key)` (schema-marked SECRET).
 - Use: `byte[] data = sv.getValue()`; `sv.erase()` post-use (secure wipe).
 - Storage: Formats preserve `SecretValue`; logs masked.
 

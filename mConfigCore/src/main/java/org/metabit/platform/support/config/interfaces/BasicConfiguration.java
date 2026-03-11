@@ -2,7 +2,7 @@ package org.metabit.platform.support.config.interfaces;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.ConfigScope;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.ConfigEntry;
 
 import java.util.EnumSet;
@@ -32,11 +32,11 @@ public interface BasicConfiguration extends AutoCloseable
 
 
     /**
-     * set the config scheme to use and validate against.
+     * set the config schema to use and validate against.
      *
-     * @param scheme ConfigScheme to use.
+     * @param schema ConfigSchema to use.
      */
-    void setConfigScheme(final ConfigScheme scheme);
+    void setConfigSchema(final ConfigSchema schema);
     /**
      * check whether this configuration is writable
      *

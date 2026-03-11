@@ -1,13 +1,13 @@
 package org.metabit.platform.support.config.impl;
 
 import org.metabit.platform.support.config.ConfigFactory;
-import org.metabit.platform.support.config.impl.core.NullLogging;
+import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigSecretsProviderInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
-import org.metabit.platform.support.config.scheme.repository.ConfigSchemeRepository;
-import org.metabit.platform.support.config.scheme.repository.DefaultConfigSchemeRepository;
+import org.metabit.platform.support.config.schema.repository.ConfigSchemaRepository;
+import org.metabit.platform.support.config.schema.repository.DefaultConfigSchemaRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,21 +16,20 @@ import java.util.Map;
  * internal implementation class. Encapsulation of the context  data for a
  * ConfigFactory instance.
  *
- * 
  * @version $Id: $Id
  */
 public class ConfigFactoryInstanceContext
 {
-    private final ConfigFactorySettings               settings;
-    private       ConfigLoggingInterface              logger;
-    private       Map<String, ConfigStorageInterface> configStorages;
-    private       Map<String, ConfigFormatInterface>  configFormats;
+    private final ConfigFactorySettings                       settings;
+    private       ConfigLoggingInterface                      logger;
+    private       Map<String, ConfigStorageInterface>         configStorages;
+    private       Map<String, ConfigFormatInterface>          configFormats;
     private       Map<String, ConfigSecretsProviderInterface> configSecretsProviders;
-    private       ConfigSearchList                    searchList;
-    private       ClassLoader                         classLoader;
-    private       SourceChangeNotifier                sourceChangeNotifier;
-    private final ConfigSchemeRepository              schemeRepository = new DefaultConfigSchemeRepository();
-    private       ConfigFactory                       factory;
+    private final ConfigSearchList                            searchList;
+    private       ClassLoader                                 classLoader;
+    private       SourceChangeNotifier                        sourceChangeNotifier;
+    private final ConfigSchemaRepository                      schemeRepository = new DefaultConfigSchemaRepository();
+    private       ConfigFactory                               factory;
 
     /**
      * constructor.
@@ -50,14 +49,14 @@ public class ConfigFactoryInstanceContext
         }
 
     public ConfigFactory getFactory()
-    {
+        {
         return factory;
-    }
+        }
 
     public void setFactory(ConfigFactory factory)
-    {
+        {
         this.factory = factory;
-    }
+        }
 
     /**
      * <p>Getter for the field <code>settings</code>.</p>
@@ -198,9 +197,10 @@ public class ConfigFactoryInstanceContext
 
     /**
      * get the scheme repository.
+     *
      * @return the scheme repository.
      */
-    public ConfigSchemeRepository getSchemeRepository()
+    public ConfigSchemaRepository getSchemaRepository()
         {
         return schemeRepository;
         }

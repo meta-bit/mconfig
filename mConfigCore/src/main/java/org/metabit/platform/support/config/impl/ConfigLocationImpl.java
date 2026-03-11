@@ -86,15 +86,10 @@ public class ConfigLocationImpl implements ConfigLocation, ConfigSource
         return;
         }
 
-    // or should we call it "resolve", as java.io.Path does?
+
     public ConfigLocation derive(final Path file)
         {
         return new ConfigLocationImpl(this.scope, this.storage, this.storageFormat, file);
-        }
-
-    public ConfigLocation derive(final URI uri)
-        {
-        return new ConfigLocationImpl(this.scope, this.storage, this.storageFormat, uri);
         }
 
     /** {@inheritDoc} */

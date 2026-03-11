@@ -2,7 +2,7 @@ package org.metabit.platform.support.config.tool;
 
 import org.metabit.platform.support.config.ConfigDiscoveryInfo;
 import org.metabit.platform.support.config.ConfigFactory;
-import org.metabit.platform.support.config.ConfigFactoryBuilder;
+import org.metabit.platform.support.config.ConfigScope;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
@@ -16,7 +16,7 @@ public class ListCommand implements Callable<Integer>
     @ParentCommand
     private Main main;
 
-    @CommandLine.Parameters(index = "0", arity = "0..1", description = "Shortened syntax: [COMPANY:]APPLICATION")
+    @CommandLine.Parameters(index = "0", arity = "0..1", description = "Shortened syntax: [COMPANY:]APPLICATION[:SUBDIR...]")
     private String shortened;
 
     @CommandLine.Mixin
@@ -33,9 +33,14 @@ public class ListCommand implements Callable<Integer>
         try
             {
             ctx.validate(false, false);
-            try (ConfigFactory configFactory = ConfigFactoryBuilder.create(ctx.company, ctx.application).build())
+            try (ConfigFactory configFactory = ctx.createBuilder().build())
                 {
                 Set<ConfigDiscoveryInfo> configs = configFactory.listAvailableConfigurations();
+                // Filter out internal/tooling-only version pseudo-configs that leak via PRODUCT/JAR defaults
+                configs.removeIf(info ->
+                        "version".equals(info.getConfigName())
+                                && info.getScope() == ConfigScope.PRODUCT
+                                && String.valueOf(info.getUri()).contains("/version"));
                 if (ctx.format == Main.OutputFormat.HUMAN)
                     {
                     System.out.println("Available configurations for "+ctx.company+" / "+ctx.application+":");
@@ -87,6 +92,10 @@ public class ListCommand implements Callable<Integer>
                         {
                         System.out.print(OutputFormatter.toToml(data));
                         }
+                    }
+                if (ctx.showEvents)
+                    {
+                    OutputFormatter.reportEvents(configFactory.getEvents(), ctx.format);
                     }
                 }
             }

@@ -12,7 +12,7 @@ import org.metabit.platform.support.config.impl.BlobConfiguration;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.LayeredConfiguration;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.net.URI;
 
@@ -147,11 +147,11 @@ public interface ConfigStorageInterface extends Cloneable
      *
      * @param configName a {@link java.lang.String} object
      * @param location a {@link org.metabit.platform.support.config.ConfigLocation} object
-     * @param configScheme a {@link org.metabit.platform.support.config.scheme.ConfigScheme} object
+     * @param configSchema a {@link ConfigSchema} object
      * @param layeredConfiguration a {@link org.metabit.platform.support.config.impl.LayeredConfiguration} object
      * @return a {@link org.metabit.platform.support.config.interfaces.ConfigLayerInterface} object
      */
-    ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigScheme configScheme, LayeredConfiguration layeredConfiguration);
+    ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configSchema, LayeredConfiguration layeredConfiguration);
 
     /**
      *

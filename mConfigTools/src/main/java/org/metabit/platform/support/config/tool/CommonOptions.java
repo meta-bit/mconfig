@@ -19,6 +19,9 @@ public class CommonOptions
     @Option(names = {"-v", "--verbose"}, description = "Verbose output")
     public boolean verbose;
 
+    @Option(names = {"--debug"}, description = "Enable debug logging for the CLI and underlying library")
+    public boolean debug;
+
     @Option(names = {"-f", "--format"}, description = "Output format: HUMAN, JSON, CSV, YAML, TOML", defaultValue = "HUMAN")
     public Main.OutputFormat format;
 
@@ -27,4 +30,10 @@ public class CommonOptions
 
     @Option(names = {"-X", "--experimental"}, description = "Enable experimental features")
     public boolean experimental;
+
+    @Option(names = {"-E", "--show-events"}, description = "Show configuration events (e.g. parse warnings)")
+    public boolean showEvents;
+
+    @Option(names = {"-W", "--whitesmiths"}, description = "Use Moderate Whitesmiths indentation for JSON/YAML/TOML output")
+    public boolean whitesmiths;
 }

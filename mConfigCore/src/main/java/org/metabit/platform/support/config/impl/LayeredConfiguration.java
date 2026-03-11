@@ -8,12 +8,14 @@ import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.NullConfigEntrySpecification;
-import org.metabit.platform.support.config.scheme.NullConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.NullConfigEntrySpecification;
+import org.metabit.platform.support.config.schema.NullConfigSchema;
 import org.metabit.platform.support.config.source.core.DefaultLayer;
 
 import java.io.Closeable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 public class LayeredConfiguration extends AbstractConfiguration implements LayeredConfigurationInterface
 {
     final String                         configName; // the name this goes by
-    ConfigScheme                         configScheme; // the scheme the contents are to be validated by
+    ConfigSchema configSchema; // the scheme the contents are to be validated by
     final List<ConfigLayerInterface>     configs; // the actual config data. sorted list, sort on insertion.
     final SourceChangeNotifier           changeNotifier;
     final SourceChangeChecker            changeChecker;
@@ -44,11 +46,11 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
      * <p>Constructor for LayeredConfiguration.</p>
      *
      * @param sanitizedConfigName a {@link java.lang.String} object
-     * @param configScheme a {@link org.metabit.platform.support.config.scheme.ConfigScheme} object
+     * @param configSchema a {@link ConfigSchema} object
      * @param ctx a {@link org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext} object
      * @param configFactory a {@link org.metabit.platform.support.config.ConfigFactory} object
      */
-    public LayeredConfiguration(String sanitizedConfigName, final ConfigScheme configScheme,
+    public LayeredConfiguration(String sanitizedConfigName, final ConfigSchema configSchema,
                                 ConfigFactoryInstanceContext ctx, ConfigFactory configFactory)
         {
         this.logger = ctx.getLogger();
@@ -60,36 +62,34 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         this.defaultLayer = new DefaultLayer(ctx);
         this.configFactory = configFactory;
         
-        if (configScheme != null)
+        if (configSchema != null)
             {
-            this.configScheme = configScheme;
+            this.configSchema = configSchema;
             // @CHECK: who calls the scheme.init() ?
             // init defaults, if possible - transfer scheme entries to default layer
-            this.setConfigScheme(configScheme);
+            this.setConfigSchema(configSchema);
             }
         else
             {
-            this.configScheme = NullConfigScheme.INSTANCE;
+            this.configSchema = NullConfigSchema.INSTANCE;
             }
         configs = new ArrayList<>();
         configs.add(defaultLayer);    // needs to go at the lowest priority.
-        this.events = new ConfigEventList();
+        int maxEvents = ctx.getSettings().getInteger(ConfigFeature.EVENTS_MAX_CONFIGURATION);
+        int dedupLimit = ctx.getSettings().getInteger(ConfigFeature.EVENTS_DEDUP_RECENT_LIMIT);
+        this.events = new ConfigEventList(maxEvents, dedupLimit);
         this.changeNotifier = new SourceChangeNotifier(ctx);
         this.changeChecker = new SourceChangeChecker(ctx, changeNotifier);
         this.ctx = ctx;
         return;
         }
 
-    /*
-     *   @Override
-     *   public ConfigEventList getEvents()
-     *       {
-     *       return this.events;
-     *       }
-     *
-     *    set config scheme from an initialized scheme.
-     *   @Override
-     */
+    @Override
+    public ConfigEventList getEvents()
+        {
+        return this.events;
+        }
+
     /** {@inheritDoc} */
     @Override
     public void add(ConfigLayerInterface singleConfig, ConfigLocation location)
@@ -295,7 +295,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
     public ConfigEntry getConfigEntryFromFullKey(final String fullKey, EnumSet<ConfigScope> scopes)
         {
         checkClosed();
-        ConfigEntrySpecification spec = configScheme.getSpecification(fullKey);
+        ConfigEntrySpecification spec = configSchema.getSpecification(fullKey);
         if (scopes == null)
             { scopes = EnumSet.allOf(ConfigScope.class); }   // may be limited by feature settings in future.
 
@@ -322,7 +322,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
                 if (!(spec instanceof NullConfigEntrySpecification))
                     { entry = new SpecifiedConfigEntryWrapper(entry, spec); }
 
-                if (!configScheme.checkConfigEntryValidity(fullKey, entry))
+                if (!configSchema.checkConfigEntryValidity(fullKey, entry))
                     { continue; } // skip
                 // else:  if there is no Scheme, then there is no check.
                 return entry;
@@ -335,16 +335,16 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
 
     /** {@inheritDoc} */
     @Override
-    public void setConfigScheme(final ConfigScheme scheme)
+    public void setConfigSchema(final ConfigSchema schema)
         {
-        if (scheme != null)
+        if (schema != null)
             {
-            this.configScheme = scheme;
-            // Cleaning handled by scheme impl (SCHEME_RESETS_DEFAULTS flag)
-            scheme.transferDefaults(defaultLayer);    // defaultLayer exists by ... default.
+            this.configSchema = schema;
+            // Cleaning handled by schema impl (SCHEMA_RESETS_DEFAULTS flag)
+            schema.transferDefaults(defaultLayer);    // defaultLayer exists by ... default.
             }
         else
-            { this.configScheme = NullConfigScheme.INSTANCE; }
+            { this.configSchema = NullConfigSchema.INSTANCE; }
         return;
         }
 
@@ -394,11 +394,11 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
      *
      * @param configName           the name of the configuration
      * @param scopeToCreateLayerAt the scope to create the layer at
-     * @param configScheme         the config scheme to apply, if any.
+     * @param configSchema         the config scheme to apply, if any.
      * @return the instance of the created layer
      * @throws org.metabit.platform.support.config.ConfigCheckedException on failure to create any such layer
      */
-    protected ConfigLayerInterface tryToCreateConfigLayer(String configName, ConfigScope scopeToCreateLayerAt, ConfigScheme configScheme)
+    protected ConfigLayerInterface tryToCreateConfigLayer(String configName, ConfigScope scopeToCreateLayerAt, ConfigSchema configSchema)
             throws ConfigCheckedException
         {
         // Exact scope only; fallback scopes planned for future.
@@ -418,7 +418,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
                 continue; // skip
                 }
 
-            ConfigLayerInterface instance = storage.tryToCreateConfiguration(configName, location, configScheme, this);
+            ConfigLayerInterface instance = storage.tryToCreateConfiguration(configName, location, configSchema, this);
             if (instance != null)
                 {
                 // check if the storage already added the instance to our list
@@ -446,10 +446,10 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
     public void putGeneric(String fullKey, Object value, ConfigEntryType type, ConfigScope scope) throws ConfigCheckedException
         {
         // Validate against scheme before any write attempt (only when a real spec exists).
-        ConfigEntrySpecification spec = (configScheme != null) ? configScheme.getSpecification(fullKey) : null;
-        if (spec != null && !(spec instanceof org.metabit.platform.support.config.scheme.NullConfigEntrySpecification))
+        ConfigEntrySpecification spec = (configSchema != null) ? configSchema.getSpecification(fullKey) : null;
+        if (spec != null && !(spec instanceof org.metabit.platform.support.config.schema.NullConfigEntrySpecification))
             {
-            ConfigEntry entryToValidate = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, null);
+            ConfigEntry entryToValidate = ConfigEntryFactory.createEntry(fullKey, value, type, this.configSchema, null);
             if (!spec.validateEntry(entryToValidate))
                 {
                 throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.INPUT_INVALID);
@@ -470,7 +470,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
                 if (entry != null)
                     {
                     // Update: do not auto-add description on update
-                    ConfigEntry updatedEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, configLayer.getSource());
+                    ConfigEntry updatedEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configSchema, configLayer.getSource());
                     configLayer.writeEntry(updatedEntry);
                     return;
                     }
@@ -484,7 +484,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
                 if (!configLayer.isWriteable())
                     { continue; }
 
-                ConfigEntry newEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, configLayer.getSource());
+                ConfigEntry newEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configSchema, configLayer.getSource());
                 if (descriptionOnCreateFlag && spec != null)
                     {
                     String desc = null;
@@ -502,8 +502,32 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
             }
 
         // Priority 3: Create a new configuration layer instance
-        ConfigLayerInterface newLayer = tryToCreateConfigLayer(this.configName, scope, this.configScheme);
-        ConfigEntry newEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configScheme, newLayer.getSource());
+        ConfigLayerInterface newLayer = null;
+        try
+            {
+            newLayer = tryToCreateConfigLayer(this.configName, scope, this.configSchema);
+            }
+        catch (ConfigCheckedException e)
+            {
+            if (e.getReason() == ConfigCheckedException.ConfigExceptionReason.NOT_WRITEABLE)
+                {
+                ConfigEventImpl event = ConfigEventImpl.builder()
+                        .severity(ConfigEvent.Severity.WARNING)
+                        .domain(ConfigEvent.Domain.WRITE)
+                        .kind(ConfigEvent.Kind.REFUSED_NOT_WRITEABLE)
+                        .detailCode("WRITE_REFUSED_NOT_WRITEABLE")
+                        .message("write refused: no writeable layer found for scope " + scope)
+                        .configName(this.configName)
+                        .keyPath(fullKey)
+                        .scope(scope)
+                        .remediation(ConfigEvent.Remediation.ADJUST_SCOPE)
+                        .remediationMessage("Try writing to a different scope or check if the configuration storage is writeable.")
+                        .build();
+                EventRecorder.record(event, this, ctx);
+                }
+            throw e;
+            }
+        ConfigEntry newEntry = ConfigEntryFactory.createEntry(fullKey, value, type, this.configSchema, newLayer.getSource());
         if (descriptionOnCreateFlag && spec != null)
             {
             String desc = null;
@@ -523,6 +547,60 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         {
         try
             { putGeneric(fullKey, value, ConfigEntryType.STRING, scope); }
+        catch (ConfigCheckedException e)
+            { throw new ConfigException(e); }
+        }
+
+    @Override
+    public void put(String fullKey, Boolean value, ConfigScope scope) throws ConfigException
+        {
+        try
+            { putGeneric(fullKey, value, ConfigEntryType.BOOLEAN, scope); }
+        catch (ConfigCheckedException e)
+            { throw new ConfigException(e); }
+        }
+
+    @Override
+    public void put(String fullKey, Integer value, ConfigScope scope) throws ConfigException
+        {
+        try
+            { putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope); }
+        catch (ConfigCheckedException e)
+            { throw new ConfigException(e); }
+        }
+
+    @Override
+    public void put(String fullKey, Long value, ConfigScope scope) throws ConfigException
+        {
+        try
+            { putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope); }
+        catch (ConfigCheckedException e)
+            { throw new ConfigException(e); }
+        }
+
+    @Override
+    public void put(String fullKey, Double value, ConfigScope scope) throws ConfigException
+        {
+        try
+            { putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope); }
+        catch (ConfigCheckedException e)
+            { throw new ConfigException(e); }
+        }
+
+    @Override
+    public void put(String fullKey, BigInteger value, ConfigScope scope) throws ConfigException
+        {
+        try
+            { putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope); }
+        catch (ConfigCheckedException e)
+            { throw new ConfigException(e); }
+        }
+
+    @Override
+    public void put(String fullKey, BigDecimal value, ConfigScope scope) throws ConfigException
+        {
+        try
+            { putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope); }
         catch (ConfigCheckedException e)
             { throw new ConfigException(e); }
         }
@@ -552,9 +630,9 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         }
 
     @Override
-    public ConfigScheme getConfigScheme()
+    public ConfigSchema getConfigSchema()
         {
-        return configScheme;
+        return configSchema;
         }
 
 
@@ -595,6 +673,33 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
      *         across all configuration layers.
      */
     @Override
+    public List<String> getListOfStrings(String fullKey)
+            throws ConfigException
+        {
+        ConfigEntry entry = this.getConfigEntryFromFullKey(fullKey, EnumSet.allOf(ConfigScope.class));
+        if (entry == null)
+            {
+            return null;
+            }
+        try
+            {
+            return entry.getValueAsStringList();
+            }
+        catch (ConfigCheckedException e)
+            {
+            throw new ConfigException(e);
+            }
+        }
+
+    /**
+     * Retrieves all configuration keys from all configuration layers,
+     * combining them into a single set with keys flattened into a string format.
+     * The method collects keys recursively from each configuration layer.
+     *
+     * @return a {@link Set} containing all flattened configuration keys
+     *         across all configuration layers.
+     */
+    @Override
     public Set<String> getAllConfigurationKeysFlattened(EnumSet<ConfigScope> scopes)
         {
         checkClosed();
@@ -619,7 +724,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
      *         Values can be null if no matching scheme entry exists.
      */
     @Override
-    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemesFlattened(EnumSet<ConfigScope> scopes)
+    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
         {
         checkClosed();
         Set<String> allKeys = getAllConfigurationKeysFlattened(scopes);
@@ -627,7 +732,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
 
         for (String key : allKeys)
             {
-            ConfigEntrySpecification spec = configScheme.getSpecification(key);
+            ConfigEntrySpecification spec = configSchema.getSpecification(key);
             if (!(spec instanceof NullConfigEntrySpecification))
                 { result.put(key, spec); }
             }

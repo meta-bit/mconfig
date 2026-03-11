@@ -25,9 +25,9 @@ server.port=8080
 server.tls=false
 ```
 
-## 3. Optional: add a scheme
-Add a scheme next to the config file to define types and defaults:
-`src/main/resources/.config/ACME/ourApp/network.scheme.json`
+## 3. Optional: add a schema
+Add a schema next to the config file to define types and defaults:
+`src/main/resources/.config/ACME/ourApp/network.schema.json`
 
 ```json
 [
@@ -39,4 +39,4 @@ Add a scheme next to the config file to define types and defaults:
 
 Related docs:
 - [Getting Started](../13_getting_started.md)
-- [Configuration Schemes](../23_configuration_schemes.md)
+- [Configuration Schemas](../23_configuration_schemas.md)

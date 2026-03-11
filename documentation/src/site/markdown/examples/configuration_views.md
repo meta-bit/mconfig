@@ -1,7 +1,7 @@
 # Immutable Configuration Views
 
 These utility methods in `ConfigUtil` create lightweight, immutable `Configuration` views for overrides, prefix remapping,
-and `Properties` adaptation. They support chaining and inherit scheme validation where applicable.
+and `Properties` adaptation. They support chaining and inherit schema validation where applicable.
 
 ## withOverrides
 
@@ -21,7 +21,7 @@ Integer port = cfg.getInteger("db.port"); // 5432 (auto-convert)
 
 - Overrides take precedence.
 - Lazy type conversion (null on parse fail).
-- If `parent` has `ConfigScheme`, validates overrides (throws `IllegalArgumentException` on mismatch).
+- If `parent` has `ConfigSchema`, validates overrides (throws `IllegalArgumentException` on mismatch).
 - `getAllConfigurationKeysFlattened()`: union of keys.
 
 ## remapped
@@ -38,7 +38,7 @@ String other = cfg.getString("other.key"); // passthru
 - Non-matching keys delegate directly.
 - Trims prefixes/keys aggressively.
 - Uniform for all typed getters; projects `getAll*`.
-- Inherits scheme.
+- Inherits schema.
 
 ## fromProperties
 
@@ -55,7 +55,7 @@ Integer v2 = cfg.getInteger("key2"); // 42 (null on fail)
 ```
 
 - Lazy parsing, null on errors.
-- No scheme.
+- No schema.
 - `getAllConfigurationKeysFlattened()`: props keys.
 
 ## Chaining

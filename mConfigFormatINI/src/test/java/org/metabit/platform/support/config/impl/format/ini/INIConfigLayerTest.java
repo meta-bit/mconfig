@@ -11,6 +11,7 @@ import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -207,7 +208,7 @@ public class INIConfigLayerTest
             }
 
         @Override
-        public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, org.metabit.platform.support.config.scheme.ConfigScheme configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration)
+        public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration)
             {
             return null;
             }

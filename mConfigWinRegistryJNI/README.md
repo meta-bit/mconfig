@@ -1,5 +1,33 @@
 # mConfig Windows Registry JNI Module
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigWinRegistryJNI",
+  "description": "High-performance mConfig module providing native access to the Windows Registry using JNI. Faster and smaller alternative to JNR-FFI, requiring native DLL distribution.",
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "Java",
+      "url": "https://www.java.com"
+    },
+    {
+      "@type": "ComputerLanguage",
+      "name": "C",
+      "url": "https://en.wikipedia.org/wiki/C_(programming_language)"
+    }
+  ],
+  "runtimePlatform": "Windows",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "windows-registry, jni, native-performance, mingw-w64"
+}
+</script>
+
 This module provides high-performance, native access to the Windows Registry using JNI (Java Native Interface).
 It is designed to be a faster and smaller alternative to the JNR-FFI based registry module.
 

@@ -1,8 +1,7 @@
 package org.metabit.platform.support.config.util;
 
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeFactory;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 

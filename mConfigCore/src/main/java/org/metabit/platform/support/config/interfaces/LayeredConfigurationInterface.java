@@ -3,7 +3,7 @@ package org.metabit.platform.support.config.interfaces;
 
 import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
 public interface LayeredConfigurationInterface extends BasicConfiguration
 {
     /** {@inheritDoc} */
-    void setConfigScheme(final ConfigScheme scheme);
+    void setConfigSchema(final ConfigSchema scheme);
 
     /**
      * add a config layer to this collection.

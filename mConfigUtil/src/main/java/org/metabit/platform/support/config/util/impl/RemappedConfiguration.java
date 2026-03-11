@@ -5,7 +5,7 @@ import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.util.ConfigUtil;
 
 import java.math.BigDecimal;
@@ -22,16 +22,23 @@ import java.util.function.Consumer;
 public class RemappedConfiguration implements Configuration
 {
     private final Configuration source;
+    private final ConfigEventList events = new ConfigEventList(1000);
     private final String        oldPrefix;
-    private final String        newPrefix;
-    private final ConfigScheme  scheme;
+    private final String       newPrefix;
+    private final ConfigSchema scheme;
 
     public RemappedConfiguration(Configuration source, String oldPrefix, String newPrefix)
         {
         this.source = Objects.requireNonNull(source, "source cannot be null");
         this.oldPrefix = oldPrefix != null ? oldPrefix.trim() : "";
         this.newPrefix = newPrefix != null ? newPrefix.trim() : "";
-        this.scheme = source.getConfigScheme();
+        this.scheme = source.getConfigSchema();
+        }
+
+    @Override
+    public ConfigEventList getEvents()
+        {
+        return source.getEvents() != null ? source.getEvents() : events;
         }
 
     private String computeMapped(String key)
@@ -273,17 +280,71 @@ public class RemappedConfiguration implements Configuration
     @Override
     public void put(String fullKey, List<String> value, ConfigScope scope)
         {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
+        source.put(computeMapped(fullKey), value, scope);
         }
 
     @Override
     public void put(String fullKey, List<String> value, EnumSet<ConfigScope> scopes)
         {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
+        source.put(computeMapped(fullKey), value, scopes);
         }
 
     @Override
-    public ConfigScheme getConfigScheme()
+    public void put(String fullKey, String value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, Boolean value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, Integer value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, Long value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, Double value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, BigInteger value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, BigDecimal value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, byte[] value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public void put(String fullKey, List<String> value)
+        {
+        source.put(computeMapped(fullKey), value);
+        }
+
+    @Override
+    public ConfigSchema getConfigSchema()
         {
         return scheme;
         }
@@ -341,10 +402,10 @@ public class RemappedConfiguration implements Configuration
         }
 
     @Override
-    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemesFlattened(EnumSet<ConfigScope> scopes)
+    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
         {
         Map<String, ConfigEntrySpecification> res = new HashMap<>();
-        Map<String, ConfigEntrySpecification> sourceMap = source.getAllConfigurationKeysWithSchemesFlattened(scopes);
+        Map<String, ConfigEntrySpecification> sourceMap = source.getAllConfigurationKeysWithSchemasFlattened(scopes);
         for (String sourceKey : sourceMap.keySet())
             {
             String newKey;
@@ -391,7 +452,7 @@ public class RemappedConfiguration implements Configuration
         }
 
     @Override
-    public void setConfigScheme(ConfigScheme scheme)
+    public void setConfigSchema(ConfigSchema scheme)
         {
         throw new UnsupportedOperationException("Immutable view");
         }

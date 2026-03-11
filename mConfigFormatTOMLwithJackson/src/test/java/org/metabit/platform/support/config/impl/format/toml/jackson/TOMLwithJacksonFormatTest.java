@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
-import org.metabit.platform.support.config.impl.core.NullLogging;
+import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 
 import java.io.ByteArrayInputStream;

@@ -1,8 +1,8 @@
 package org.metabit.platform.support.config.util;
 
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeFactory;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.ConfigSchemaFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -78,10 +78,10 @@ public class ConfigUtil
      * @param configSchemeInJsonFormat the scheme to be checked
      * @return true if it is OK, false if it has errors.
      */
-    public boolean testConfigScheme(final String configSchemeInJsonFormat)
+    public boolean testConfigSchema(final String configSchemeInJsonFormat)
         {
         try
-            { return ConfigSchemeFactory.create().testSchemeJSON(configSchemeInJsonFormat); }
+            { return ConfigSchemaFactory.create().testSchemaJSON(configSchemeInJsonFormat); }
         catch (Exception e)
             { return false; }
         }
@@ -90,10 +90,10 @@ public class ConfigUtil
      * "flattening" configurations to a Java.util Properties instance.
      *
      * @param cfg configuration to copy to a Properties instance.
-     *            *must* have a ConfigScheme, otherwise we don't know which entries to look for.
+     *            *must* have a ConfigSchema, otherwise we don't know which entries to look for.
      * @return the Properties object with all entries converted to String
      *
-     * @throws UnsupportedOperationException if the configuration has no ConfigScheme
+     * @throws UnsupportedOperationException if the configuration has no ConfigSchema
      */
     @Deprecated
     static public java.util.Properties copySchemeDefinedEntriesToJavaProperties(Configuration cfg)
@@ -173,7 +173,7 @@ public class ConfigUtil
      * <em>consider using put to the RUNTIME scope instead (not immutable)</em>
      * <p>
      * Overrides take precedence. Values are type-converted lazily on access. If {@code parent} has a
-     * {@link ConfigScheme}, overrides are validated against it (throws `IllegalArgumentException`
+     * {@link ConfigSchema}, overrides are validated against it (throws `IllegalArgumentException`
      * on invalid access).
      * <p>
      * Supports chaining, e.g., {@link #remapped(Configuration, String, String)} for prefixed overrides.
@@ -229,7 +229,7 @@ public class ConfigUtil
         static Properties extract(Configuration cfg)
             throws UnsupportedOperationException
             {
-            ConfigScheme scheme = cfg.getConfigScheme();
+            ConfigSchema scheme = cfg.getConfigSchema();
             if (scheme == null)
                 throw new UnsupportedOperationException("iteration possible only for configurations with associated schemes");
 

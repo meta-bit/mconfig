@@ -33,14 +33,7 @@ public class INIConfigLayer implements ConfigLayerInterface
         {
         this.source = new ConfigLocationImpl(location, this, format, path);
         this.ourFormat = format;
-        if (path != null)
-            {
-            this.writeableFlag = path.toFile().canWrite();
-            }
-        else
-            {
-            this.writeableFlag = false;
-            }
+        this.writeableFlag = location.isWriteable();
         this.trimValueStringsFlag = settings.getBoolean(ConfigFeature.TRIM_TEXTVALUE_SPACES);
         this.writeCacheFlag = !settings.getBoolean(ConfigFeature.WRITE_SYNC);
         this.readCommentsFlag = settings.getBoolean(ConfigFeature.COMMENTS_READING);

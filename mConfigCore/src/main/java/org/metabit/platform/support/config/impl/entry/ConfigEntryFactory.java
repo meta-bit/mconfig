@@ -7,8 +7,8 @@ import org.metabit.platform.support.config.impl.ConfigFactoryComponent;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretType;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.NullConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.NullConfigSchema;
 
 import java.util.List;
 import java.util.ServiceLoader;
@@ -29,17 +29,17 @@ public class ConfigEntryFactory
      * @param source the config source
      * @return the created ConfigEntry
      */
-    public static ConfigEntry createEntry(String fullKey, Object value, ConfigEntryType type, ConfigScheme scheme, ConfigSource source)
+    public static ConfigEntry createEntry(String fullKey, Object value, ConfigEntryType type, ConfigSchema scheme, ConfigSource source)
         {
         if (scheme == null)
             {
-            scheme = NullConfigScheme.INSTANCE;
+            scheme = NullConfigSchema.INSTANCE;
             }
         ConfigEntryMetadata meta = new ConfigEntryMetadata(source);
         ConfigEntrySpecification spec = scheme.getSpecification(fullKey);
         meta.setSpecification(spec);
 
-        if (spec != null && !(spec instanceof org.metabit.platform.support.config.scheme.NullConfigEntrySpecification))
+        if (spec != null && !(spec instanceof org.metabit.platform.support.config.schema.NullConfigEntrySpecification))
             {
             type = spec.getType();
             }

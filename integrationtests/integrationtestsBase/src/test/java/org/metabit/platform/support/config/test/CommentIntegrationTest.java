@@ -3,13 +3,11 @@ package org.metabit.platform.support.config.test;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.impl.ext.ConfigSchemeImpl;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.impl.ext.ConfigSchemaImpl;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,8 +27,8 @@ class CommentIntegrationTest {
         builder.setFeature(ConfigFeature.COMMENTS_READING, true);
         builder.setFeature(ConfigFeature.DESCRIPTION_ON_CREATE, true);
 
-        ConfigScheme scheme = new ConfigSchemeImpl();
-        scheme.addSchemeEntry("mykey", ConfigEntryType.STRING, null, null, "This is a key description", null, null);
+        ConfigSchema scheme = new ConfigSchemaImpl();
+        scheme.addSchemaEntry("mykey", ConfigEntryType.STRING, null, null, "This is a key description", null, null);
 
         ConfigFactory factory = builder.build();
         Configuration cfg = factory.getConfig("testconfig", scheme);
@@ -55,7 +53,7 @@ class CommentIntegrationTest {
         assertTrue(fileContent.contains("mykey=myvalue") || fileContent.contains("mykey = myvalue"), "File should contain the key-value pair");
 
         // Sanity: scheme must carry the same description
-        org.metabit.platform.support.config.interfaces.ConfigEntrySpecification spec = cfg.getConfigScheme().getSpecification("mykey");
+        org.metabit.platform.support.config.interfaces.ConfigEntrySpecification spec = cfg.getConfigSchema().getSpecification("mykey");
         assertNotNull(spec, "Spec should exist for mykey");
         String specDesc;
         try { specDesc = spec.getDescription(java.util.Locale.getDefault()); } catch (Throwable t) { specDesc = spec.getDescription(); }

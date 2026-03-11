@@ -36,10 +36,10 @@ public class ValidateCommand implements Callable<Integer>
             try (ConfigFactory configFactory = ConfigFactoryBuilder.create(ctx.company, ctx.application).build())
                 {
                 Configuration cfg = configFactory.getConfig(ctx.configName);
-                if (cfg.getConfigScheme().isNullScheme())
+                if (cfg.getConfigSchema().isNullSchema())
                     {
-                    System.out.println("No config scheme defined for '"+ctx.configName+"'. Validation is not possible.");
-                    System.out.println("Use 'propose-scheme' to generate a scheme from current values.");
+                    System.out.println("No config schema defined for '"+ctx.configName+"'. Validation is not possible.");
+                    System.out.println("Use 'propose-scheme' to generate a schema from current values.");
                     return 1;
                     }
                 int errors = 0;

@@ -10,7 +10,7 @@ package org.metabit.platform.support.config.impl;
 import org.metabit.platform.support.config.ConfigException;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigScope;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.nio.file.Path;
 import java.text.MessageFormat;
@@ -265,7 +265,6 @@ public class ConfigFactorySettings extends HashMap<ConfigFeature, Object> implem
             }
         return Collections.unmodifiableMap(result);
         }
-// ... existing code ...
 
     /**
      * <p>setBoolean.</p>
@@ -363,8 +362,8 @@ public class ConfigFactorySettings extends HashMap<ConfigFeature, Object> implem
                 default: // this is intentionally NOT the last branch.
                     break;
                 // specific checks necessary since Java type system doesn't carry over what a list consists of.
-                case CONFIG_SCHEME_LIST: // Map<String,ConfigScheme>
-                    @SuppressWarnings("unchecked") Map<String, ConfigScheme> tmp = (Map<String, ConfigScheme>) value;
+                case CONFIG_SCHEMA_LIST: // Map<String,ConfigSchema>
+                    @SuppressWarnings("unchecked") Map<String, ConfigSchema> tmp = (Map<String, ConfigSchema>) value;
                     boolean tmp2 = tmp.isEmpty();
                     // case TESTMODE_PARAMETERS: // Map<String, String>
                 }

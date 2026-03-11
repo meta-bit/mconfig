@@ -1,7 +1,7 @@
 # Handling Cryptographic Keys and Certificates with mConfig
 
 mConfig supports storing and retrieving cryptographic material (keys, certificates) securely using `SecretValue`. 
-Binary data (DER) is stored as `BYTES` entries marked as `SECRET` in schemes. 
+Binary data (DER) is stored as `BYTES` entries marked as `SECRET` in schemas. 
 PEM can be stored as `STRING` or `BYTES` and parsed with BouncyCastle.
 
 **Note**: Sensitive data is redacted in logs. Use `SecretValue.erase()` after use.
@@ -22,7 +22,7 @@ PEM can be stored as `STRING` or `BYTES` and parsed with BouncyCastle.
   ```gradle
   implementation 'org.bouncycastle:bcprov-jdk18on:1.78'
   ```
-- Mark scheme entries as `SECRET`:
+- Mark schema entries as `SECRET`:
   ```json
   {
     "keys/rsa/private": {
@@ -41,15 +41,15 @@ PEM can be stored as `STRING` or `BYTES` and parsed with BouncyCastle.
 ## 2. Setup ConfigFactory
 
 ```java
-ConfigScheme scheme = ConfigScheme.fromJSON(...) // load scheme
+ConfigSchema schema = ConfigSchema.fromJSON(...) // load schema
 ConfigFactory factory = ConfigFactoryBuilder.create("mycompany", "myapp")
-  .setFeature(ConfigFeature.CONFIG_SCHEME_LIST, Map.of("crypto", scheme))
+  .setFeature(ConfigFeature.CONFIG_SCHEMA_LIST, Map.of("crypto", schema))
   .build();
 Configuration config = factory.getConfig("crypto");
 ```
 
-Instead of specifying the scheme programmatically, you can also 
-place the scheme file in the respective resource directory within the jar/classpath.
+Instead of specifying the schema programmatically, you can also 
+place the schema file in the respective resource directory within the jar/classpath.
 (separate folders below "main" for production, below "test" for integration tests.)
 
 ## 3. Generate and Store RSA Keypair (JCE)
@@ -66,7 +66,7 @@ KeyPair kp = kpg.generateKeyPair();
 byte[] privDer = kp.getPrivate().getEncoded();
 byte[] pubDer = kp.getPublic().getEncoded();
 
-// Store as SecretValue (auto-typed if scheme helps)
+// Store as SecretValue (auto-typed if schema helps)
 config.put("keys/rsa/private", new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.USER);
 config.put("keys/rsa/public", pubDer, ConfigScope.USER); // Public OK as non-secret
 

@@ -52,7 +52,7 @@ final class TOMLConfigLayer implements ConfigLayerInterface
         this.root = root;
         this.source = new ConfigLocationImpl(location, this, format, path);
         this.globalHeaderComments = new ArrayList<>();
-        this.writeable = path != null && path.toFile().canWrite();
+        this.writeable = location.isWriteable();
         this.writeCache = !settings.getBoolean(ConfigFeature.WRITE_SYNC);
         this.readCommentsFlag = settings.getBoolean(ConfigFeature.COMMENTS_READING);
         this.writeCommentsFlag = settings.getBoolean(ConfigFeature.COMMENTS_WRITING);

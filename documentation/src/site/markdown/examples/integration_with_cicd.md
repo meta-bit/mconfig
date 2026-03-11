@@ -24,13 +24,13 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp")
 CI usually runs tests from the build tree. Keep your test configs here:
 - `src/test/resources/.config/ACME/ourApp/network.properties`
 
-## 3. Prefer configuration schemes in CI
-Schemes are recommended in CI because they:
+## 3. Prefer configuration schemas in CI
+Schemas are recommended in CI because they:
 1. Prevent most cases of incomplete configs by providing defaults.
 2. Enforce mandatory values and validation rules early.
 
-Add a scheme in test resources:
-- `src/test/resources/.config/ACME/ourApp/network.scheme.json`
+Add a schema in test resources:
+- `src/test/resources/.config/ACME/ourApp/network.schema.json`
 
 ```json
 [
@@ -63,5 +63,5 @@ ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
 
 Related docs:
 - [Test Mode](../15_test_mode.md)
-- [Configuration Schemes](../23_configuration_schemes.md)
+- [Configuration Schemas](../23_configuration_schemas.md)
 - [Config Features](../25_config_features.md)

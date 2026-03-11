@@ -1,6 +1,6 @@
 package org.metabit.platform.support.config;
 
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.impl.ConfigFactoryInternal;
 
 import java.util.EnumSet;
@@ -66,14 +66,14 @@ public interface ConfigFactory extends AutoCloseable, ConfigFactoryInternal
     ConfigEventList getEvents();
 
     /**
-     * get configuration instance, with explicit Schemes
+     * get configuration instance, with explicit schemas
      *
      * @param configName   the key/name for the configuration
-     * @param configScheme the Scheme for the configuration - may be "null" for none.
+     * @param configSchema the schema for the configuration - may be "null" for none.
      * @return Configuration instance. (see also Feature EXCEPTION_ON_NULL)
      * @throws org.metabit.platform.support.config.ConfigCheckedException if the Configuration could not be found.
      */
-    Configuration getConfig(final String configName, final ConfigScheme configScheme)
+    Configuration getConfig(final String configName, final ConfigSchema configSchema)
             throws ConfigCheckedException;
 
 
@@ -98,10 +98,10 @@ public interface ConfigFactory extends AutoCloseable, ConfigFactoryInternal
      * schemes in the resource folder, if it is distributed as a JAR.
      *
      * @param configName                the configuration to set this scheme for
-     * @param jsonFormattedConfigScheme the JSON-formatted config scheme
-     * @throws org.metabit.platform.support.config.ConfigCheckedException   if the string is not in a valid ConfigScheme format
+     * @param jsonFormattedConfigSchema the JSON-formatted config scheme
+     * @throws org.metabit.platform.support.config.ConfigCheckedException   if the string is not in a valid ConfigSchema format
      */
-    void addConfigScheme(final String configName, final String jsonFormattedConfigScheme)
+    void addConfigSchema(final String configName, final String jsonFormattedConfigSchema)
             throws ConfigCheckedException;
 
 }

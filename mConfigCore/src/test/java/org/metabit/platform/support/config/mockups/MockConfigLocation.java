@@ -28,6 +28,5 @@ public class MockConfigLocation implements ConfigLocation
     @Override public ConfigStorageInterface getStorage() { return null; }
     @Override public Object getStorageInstanceHandle() { return null; }
     @Override public ConfigLocation derive(Path file) { return null; }
-    @Override public ConfigLocation derive(URI uri) { return null; }
     @Override public String toString() { return description; }
     }

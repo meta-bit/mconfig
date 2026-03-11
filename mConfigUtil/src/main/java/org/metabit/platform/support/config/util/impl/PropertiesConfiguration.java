@@ -5,7 +5,7 @@ import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.util.ConfigUtil;
 
 import java.math.BigDecimal;
@@ -32,9 +32,16 @@ import java.util.stream.Collectors;
 public class PropertiesConfiguration implements Configuration
 {
     private final Properties props;
+    private final ConfigEventList events = new ConfigEventList(1000);
 
     public PropertiesConfiguration(Properties props)
         { this.props = props != null ? props : new Properties(); }
+
+    @Override
+    public ConfigEventList getEvents()
+        {
+        return events;
+        }
 
     private String parseString(String s)
         {
@@ -319,6 +326,60 @@ public class PropertiesConfiguration implements Configuration
         }
 
     @Override
+    public void put(String fullKey, String value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Boolean value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Integer value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Long value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Double value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, BigInteger value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, BigDecimal value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, byte[] value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, List<String> value)
+        {
+        throw new UnsupportedOperationException("PropertiesConfiguration is read-only");
+        }
+
+    @Override
     public void subscribeToUpdates(Consumer<ConfigLocation> listener)
         {
         throw new UnsupportedOperationException("PropertiesConfiguration does not support updates");
@@ -337,7 +398,7 @@ public class PropertiesConfiguration implements Configuration
         }
 
     @Override
-    public ConfigScheme getConfigScheme()
+    public ConfigSchema getConfigSchema()
         {
         return null;
         }
@@ -363,7 +424,7 @@ public class PropertiesConfiguration implements Configuration
         }
 
     @Override
-    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemesFlattened(EnumSet<ConfigScope> scopes)
+    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
         {
         return Collections.emptyMap();
         }
@@ -389,7 +450,7 @@ public class PropertiesConfiguration implements Configuration
         }
 
     @Override
-    public void setConfigScheme(ConfigScheme scheme)
+    public void setConfigSchema(ConfigSchema scheme)
         {
         throw new UnsupportedOperationException("Immutable view");
         }

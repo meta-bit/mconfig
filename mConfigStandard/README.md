@@ -1,5 +1,26 @@
 # mConfigStandard
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigStandard",
+  "description": "The recommended POM-packaged aggregator for mConfig. Pulls in the core API plus essential sources (JAR, Filesystem) and formats (Java Properties).",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "runtimePlatform": "Java 11+",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "pom-aggregator, mconfig-standard, dependency-management"
+}
+</script>
+
 mConfigStandard is the recommended starting point for mConfig. It is a `pom`-packaged
 aggregator that pulls in the core API plus the essential sources and formats.
 
@@ -43,7 +64,7 @@ full JPMS `requires`:
 
 ```java
 requires metabit.mconfig.core;
-requires metabit.mconfig.scheme;
+requires metabit.mconfig.schema;
 requires metabit.mconfig.secrets;
 requires metabit.mconfig.util;
 requires metabit.mconfig.modules.jar;

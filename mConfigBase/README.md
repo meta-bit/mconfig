@@ -1,5 +1,26 @@
 # mConfigBase
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigBase",
+  "description": "Batteries-included base distribution of mConfig. Shaded JAR containing the core API, schema validation, secrets handling, and standard sources (JAR, Filesystem, EnvVar).",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "runtimePlatform": "Java 9+",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "shaded-jar, batteries-included, mconfig-core"
+}
+</script>
+
 mConfigBase is the "batteries-included" base distribution of mConfig packaged as a
 single, (signed), shaded JAR. It bundles the core API plus the most common sources
 and formats, while remaining JPMS-friendly (it ships a `module-info.class`).

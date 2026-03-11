@@ -8,7 +8,7 @@ import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -126,7 +126,7 @@ public class InMemoryLayerSource implements ConfigStorageInterface
 
     /** {@inheritDoc} */
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String sanitizedConfigName, ConfigLocation location, ConfigScheme configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface tryToCreateConfiguration(String sanitizedConfigName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         {
         logger.debug("trying to create config \""+sanitizedConfigName+"\" inside memory storage");
         InMemoryLayer instance = new InMemoryLayer(settings, ourLocation, ConfigScope.SESSION);

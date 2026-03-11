@@ -1,3 +1,219 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "mConfig",
+  "alternateName": "metabit mConfig",
+  "description": "A 10-tier hierarchical configuration architecture and Java library. Resolves configuration through a strict Scope hierarchy from POLICY down to PRODUCT defaults, abstracting Sources (Filesystem, ZooKeeper, I2C) from Formats (JSON, YAML, TOML, INI).",
+  "applicationCategory": "DeveloperApplication",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "0.8.7",
+  "url": "https://github.com/meta-bit/mconfig",
+  "keywords": "mConfig, configuration-hierarchy, java-config, policy-based-configuration, zookeeper, i2c-embedded, cross-language-config, type-safe, architecture",
+  "author": {
+    "@type": "Organization",
+    "name": "metabit",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "mentions": [
+    {
+      "@type": "DefinedTerm",
+      "name": "POLICY Scope",
+      "description": "Top-level enforced configuration, equivalent to Windows Group Policy (GPO) or enterprise constraints.",
+      "sameAs": "https://en.wikipedia.org/wiki/Group_Policy"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "RUNTIME Scope",
+      "description": "Volatile, in-memory settings for the current process, lost after application end/restart.",
+      "sameAs": "https://en.wikipedia.org/wiki/Runtime_(program_lifecycle_phase)"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "SESSION Scope",
+      "description": "Contextual configuration derived from Environment Variables or CLI arguments.",
+      "sameAs": "https://en.wikipedia.org/wiki/Session_(computer_science)"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "USER Scope",
+      "description": "Personal settings for the current user (e.g., ~/.config/ or AppData).",
+      "sameAs": "https://en.wikipedia.org/wiki/Home_directory"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "APPLICATION Scope",
+      "description": "Settings specific to the application installation/portable root, isolated from other versions.",
+      "sameAs": "https://en.wikipedia.org/wiki/Installation_(computer_programs)"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "HOST Scope",
+      "description": "Machine-specific settings located in /etc/ files or the Windows Registry (HKLM).",
+      "sameAs": "https://en.wikipedia.org/wiki/Configuration_file"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "CLUSTER Scope",
+      "description": "Network-wide configuration managed by distributed coordinators like Apache ZooKeeper.",
+      "sameAs": "https://en.wikipedia.org/wiki/Computer_cluster"
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "PRODUCT Scope",
+      "description": "Hardcoded defaults provided by the application or its modules (the floor defaults).",
+      "sameAs": "https://en.wikipedia.org/wiki/Default_(computer_science)"
+    },
+    {
+      "@type": "Specialty",
+      "name": "CI/CD Test Mode",
+      "description": "Enables environment-independent configuration for automated testing and continuous integration.",
+      "relatedLink": "https://en.wikipedia.org/wiki/Continuous_integration"
+    }
+  ],
+  "featureList": [
+    "10-Tier Scope Hierarchy (Priority Order): POLICY, RUNTIME, SESSION, USER, APPLICATION, HOST, CLUSTER, CLOUD, ORGANIZATION, PRODUCT",
+    "Source Agnostic: Supports local files, JAR resources, Environment/CLI, Apache ZooKeeper, and I2C storage",
+    "Multi-Format Support: Native parsing for JSON, YAML, TOML, INI, and Java Properties",
+    "Type-Safe Mapping: Direct binding to Java objects with pluggable validation",
+    "Cross-Language Architecture: Specification-first design with current Java implementation",
+    "Pluggable validation system",
+    "mConfigCore: Extensible kernel for custom scope and source implementation"
+  ],
+  "hasPart": [
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigCore",
+      "description": "The kernel of the mConfig system, defining the 10-tier Scope hierarchy and resolution logic."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSchema",
+      "description": "Provides schema based typesafety and validation, documentation and security features."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSecrets",
+      "description": "Provides handling of data with security relevance, like secrets, passwords, keys, certificates."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigMapper",
+      "description": "Experimental mapping between configurations and data models + POJO.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigMapper/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigUtil",
+      "description": "Adapters for legacy API interfaces with configurations based on Properties and Map."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigTools",
+      "description": "Command line tool for configuration management.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigTools/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceEnvVar",
+      "description": "Provides SESSION scope configuration via environment variables.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigSourceEnvVar/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceFilesystem",
+      "description": "Provides configuration reading and writing from filesystems, supporting multiple Scopes and Formats."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceJAR",
+      "description": "Provides PRODUCT default scope configurations from Java JAR files.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigSourceJAR/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceZooKeeper",
+      "description": "Provides the CLUSTER scope implementation using Apache ZooKeeper for distributed networked configuration."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigLoggingSlf4j",
+      "description": "Provides logging integration with SLF4J facade."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigWinRegistry",
+      "description": "Provides POLICY, USER, and HOST scope configurations from Windows Registry using JNR-FFI.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigWinRegistry/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigWinRegistryJNI",
+      "description": "Provides native Windows Registry access using JNI for higher performance and smaller footprint.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigWinRegistryJNI/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigCheese",
+      "description": "Convenience facade providing alternative API flavors for mConfig.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigCheese/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatTOML",
+      "description": "TOML format module for mConfig, maintaining comment integrity."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatYAMLwithJackson",
+      "description": "YAML format module for mConfig using Jackson library."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatJSONwithJackson",
+      "description": "JSON format module for mConfig using Jackson library."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatJavaProperties",
+      "description": "Java Properties format module for mConfig, maintaining comment integrity."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatINI",
+      "description": "INI format module for mConfig, maintaining comment integrity."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatRawFile",
+      "description": "Special format module for reading and writing raw files, secrets, and binary data."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigBase",
+      "description": "Batteries-included base distribution of mConfig. Shaded JAR.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigBase/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigStandard",
+      "description": "Standard set of mConfig modules for basic usage. POM aggregator.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigStandard/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFull",
+      "description": "Extended set of mConfig modules for advanced usage. POM aggregator.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigFull/README.md"
+    }
+  ]
+ }
+</script>
 # mConfig
 
 The "Hen-and-Egg" Problem Solved.
@@ -11,8 +227,6 @@ from embedded I2C storage to cloud-native orchestration.
 
 * Universal Reach: A single library for the entire compute spectrum;
   from resource-constrained embedded systems to cloud-native microservices.
-* Minimal Footprint: The core library is less than 200kB (JAR size). 
-  This is exceptionally small compared to frameworks like Spring Boot or Apache Commons, making it ideal for microservices, serverless functions, and environments where memory/disk space is critical.
 * Zero-Dependency Core: Keep your footprint small. 
   The core is lightweight, modular, and dependency-free.
 * Deep Origin Traceability: 
@@ -30,13 +244,16 @@ from embedded I2C storage to cloud-native orchestration.
   Registry/Known Folder conventions on Windows.
 * Modular Drop-in Support:
   mConfig implements Modular Directory Discovery, automatically layering .d fragments into the configuration stack without manual setup.
-* Multi-Format Support: comes with format modules for TOML, YAML, JSON5, JSON, and Java Properties.¹
+* Multi-Format Support: comes with format modules for TOML, YAML, JSON5, JSON, INI, and Java Properties.¹
 * Type-Safe Config Schemes: Define your schema once. Includes validation, range-checking, and centralized defaults.
 * Sensible Defaults, Total Control: 
   Adheres to the "principle of least surprise" with its defaults.
   Every aspect is tunable via ConfigFeature flags for enterprise-level customization.
 * Dynamic Updates: do not buffer values locally. Changes are immediately reflected in mConfig objects,
   so you always have the latest configuration available. ("zero-code data binding")
+* Minimal Footprint: The core library is about 200kB (JAR size).
+  This is exceptionally small compared to frameworks like Spring Boot or Apache Commons, making it ideal for microservices, serverless functions, and environments where memory/disk space is critical.
+* CLI Tool: mConfig comes with a command-line tool for auditing and troubleshooting.
 
 ¹ parsing of TOML,YAML,JSON5,JSON is done using mature external libraries,
 so using these formats will increase your application's footprint. 

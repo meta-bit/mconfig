@@ -62,15 +62,15 @@ settings via environment variables with the prefix `MCONFIG_RUNTIME_`:
 - `STORAGE_TYPE_PRIORITIES` (`List<String>`, default: `RAM,secrets,files,registry,registryjni,zookeeper,JAR`): Init/search order within a scope.
 - `STORAGE_TYPE_ALLOW_ALL_STORAGES` (Boolean, default: true): Allow storages not explicitly listed.
 
-### Schemes and defaults
-- `CONFIG_SCHEME_LIST` (`Map<String,ConfigScheme>`): Provide schemes programmatically.
-- `SCHEME_STRICT_MODE` (Boolean, default: false): Reject keys not in the scheme.
+### Schemas and defaults
+- `CONFIG_SCHEMA_LIST` (`Map<String,ConfigSchema>`): Provide schemas programmatically.
+- `SCHEME_STRICT_MODE` (Boolean, default: false): Reject keys not in the schema.
 - `SCHEME_RESETS_DEFAULTS` (Boolean, default: false): Replace existing defaults instead of merging.
-- `FREE_CONFIGURATION` (Boolean): Allow configs without a scheme (behavior may evolve).
+- `FREE_CONFIGURATION` (Boolean): Allow configs without a schema (behavior may evolve).
 
 ### Missing entry behavior
 - `EXCEPTION_ON_MISSING_ENTRY` (Boolean, default: true): Throw when a key is absent.
-- `DEFAULT_ON_MISSING_ENTRY` (Boolean, default: false): Return scheme defaults if missing (requires exceptions disabled).
+- `DEFAULT_ON_MISSING_ENTRY` (Boolean, default: false): Return schema defaults if missing (requires exceptions disabled).
 - `EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND` (Boolean, default: false): Throw if a configuration name is not found at all.
 - `FALLBACKS_ACROSS_SCOPES` (Boolean, default: true): Allow fallback to less specific scopes on reads.
 - `WRITE_FALLBACK_ACROSS_SCOPES` (Boolean, default: false): Allow fallback to more specific scopes on writes.

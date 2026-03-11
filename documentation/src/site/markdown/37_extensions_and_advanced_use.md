@@ -16,8 +16,8 @@ and mConfig takes care of the checking.
 
 
 ## 3.7.3 Data types
-### 3.7.3.1 Config scheme formats
-#### 3.7.3.1.1 Internal format 0: single ConfigSchemeEntry
+### 3.7.3.1 Config schema formats
+#### 3.7.3.1.1 Internal format 0: single ConfigSchemaEntry
     {
     "key":"mandatory key / configuration entry name",
     "TYPE":"mandatory type",
@@ -36,22 +36,22 @@ Multi-language descriptions are supported by providing a map of language codes t
 **PLAN**: For FLAGS, in the future we may chose an alternative form - each being a pair with string
 key and boolean value.
 
-#### 3.7.3.1.2 Internal format 1:  ConfigSchemes, in an array. internal use only!
+#### 3.7.3.1.2 Internal format 1:  ConfigSchemas, in an array. internal use only!
     [ 
     SCHEME_ENTRIES,
     GO_HERE,
     DEFINED_AS_IN_FORMAT_1
     ]
 
-#### 3.7.3.1.3 Format 2: full single ConfigScheme
+#### 3.7.3.1.3 Format 2: full single ConfigSchema
     {
      "name":"mandatory name the Configuration is identified by",
      "entries":[ ENTRIES_AS_DEFINED_IN_FORMAT_2 ],
     }
 
-#### 3.7.3.1.4 Format 3: multiple full ConfigSchemes
+#### 3.7.3.1.4 Format 3: multiple full ConfigSchemas
     [
-      FULL_CONFIG_SCHEME_AS_DEFINED_IN_FORMAT_3
+      FULL_CONFIG_SCHEMA_AS_DEFINED_IN_FORMAT_3
     ]
 
 ```mermaid

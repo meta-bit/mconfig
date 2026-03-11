@@ -1,12 +1,5 @@
 package org.metabit.platform.support.config.impl.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.stream.Stream;
-
 /**
  * Low-level IO and data transformation utility functions for mConfig core.
  * Internal implementation class.
@@ -81,25 +74,5 @@ public class ConfigIOUtil
         byte[] resultBytes = new byte[offset];
         System.arraycopy(byteBuffer, 0, resultBytes, 0, offset);
         return resultBytes;
-        }
-
-    /**
-     * Deletes a directory and all its contents recursively.
-     *
-     * @param dirToDelete the path to the directory to delete
-     * @throws IOException if an I/O error occurs
-     */
-    public static void deleteDirectoryWithContents(final Path dirToDelete) throws IOException
-        {
-        if (dirToDelete == null || !Files.exists(dirToDelete))
-            {
-            return;
-            }
-        try (Stream<Path> pathStream = Files.walk(dirToDelete))
-            {
-            pathStream.sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
-            }
         }
 }

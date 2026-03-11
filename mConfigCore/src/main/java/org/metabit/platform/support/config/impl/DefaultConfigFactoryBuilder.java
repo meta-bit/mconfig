@@ -1,13 +1,13 @@
 package org.metabit.platform.support.config.impl;
 
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.impl.core.InternalLogger;
-import org.metabit.platform.support.config.impl.core.NullLogging;
+import org.metabit.platform.support.config.impl.logging.InternalLogger;
+import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigSecretsProviderInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.osdetection.PlatformDetector;
 
 import java.util.*;
@@ -26,10 +26,10 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
     private static       boolean                            testModePermitted    = true;
     private              boolean                            testModeActive       = false;
     private              EnumMap<ConfigScope, List<String>> testModeDirectories;
-    private final        ConfigFactorySettings              configFactorySettings;
-    private final        List<String>                       schemeJsons = new ArrayList<>();
-    private              Map<String, ConfigScheme>          manualSchemes;
-    private              ClassLoader                        classLoader;
+    private final        ConfigFactorySettings     configFactorySettings;
+    private final        List<String>              schemaJsons = new ArrayList<>();
+    private              Map<String, ConfigSchema> manualSchemas;
+    private              ClassLoader               classLoader;
 
     public DefaultConfigFactoryBuilder(final Map<String, String> configFactoryParameters)
             throws ConfigCheckedException
@@ -160,7 +160,7 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
             throw new ConfigException(t);
             }
         testModeDirectories = new EnumMap<ConfigScope, List<String>>(ConfigScope.class);
-        manualSchemes = new HashMap<>();
+        manualSchemas = new HashMap<>();
         }
 
     @Override
@@ -257,28 +257,39 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
             logger.warn("*** Test mode active but no test directories configured. ***\\nHINTS: \\n- Place files in `src/test/resources/.config/<company>/<app>/`\\n- Or `ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of(\\\"USER:src/test/configs\\\"));`\\n- See [Test Mode docs](https://github.com/meta-bit/mconfig/blob/main/documentation/src/site/markdown/test-mode.md)");
             }
 
+        // provide full context to formats so they can emit events, etc.
+        for (ConfigFormatInterface fmt : configFormats.values())
+            {
+            try { 
+                fmt.initialize(ctx); 
+                logger.trace("initialized format "+fmt.getFormatID()+" with context");
+            } catch (Exception e) { 
+                logger.warn("failed to initialize format "+fmt.getFormatID(), e);
+            }
+            }
+
         // store providers found
         ctx.setConfigFormats(configFormats);
         ctx.setConfigStorages(configStorages);
         ctx.setConfigSecretsProviders(configSecretsProviders);
 
         // merge schemes into immutable map
-        if (!schemeJsons.isEmpty() || (manualSchemes != null && !manualSchemes.isEmpty()))
+        if (!schemaJsons.isEmpty() || (manualSchemas != null && !manualSchemas.isEmpty()))
             {
             Map allSchemes = new HashMap();
-            if (manualSchemes != null && !manualSchemes.isEmpty())
-                { allSchemes.putAll(manualSchemes); }
-            for (String json : schemeJsons)
+            if (manualSchemas != null && !manualSchemas.isEmpty())
+                { allSchemes.putAll(manualSchemas); }
+            for (String json : schemaJsons)
                 {
                 try
                     {
-                    Map parsed = ConfigScheme.fromJSON(json, ctx);
+                    Map parsed = ConfigSchema.fromJSON(json, ctx);
                     allSchemes.putAll(parsed);
                     }
                 catch (ConfigCheckedException e)
                     { throw new ConfigException(e); }
                 }
-            configFactorySettings.setObject(CONFIG_SCHEME_LIST, Collections.unmodifiableMap(allSchemes));
+            configFactorySettings.setObject(CONFIG_SCHEMA_LIST, Collections.unmodifiableMap(allSchemes));
             }
 
         // init factory with the providers found
@@ -507,11 +518,11 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         }
 
     @Override
-    public ConfigFactoryBuilder setSchemes(Map<String, ConfigScheme> Schemes)
+    public ConfigFactoryBuilder setSchemas(Map<String, ConfigSchema> schemas)
             throws ConfigCheckedException
         {
-        manualSchemes.clear();
-        manualSchemes.putAll(Schemes);
+        manualSchemas.clear();
+        manualSchemas.putAll(schemas);
         return this;
         }
 
@@ -540,9 +551,9 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         }
 
     @Override
-    public ConfigFactoryBuilder addSchemeJson(String jsonScheme)
+    public ConfigFactoryBuilder addSchemaJson(String jsonScheme)
         {
-        schemeJsons.add(jsonScheme);
+        schemaJsons.add(jsonScheme);
         return this;
         }
 }

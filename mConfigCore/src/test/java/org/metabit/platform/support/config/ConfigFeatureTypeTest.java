@@ -1,6 +1,7 @@
 package org.metabit.platform.support.config;
 
 import org.junit.jupiter.api.Test;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,11 +86,11 @@ class ConfigFeatureTypesTest
                     assertDoesNotThrow(()->b.setTestParameters(ok), "Expected setTestParameters to accept Map<String,String>");
                     break;
                     }
-                    case CONFIG_SCHEME_LIST:
+                    case CONFIG_SCHEMA_LIST:
                     {
-                    Map<String, org.metabit.platform.support.config.scheme.ConfigScheme> ok = new HashMap<>();
+                    Map<String, ConfigSchema> ok = new HashMap<>();
                     // just verify the signature acceptance; actual contents are not part of this type test
-                    assertDoesNotThrow(()->b.setSchemes(ok), "Expected setSchemes to accept Map<String, ConfigScheme>");
+                    assertDoesNotThrow(()->b.setSchemas(ok), "Expected setSchemas to accept Map<String, ConfigSchema>");
                     break;
                     }
                     case CURRENT_PLATFORM_OS:
@@ -207,10 +208,10 @@ class ConfigFeatureTypesTest
         b1.setFeature(TEST_MODE, true);
         assertDoesNotThrow(()->b1.setTestParameters(ok), "setTestParameters should accept a Map<String,String>");
 
-        // CONFIG_SCHEME_LIST: accepts Map<String, ConfigScheme> via setSchemes
+        // CONFIG_SCHEMA_LIST: accepts Map<String, ConfigSchema> via setSchemas
         ConfigFactoryBuilder b2 = newBuilder();
-        Map<String, org.metabit.platform.support.config.scheme.ConfigScheme> schemes = new HashMap<>();
-        assertDoesNotThrow(()->b2.setSchemes(schemes), "setSchemes should accept a Map<String,ConfigScheme>");
+        Map<String, ConfigSchema> schemes = new HashMap<>();
+        assertDoesNotThrow(()->b2.setSchemas(schemes), "setSchemas should accept a Map<String,ConfigSchema>");
         }
 
     @Test
@@ -233,9 +234,9 @@ class ConfigFeatureTypesTest
         assertTrue(FILE_FORMAT_READING_ALLOW_ALL_FORMATS.isBooleanType());
         assertTrue(FILE_FORMAT_WRITING_ALLOW_ALL_FORMATS.isBooleanType());
         assertTrue(TRIM_TEXTVALUE_SPACES.isBooleanType());
-        assertTrue(CONFIG_SCHEME_LIST.isSpecialClassType(Map.class));
-        assertTrue(SCHEME_STRICT_MODE.isBooleanType());
-        assertTrue(SCHEME_RESETS_DEFAULTS.isBooleanType());
+        assertTrue(CONFIG_SCHEMA_LIST.isSpecialClassType(Map.class));
+        assertTrue(SCHEMA_STRICT_MODE.isBooleanType());
+        assertTrue(SCHEMA_RESETS_DEFAULTS.isBooleanType());
         assertTrue(USE_CONTEXT_CLASS_LOADER.isBooleanType());
         assertTrue(USE_SYSTEM_CLASS_LOADER.isBooleanType());
         assertTrue(WRITE_SYNC.isBooleanType());

@@ -16,8 +16,8 @@ if (dbPassword != null)
     }
 ```
 
-## 3.5.2 Scheme Integration
-To ensure an entry is treated as a secret, you must mark it with the `SECRET` flag in your `ConfigScheme`.
+## 3.5.2 Schema Integration
+To ensure an entry is treated as a secret, you must mark it with the `SECRET` flag in your `ConfigSchema`.
 
 ```json
 {

@@ -10,7 +10,7 @@ import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -100,7 +100,7 @@ public class DefaultLayerStorage implements ConfigStorageInterface
 
     /** {@inheritDoc} */
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigScheme configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         {
         logger.debug("trying to create inside default storage");
         return null;

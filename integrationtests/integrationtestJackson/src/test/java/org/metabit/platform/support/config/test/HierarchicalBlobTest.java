@@ -3,8 +3,8 @@ package org.metabit.platform.support.config.test;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeEntry;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,10 +30,10 @@ class HierarchicalBlobTest {
         Files.writeString(jsonFile, "{ \"binaryData\": \"" + base64Data + "\", \"other\": \"value\" }");
 
         // We need a scheme to tell mConfig that "binaryData" is BYTES
-        ConfigSchemeEntry schemeEntry = new ConfigSchemeEntry("binaryData", ConfigEntryType.BYTES);
-        Set<ConfigSchemeEntry> entries = new HashSet<>();
+        ConfigSchemaEntry schemeEntry = new ConfigSchemaEntry("binaryData", ConfigEntryType.BYTES);
+        Set<ConfigSchemaEntry> entries = new HashSet<>();
         entries.add(schemeEntry);
-        ConfigScheme scheme = ConfigScheme.fromSchemeEntries(entries);
+        ConfigSchema scheme = ConfigSchema.fromSchemaEntries(entries);
 
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test");
         builder.setTestConfigPaths(ConfigScope.USER, java.util.List.of(tempDir.toAbsolutePath().toString()));

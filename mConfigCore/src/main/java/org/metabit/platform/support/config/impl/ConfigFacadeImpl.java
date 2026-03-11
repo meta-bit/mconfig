@@ -5,7 +5,7 @@ import org.metabit.platform.support.config.impl.entry.BasicSecretValue;
 import org.metabit.platform.support.config.impl.entry.SecretConfigEntry;
 import org.metabit.platform.support.config.interfaces.SecretType;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import org.metabit.platform.support.config.impl.util.ConfigIOUtil;
 import java.nio.charset.StandardCharsets;
@@ -23,11 +23,11 @@ public class ConfigFacadeImpl extends LayeredConfiguration implements Configurat
      * <p>Constructor for ConfigFacadeImpl.</p>
      *
      * @param sanitizedConfigName a {@link java.lang.String} object
-     * @param configScheme a {@link org.metabit.platform.support.config.scheme.ConfigScheme} object
+     * @param configScheme a {@link ConfigSchema} object
      * @param ctx a {@link org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext} object
      * @param configFactory a {@link org.metabit.platform.support.config.impl.DefaultConfigFactory} object
      */
-    public ConfigFacadeImpl(String sanitizedConfigName, ConfigScheme configScheme, ConfigFactoryInstanceContext ctx, ConfigFactory configFactory)
+    public ConfigFacadeImpl(String sanitizedConfigName, ConfigSchema configScheme, ConfigFactoryInstanceContext ctx, ConfigFactory configFactory)
         {
         super(sanitizedConfigName, configScheme, ctx, configFactory);
         }

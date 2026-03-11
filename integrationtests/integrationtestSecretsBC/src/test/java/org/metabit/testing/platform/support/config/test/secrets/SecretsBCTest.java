@@ -11,10 +11,9 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.interfaces.SecretType;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeEntry;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
 
 import java.math.BigInteger;
 import java.security.*;
@@ -76,21 +75,21 @@ public class SecretsBCTest
         builder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, Arrays.asList("USER:" + userDir.toString()));
         ConfigFactory factory = builder.build();
         
-        ConfigSchemeEntry certEntrySpec = new ConfigSchemeEntry("server/cert", ConfigEntryType.BYTES);
+        ConfigSchemaEntry certEntrySpec = new ConfigSchemaEntry("server/cert", ConfigEntryType.BYTES);
         certEntrySpec.setSecret(true);
-        ConfigSchemeEntry privKeyEntrySpec = new ConfigSchemeEntry("server/key", ConfigEntryType.BYTES);
+        ConfigSchemaEntry privKeyEntrySpec = new ConfigSchemaEntry("server/key", ConfigEntryType.BYTES);
         privKeyEntrySpec.setSecret(true);
-        ConfigSchemeEntry certUserSpec = new ConfigSchemeEntry("server/cert.user", ConfigEntryType.BYTES);
+        ConfigSchemaEntry certUserSpec = new ConfigSchemaEntry("server/cert.user", ConfigEntryType.BYTES);
         certUserSpec.setSecret(true);
-        ConfigSchemeEntry keyUserSpec = new ConfigSchemeEntry("server/key.user", ConfigEntryType.BYTES);
+        ConfigSchemaEntry keyUserSpec = new ConfigSchemaEntry("server/key.user", ConfigEntryType.BYTES);
         keyUserSpec.setSecret(true);
         
-        Set<ConfigSchemeEntry> entries = new HashSet<>();
+        Set<ConfigSchemaEntry> entries = new HashSet<>();
         entries.add(certEntrySpec);
         entries.add(privKeyEntrySpec);
         entries.add(certUserSpec);
         entries.add(keyUserSpec);
-        ConfigScheme scheme = ConfigScheme.fromSchemeEntries(entries);
+        ConfigSchema scheme = ConfigSchema.fromSchemaEntries(entries);
         
         Configuration config = factory.getConfig("secrets-bc", scheme);
 

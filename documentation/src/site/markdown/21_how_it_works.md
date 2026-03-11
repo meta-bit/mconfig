@@ -36,7 +36,7 @@ individual software instance run may override those, in turn. It's a hierarchy.
 ### Scope meanings (short version)
 | Scope        | Intended use                                                               | Typical sources                         |
 |--------------|----------------------------------------------------------------------------|-----------------------------------------|
-| PRODUCT      | Defaults shipped with the software.                                        | ConfigScheme defaults, JAR resources    |
+| PRODUCT      | Defaults shipped with the software.                                        | ConfigSchema defaults, JAR resources    |
 | ORGANIZATION | Company-level defaults and licensing.                                      | Registry, network services              |
 | CLOUD        | Cloud-based configurations, shared across multiple clusters.               | Cloud services, network services        |
 | CLUSTER      | Cluster-wide settings.                                                     | ZooKeeper, network services             |
@@ -172,7 +172,7 @@ value you asked for (e.g. Boolean, Integer, byte array).
 
 ### validation 
 Note the mention of **valid** data.
-You can, and should, provide a ConfigScheme which declares the expected
+You can, and should, provide a ConfigSchema which declares the expected
 entries, and some information about them.
 
 Mandatory for this is a key (~ name), and a *type*.
@@ -186,7 +186,7 @@ provide usable data to continue your program code with, best-effort.
 An optional field allows for more specific restrictions to be applied to fields,
 listing which contents are acceptable values.
 
-When a ConfigScheme is activated for a Configuration
+When a ConfigSchema is activated for a Configuration
 - it sets the DefaultLayer contents, if defaults are not disabled
 - it becomes available for the Configuration, to check entries against. 
 - it also is available for documentation generation
@@ -243,8 +243,8 @@ erDiagram
     ConfigSource     ||--|| ConfigFormat : "uses a specific"
     ConfigStorage    ||--|{ ConfigFormat : "compatible with"
     
-    Configuration    ||--o| ConfigScheme : "may use"
-    ConfigScheme     ||--o{ ConfigSchemeEntry : contains 
+    Configuration    ||--o| ConfigSchema : "may use"
+    ConfigSchema     ||--o{ ConfigSchemaEntry : contains 
 ```
 
 
@@ -297,7 +297,7 @@ flowchart LR
     ConfigLocationImpl --> location
     ConfigLocationImpl --> flags
     ConfigSourceInterface --> FileConfigSource
-    ConfigSourceInterface --> SchemeDefaultConfigSource
+    ConfigSourceInterface --> SchemaDefaultConfigSource
 ````
 </blockquote>
 
@@ -325,7 +325,7 @@ and so on - it is an internally shared resource.
 mConfig has built-in support for sensitive data such as passwords, API keys, and private certificates.
 
 ### Secret Redaction
-Config entries marked as secrets in the `ConfigScheme` are automatically handled with care:
+Config entries marked as secrets in the `ConfigSchema` are automatically handled with care:
 - Their `toString()` representation is redacted (`[REDACTED]`). (using stars could be ambiguous)
 - They are stored in specialized `SecretConfigEntryLeaf` objects.
 - In-memory storage uses `byte[]` or `char[]` to allow for clearing the data after use.
@@ -346,7 +346,7 @@ Not all configuration is text-based. mConfig supports Binary Large Objects (BLOB
 ### Hierarchical BLOBs
 In modern formats like JSON and YAML, binary data can be embedded directly.
 - **YAML** uses the standard `!!binary` tag.
-- **JSON** uses Base64 encoded strings. If a `ConfigScheme` is provided that marks a key as `BYTES` type, mConfig will automatically decode the Base64 string into a byte array.
+- **JSON** uses Base64 encoded strings. If a `ConfigSchema` is provided that marks a key as `BYTES` type, mConfig will automatically decode the Base64 string into a byte array.
 
 ### Flat Binary Files
 For legacy support or specific use cases, an entire file can be treated as a single binary blob. This uses the `binary_file` format and is accessed via the empty string key (`""`).

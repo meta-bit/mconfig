@@ -1,6 +1,6 @@
 package org.metabit.platform.support.config;
 
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.util.List;
 import java.util.Map;
@@ -157,13 +157,13 @@ public interface ConfigFactoryBuilder
     ConfigFactoryBuilder setSpecialFeature(ConfigFeature feature, List<Object> param) throws ConfigCheckedException;
 
     /**
-     * <p>setSchemes.</p>
+     * <p>setSchemas.</p>
      *
      * @param Schemes a {@link java.util.Map} object
      * @return a {@link org.metabit.platform.support.config.ConfigFactoryBuilder} object
      * @throws org.metabit.platform.support.config.ConfigCheckedException if any.
      */
-    ConfigFactoryBuilder setSchemes(Map<String, ConfigScheme> Schemes) throws ConfigCheckedException;
+    ConfigFactoryBuilder setSchemas(Map<String, ConfigSchema> Schemes) throws ConfigCheckedException;
 
     /**
      * set the configuration for the secrets provider.
@@ -187,10 +187,10 @@ public interface ConfigFactoryBuilder
      * Add configuration scheme(s) using JSON string.
      * Can contain single scheme or array with multiple.
      * Name extracted from JSON "name" field.
-     * Parsed during build using ConfigScheme.fromJSON.
+     * Parsed during build using ConfigSchema.fromJSON.
      * @param jsonScheme the JSON string defining the scheme(s)
      * @return this builder for chaining
      */
-    ConfigFactoryBuilder addSchemeJson(String jsonScheme);
+    ConfigFactoryBuilder addSchemaJson(String jsonScheme);
 }
 //___EOF___

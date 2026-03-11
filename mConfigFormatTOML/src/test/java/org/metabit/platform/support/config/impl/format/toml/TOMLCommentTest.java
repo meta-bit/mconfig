@@ -7,7 +7,9 @@ import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -31,7 +33,7 @@ public class TOMLCommentTest
         settings.put(ConfigFeature.COMMENTS_READING, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         TOMLFileFormat format = new TOMLFileFormat();
-        format.testComponent(settings, org.metabit.platform.support.config.impl.core.NullLogging.getSingletonInstance());
+        format.testComponent(settings, NullLogging.getSingletonInstance());
         
         String toml = "# leading comment\n" +
                       "key = \"value\" # inline comment\n";
@@ -52,7 +54,7 @@ public class TOMLCommentTest
         settings.put(ConfigFeature.WRITE_SYNC, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         TOMLFileFormat format = new TOMLFileFormat();
-        format.testComponent(settings, org.metabit.platform.support.config.impl.core.NullLogging.getSingletonInstance());
+        format.testComponent(settings, NullLogging.getSingletonInstance());
 
         Path tempFile = tempDir.resolve("test.toml");
         TOMLConfigLayer layer = (TOMLConfigLayer) format.createFile(tempFile, location);
@@ -74,7 +76,7 @@ public class TOMLCommentTest
         settings.put(ConfigFeature.COMMENTS_READING, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         TOMLFileFormat format = new TOMLFileFormat();
-        format.testComponent(settings, org.metabit.platform.support.config.impl.core.NullLogging.getSingletonInstance());
+        format.testComponent(settings, NullLogging.getSingletonInstance());
 
         String toml = "# Line 1\n" +
                       "# Line 2\n" +
@@ -93,7 +95,7 @@ public class TOMLCommentTest
         settings.put(ConfigFeature.COMMENTS_READING, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         TOMLFileFormat format = new TOMLFileFormat();
-        format.testComponent(settings, org.metabit.platform.support.config.impl.core.NullLogging.getSingletonInstance());
+        format.testComponent(settings, NullLogging.getSingletonInstance());
 
         String toml = "# Global Header\n" +
                       "\n" +
@@ -115,7 +117,7 @@ public class TOMLCommentTest
         settings.put(ConfigFeature.WRITE_SYNC, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         TOMLFileFormat format = new TOMLFileFormat();
-        format.testComponent(settings, org.metabit.platform.support.config.impl.core.NullLogging.getSingletonInstance());
+        format.testComponent(settings, NullLogging.getSingletonInstance());
 
         Path tempFile = tempDir.resolve("append.toml");
         Files.writeString(tempFile, "# Existing\nkey = \"value\"\n");
@@ -142,7 +144,7 @@ public class TOMLCommentTest
         @Override public boolean isGenerallyWriteable() { return true; }
         @Override public URI getURIforConfigLocation(ConfigLocation configLocation, String key, String optionalFragment) { return URI.create("test://toml"); }
         @Override public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg) { }
-        @Override public org.metabit.platform.support.config.interfaces.ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, org.metabit.platform.support.config.scheme.ConfigScheme configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration) { return null; }
+        @Override public org.metabit.platform.support.config.interfaces.ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration) { return null; }
         @Override public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig) { }
         @Override public java.util.Set<org.metabit.platform.support.config.ConfigDiscoveryInfo> listAvailableConfigurations(ConfigLocation location) { return Collections.emptySet(); }
         @Override public boolean hasChangedSincePreviousCheck(Object storageInstanceHandle) { return false; }

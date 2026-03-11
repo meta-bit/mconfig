@@ -206,7 +206,7 @@ public class PerfTests
             builder.setTestConfigPaths(ConfigScope.USER, Arrays.asList(tempDir.toString()));
             try (ConfigFactory factory = builder.build())
                 {
-                factory.addConfigScheme(CONFIG_NAME, SCHEME_JSON);
+                factory.addConfigSchema(CONFIG_NAME, SCHEME_JSON);
                 Configuration config = factory.getConfig(CONFIG_NAME);
                 long start = System.nanoTime();
                 for (int i = 0; i < LOOP_COUNT; i++)
@@ -249,7 +249,7 @@ public class PerfTests
             builder.setTestConfigPaths(ConfigScope.USER, Arrays.asList(tempDir.toString()));
             try (ConfigFactory factory = builder.build())
                 {
-                factory.addConfigScheme(CONFIG_NAME, SCHEME_JSON);
+                factory.addConfigSchema(CONFIG_NAME, SCHEME_JSON);
                 Configuration config = factory.getConfig(CONFIG_NAME);
                 long initialCounter = config.getLong("counter");
                 // Simulate external update
@@ -296,7 +296,7 @@ public class PerfTests
             builder.setTestConfigPaths(ConfigScope.USER, Arrays.asList(tempDir.toString()));
             try (ConfigFactory factory = builder.build())
                 {
-                factory.addConfigScheme(CONFIG_NAME, SCHEME_JSON);
+                factory.addConfigSchema(CONFIG_NAME, SCHEME_JSON);
                 Configuration config = factory.getConfig(CONFIG_NAME);
                 assertTrue(config.isWriteable());
                 long initialCounter = config.getLong("counter");

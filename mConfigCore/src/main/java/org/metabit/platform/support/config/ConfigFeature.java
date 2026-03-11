@@ -105,6 +105,25 @@ public enum ConfigFeature
 
 
     /**
+     * maximum number of events to retain at the ConfigFactory level.
+     */
+    EVENTS_MAX_FACTORY,
+    /**
+     * maximum number of events to retain at the individual Configuration level.
+     */
+    EVENTS_MAX_CONFIGURATION,
+    /**
+     * filtering level for events to be recorded.
+     * Allowed values: OFF, FAILURES_ONLY, NORMAL, VERBOSE
+     */
+    EVENTS_DETAIL_LEVEL,
+    /**
+     * maximum number of recent events to keep for de-duplication.
+     */
+    EVENTS_DEDUP_RECENT_LIMIT,
+
+
+    /**
      * reduce logging output the library generates. works separately from the logging config.
      */
     QUIET, // Boolean
@@ -208,24 +227,61 @@ public enum ConfigFeature
 
     /**
      * provide all the config Schemes before creating a config factory.
-     * parameter type must be Map&lt;String,ConfigScheme&gt;
+     * parameter type must be Map&lt;String,ConfigSchema&gt;
      */
-    CONFIG_SCHEME_LIST,
+    CONFIG_SCHEMA_LIST,
 
     /**
      * AKA "pass undefined entries"
-     * if a config entry has no defined entry in the Scheme, should we just pass it?
+     * if a config entry has no defined entry in the Schema, should we just pass it?
      * set to false for strict mode, if you don't want to allow unchecked data to sneak through.
      * default: true.
      */
-    SCHEME_STRICT_MODE,
+    SCHEMA_STRICT_MODE,
 
     /**
-     * whether setting a config scheme replaces existing defaults entirely (true),
+     * whether setting a config schema replaces existing defaults entirely (true),
      * or whether it adds to existing defaults (false).
      * default: false.
      */
-    SCHEME_RESETS_DEFAULTS,
+    SCHEMA_RESETS_DEFAULTS,
+
+    /**
+     * If true, the ConfigFactory will attempt to export bundled schemas to the shared local directory during initialization.
+     * default: false
+     */
+    EXPORT_SCHEMA_TO_LOCAL_STORAGE,
+
+    /**
+     * Override for the default OS-specific schema directory.
+     * default: null
+     */
+    LOCAL_SCHEMA_DIRECTORY,
+
+    /**
+     * Enable/disable network lookups for schemas (e.g. from schemastore.org).
+     * default: false
+     */
+    REMOTE_SCHEMA_LOOKUP_ENABLED,
+
+    /**
+     * The base URL for the remote schema catalog.
+     * default: "https://schemastore.org/api/json/catalog.json"
+     */
+    REMOTE_SCHEMA_REPOSITORY_URL,
+
+    /**
+     * Defines the persistence behavior for remote schemas.
+     * Values: "TRANSIENT", "PERSIST", "CONVERT"
+     * default: "TRANSIENT"
+     */
+    REMOTE_SCHEMA_CACHE_POLICY,
+
+    /**
+     * If false, local filesystem schemas are ignored, locking the application to its bundled schema.
+     * default: true
+     */
+    ALLOW_LOCAL_SCHEMA_OVERRIDE,
 
 
     /**
@@ -498,19 +554,37 @@ public enum ConfigFeature
         DEFAULT_TEXTFILE_CHARSET.valueType = ValueType.STRING;
         DEFAULT_TEXTFILE_CHARSET.defaultValue = StandardCharsets.UTF_8.name();
 
-        CONFIG_SCHEME_LIST.valueType = ValueType.SPECIAL_CLASS;
-        CONFIG_SCHEME_LIST.classType = Map.class; // needs special check on assignment and use.
-        CONFIG_SCHEME_LIST.defaultValue = null;
+        CONFIG_SCHEMA_LIST.valueType = ValueType.SPECIAL_CLASS;
+        CONFIG_SCHEMA_LIST.classType = Map.class; // needs special check on assignment and use.
+        CONFIG_SCHEMA_LIST.defaultValue = null;
         FALLBACKS_ACROSS_SCOPES.valueType = ValueType.BOOLEAN;
         FALLBACKS_ACROSS_SCOPES.defaultValue = Boolean.TRUE;
 
         WRITE_FALLBACK_ACROSS_SCOPES.valueType = ValueType.BOOLEAN;
         WRITE_FALLBACK_ACROSS_SCOPES.defaultValue = Boolean.FALSE;
 
-        SCHEME_STRICT_MODE.valueType = ValueType.BOOLEAN;
-        SCHEME_STRICT_MODE.defaultValue = Boolean.FALSE;
-        SCHEME_RESETS_DEFAULTS.valueType = ValueType.BOOLEAN;
-        SCHEME_RESETS_DEFAULTS.defaultValue = Boolean.FALSE;
+        SCHEMA_STRICT_MODE.valueType = ValueType.BOOLEAN;
+        SCHEMA_STRICT_MODE.defaultValue = Boolean.FALSE;
+        SCHEMA_RESETS_DEFAULTS.valueType = ValueType.BOOLEAN;
+        SCHEMA_RESETS_DEFAULTS.defaultValue = Boolean.FALSE;
+
+        EXPORT_SCHEMA_TO_LOCAL_STORAGE.valueType = ValueType.BOOLEAN;
+        EXPORT_SCHEMA_TO_LOCAL_STORAGE.defaultValue = Boolean.FALSE;
+
+        LOCAL_SCHEMA_DIRECTORY.valueType = ValueType.STRING;
+        LOCAL_SCHEMA_DIRECTORY.defaultValue = null;
+
+        REMOTE_SCHEMA_LOOKUP_ENABLED.valueType = ValueType.BOOLEAN;
+        REMOTE_SCHEMA_LOOKUP_ENABLED.defaultValue = Boolean.FALSE;
+
+        REMOTE_SCHEMA_REPOSITORY_URL.valueType = ValueType.STRING;
+        REMOTE_SCHEMA_REPOSITORY_URL.defaultValue = "https://schemastore.org/api/json/catalog.json";
+
+        REMOTE_SCHEMA_CACHE_POLICY.valueType = ValueType.STRING;
+        REMOTE_SCHEMA_CACHE_POLICY.defaultValue = "TRANSIENT";
+
+        ALLOW_LOCAL_SCHEMA_OVERRIDE.valueType = ValueType.BOOLEAN;
+        ALLOW_LOCAL_SCHEMA_OVERRIDE.defaultValue = Boolean.TRUE;
 
         DEFAULT_ON_MISSING_ENTRY.valueType = ValueType.BOOLEAN;
         DEFAULT_ON_MISSING_ENTRY.defaultValue = Boolean.FALSE;
@@ -546,6 +620,15 @@ public enum ConfigFeature
         FILENAME_EXTENSION_MAPPINGS.valueType = ValueType.STRINGLIST;
         AUTOMATIC_CONFIG_LOADING.valueType = ValueType.BOOLEAN;
         AUTOMATIC_CONFIG_CREATION.valueType = ValueType.BOOLEAN;
+
+        EVENTS_MAX_FACTORY.valueType = ValueType.NUMBER;
+        EVENTS_MAX_FACTORY.defaultValue = 1000;
+        EVENTS_MAX_CONFIGURATION.valueType = ValueType.NUMBER;
+        EVENTS_MAX_CONFIGURATION.defaultValue = 1000;
+        EVENTS_DETAIL_LEVEL.valueType = ValueType.STRING;
+        EVENTS_DETAIL_LEVEL.defaultValue = "FAILURES_ONLY";
+        EVENTS_DEDUP_RECENT_LIMIT.valueType = ValueType.NUMBER;
+        EVENTS_DEDUP_RECENT_LIMIT.defaultValue = 32;
 
         CACHE_CONFIGS.valueType = ValueType.BOOLEAN;
         WRITE_SYNC.valueType = ValueType.BOOLEAN;

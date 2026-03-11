@@ -2,7 +2,6 @@ package org.metabit.platform.support.config.impl.format.javaproperties;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.ConfigLocation;
-import org.metabit.platform.support.config.ConfigSource;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
@@ -11,11 +10,7 @@ import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Properties;
 
 public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
 {

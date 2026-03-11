@@ -31,6 +31,18 @@ final class TomlWriter
         {
         TomlTable previousTable = currentTable;
         currentTable = table;
+
+        // First pass: write all scalar and array values
+        for (Map.Entry<String, TomlValue> entry : table.getValues().entrySet())
+            {
+            TomlValue value = entry.getValue();
+            if (!(value instanceof TomlTable && !((TomlTable) value).isInline()) && !(value instanceof TomlArrayTable))
+                {
+                writeKeyValue(entry.getKey(), value);
+                }
+            }
+
+        // Second pass: write all tables and array tables
         for (Map.Entry<String, TomlValue> entry : table.getValues().entrySet())
             {
             TomlValue value = entry.getValue();
@@ -59,9 +71,8 @@ final class TomlWriter
                     }
                 out.append('\n');
                 writeTable(subTable, path);
-                continue;
                 }
-            if (value instanceof TomlArrayTable)
+            else if (value instanceof TomlArrayTable)
                 {
                 TomlArrayTable arrayTable = (TomlArrayTable) value;
                 String path = joinPath(prefix, entry.getKey());
@@ -89,9 +100,7 @@ final class TomlWriter
                     out.append('\n');
                     writeTable(item, path);
                     }
-                continue;
                 }
-            writeKeyValue(entry.getKey(), value);
             }
         currentTable = previousTable;
         }

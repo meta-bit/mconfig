@@ -15,7 +15,7 @@ mConfig aims to keep comments intact in configuration files to ensure that human
 
 While mConfig prioritizes preserving existing comments, it also supports adding comments programmatically:
 
-1.  **Description from Scheme**: When an entry is first created, mConfig can automatically include the description defined in the `ConfigScheme` as a comment. This is controlled by the `ConfigFeature.DESCRIPTION_ON_CREATE` feature.
+1.  **Description from Schema**: When an entry is first created, mConfig can automatically include the description defined in the `ConfigSchema` as a comment. This is controlled by the `ConfigFeature.DESCRIPTION_ON_CREATE` feature.
 2.  **Explicit Comments**: Developers can add comments to a `ConfigEntry` using the `setComment(String)` method. This is useful for documenting automated changes (e.g., "# AUTO-REDUCED: Disk space was below 5%").
 
 ## Configuration Features
@@ -24,7 +24,7 @@ The behavior of comment handling is governed by several `ConfigFeature` flags:
 
 - **`ConfigFeature.COMMENTS_WRITING`** (default: `false`): When set to `true`, mConfig will write programmatic comments to the configuration. Even when `false`, the library still attempts to preserve *existing* comments for supported formats.
 - **`ConfigFeature.COMMENTS_READING`** (default: `false`): Enables reading comments from files into the `ConfigEntry` objects. Note that determining exactly which lines belong to which key is heuristic-based and may not be perfect for all formats.
-- **`ConfigFeature.DESCRIPTION_ON_CREATE`** (default: `false`): When `true`, uses the `description` field from the `ConfigSchemeEntry` to populate comments for new entries.
+- **`ConfigFeature.DESCRIPTION_ON_CREATE`** (default: `false`): When `true`, uses the `description` field from the `ConfigSchemaEntry` to populate comments for new entries.
 
 ## Format Support Matrix
 
@@ -55,7 +55,7 @@ Preservation of comments depends on the underlying format module. Some high-leve
 
 ### Priority and Merging
 When writing an entry, comments are merged based on the following priority (top to bottom):
-1.  **Description from Scheme**: If `DESCRIPTION_ON_CREATE=true` and the entry is new.
+1.  **Description from Schema**: If `DESCRIPTION_ON_CREATE=true` and the entry is new.
 2.  **Existing Comments**: Preserved from the original file.
 3.  **Programmatic Comments**: Added via `ConfigEntry.setComment()`.
 

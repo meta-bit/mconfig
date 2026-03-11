@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.util.ConfigUtil;
-import org.metabit.platform.support.config.impl.util.ConfigIOUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,8 +77,22 @@ class SubPathTest
     static void exit()
             throws IOException
         {
-//        ConfigIOUtil.deleteDirectoryWithContents(tempDirApplication);
-        ConfigIOUtil.deleteDirectoryWithContents(tempDirUser);
+//        deleteDirectoryWithContents(tempDirApplication);
+        deleteDirectoryWithContents(tempDirUser);
         assertTrue(currentWorkingDirectory.toFile().delete());
+        }
+
+    private static void deleteDirectoryWithContents(final Path dirToDelete) throws IOException
+        {
+        if (dirToDelete == null || !Files.exists(dirToDelete))
+            {
+            return;
+            }
+        try (Stream<Path> pathStream = Files.walk(dirToDelete))
+            {
+            pathStream.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            }
         }
 }

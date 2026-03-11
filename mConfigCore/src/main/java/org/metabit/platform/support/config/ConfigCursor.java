@@ -65,21 +65,21 @@ public interface ConfigCursor // extends Iterable<ConfigEntry>
     *
     * @return true if movement was successful, false if not.
     */
-   public boolean moveNext();    //
+   boolean moveNext();    //
 
    /**
     * <p>canEnter.</p>
     *
     * @return true if possible, false if not (e.g. leaf).
     */
-   public boolean canEnter();    // canMoveDown();
+   boolean canEnter();    // canMoveDown();
 
    /**
     * <p>canLeave.</p>
     *
     * @return true if possible, false if not (top level of the structure).
     */
-   public boolean canLeave();    // canMoveUp();
+   boolean canLeave();    // canMoveUp();
 
    /**
     * enter a constructed tag -> for configurations, enter a branch.

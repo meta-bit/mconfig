@@ -1,3 +1,24 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigSourceJAR",
+  "description": "mConfig module for accessing JAR/classpath resource contents. Provides default and pre-set configurations from within packaged applications.",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "runtimePlatform": "Cross-platform",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "jar-resources, classpath-config, defaults-provider"
+}
+</script>
+
 This is a mConfig module for accessing JAR file contents for configuration purposes,
 from the "inside" of a JAR especially.
 

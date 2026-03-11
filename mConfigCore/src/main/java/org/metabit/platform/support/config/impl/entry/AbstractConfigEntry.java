@@ -2,7 +2,7 @@ package org.metabit.platform.support.config.impl.entry;
 
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
-import org.metabit.platform.support.config.scheme.NullConfigEntrySpecification;
+import org.metabit.platform.support.config.schema.NullConfigEntrySpecification;
 
 import java.net.URI;
 import java.net.URISyntaxException;

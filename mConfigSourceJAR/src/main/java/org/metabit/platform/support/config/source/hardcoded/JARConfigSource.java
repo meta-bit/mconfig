@@ -6,8 +6,7 @@ import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigException;
 import org.metabit.platform.support.config.impl.*;
 import org.metabit.platform.support.config.interfaces.*;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.provider.ConfigSchemeProvider;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.io.File;
 import java.io.IOException;
@@ -194,7 +193,7 @@ public class JARConfigSource implements ConfigStorageInterface
         }
 
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigScheme configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         { throw new ConfigException(ConfigException.ConfigExceptionReason.CODE_LOGIC_ERROR); }
 
 
@@ -252,7 +251,12 @@ public class JARConfigSource implements ConfigStorageInterface
                 String name = entry.getName();
                 if (name.startsWith(resourcePath) && !entry.isDirectory())
                     {
-                    processor.process(name, () -> jarFile.getInputStream(entry));
+                    // Check if it's an immediate child of the resourcePath (non-recursive)
+                    String subName = name.substring(resourcePath.length());
+                    if (subName.indexOf('/') == -1)
+                        {
+                        processor.process(name, () -> jarFile.getInputStream(entry));
+                        }
                     }
                 }
             }
@@ -267,11 +271,7 @@ public class JARConfigSource implements ConfigStorageInterface
             }
         for (File file : files)
             {
-            if (file.isDirectory())
-                {
-                scanDirectoryResources(file, resourcePath + file.getName() + "/", processor);
-                }
-            else
+            if (!file.isDirectory())
                 {
                 String name = resourcePath + file.getName();
                 processor.process(name, () -> java.nio.file.Files.newInputStream(file.toPath()));

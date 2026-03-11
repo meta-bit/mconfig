@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.6</version>
+        <version>0.8.8</version>
     </parent>
 
     <artifactId>mconfigformattomlwithjackson</artifactId>
@@ -14,7 +14,7 @@
     <description>TOML support for mConfig, using the Jackson library</description>
 
     <properties>
-        <jackson.version>2.19.2</jackson.version>
+        <jackson.version>2.21.1</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

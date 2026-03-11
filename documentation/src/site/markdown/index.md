@@ -5,7 +5,6 @@ The [mConfig Tool](41_mconfig_tool.md) is a powerful companion for exploring and
 
 **Core Principle**: Layered resolution stack prioritizes scopes (highest first):
 
-
 ```mermaid
 graph LR
   POLICY[POLICY<br/>Enforced/GPO] --> RUNTIME[RUNTIME<br/>Volatile RAM]
@@ -20,8 +19,7 @@ graph LR
 
   classDef high fill:#ff9999
   class POLICY,RUNTIME high
-```
-
+  ```
 
 Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > registry > JAR.
 
@@ -39,7 +37,7 @@ Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > 
 ## Part 2: Core Concepts
 - [2.1 How it Works](21_how_it_works.md)
 - [2.2 Priorities and Hierarchies](22_priorities_and_hierarchies.md)
-- [2.3 Configuration Schemes](23_configuration_schemes.md)
+- [2.3 Configuration Schemas](23_configuration_schemas.md)
 - [2.4 Comment Handling](24_comment_handling.md)
 - [2.5 Config Features](25_config_features.md)
 
@@ -48,10 +46,11 @@ Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > 
 - [3.2 Updates](32_updates.md)
 - [3.3 Getting Information](33_getting_information.md)
 - [3.4 Definitions and Valid Values](34_definitions_and_valid_values.md)
-- [3.5 Handling Secrets](35_handling_secrets.md)
-- [3.6 Windows Registry Access](36_windows_registry.md)
-- [3.7 Extensions and Advanced Use](37_extensions_and_advanced_use.md)
-- [3.8 Code Improvements and Best Practices](38_code_improvements.md)
+- [3.5 Config Events](45_events.md)
+- [3.6 Handling Secrets](35_handling_secrets.md)
+- [3.7 Windows Registry Access](36_windows_registry.md)
+- [3.8 Extensions and Advanced Use](37_extensions_and_advanced_use.md)
+- [3.9 Code Improvements and Best Practices](38_code_improvements.md)
 
 ## Part 4: Reference & Project
 - [4.1 mConfig Tool](41_mconfig_tool.md)

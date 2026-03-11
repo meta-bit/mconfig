@@ -1,5 +1,6 @@
 package org.metabit.platform.support.config.interfaces;
 
+import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 
 /**
@@ -25,4 +26,10 @@ public interface ConfigFormatInterface
   * @return a boolean
   */
  boolean testComponent(ConfigFactorySettings configFactorySettings, ConfigLoggingInterface logger);
+
+ /**
+  * initialize the component with full context.
+  * @param ctx the context
+  */
+ default void initialize(ConfigFactoryInstanceContext ctx) {}
 }

@@ -88,7 +88,7 @@ See the [mConfig Modules](mconfig-modules.md) page for more details.
 * [Simple Configuration Loading](simple_configuration_loading.md)
 * [Testing Configurations](testing_configurations.md)
 * [Immutable Configuration Views](configuration_views.md)
-* [Configuration Scheme Examples](schemes.md)
+* [Configuration Schema Examples](schemas.md)
 * [Advanced Configuration Handling](advanced_configuration_handling.md)
 * [Integration with CI/CD](integration_with_cicd.md)
 * [Crypto Keys and Certificates](handling_crypto_keys_and_certificates.md)

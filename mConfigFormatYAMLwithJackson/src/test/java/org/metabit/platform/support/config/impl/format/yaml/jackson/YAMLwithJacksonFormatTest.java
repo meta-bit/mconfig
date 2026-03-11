@@ -2,20 +2,15 @@ package org.metabit.platform.support.config.impl.format.yaml.jackson;
 
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
-import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.impl.logging.ConsoleLogging;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -50,7 +50,7 @@ try {
 ```
  Reminder: You can provide defaults in the resource folder of your JAR.
 
-- **Manual null handling for missing values:** Alternatively, use `EXCEPTION_ON_MISSING_ENTRY=false` and `DEFAULT_ON_MISSING_ENTRY=true` to automatically return scheme defaults instead of `null`.
+- **Manual null handling for missing values:** Alternatively, use `EXCEPTION_ON_MISSING_ENTRY=false` and `DEFAULT_ON_MISSING_ENTRY=true` to automatically return schema defaults instead of `null`.
 
 - **Manual strictness checks:** Set `SCHEME_STRICT_MODE=true` to reject unknown keys at runtime.
 

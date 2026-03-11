@@ -41,7 +41,7 @@ public class MonitorCommand implements Callable<Integer>
         try
             {
             ctx.validate(true, false);
-            try (ConfigFactory configFactory = ConfigFactoryBuilder.create(ctx.company, ctx.application).build())
+            try (ConfigFactory configFactory = ctx.createBuilder().build())
                 {
                 Configuration cfg = configFactory.getConfig(ctx.configName);
 
@@ -59,13 +59,13 @@ public class MonitorCommand implements Callable<Integer>
                 cfg.subscribeToUpdates(location->
                     {
                     String timestamp = LocalDateTime.now().format(DATE_FORMATTER);
-                    System.out.println("["+timestamp+"] Change detected in source: "+location.toLocationString());
-                    if (commonOptions.verbose)
+                    if (ctx.verbose)
                         {
+                        System.out.println("["+timestamp+"] Change detected in source: "+location.toLocationString());
                         System.out.println("  Scope: "+location.getScope());
                         }
 
-                    reportChanges(cfg);
+                    reportChanges(cfg, timestamp);
                     });
 
                 // Keep running until interrupted
@@ -110,7 +110,7 @@ public class MonitorCommand implements Callable<Integer>
             }
         }
 
-    private synchronized void reportChanges(Configuration cfg)
+    private synchronized void reportChanges(Configuration cfg, String timestamp)
         {
         Iterator<String> it = cfg.getEntryKeyTreeIterator();
         Set<String> currentKeys = new HashSet<>();
@@ -126,12 +126,12 @@ public class MonitorCommand implements Callable<Integer>
 
                 if (oldValue == null)
                     {
-                    System.out.println("  [ADDED] "+key+" = "+newValue);
+                    System.out.println("["+timestamp+"] [ADDED] "+key+" = "+newValue);
                     lastValues.put(key, newValue);
                     }
                 else if (!Objects.equals(oldValue, newValue))
                     {
-                    System.out.println("  [CHANGED] "+key+": "+oldValue+" -> "+newValue);
+                    System.out.println("["+timestamp+"] [CHANGED] "+key+" = "+newValue+" (was: "+oldValue+")");
                     lastValues.put(key, newValue);
                     }
                 }
@@ -146,7 +146,7 @@ public class MonitorCommand implements Callable<Integer>
             {
             if (!currentKeys.contains(key))
                 {
-                System.out.println("  [REMOVED] "+key);
+                System.out.println("["+timestamp+"] [REMOVED] "+key);
                 lastValues.remove(key);
                 }
             }

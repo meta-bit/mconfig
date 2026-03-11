@@ -8,4 +8,5 @@ module metabit.mconfig.modules.filesystem
     uses org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 
     provides org.metabit.platform.support.config.interfaces.ConfigStorageInterface with FileConfigStorage;
+    provides org.metabit.platform.support.config.schema.provider.ConfigSchemaProvider with org.metabit.platform.support.config.impl.source.filesystem.FilesystemConfigSchemaProvider;
     }

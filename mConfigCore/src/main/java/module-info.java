@@ -1,10 +1,12 @@
 import org.metabit.platform.support.config.ConfigFactory;
 import org.metabit.platform.support.config.impl.DefaultConfigFactory;
-import org.metabit.platform.support.config.impl.core.NullLogging;
+import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.interfaces.ConfigFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigSecretsProviderInterface;
+import org.metabit.platform.support.config.schema.ConfigSchemaFactory;
+import org.metabit.platform.support.config.schema.provider.ConfigSchemaProvider;
 import org.metabit.platform.support.config.source.core.DefaultLayerStorage;
 import org.metabit.platform.support.config.source.core.InMemoryLayerSource;
 import org.metabit.platform.support.config.impl.logging.ConsoleLogging;
@@ -19,22 +21,21 @@ module metabit.mconfig.core
     uses ConfigStorageInterface;
     uses ConfigFormatInterface;
     uses ConfigSecretsProviderInterface;
-    uses org.metabit.platform.support.config.scheme.ConfigSchemeFactory;
-    uses org.metabit.platform.support.config.scheme.provider.ConfigSchemeProvider;
+    uses ConfigSchemaFactory;
+    uses ConfigSchemaProvider;
     uses org.metabit.platform.support.config.impl.ConfigFactoryComponent;
 
     exports org.metabit.platform.support.config;
-    exports org.metabit.platform.support.config.impl;
     exports org.metabit.platform.support.config.interfaces;
-    exports org.metabit.platform.support.config.scheme;
-    exports org.metabit.platform.support.config.impl.core;
-    exports org.metabit.platform.support.config.impl.logging;
+    exports org.metabit.platform.support.config.schema;
     exports org.metabit.platform.support.osdetection;
     exports org.metabit.platform.support.config.source.core;
+    exports org.metabit.platform.support.config.impl.logging;
     exports org.metabit.platform.support.config.impl.entry;
-    exports org.metabit.platform.support.config.scheme.repository;
-    exports org.metabit.platform.support.config.scheme.impl;
-    exports org.metabit.platform.support.config.scheme.provider;
+    exports org.metabit.platform.support.config.impl;
+    exports org.metabit.platform.support.config.schema.repository;
+    exports org.metabit.platform.support.config.schema.impl;
+    exports org.metabit.platform.support.config.schema.provider;
 
     provides ConfigLoggingInterface with NullLogging, ConsoleLogging;
     provides ConfigFactory with DefaultConfigFactory;

@@ -3,6 +3,7 @@ package org.metabit.platform.support.config.impl;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.util.ConfigIOUtil;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -226,68 +227,6 @@ public abstract class AbstractConfiguration implements Configuration
         }
 
     @Override
-    public void put(String fullKey, Integer value, EnumSet<ConfigScope> scopes)
-            throws ConfigException
-        { putInOrderedScopes(fullKey, value, scopes); }
-
-    @Override
-    public void put(String fullKey, Double value, ConfigScope scope)
-            throws ConfigException
-        {
-        try
-            {
-            putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope);
-            }
-        catch (ConfigCheckedException e)
-            {
-            throw new ConfigException(e);
-            }
-        }
-
-    @Override
-    public void put(String fullKey, Double value, EnumSet<ConfigScope> scopes)
-            throws ConfigException
-        { putInOrderedScopes(fullKey, value, scopes); }
-
-    @Override
-    public void put(String fullKey, BigInteger value, ConfigScope scope)
-            throws ConfigException
-        {
-        try
-            {
-            putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope);
-            }
-        catch (ConfigCheckedException e)
-            {
-            throw new ConfigException(e);
-            }
-        }
-
-    @Override
-    public void put(String fullKey, BigInteger value, EnumSet<ConfigScope> scopes)
-            throws ConfigException
-        { putInOrderedScopes(fullKey, value, scopes); }
-
-    @Override
-    public void put(String fullKey, BigDecimal value, ConfigScope scope)
-            throws ConfigException
-        {
-        try
-            {
-            putGeneric(fullKey, value, ConfigEntryType.NUMBER, scope);
-            }
-        catch (ConfigCheckedException e)
-            {
-            throw new ConfigException(e);
-            }
-        }
-
-    @Override
-    public void put(String fullKey, BigDecimal value, EnumSet<ConfigScope> scopes)
-            throws ConfigException
-        { putInOrderedScopes(fullKey, value, scopes); }
-
-    @Override
     public void put(String fullKey, Long value, ConfigScope scope)
             throws ConfigException
         {
@@ -302,9 +241,46 @@ public abstract class AbstractConfiguration implements Configuration
         }
 
     @Override
-    public void put(String fullKey, Long value, EnumSet<ConfigScope> scopes)
+    public void put(String fullKey, String value, ConfigScope scope)
             throws ConfigException
-        { putInOrderedScopes(fullKey, value, scopes); }
+        {
+        try
+            {
+            putGeneric(fullKey, value, ConfigEntryType.STRING, scope);
+            }
+        catch (ConfigCheckedException e)
+            {
+            throw new ConfigException(e);
+            }
+        }
+
+    @Override
+    public void put(String fullKey, List<String> value, ConfigScope scope)
+            throws ConfigException
+        {
+        try
+            {
+            putGeneric(fullKey, value, ConfigEntryType.MULTIPLE_STRINGS, scope);
+            }
+        catch (ConfigCheckedException e)
+            {
+            throw new ConfigException(e);
+            }
+        }
+
+    @Override
+    public void put(String fullKey, byte[] value, ConfigScope scope)
+            throws ConfigException
+        {
+        try
+            {
+            putGeneric(fullKey, value, ConfigEntryType.BYTES, scope);
+            }
+        catch (ConfigCheckedException e)
+            {
+            throw new ConfigException(e);
+            }
+        }
 
     protected abstract void putGeneric(String fullKey, Object value, ConfigEntryType type, ConfigScope scope)
             throws ConfigCheckedException;
@@ -321,11 +297,7 @@ public abstract class AbstractConfiguration implements Configuration
         List<ConfigScope> sortedScopes = new ArrayList<>(scopes);
         sortedScopes.sort(Comparator.comparingInt(ConfigScope::ordinal).reversed());
 
-        ConfigEntryType type = ConfigEntryType.STRING;
-        if (value instanceof Boolean) type = ConfigEntryType.BOOLEAN;
-        else if (value instanceof Number) type = ConfigEntryType.NUMBER;
-        else if (value instanceof byte[]) type = ConfigEntryType.BYTES;
-        else if (value instanceof List) type = ConfigEntryType.MULTIPLE_STRINGS;
+        ConfigEntryType type = inferType(value);
 
         for (ConfigScope scope : sortedScopes)
             {
@@ -341,13 +313,114 @@ public abstract class AbstractConfiguration implements Configuration
         throw new ConfigException(ConfigException.ConfigExceptionReason.NO_WRITEABLE_LOCATION);
         }
 
+    private ConfigEntryType inferType(Object value)
+        {
+        if (value instanceof Boolean) return ConfigEntryType.BOOLEAN;
+        if (value instanceof Number) return ConfigEntryType.NUMBER;
+        if (value instanceof byte[]) return ConfigEntryType.BYTES;
+        if (value instanceof List) return ConfigEntryType.MULTIPLE_STRINGS;
+        return ConfigEntryType.STRING;
+        }
+
+    private void putWithPreferredScope(String fullKey, Object value, ConfigEntryType type)
+            throws ConfigException
+        {
+        ConfigSchema schema = getConfigSchema();
+        ConfigScope preferred = null;
+        if (schema != null)
+            {
+            ConfigEntrySpecification spec = schema.getSpecification(fullKey);
+            if (spec != null)
+                {
+                preferred = spec.getWriteScope();
+                }
+            }
+
+        if (preferred != null)
+            {
+            try
+                {
+                putGeneric(fullKey, value, type, preferred);
+                return;
+                }
+            catch (ConfigCheckedException e)
+                {
+                throw new ConfigException(e);
+                }
+            }
+
+        // Fallback to all scopes
+        putInOrderedScopes(fullKey, value, EnumSet.allOf(ConfigScope.class));
+        }
+
     @Override
-    public void put(String fullKey, String value, EnumSet<ConfigScope> scopes)
+    public void put(String fullKey, String value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.STRING); }
+
+    @Override
+    public void put(String fullKey, Boolean value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.BOOLEAN); }
+
+    @Override
+    public void put(String fullKey, Integer value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.NUMBER); }
+
+    @Override
+    public void put(String fullKey, Long value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.NUMBER); }
+
+    @Override
+    public void put(String fullKey, Double value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.NUMBER); }
+
+    @Override
+    public void put(String fullKey, BigInteger value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.NUMBER); }
+
+    @Override
+    public void put(String fullKey, BigDecimal value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.NUMBER); }
+
+    @Override
+    public void put(String fullKey, byte[] value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.BYTES); }
+
+    @Override
+    public void put(String fullKey, List<String> value) throws ConfigException
+        { putWithPreferredScope(fullKey, value, ConfigEntryType.MULTIPLE_STRINGS); }
+
+    @Override
+    public void put(String fullKey, Long value, EnumSet<ConfigScope> scopes)
+            throws ConfigException
+        { putInOrderedScopes(fullKey, value, scopes); }
+
+    @Override
+    public void put(String fullKey, Integer value, EnumSet<ConfigScope> scopes)
+            throws ConfigException
+        { putInOrderedScopes(fullKey, value, scopes); }
+
+    @Override
+    public void put(String fullKey, Double value, EnumSet<ConfigScope> scopes)
+            throws ConfigException
+        { putInOrderedScopes(fullKey, value, scopes); }
+
+    @Override
+    public void put(String fullKey, BigInteger value, EnumSet<ConfigScope> scopes)
+            throws ConfigException
+        { putInOrderedScopes(fullKey, value, scopes); }
+
+    @Override
+    public void put(String fullKey, BigDecimal value, EnumSet<ConfigScope> scopes)
             throws ConfigException
         { putInOrderedScopes(fullKey, value, scopes); }
 
     @Override
     public void put(String fullKey, byte[] value, EnumSet<ConfigScope> scopes)
+            throws ConfigException
+        { putInOrderedScopes(fullKey, value, scopes); }
+
+    @Override
+    public void put(String fullKey, String value, EnumSet<ConfigScope> scopes)
             throws ConfigException
         { putInOrderedScopes(fullKey, value, scopes); }
 
@@ -358,11 +431,11 @@ public abstract class AbstractConfiguration implements Configuration
 
     @Override
     public Set<String> getAllConfigurationKeysFlattened(EnumSet<ConfigScope> scopes)
-        { return Set.of(); }
+        { return Collections.emptySet(); }
 
     @Override
-    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemesFlattened(EnumSet<ConfigScope> scopes)
-        { return Map.of(); }
+    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
+        { return Collections.emptyMap(); }
 
     @Override
     public List<String> getListOfStrings(String fullKey)

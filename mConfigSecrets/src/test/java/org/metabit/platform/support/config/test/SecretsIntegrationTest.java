@@ -10,9 +10,9 @@ import org.metabit.platform.support.config.interfaces.ConfigSecretsProviderInter
 import org.metabit.platform.support.config.interfaces.SecretType;
 import org.metabit.platform.support.config.interfaces.SecretValue;
 import org.metabit.platform.support.config.interfaces.WatchHandle;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeEntry;
-import org.metabit.platform.support.config.scheme.ConfigSchemeFactory;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
+import org.metabit.platform.support.config.schema.ConfigSchemaFactory;
 import org.mockito.Mockito;
 import org.metabit.platform.support.config.impl.logging.ConsoleLogging;
 
@@ -74,11 +74,11 @@ class SecretsIntegrationTest
         ConfigFactory factory = builder.build();
 
         // Create a scheme manually
-        ConfigSchemeFactory schemeFactory = ConfigSchemeFactory.create();
-        ConfigScheme scheme = schemeFactory.createScheme();
-        ConfigSchemeEntry schemeEntry = schemeFactory.createEntry("api/key", ConfigEntryType.STRING);
+        ConfigSchemaFactory schemeFactory = ConfigSchemaFactory.create();
+        ConfigSchema scheme = schemeFactory.createSchema();
+        ConfigSchemaEntry schemeEntry = schemeFactory.createEntry("api/key", ConfigEntryType.STRING);
         schemeEntry.setSecret(true);
-        scheme.addSchemeEntry(schemeEntry);
+        scheme.addSchemaEntry(schemeEntry);
 
         Configuration config = factory.getConfig("test", scheme);
         config.put("api/key", "my-api-key", ConfigScope.SESSION);

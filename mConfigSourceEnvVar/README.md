@@ -1,3 +1,24 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigSourceEnvVar",
+  "description": "mConfig module for accessing environment variables and controlling library behavior at runtime via MCONFIG_RUNTIME_ variables.",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "runtimePlatform": "Cross-platform",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "environment-variables, runtime-control, debugging-tools"
+}
+</script>
+
 This is a mConfig module for accessing environment variables for configuration purposes.
 
 The default naming scheme is `<application name>_<config name>_<config key>.`

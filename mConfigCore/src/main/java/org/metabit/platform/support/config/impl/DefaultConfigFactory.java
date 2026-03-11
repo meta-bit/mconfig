@@ -4,8 +4,8 @@ import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigSecretsProviderInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.provider.ConfigSchemeProvider;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.provider.ConfigSchemaProvider;
 import org.metabit.platform.support.osdetection.OperatingSystem;
 
 import java.lang.ref.WeakReference;
@@ -19,7 +19,7 @@ import java.util.*;
 public class DefaultConfigFactory implements ConfigFactory
 {
     public     ConfigFactoryInstanceContext                ctx;
-    private final ConfigEventList                             events; // not truly final; its contents will change, but the list itself stays.
+    private       ConfigEventList                             events; // can be re-initialized at init time.
     private       Boolean                                     throwExceptionOnEmptyConfigsFlag;
     private final Map<String, WeakReference<Configuration>>   instantiatedConfigs;
     private       ConfigLoggingInterface                      logger;
@@ -32,7 +32,7 @@ public class DefaultConfigFactory implements ConfigFactory
      */
     public DefaultConfigFactory()
         {
-        this.events = new ConfigEventList();
+        this.events = new ConfigEventList(1000);
         this.instantiatedConfigs = new HashMap<>();
         this.activeSecretsProviders = new HashMap<>();
         this.closed = false;
@@ -54,6 +54,18 @@ public class DefaultConfigFactory implements ConfigFactory
         ctx.setFactory(this);
         this.logger = ctx.getLogger();
 
+        // re-initialize events with correct size from settings
+        int maxEvents = ctx.getSettings().getInteger(ConfigFeature.EVENTS_MAX_FACTORY);
+        int dedupLimit = ctx.getSettings().getInteger(ConfigFeature.EVENTS_DEDUP_RECENT_LIMIT);
+        
+        // Preserve any events that occurred before re-init if they still fit
+        ConfigEventList oldEvents = this.events;
+        this.events = new ConfigEventList(maxEvents, dedupLimit);
+        if (oldEvents != null && !oldEvents.isEmpty())
+            {
+            this.events.addAll(oldEvents);
+            }
+        
         if (ctx.getSourceChangeNotifier() == null)
             {
             ctx.setSourceChangeNotifier(new SourceChangeNotifier(ctx));
@@ -157,53 +169,47 @@ public class DefaultConfigFactory implements ConfigFactory
                     logger.debug("\t"+value.toLocationString()));
             }
 
-        // process discovered schemes
+        // process discovered schemas
         try {
-            java.util.ServiceLoader<ConfigSchemeProvider> schemeProviders = java.util.ServiceLoader.load(ConfigSchemeProvider.class, ctx.getClassLoader());
-            for (ConfigSchemeProvider provider : schemeProviders)
+            java.util.ServiceLoader<ConfigSchemaProvider> schemaProviders = java.util.ServiceLoader.load(ConfigSchemaProvider.class, ctx.getClassLoader());
+            for (ConfigSchemaProvider provider : schemaProviders)
                 {
-                Map<String, ConfigScheme> discovered = provider.discoverSchemes(ctx);
-                discovered.forEach((name, scheme) -> ctx.getSchemeRepository().registerScheme(name, scheme));
+                Map<String, ConfigSchema> discovered = provider.discoverSchemas(ctx);
+                discovered.forEach((name, schema) -> ctx.getSchemaRepository().registerSchema(name, schema));
                 }
         } catch (Error | Exception t) {
-            // If the provider package or service loader fails, we continue without discovered schemes.
-            if (logger != null) logger.debug("Discovery of schemes skipped or failed.");
+            // If the provider package or service loader fails, we continue without discovered schemas.
+            if (logger != null) logger.debug("Discovery of schemas skipped or failed.");
         }
 
-        // process manually provided schemes from settings
-        Map<String, ConfigScheme> manualSchemes = (Map<String, ConfigScheme>) settings.getObject(ConfigFeature.CONFIG_SCHEME_LIST, Map.class);
-        if (manualSchemes != null)
+        // process manually provided schemas from settings
+        Map<String, ConfigSchema> manualSchemas = (Map<String, ConfigSchema>) settings.getObject(ConfigFeature.CONFIG_SCHEMA_LIST, Map.class);
+        if (manualSchemas != null)
             {
-            manualSchemes.forEach((name, scheme) -> ctx.getSchemeRepository().registerScheme(name, scheme));
+            manualSchemas.forEach((name, schema) -> ctx.getSchemaRepository().registerSchema(name, schema));
             }
 
         return true;
         }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * add a configuration scheme.
-     * special use: if you are adding multiple named configurations, leave the configName empty ("").
-     */
     @Override
-    public void addConfigScheme(String configName, String jsonFormattedConfigScheme)
+    public void addConfigSchema(String configName, String jsonFormattedConfigSchema)
             throws ConfigCheckedException
         {
         if (closed)
             { throw new ConfigException("ConfigFactory was closed."); }
-        Map<String, ConfigScheme> schemes = ConfigScheme.fromJSON(jsonFormattedConfigScheme, this.ctx);
+        Map<String, ConfigSchema> schemas = ConfigSchema.fromJSON(jsonFormattedConfigSchema, this.ctx);
         if ((configName == null) || (configName.isEmpty()))
             {
-            schemes.forEach((name, scheme) -> ctx.getSchemeRepository().registerScheme(name, scheme));
+            schemas.forEach((name, schema) -> ctx.getSchemaRepository().registerSchema(name, schema));
             }
         else
             {
-            // normal case where we expect a single scheme.
-            if (schemes.size() != 1)
-                throw new ConfigCheckedException(new IllegalArgumentException("content must be exactly one scheme for a given name"));
+            // normal case where we expect a single schema.
+            if (schemas.size() != 1)
+                throw new ConfigCheckedException(new IllegalArgumentException("content must be exactly one schema for a given name"));
             String sanitizedName = ConfigNameSanitizer.sanitize(configName);
-            ctx.getSchemeRepository().registerScheme(sanitizedName, schemes.values().iterator().next());
+            ctx.getSchemaRepository().registerSchema(sanitizedName, schemas.values().iterator().next());
             }
         return;
         }
@@ -304,18 +310,18 @@ public class DefaultConfigFactory implements ConfigFactory
     public Configuration getConfig(final String configName)
             throws ConfigException
         {
-        // find associated scheme
-        final ConfigScheme scheme = this.ctx.getSchemeRepository().getScheme(ConfigNameSanitizer.sanitize(configName));
-        return this.getConfig(configName, scheme);
+        // find associated schema
+        final ConfigSchema schema = this.ctx.getSchemaRepository().getSchema(ConfigNameSanitizer.sanitize(configName));
+        return this.getConfig(configName, schema);
         }
 
 
     /** {@inheritDoc} */
     @Override
-    public Configuration getConfig(final String configName, final ConfigScheme configScheme)
+    public Configuration getConfig(final String configName, final ConfigSchema configSchema)
             throws ConfigException
         {
-        return this.getConfig(configName, configScheme, EnumSet.allOf(ConfigScope.class));
+        return this.getConfig(configName, configSchema, EnumSet.allOf(ConfigScope.class));
         }
 
     /** {@inheritDoc} */
@@ -363,7 +369,7 @@ public class DefaultConfigFactory implements ConfigFactory
     /*
     the actual configuration finding.
      */
-    private Configuration getConfig(String configName, ConfigScheme configScheme, EnumSet<ConfigScope> scopes)
+    private Configuration getConfig(String configName, ConfigSchema configSchema, EnumSet<ConfigScope> scopes)
         {
         if (configName == null)
             { throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID); }
@@ -386,7 +392,7 @@ public class DefaultConfigFactory implements ConfigFactory
                 }
             }
 
-        ConfigFacadeImpl layeredCfg = new ConfigFacadeImpl(sanitizedConfigName, configScheme, ctx, this); // which is a facade to the LayeredConfiguration.
+        ConfigFacadeImpl layeredCfg = new ConfigFacadeImpl(sanitizedConfigName, configSchema, ctx, this); // which is a facade to the LayeredConfiguration.
         // 3. go through the search list. For each entry, check with the respective ConfigSource whether the combination SearchListEntry + configName yields results.
         List<ConfigLocation> searchList = ctx.getSearchList().getEntries();
 
@@ -417,13 +423,13 @@ public class DefaultConfigFactory implements ConfigFactory
      *
      * @param configName   a {@link java.lang.String} object
      * @param scope        a {@link org.metabit.platform.support.config.ConfigScope} object
-     * @param configScheme a {@link org.metabit.platform.support.config.scheme.ConfigScheme} object
+     * @param configSchema a {@link ConfigSchema} object
      * @return a {@link org.metabit.platform.support.config.Configuration} object
      *
      * @throws org.metabit.platform.support.config.ConfigCheckedException if any.
      */
     @Deprecated
-    public Configuration createConfig(final String configName, final ConfigScope scope, final ConfigScheme configScheme)
+    public Configuration createConfig(final String configName, final ConfigScope scope, final ConfigSchema configSchema)
             throws ConfigCheckedException
         {
         throw new ConfigCheckedException(new UnsupportedOperationException("not implemented yet"));

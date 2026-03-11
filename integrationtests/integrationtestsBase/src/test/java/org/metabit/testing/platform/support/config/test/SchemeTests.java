@@ -1,14 +1,13 @@
 package org.metabit.testing.platform.support.config.test;
 
 import org.junit.jupiter.api.Test;
-import org.metabit.library.format.json.JsonStreamParser;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeEntry;
-import org.metabit.platform.support.config.scheme.ConfigSchemeFactory;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
+import org.metabit.platform.support.config.schema.ConfigSchemaFactory;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -19,17 +18,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SchemeTests
 {
     @Test
-    void checkSchemeParser()
+    void checkSchemaParser()
+            throws ConfigCheckedException
         {
-        // JsonStreamParser.JsonStreamConsumer consumer = new DebugJsonStreamConsumer();
         // String[] validTestStrings = {format3JSONtestSchemeVariant2};
         String[] validTestStrings = {format3JSONtestScheme, format3JSONtestSchemeVariant2};
 
         for (String s : validTestStrings)
             {
-            JsonStreamParser jsp = new JsonStreamParser();
-            JsonStreamParser.JsonStreamConsumer consumer = new SchemeConverterInDevelopment();
-            jsp.parse(s, consumer);
+            org.metabit.platform.support.config.schema.impl.ext.ConfigSchemaImpl.fromJSON(s, null);
             }
         return;
         }
@@ -43,11 +40,11 @@ public class SchemeTests
                 .build())
             {
 
-            ConfigSchemeEntry testSchemeEntry = new ConfigSchemeEntry("testkey", ConfigEntryType.STRING).setDefault("testvalue");
-            ConfigScheme testScheme = ConfigScheme.fromSchemeEntries(Set.of(testSchemeEntry));
+            ConfigSchemaEntry testSchemeEntry = new ConfigSchemaEntry("testkey", ConfigEntryType.STRING).setDefault("testvalue");
+            ConfigSchema testScheme = ConfigSchema.fromSchemaEntries(Set.of(testSchemeEntry));
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
-            cfg.setConfigScheme(testScheme); // this is an internal API, not intended for public use. may be removed later.
+            cfg.setConfigSchema(testScheme); // this is an internal API, not intended for public use. may be removed later.
 
             String value = cfg.getString("testkey");
             assertEquals("testvalue", value);
@@ -74,7 +71,7 @@ public class SchemeTests
 
             System.out.println(format3JSONtestScheme);
 
-            factory.addConfigScheme(CONFIG_NAME, format3JSONtestScheme);
+            factory.addConfigSchema(CONFIG_NAME, format3JSONtestScheme);
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
 
@@ -116,7 +113,7 @@ public class SchemeTests
                 .build())
             {
             // format 1 - the scheme, plain
-            factory.addConfigScheme(CONFIG_NAME, format1SingleScheme);
+            factory.addConfigSchema(CONFIG_NAME, format1SingleScheme);
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
             String value = cfg.getString("testkey");
@@ -132,8 +129,8 @@ public class SchemeTests
                 .build())
             {
             // format 1 - the scheme, plain
-            factory.addConfigScheme(CONFIG_NAME, format2SchemeAWithName);
-            factory.addConfigScheme(CONFIG_NAME, format2SchemeBWithName);
+            factory.addConfigSchema(CONFIG_NAME, format2SchemeAWithName);
+            factory.addConfigSchema(CONFIG_NAME, format2SchemeBWithName);
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
             String value = cfg.getString("testkey");
@@ -150,7 +147,7 @@ public class SchemeTests
                 .build())
             {
             // format 1 - the scheme, plain
-            factory.addConfigScheme(CONFIG_NAME, format3singleSchemes);
+            factory.addConfigSchema(CONFIG_NAME, format3singleSchemes);
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
             String value = cfg.getString("testkey");
@@ -167,7 +164,7 @@ public class SchemeTests
                 .build())
             {
             // format 1 - the scheme, plain
-            factory.addConfigScheme(CONFIG_NAME, format3twoSchemes);
+            factory.addConfigSchema(CONFIG_NAME, format3twoSchemes);
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
             String value = cfg.getString("testkey");
@@ -183,7 +180,7 @@ public class SchemeTests
                 .build())
             {
             // format 1 - the scheme, plain
-            factory.addConfigScheme(CONFIG_NAME, format1SingleScheme);
+            factory.addConfigSchema(CONFIG_NAME, format1SingleScheme);
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
             String value = cfg.getString("testkey");
@@ -192,20 +189,20 @@ public class SchemeTests
         }
 
     @Test
-    void testGetAllConfigurationKeysWithSchemesFlattened()
+    void testGetAllConfigurationKeysWithSchemasFlattened()
             throws ConfigCheckedException
         {
         try (ConfigFactory factory = ConfigFactoryBuilder.create(COMPANY_NAME, APPLICATION_NAME)
                 .setFeature(ConfigFeature.TEST_MODE, true)
                 .build())
             {
-            ConfigSchemeEntry schemeEntry1 = new ConfigSchemeEntry("key1", ConfigEntryType.STRING).setDefault("val1");
-            ConfigScheme scheme = ConfigScheme.fromSchemeEntries(Set.of(schemeEntry1));
+            ConfigSchemaEntry schemeEntry1 = new ConfigSchemaEntry("key1", ConfigEntryType.STRING).setDefault("val1");
+            ConfigSchema scheme = ConfigSchema.fromSchemaEntries(Set.of(schemeEntry1));
 
             Configuration cfg = factory.getConfig(CONFIG_NAME);
-            cfg.setConfigScheme(scheme);
+            cfg.setConfigSchema(scheme);
 
-            Map<String, ConfigEntrySpecification> keysWithSchemes = cfg.getAllConfigurationKeysWithSchemesFlattened(EnumSet.allOf(ConfigScope.class));
+            Map<String, ConfigEntrySpecification> keysWithSchemes = cfg.getAllConfigurationKeysWithSchemasFlattened(EnumSet.allOf(ConfigScope.class));
 
             assertTrue(keysWithSchemes.containsKey("key1"));
             assertTrue(keysWithSchemes.containsKey("testdata")); // From product/testconfig.properties
@@ -219,29 +216,29 @@ public class SchemeTests
     void testNewValidators()
             throws ConfigCheckedException
         {
-        ConfigSchemeFactory sf = ConfigSchemeFactory.create();
+        ConfigSchemaFactory sf = ConfigSchemaFactory.create();
         ConfigEntryMetadata meta = new ConfigEntryMetadata(null);
 
         // port
-        ConfigSchemeEntry portEntry = sf.createEntry("port", ConfigEntryType.NUMBER, "", null, "port", null, null);
+        ConfigSchemaEntry portEntry = sf.createEntry("port", ConfigEntryType.NUMBER, "", null, "port", null, null);
         meta.setSpecification(portEntry);
         assertTrue(portEntry.validateEntry(new TypedConfigEntryLeaf("port", "80", ConfigEntryType.NUMBER, meta)));
         assertFalse(portEntry.validateEntry(new TypedConfigEntryLeaf("port", "99999", ConfigEntryType.NUMBER, meta)));
 
         // email
-        ConfigSchemeEntry emailEntry = sf.createEntry("email", ConfigEntryType.STRING, "", null, "email", null, null);
+        ConfigSchemaEntry emailEntry = sf.createEntry("email", ConfigEntryType.STRING, "", null, "email", null, null);
         meta.setSpecification(emailEntry);
         assertTrue(emailEntry.validateEntry(new TypedConfigEntryLeaf("email", "test@example.com", ConfigEntryType.STRING, meta)));
         assertFalse(emailEntry.validateEntry(new TypedConfigEntryLeaf("email", "invalid-email", ConfigEntryType.STRING, meta)));
 
         // duration
-        ConfigSchemeEntry durationEntry = sf.createEntry("duration", ConfigEntryType.DURATION, "", null, "duration", null, null);
+        ConfigSchemaEntry durationEntry = sf.createEntry("duration", ConfigEntryType.DURATION, "", null, "duration", null, null);
         meta.setSpecification(durationEntry);
         assertTrue(durationEntry.validateEntry(new TypedConfigEntryLeaf("duration", "PT1H", ConfigEntryType.DURATION, meta)));
         assertFalse(durationEntry.validateEntry(new TypedConfigEntryLeaf("duration", "invalid", ConfigEntryType.DURATION, meta)));
 
         // size
-        ConfigSchemeEntry sizeEntry = sf.createEntry("size", ConfigEntryType.NUMBER, "", null, "size", null, null);
+        ConfigSchemaEntry sizeEntry = sf.createEntry("size", ConfigEntryType.NUMBER, "", null, "size", null, null);
         meta.setSpecification(sizeEntry);
         assertTrue(sizeEntry.validateEntry(new TypedConfigEntryLeaf("size", "1024", ConfigEntryType.NUMBER, meta)));
         assertFalse(sizeEntry.validateEntry(new TypedConfigEntryLeaf("size", "abc", ConfigEntryType.NUMBER, meta)));

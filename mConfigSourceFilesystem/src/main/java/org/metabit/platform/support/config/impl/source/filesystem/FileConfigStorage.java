@@ -3,7 +3,7 @@ package org.metabit.platform.support.config.impl.source.filesystem;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.*;
 import org.metabit.platform.support.config.interfaces.*;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.osdetection.OperatingSystem;
 
 import java.io.File;
@@ -44,6 +44,7 @@ public class FileConfigStorage implements ConfigStorageInterface
         }
 
     private ConfigLoggingInterface               logger;
+    private ConfigFactoryInstanceContext         ctx;
     private List<ConfigFileFormatInterface>      fileFormats; // an ordered map would be nicer.
     private ArrayList<ConfigFileFormatInterface> readFormatList;
     private ArrayList<ConfigFileFormatInterface> writeFormatList;
@@ -88,7 +89,7 @@ public class FileConfigStorage implements ConfigStorageInterface
      */
     public boolean init(ConfigFactoryInstanceContext ctx)
         {
-        // this.ctx = ctx;
+        this.ctx = ctx;
         this.logger = ctx.getLogger();
         this.fileFormats = new ArrayList<>();
         try
@@ -306,6 +307,29 @@ public class FileConfigStorage implements ConfigStorageInterface
         File dotDDir = dotDPath.toFile();
         if (dotDDir.exists() && dotDDir.isDirectory())
             {
+            if (!dotDDir.canRead())
+                {
+                logger.warn("unreadable .d directory found at "+dotDPath.toAbsolutePath());
+                ConfigEventImpl event = ConfigEventImpl.builder()
+                        .severity(ConfigEvent.Severity.WARNING)
+                        .domain(ConfigEvent.Domain.DISCOVERY)
+                        .kind(ConfigEvent.Kind.SKIPPED_PERMISSION_DENIED)
+                        .detailCode("FS_DISCOVERY_PERMISSION_DENIED")
+                        .message("unreadable .d directory skipped")
+                        .location(location)
+                        .scope(location.getScope())
+                        .remediation(ConfigEvent.Remediation.CHECK_PERMISSIONS)
+                        .remediationMessage("Check read permissions for " + dotDPath.toAbsolutePath())
+                        .build();
+                // How to get context here?
+                // Actually FileConfigStorage.init(ctx) was called.
+                // I should store ctx in a field.
+                if (this.ctx != null)
+                    {
+                    EventRecorder.record(event, this.ctx);
+                    }
+                return;
+                }
             File[] files = dotDDir.listFiles(File::isFile);
             if (files != null && files.length > 0)
                 {
@@ -357,12 +381,12 @@ public class FileConfigStorage implements ConfigStorageInterface
     /**
      * @param configName   name of the configuration, also used as filename if applicable
      * @param location     location to create it in
-     * @param configScheme the ConfigScheme to use, defining the file format and possible entries
+     * @param configScheme the ConfigSchema to use, defining the file format and possible entries
      * @param layeredCfg   the layeredCfg to apply it to
      * @return newly instantiated layer interface, or null
      */
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigScheme configScheme, LayeredConfiguration layeredCfg)
+    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredCfg)
         {
         // 1. test entry to match with this source.
         if (location.getStorage() != this)

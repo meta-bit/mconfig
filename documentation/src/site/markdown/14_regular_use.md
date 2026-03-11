@@ -2,7 +2,7 @@
 
 ## 1.4.1 Providing a default configuration (PRODUCT scope)
 The lowest-priority layer is `PRODUCT` scope. Defaults come from two places:
-- **ConfigScheme defaults** (recommended for typed, documented defaults)
+- **ConfigSchema defaults** (recommended for typed, documented defaults)
 - **JAR resources** (optional: ship default config files inside the JAR)
 
 For JAR resources, mConfig searches these paths (in order):
@@ -21,21 +21,31 @@ While it is possible to omit the company name, it is not recommended.
 Some environments may use no company name by convention, but developing multi-platform,
 
 
-ConfigScheme defaults are always part of the PRODUCT scope default layer. If you want schemes
+ConfigSchema defaults are always part of the PRODUCT scope default layer. If you want schemas
 to *replace* existing defaults rather than merge them, use `SCHEME_RESETS_DEFAULTS`.
 
 **Note:** JAR defaults are active when running from a JAR, but during development
 the JAR source still reads resources from the classpath, so the same paths work in IDE runs.
 
-## 1.4.2 Configuration Schemes Discovery
-Config Schemes (`*.scheme.json`) are automatically discovered from the `.config/` directory on the classpath.
+## 1.4.2 Configuration Schemas Discovery
+Config Schemas (`*.mconfig-schema.json` and `*.schema.json`) are automatically discovered from multiple locations:
 
-- **Development Time:** Both `src/main/resources/.config/` and `src/test/resources/.config/` are searched.
-- **Precedence:** If a scheme for the same configuration name exists in both locations, the one found last by the `ClassLoader` takes precedence.
-- **Production vs Test:** Unlike configuration data, schemes are not bypassed in `TEST_MODE`. Production schemes are always loaded from the classpath to ensure the configuration contract is maintained.
+1.  **Classpath:** Scanned within `.config/` directories (e.g., `src/main/resources/.config/`).
+2.  **Filesystem (system-wide and user):** Scanned in prioritized OS-specific locations. Schemas are stored under an app-scoped subdirectory:
+    - `[<company>/]<application>/<configName>.mconfig-schema.json`
+    - If company is blank/null/whitespace, the company segment is omitted (app-only paths).
+    - **Windows:** `%APPDATA%\\mconfig\\schemas`, `%PROGRAMDATA%\\mconfig\\schemas`.
+    - **Unix/Linux/Mac:** `~/.config/mconfig/schemas`, `/etc/mconfig/schemas`, `/usr/local/share/mconfig/schemas`.
+    You can override this with `ConfigFeature.LOCAL_SCHEMA_DIRECTORY`.
+3.  **Custom providers:** Only classpath and filesystem providers are built-in. If you need network-backed discovery, implement a `ConfigSchemaProvider` and register it via `ServiceLoader`.
+
+- **Development Time:** Both `src/main/resources/.config/` and `src/test/resources/.config/` are searched on the classpath.
+- **Precedence:** By default, schemas found in the **filesystem** take precedence over those found on the **classpath**. Within the same location, the one found last takes precedence.
+- **Hardening:** Use `ConfigFeature.ALLOW_LOCAL_SCHEMA_OVERRIDE = false` to ignore filesystem schemas and ensure the application only uses its bundled contract.
+- **Production vs Test:** Unlike configuration data, schemas are not bypassed in `TEST_MODE`. Production schemas are always loaded to ensure the configuration contract is maintained.
 
 Recommended: Place in the main resources only.
-Schemes are a "contract" for the configurations,
+Schemas are a "contract" for the configurations,
 so they should be valid both for testing and production.
 
 
@@ -49,7 +59,7 @@ them. That is intentional behaviour for security and safety purposes.
 You can activate [Test Mode](15_test_mode.md), however: In Test Mode, the relative paths are 
 accepted (along with all the other directories test mode uses).
 
-## 1.4.3 Use a config scheme
+## 1.4.3 Use a config schema
 
 ### 1.4.3.1 Reasons
 There are some benefits to declaring the contents of your configurations
@@ -59,7 +69,7 @@ separately from the code.
 - type safety for your configuration parameters
 - automatic parameter validation before your code gets the values.
 
-Ideally, for a configuration there is just theme ConfigScheme you declared,
+Ideally, for a configuration there is just theme ConfigSchema you declared,
 and the key names your code uses. Once the mConfig Configuration is instantiated,
 the sole connection between the code and the values should be the keys it asks for.
 
@@ -73,28 +83,28 @@ Normally, you'll place a JSON file in a subfolder of your resource directory,
 and that's it. 
 
 The file name is the name of the Configuration you want to use,
-plus the suffix ".scheme.json". It is a JSON(-style) file, following a specific
-format (see [Configuration Schemes](23_configuration_schemes.md))
+plus the suffix ".schema.json". It is a JSON(-style) file, following a specific
+format (see [Configuration Schemas](23_configuration_schemas.md))
 
 You declare all the configuration parameters your code can or will use.
 mConfig will automatically detect and use these files.
 
 Example: If your code uses a Configuration named "MyConfig" for
 Company "MyCompany" and Application "MyApplication",
-you would place the corresponding scheme file in
-`src/main/resources/.config/MyCompany/MyApplication/MyConfig.scheme.json`
+you would place the corresponding schema file in
+`src/main/resources/.config/MyCompany/MyApplication/MyConfig.schema.json`
 
 
 ### 1.4.3.3 Explicit setting
 
-If, for reasons whatsoever, you want to provide the configuration scheme yourself,
+If, for reasons whatsoever, you want to provide the configuration schema yourself,
 prepare the JSON string according to the format.
-Convert it to a ConfigScheme
-`ConfigScheme testScheme = ConfigScheme.statics.fromJSON(yourConfigSchemeString);`
+Convert it to a ConfigSchema
+`ConfigSchema testSchema = ConfigSchema.statics.fromJSON(yourConfigSchemaString);`
 and apply it to the respective Configuration
-`cfg.setConfigScheme(testScheme);`.
+`cfg.setConfigSchema(testSchema);`.
 
-Note: default values in your scheme will replace potentially existing defaults.
+Note: default values in your schema will replace potentially existing defaults.
 
 ## 1.4.4 Runtime Dynamic Configurations
 Mutable Puts: you can change the values of existing entries at runtime.

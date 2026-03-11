@@ -2,28 +2,28 @@ package org.metabit.platform.support.config.util.ts;
 
 import org.metabit.platform.support.config.ConfigEntryType;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Generates TypeScript type definitions from an mConfig ConfigScheme.
+ * Generates TypeScript type definitions from an mConfig ConfigSchema.
  */
 public class TypeScriptGenerator
 {
     /**
-     * Generates a TypeScript interface definition from the given ConfigScheme.
+     * Generates a TypeScript interface definition from the given ConfigSchema.
      *
-     * @param scheme        The ConfigScheme to process.
+     * @param scheme        The ConfigSchema to process.
      * @param interfaceName The name of the generated TypeScript interface.
      * @return A string containing the TypeScript interface definition.
      */
-    public String generateInterface(ConfigScheme scheme, String interfaceName)
+    public String generateInterface(ConfigSchema scheme, String interfaceName)
         {
         StringBuilder sb = new StringBuilder();
         sb.append("/**\n");
-        sb.append(" * Generated from mConfig ConfigScheme\n");
+        sb.append(" * Generated from mConfig ConfigSchema\n");
         sb.append(" */\n");
         sb.append("export interface ").append(interfaceName).append(" {\n");
 

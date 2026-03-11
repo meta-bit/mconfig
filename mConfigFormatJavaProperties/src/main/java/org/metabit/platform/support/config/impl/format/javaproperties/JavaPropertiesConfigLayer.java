@@ -129,7 +129,8 @@ public class JavaPropertiesConfigLayer implements ConfigLayerInterface
     @Override
     public ConfigEntry getEntry(final String hierarchicalKey)
         {
-        // @TODO split hierarchical key @DUMMY dummy-code
+        // Java Properties is a flat format.
+        // we cannot split the hierarchical key
         String key = hierarchicalKey;
 
         String propsValue = props.getProperty(hierarchicalKey);
@@ -264,7 +265,7 @@ public class JavaPropertiesConfigLayer implements ConfigLayerInterface
     /**
      * flush write-cache, if applicable.
      *
-     * @return 0 for none. >0 number of entries flushed; <0 for status codes.
+     * @return 0 for none. &gt;0 number of entries flushed; &lt;0 for status codes.
      */
     @Override
     public int flush()

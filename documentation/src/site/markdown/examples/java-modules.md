@@ -27,7 +27,7 @@ If you use the standard bundle:
 module my.app {
 // ...
 requires metabit.mconfig.core;
-requires metabit.mconfig.scheme;
+requires metabit.mconfig.schema;
 requires metabit.mconfig.secrets;
 requires metabit.mconfig.util;
 requires metabit.mconfig.modules.jar;

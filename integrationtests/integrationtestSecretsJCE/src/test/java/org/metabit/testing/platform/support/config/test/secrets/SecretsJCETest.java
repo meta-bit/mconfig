@@ -3,8 +3,8 @@ package org.metabit.testing.platform.support.config.test.secrets;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeEntry;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
 
 import java.security.*;
 import java.util.EnumSet;
@@ -42,21 +42,21 @@ public class SecretsJCETest
         builder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, Arrays.asList("USER:" + userDir.toString()));
         ConfigFactory factory = builder.build();
         
-        ConfigSchemeEntry privKeyEntry = new ConfigSchemeEntry("server/privateKey", ConfigEntryType.BYTES);
+        ConfigSchemaEntry privKeyEntry = new ConfigSchemaEntry("server/privateKey", ConfigEntryType.BYTES);
         privKeyEntry.setSecret(true);
-        ConfigSchemeEntry pubKeyEntry = new ConfigSchemeEntry("server/publicKey", ConfigEntryType.BYTES);
+        ConfigSchemaEntry pubKeyEntry = new ConfigSchemaEntry("server/publicKey", ConfigEntryType.BYTES);
         pubKeyEntry.setSecret(true);
-        ConfigSchemeEntry privKeyUserEntry = new ConfigSchemeEntry("server/privateKey.user", ConfigEntryType.BYTES);
+        ConfigSchemaEntry privKeyUserEntry = new ConfigSchemaEntry("server/privateKey.user", ConfigEntryType.BYTES);
         privKeyUserEntry.setSecret(true);
-        ConfigSchemeEntry pubKeyUserEntry = new ConfigSchemeEntry("server/publicKey.user", ConfigEntryType.BYTES);
+        ConfigSchemaEntry pubKeyUserEntry = new ConfigSchemaEntry("server/publicKey.user", ConfigEntryType.BYTES);
         pubKeyUserEntry.setSecret(true);
         
-        Set<ConfigSchemeEntry> entries = new HashSet<>();
+        Set<ConfigSchemaEntry> entries = new HashSet<>();
         entries.add(privKeyEntry);
         entries.add(pubKeyEntry);
         entries.add(privKeyUserEntry);
         entries.add(pubKeyUserEntry);
-        ConfigScheme scheme = ConfigScheme.fromSchemeEntries(entries);
+        ConfigSchema scheme = ConfigSchema.fromSchemaEntries(entries);
         
         Configuration config = factory.getConfig("secrets-jce", scheme);
 

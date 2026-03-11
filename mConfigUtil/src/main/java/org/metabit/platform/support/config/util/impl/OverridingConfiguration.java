@@ -7,7 +7,7 @@ import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretType;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.util.ConfigUtil;
 
 import java.math.BigDecimal;
@@ -29,14 +29,22 @@ import java.util.stream.Collectors;
 public class OverridingConfiguration implements Configuration
 {
     private final Configuration       parent;
+    private final ConfigEventList     events = new ConfigEventList(1000);
     private final Map<String, Object> overrides;
-    private final ConfigScheme        scheme;
+    private final ConfigSchema        scheme;
 
     public OverridingConfiguration(Configuration parent, Map<String, Object> overrides)
         {
         this.parent = Objects.requireNonNull(parent, "parent cannot be null");
         this.overrides = overrides != null ? new HashMap<>(overrides) : new HashMap<>();
-        this.scheme = parent.getConfigScheme();
+        this.scheme = parent.getConfigSchema();
+        }
+
+    @Override
+    public ConfigEventList getEvents()
+        {
+        // expose parent's events; local overrides aren't tracked separately for now
+        return parent.getEvents() != null ? parent.getEvents() : events;
         }
 
     private String rawToString(Object raw)
@@ -405,7 +413,61 @@ public class OverridingConfiguration implements Configuration
         }
 
     @Override
-    public ConfigScheme getConfigScheme()
+    public void put(String fullKey, String value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Boolean value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Integer value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Long value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, Double value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, BigInteger value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, BigDecimal value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, byte[] value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public void put(String fullKey, List<String> value)
+        {
+        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
+        }
+
+    @Override
+    public ConfigSchema getConfigSchema()
         {
         return scheme;
         }
@@ -449,7 +511,7 @@ public class OverridingConfiguration implements Configuration
         }
 
     @Override
-    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemesFlattened(EnumSet<ConfigScope> scopes)
+    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
         {
         Map<String, ConfigEntrySpecification> map = new HashMap<>();
         if (scheme != null)
@@ -457,7 +519,7 @@ public class OverridingConfiguration implements Configuration
             for (String key : overrides.keySet())
                 { map.put(key, scheme.getSpecification(key)); }
             }
-        map.putAll(parent.getAllConfigurationKeysWithSchemesFlattened(scopes));
+        map.putAll(parent.getAllConfigurationKeysWithSchemasFlattened(scopes));
         return Collections.unmodifiableMap(map);
         }
 
@@ -483,7 +545,7 @@ public class OverridingConfiguration implements Configuration
         }
 
     @Override
-    public void setConfigScheme(ConfigScheme scheme)
+    public void setConfigSchema(ConfigSchema scheme)
         {
         throw new UnsupportedOperationException("Immutable view");
         }

@@ -1,5 +1,26 @@
 # mConfig Windows Registry Module (JNR-FFI)
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigWinRegistry",
+  "description": "mConfig module providing native access to the Windows Registry using JNR-FFI. No custom native binaries required. Maps Registry keys to hierarchical mConfig structures.",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "runtimePlatform": "Windows",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "windows-registry, jnr-ffi, native-access"
+}
+</script>
+
 This module provides native access to the Windows Registry using JNR-FFI (Java Native Runtime - Foreign Function Interface).
 It allows mConfig to read and discover configurations stored in the Windows Registry without requiring custom native binaries (DLLs), as JNR-FFI handles the native mapping dynamically.
 

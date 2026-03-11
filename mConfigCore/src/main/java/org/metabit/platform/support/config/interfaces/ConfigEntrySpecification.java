@@ -2,6 +2,7 @@ package org.metabit.platform.support.config.interfaces;
 
 import org.metabit.platform.support.config.ConfigEntry;
 import org.metabit.platform.support.config.ConfigEntryType;
+import org.metabit.platform.support.config.ConfigScope;
 
 import java.util.Locale;
 
@@ -148,5 +149,15 @@ public interface ConfigEntrySpecification
     default boolean hasUnknownMandatoryFeatures()
         {
         return false;
+        }
+
+    /**
+     * Get the preferred scope for write operations.
+     *
+     * @return the preferred write scope, or null if not designated.
+     */
+    default ConfigScope getWriteScope()
+        {
+        return null;
         }
 }

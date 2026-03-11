@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.util.ConfigUtil;
-import org.metabit.platform.support.config.impl.util.ConfigIOUtil;
 import org.metabit.platform.support.config.util.TestDetector;
 
 import java.io.File;
@@ -17,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Stream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,11 +53,7 @@ class ConfigUtilTest
             throws ConfigCheckedException
         {
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(COMPANY_NAME, APPLICATION_NAME);
-//@TODO check: what is wrong with this?
-//        builder.setFeature(ConfigFeature.TEST_MODE, true);
-//        builder.setTestConfigPaths(ConfigScope.USER, List.of(String.valueOf(tempDirUser.toAbsolutePath())));
-//        builder.setTestConfigPaths(ConfigScope.APPLICATION, List.of(String.valueOf(tempDirApplication.toAbsolutePath())));
-// instead
+
         builder.setFeature(ConfigFeature.ADDITIONAL_USER_DIRECTORIES, List.of(String.valueOf(tempDirUser.toAbsolutePath())));
 
 
@@ -120,9 +116,23 @@ class ConfigUtilTest
     static void exit()
             throws IOException
         {
-        ConfigIOUtil.deleteDirectoryWithContents(tempDirApplication);
-        ConfigIOUtil.deleteDirectoryWithContents(tempDirUser);
+        deleteDirectoryWithContents(tempDirApplication);
+        deleteDirectoryWithContents(tempDirUser);
         assertTrue(currentWorkingDirectory.toFile().delete());
+        }
+
+    private static void deleteDirectoryWithContents(final Path dirToDelete) throws IOException
+        {
+        if (dirToDelete == null || !Files.exists(dirToDelete))
+            {
+            return;
+            }
+        try (Stream<Path> pathStream = Files.walk(dirToDelete))
+            {
+            pathStream.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            }
         }
 
     @Test public void minimumExample()

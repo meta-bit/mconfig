@@ -5,7 +5,7 @@ import org.metabit.platform.support.config.impl.LayeredConfiguration;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryFactory;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -24,7 +24,7 @@ public class SetCommand implements Callable<Integer>
     @ParentCommand
     private Main main;
 
-    @CommandLine.Parameters(index = "0", arity = "0..1", description = "Shortened syntax: [COMPANY:]APPLICATION[:CONFIGNAME[:KEY]] (key=value supported)")
+    @CommandLine.Parameters(index = "0", arity = "0..1", description = "Shortened syntax: [COMPANY:]APPLICATION[:SUBDIR...]:CONFIGNAME[@KEY] (key=value supported)")
     private String shortened;
 
     @CommandLine.Parameters(index = "1", arity = "0..1", description = "Shortened key=value syntax")
@@ -36,7 +36,7 @@ public class SetCommand implements Callable<Integer>
     @Option(names = {"-V", "--value"}, description = "Value to set (or use key=value)")
     private String value;
 
-    @Option(names = {"-S", "--scope"}, description = "Target scope (USER, HOST, SESSION, RUNTIME, etc.)", required = true)
+    @Option(names = {"-S", "--scope"}, description = "Target scope (USER, HOST, SESSION, RUNTIME, etc.)")
     private ConfigScope scope;
 
     @Option(names = {"-T", "--type"}, description = "Config entry type (STRING, NUMBER, BOOLEAN, BYTES, MULTIPLE_STRINGS)")
@@ -44,6 +44,9 @@ public class SetCommand implements Callable<Integer>
 
     @Option(names = {"-d", "--dry-run"}, description = "Display what would happen without making changes")
     private boolean dryRun;
+
+    @Option(names = {"-m", "--comment"}, description = "Comment for the configuration entry")
+    private String comment;
 
     @Option(names = {"-F", "--file-format"}, description = "Preferred file format for new files (TOML, YAML, JSON, JSON5, PROPERTIES, INI)")
     private FileFormat fileFormat;
@@ -92,12 +95,19 @@ public class SetCommand implements Callable<Integer>
                 System.err.println("Error: key=value syntax is invalid: "+kv);
                 return 1;
                 }
+            String keyPart = kv.substring(0, eq);
+            if ("key".equalsIgnoreCase(keyPart) || "value".equalsIgnoreCase(keyPart))
+                {
+                System.err.println("Error: Ambiguous shortened syntax: '"+kv+"' looks like a missing '--' for parameter '"+keyPart+"'.");
+                System.err.println("Please use --key=\""+keyPart+"\" if you really want to set a key named '"+keyPart+"'.");
+                return 1;
+                }
             if (commonOptions.key != null || value != null)
                 {
                 System.err.println("Error: Use either --key/--value or key=value, not both.");
                 return 1;
                 }
-            commonOptions.key = kv.substring(0, eq);
+            commonOptions.key = keyPart;
             value = kv.substring(eq+1);
             }
 
@@ -110,19 +120,23 @@ public class SetCommand implements Callable<Integer>
         try
             {
             ctx.validate(true, true);
-            ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(ctx.company, ctx.application);
-            if (fileFormat != null)
+            ConfigFactoryBuilder builder = ctx.createBuilder();
+
+            FileFormat effectiveFormat = fileFormat;
+            if (effectiveFormat == null && commonOptions.format != null)
+                {
+                try
+                    {
+                    effectiveFormat = FileFormat.valueOf(commonOptions.format.name());
+                    }
+                catch (IllegalArgumentException ignored) { }
+                }
+
+            if (effectiveFormat != null)
                 {
                 // Try both the standard name and the withJackson variant
                 builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, 
-                        Arrays.asList(fileFormat.name(), fileFormat.name() + "withJackson"));
-                }
-            String testDirs = System.getProperty("TESTMODE_DIRECTORIES");
-            if (testDirs != null)
-                {
-                ConfigFactoryBuilder.permitTestMode();
-                builder.setTestMode(true);
-                builder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, Arrays.asList(testDirs.split(",")));
+                        Arrays.asList(effectiveFormat.name(), effectiveFormat.name() + "withJackson"));
                 }
 
             try (ConfigFactory configFactory = builder.build())
@@ -144,8 +158,19 @@ public class SetCommand implements Callable<Integer>
                         }
                     }
 
-                ConfigScheme scheme = lcfg.getConfigScheme();
-                ConfigEntrySpecification spec = (scheme != null) ? scheme.getSpecification(ctx.key) : null;
+                ConfigSchema schema = lcfg.getConfigSchema();
+                ConfigEntrySpecification spec = (schema != null) ? schema.getSpecification(ctx.key) : null;
+
+                // Determine scope
+                ConfigScope targetScope = scope;
+                if (targetScope == null && spec != null)
+                    {
+                    targetScope = spec.getWriteScope();
+                    }
+                if (targetScope == null)
+                    {
+                    targetScope = ConfigScope.USER; // Default to USER if none specified or in schema
+                    }
 
                 // Determine type
                 ConfigEntryType targetType = type;
@@ -162,7 +187,7 @@ public class SetCommand implements Callable<Integer>
                 Object convertedValue = convertValue(value, targetType);
 
                 // Create a temporary entry for validation
-                ConfigEntry entryToValidate = ConfigEntryFactory.createEntry(ctx.key, convertedValue, targetType, scheme, null);
+                ConfigEntry entryToValidate = ConfigEntryFactory.createEntry(ctx.key, convertedValue, targetType, schema, null);
 
                 // 1. Validation
                 if (spec != null)
@@ -181,7 +206,7 @@ public class SetCommand implements Callable<Integer>
                 // 2. Display dry run or hierarchy if verbose
                 if (dryRun || ctx.verbose)
                     {
-                    showInformation(lcfg, ctx.key, convertedValue, targetType, scope, dryRun, ctx.verbose);
+                    showInformation(lcfg, ctx.key, convertedValue, targetType, targetScope, dryRun, ctx.verbose);
                     }
 
                 // 3. Perform
@@ -191,60 +216,83 @@ public class SetCommand implements Callable<Integer>
                         {
                         if (targetType == ConfigEntryType.BYTES)
                             {
-                            lcfg.put(ctx.key, (byte[]) convertedValue, scope);
+                            lcfg.put(ctx.key, (byte[]) convertedValue, targetScope);
                             }
                         else if (targetType == ConfigEntryType.MULTIPLE_STRINGS)
                             {
-                            lcfg.put(ctx.key, (List<String>) convertedValue, scope);
+                            lcfg.put(ctx.key, (List<String>) convertedValue, targetScope);
                             }
                         else if (targetType == ConfigEntryType.BOOLEAN)
                             {
-                            lcfg.put(ctx.key, (Boolean) convertedValue, scope);
+                            lcfg.put(ctx.key, (Boolean) convertedValue, targetScope);
                             }
                         else if (targetType == ConfigEntryType.NUMBER)
                             {
                             if (convertedValue instanceof BigInteger)
                                 {
-                                lcfg.put(ctx.key, (BigInteger) convertedValue, scope);
+                                lcfg.put(ctx.key, (BigInteger) convertedValue, targetScope);
                                 }
                             else if (convertedValue instanceof BigDecimal)
                                 {
-                                lcfg.put(ctx.key, (BigDecimal) convertedValue, scope);
+                                lcfg.put(ctx.key, (BigDecimal) convertedValue, targetScope);
                                 }
                             else if (convertedValue instanceof Double)
                                 {
-                                lcfg.put(ctx.key, (Double) convertedValue, scope);
+                                lcfg.put(ctx.key, (Double) convertedValue, targetScope);
                                 }
                             else if (convertedValue instanceof Long)
                                 {
-                                lcfg.put(ctx.key, (Long) convertedValue, scope);
+                                lcfg.put(ctx.key, (Long) convertedValue, targetScope);
                                 }
                             else if (convertedValue instanceof Integer)
                                 {
-                                lcfg.put(ctx.key, (Integer) convertedValue, scope);
+                                lcfg.put(ctx.key, (Integer) convertedValue, targetScope);
                                 }
                             else
                                 {
-                                lcfg.put(ctx.key, value, scope);
+                                lcfg.put(ctx.key, value, targetScope);
                                 }
                             }
                         else
                             {
-                            lcfg.put(ctx.key, value, scope);
+                            lcfg.put(ctx.key, value, targetScope);
                             }
 
+                        // First flush to ensure the key exists in the target layer
                         int flushed = lcfg.flush();
+
+                        // Now apply comment (if any) on the persisted entry and flush again
+                        if (comment != null)
+                            {
+                            ConfigEntry entry = lcfg.getConfigEntryForWriting(targetScope, ctx.key);
+                            if (entry != null)
+                                {
+                                entry.setComment(comment);
+                                flushed += lcfg.flush();
+                                }
+                            }
+
                         if (ctx.verbose)
                             {
                             System.out.println("Flushed "+flushed+" changes.");
                             }
-                        System.out.println("Successfully set '"+ctx.key+"' to '"+value+"' in "+scope+" scope.");
+                        System.out.println("Successfully set '"+ctx.key+"' to '"+value+"' in "+targetScope+" scope.");
                         }
                     catch (Exception e)
                         {
-                        reportError(e, lcfg, scope);
+                        reportError(e, lcfg, targetScope);
+                        if (ctx.showEvents)
+                            {
+                            OutputFormatter.reportEvents(configFactory.getEvents(), ctx.format);
+                            OutputFormatter.reportEvents(lcfg.getEvents(), ctx.format);
+                            }
                         return 1;
                         }
+                    }
+                if (ctx.showEvents)
+                    {
+                    OutputFormatter.reportEvents(configFactory.getEvents(), ctx.format);
+                    OutputFormatter.reportEvents(lcfg.getEvents(), ctx.format);
                     }
                 }
             }

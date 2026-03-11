@@ -15,7 +15,7 @@ public class GetCommand implements Callable<Integer>
     @ParentCommand
     private Main main;
 
-    @CommandLine.Parameters(index = "0", arity = "0..1", description = "Shortened syntax: [COMPANY:]APPLICATION[:CONFIGNAME[:KEY]]")
+    @CommandLine.Parameters(index = "0", arity = "0..1", description = "Shortened syntax: [COMPANY:]APPLICATION[:SUBDIR...]:CONFIGNAME[@KEY]")
     private String shortened;
 
     @CommandLine.Parameters(index = "1", arity = "0..1", description = "Key (optional)")
@@ -42,7 +42,7 @@ public class GetCommand implements Callable<Integer>
         try
             {
             ctx.validate(true, true);
-            try (ConfigFactory configFactory = ConfigFactoryBuilder.create(ctx.company, ctx.application).build())
+            try (ConfigFactory configFactory = ctx.createBuilder().build())
                 {
                 Configuration cfg = configFactory.getConfig(ctx.configName);
                 EnumSet<ConfigScope> scopeSet = EnumSet.allOf(ConfigScope.class);
@@ -103,6 +103,15 @@ public class GetCommand implements Callable<Integer>
                             }
                         }
                     catch (ConfigCheckedException ignored) { }
+
+                    if (ctx.verbose)
+                        {
+                        String comment = entry.getComment();
+                        if (comment != null && !comment.isEmpty())
+                            {
+                            System.out.println("Comment:     "+comment);
+                            }
+                        }
                     }
                 else if (ctx.format == Main.OutputFormat.CSV)
                     {
@@ -111,8 +120,13 @@ public class GetCommand implements Callable<Integer>
                     }
                 else if (ctx.format == Main.OutputFormat.JSON)
                     {
-                    System.out.printf("{\"key\":\"%s\", \"value\":\"%s\", \"type\":\"%s\", \"scope\":\"%s\", \"uri\":\"%s\"}%n",
-                            ctx.key, entry.getValueAsString(), entry.getType(), entry.getScope(), entry.getLocation());
+                    java.util.Map<String, Object> data = OutputFormatter.newLinkedMap();
+                    data.put("key", ctx.key);
+                    data.put("value", OutputFormatter.entryValue(entry));
+                    data.put("type", entry.getType().toString());
+                    data.put("scope", entry.getScope().toString());
+                    data.put("uri", entry.getLocation().toString());
+                    System.out.println(OutputFormatter.toJson(data, commonOptions.whitesmiths));
                     }
                 else if (ctx.format == Main.OutputFormat.YAML || ctx.format == Main.OutputFormat.TOML)
                     {
@@ -124,12 +138,17 @@ public class GetCommand implements Callable<Integer>
                     data.put("uri", entry.getLocation().toString());
                     if (ctx.format == Main.OutputFormat.YAML)
                         {
-                        System.out.print(OutputFormatter.toYaml(data));
+                        System.out.print(OutputFormatter.toYaml(data, commonOptions.whitesmiths));
                         }
                     else
                         {
-                        System.out.print(OutputFormatter.toToml(data));
+                        System.out.print(OutputFormatter.toToml(data, commonOptions.whitesmiths));
                         }
+                    }
+                if (ctx.showEvents)
+                    {
+                    OutputFormatter.reportEvents(configFactory.getEvents(), ctx.format);
+                    OutputFormatter.reportEvents(cfg.getEvents(), ctx.format);
                     }
                 }
             }

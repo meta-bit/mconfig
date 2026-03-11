@@ -63,4 +63,4 @@ If you do that, `TEST_MODE` and `setTestMode(true)` have no effect.
 
 Related docs:
 - [Test Mode](../15_test_mode.md)
-- [Configuration Schemes](../23_configuration_schemes.md)
+- [Configuration Schemas](../23_configuration_schemas.md)

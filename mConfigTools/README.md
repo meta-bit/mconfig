@@ -1,5 +1,27 @@
 # mConfig CLI tool
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "mConfigTools",
+  "alternateName": "mconfig CLI",
+  "description": "Command-line interface for mConfig. Provides tools for auditing configuration (get -v), real-time monitoring, schema generation (propose-scheme), and DevOps pipeline integration.",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Java",
+    "url": "https://www.java.com"
+  },
+  "runtimePlatform": "Cross-platform",
+  "isPartOf": {
+    "@type": "SoftwareApplication",
+    "name": "mConfig",
+    "url": "https://github.com/meta-bit/mconfig"
+  },
+  "keywords": "cli, devops, configuration-audit, monitoring, schema-generation, picocli"
+}
+</script>
+
 mConfig CLI: 60-Second "Magic" Cheat Sheet
 
 Configuration doesn't need to be a "black box."

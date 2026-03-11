@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
-import org.metabit.platform.support.config.impl.core.NullLogging;
+import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 
@@ -439,10 +439,5 @@ class TOMLFileFormatTest
             return this;
             }
 
-        @Override
-        public ConfigLocation derive(URI uri)
-            {
-            return this;
-            }
         }
 }

@@ -39,8 +39,8 @@ Related docs:
   `.config/<company>/<app>/<config>.<ext>`.
 - For a standard Maven layout, the default location is:
   - `src/main/resources/.config/<company>/<app>/<config>.properties`
-- Schemes (typed defaults and validation) live next to the config file:
-  - `src/main/resources/.config/<company>/<app>/<config>.scheme.json`
+- Schemas (typed defaults and validation) live next to the config file:
+  - `src/main/resources/.config/<company>/<app>/<config>.schema.json`
 - Avoid manual loading of `Properties` defaults. mConfig already layers JAR
   defaults with filesystem, environment, and other sources.
 - Avoid null checks. mConfig has ConfigFeature flags to control behaviour, 
@@ -59,7 +59,7 @@ Related docs:
   - `WRITE_FALLBACK_ACROSS_SCOPES` controls writes (default: false)
 - Typed getters (`getInteger`, `getBoolean`, etc.) perform conversion for you.
   Do not parse values manually.
-- To return scheme defaults on missing entries, use:
+- To return schema defaults on missing entries, use:
   - `EXCEPTION_ON_MISSING_ENTRY=false`
   - `DEFAULT_ON_MISSING_ENTRY=true`
 

@@ -4,12 +4,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.impl.util.ConfigIOUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -30,7 +32,21 @@ public class DotDPatternTest
     @AfterEach
     void tearDown() throws IOException
     {
-        ConfigIOUtil.deleteDirectoryWithContents(tempDir);
+        deleteDirectoryWithContents(tempDir);
+    }
+
+    private void deleteDirectoryWithContents(final Path dirToDelete) throws IOException
+    {
+        if (dirToDelete == null || !Files.exists(dirToDelete))
+        {
+            return;
+        }
+        try (Stream<Path> pathStream = Files.walk(dirToDelete))
+        {
+            pathStream.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
     }
 
     @Test

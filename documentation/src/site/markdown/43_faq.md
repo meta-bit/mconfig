@@ -19,7 +19,7 @@ enumeration of its contents. So the result of this call may yield results
 different from what you'd get if you were using the Configuration itself!
 
 Recommendation: If that subconfig can be limited in what it may and should contain,
-please consider using a ConfigScheme (in addition, or instead).
+please consider using a ConfigSchema (in addition, or instead).
 
 Also, have a look at other methods in the ConfigUtil class, for similar use cases.
 
@@ -39,7 +39,7 @@ This approach sounds simpler - `getInteger("weightInTons",5)` looks good at firs
 Until you realize what happens when you ask for this value a second time, or a third...
 Also, this prevents you from generating a proper documentation of your configuration parameters.
 
-ConfigSchemes should not be hard to use. Try them, please.
+ConfigSchemas should not be hard to use. Try them, please.
 
 
 But if you insist on using the old way, 
@@ -120,7 +120,7 @@ See also [JPMS introduction](examples/java-modules.md).
 
 ### Config values always returning defaults or null
 
-**Symptoms:** Calls like `cfg.getString("key")` return `null` or scheme defaults; no exceptions or warnings.
+**Symptoms:** Calls like `cfg.getString("key")` return `null` or schema defaults; no exceptions or warnings.
 
 **Common causes:**
 - Mismatched `company`, `application`, or `configName` (case-sensitive).
@@ -170,7 +170,7 @@ See [Logging](42_logging.md).
 
 **Fix:**
 1. Add `mConfigSourceEnvVar` dependency.
-2. Use naming scheme: `<application>_<configName>_<key>` (lowercase, e.g., `myapp_network_peer`).
+2. Use naming schema: `<application>_<configName>_<key>` (lowercase, e.g., `myapp_network_peer`).
 3. Scope: `SESSION` (overrides USER).
 4. Verify via `mConfigTool` or enable logging.
 See [mConfigSourceEnvVar README](../../../../mConfigSourceEnvVar/README.md).

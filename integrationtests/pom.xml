@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.6</version>
+        <version>0.8.8</version>
     </parent>
 
     <!-- intentionally a different package branch, so the tests come from "outside" -->
@@ -31,7 +31,6 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <skipPublishing>true</skipPublishing>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.install.skip>true</maven.install.skip>
         <maven.jar.skip>true</maven.jar.skip>

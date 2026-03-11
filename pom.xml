@@ -24,7 +24,7 @@
 
     <groupId>org.metabit.platform.support.config</groupId>
     <artifactId>mconfig</artifactId>
-    <version>0.8.6</version>
+    <version>0.8.8</version>
     <packaging>pom</packaging>
     <name>mConfig</name>
     <description>
@@ -33,7 +33,7 @@
         This library focuses providing access to the files, not the usage.
         It is intended to be base library for other component which incorporate network based configs and parsing.
     </description>
-    <url>https://metabit.org/software/API/</url>
+    <url>https://metabit.org/software/mconfig/</url>
     <licenses>
         <license>
             <name>Polyform Shield License 1.0.0</name>
@@ -45,7 +45,7 @@
         <module>mConfigFull</module>
         <module>mConfigStandard</module>
         <module>mConfigCore</module>
-        <module>mConfigScheme</module>
+        <module>mConfigSchema</module>
         <module>mConfigSecrets</module>
         <module>mConfigFormatJavaProperties</module>
         <module>mConfigFormatJSONwithJackson</module>
@@ -67,6 +67,7 @@
         <module>mConfigFormatINI</module>
         <module>mConfigFormatTOMLwithJackson</module>
         <module>mConfigFormatTOML</module>
+        <module>mConfigFormatJsonSchema</module>
         <module>mConfigSourceZooKeeper</module>
         <module>documentation</module>
     </modules>
@@ -297,6 +298,7 @@
                             <excludeArtifacts>
                                 <!-- separate documentation "site" not to be published on central, currently -->
                                 <excludeArtifact>documentation</excludeArtifact>
+
                                 <!-- integration tests are not published to central -->
                                 <excludeArtifact>integrationtests</excludeArtifact>
                                 <excludeArtifact>integrationtestsbase</excludeArtifact>
@@ -306,7 +308,6 @@
                                 <excludeArtifact>integrationtestsecretsjce</excludeArtifact>
                                 <excludeArtifact>integrationtestsecretsbc</excludeArtifact>
                                 <excludeArtifact>integrationtesttoml</excludeArtifact>
-                                <excludeArtifact>integrationtesttools</excludeArtifact>
                                 <!-- no .deb to maven central -->
                                 <excludeArtifact>.*\.deb</excludeArtifact>
                             </excludeArtifacts>

@@ -24,7 +24,7 @@ ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
             List.of("TOML", "YAML", "JSON"));
 ```
 
-## 3. Use strict schemes
+## 3. Use strict schemas
 To reject unknown keys, turn on strict mode:
 
 ```java
@@ -33,7 +33,7 @@ ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
 ```
 
 ## 4. Missing values behavior
-If you want scheme defaults instead of exceptions:
+If you want schema defaults instead of exceptions:
 
 ```java
 ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
@@ -84,7 +84,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp")
 ```
 
 ## 8. Use secrets providers
-If you have secrets in schemes, add a secrets provider to resolve them:
+If you have secrets in schemas, add a secrets provider to resolve them:
 
 ```java
 ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")

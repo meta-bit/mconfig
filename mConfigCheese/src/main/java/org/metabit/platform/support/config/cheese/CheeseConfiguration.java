@@ -3,7 +3,7 @@ package org.metabit.platform.support.config.cheese;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -214,6 +214,42 @@ public class CheeseConfiguration implements Configuration
         }
 
     @Override
+    public void put(String fullKey, String value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, Boolean value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, Integer value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, Long value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, Double value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, BigInteger value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, BigDecimal value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, byte[] value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
+    public void put(String fullKey, List<String> value) throws ConfigException
+        { wrapped.put(fullKey, value); }
+
+    @Override
     public void put(String fullKey, String value, ConfigScope scope)
         {
         wrapped.put(fullKey, value, scope);
@@ -340,10 +376,10 @@ public class CheeseConfiguration implements Configuration
         }
 
     @Override
-    public ConfigScheme getConfigScheme()
-        {
-        return wrapped.getConfigScheme();
-        }
+    public ConfigEventList getEvents() { return wrapped.getEvents(); }
+
+    @Override
+    public ConfigSchema getConfigSchema()  { return wrapped.getConfigSchema(); }
 
     /**
      * get notified when the configuration changes.
@@ -411,9 +447,9 @@ public class CheeseConfiguration implements Configuration
      *         Values can be null if no matching scheme entry exists.
      */
     @Override
-    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemesFlattened(EnumSet<ConfigScope> scopes)
+    public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
         {
-        return wrapped.getAllConfigurationKeysWithSchemesFlattened(scopes);
+        return wrapped.getAllConfigurationKeysWithSchemasFlattened(scopes);
         }
 
     /**
@@ -438,9 +474,9 @@ public class CheeseConfiguration implements Configuration
         }
 
     @Override
-    public void setConfigScheme(ConfigScheme scheme)
+    public void setConfigSchema(ConfigSchema scheme)
         {
-        wrapped.setConfigScheme(scheme);
+        wrapped.setConfigSchema(scheme);
         }
 
     @Override

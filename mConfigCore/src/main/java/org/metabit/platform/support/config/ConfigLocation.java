@@ -84,14 +84,5 @@ public interface ConfigLocation
      */
     ConfigLocation derive(final Path file);
 
-    /**
-     * derive a new ConfigLocation given to the current one.
-     *
-     * @param uri URI or URL to apply in relative
-     * @return derived ConfigLocation, or null if not applicable/possible
-     *         -- @CHECK usage in the long run, @TODO remove if not needed+
-     */
-    @Deprecated
-    ConfigLocation derive(final URI uri);
 }
 //___EOF___

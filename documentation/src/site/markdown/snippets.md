@@ -2,7 +2,7 @@
 
 mConfig shines for everyday config pains. Copy-paste these snippets—no setup hassles.
 
-Each solves a **general problem** using mConfig's magic (OS paths, layers, reloads, schemes).
+Each solves a **general problem** using mConfig's magic (OS paths, layers, reloads, schemas).
 
 **[Starters](../../../../examples/starters/README.md) for full projects • [FAQ](43_faq.md) for fixes • [CLI](../../../../mConfigTools/README.md)**
 
@@ -49,20 +49,20 @@ try (ConfigFactory f = ConfigFactoryBuilder.create("myco", "myapp").build()) {
 
 **Problem:** Runtime `NumberFormatException`; scattered defaults.
 
-`src/main/resources/.config/myco/myapp/network.scheme.json`:
+`src/main/resources/.config/myco/myapp/network.schema.json`:
 ```json
 [{"name":"port","type":"int","default":8080,"min":1,"max":65535}]
 ```
 
 ```java
-ConfigScheme scheme = ConfigScheme.fromClasspath("network.scheme.json");
-Config cfg = factory.getConfig("network", scheme);
+ConfigSchema schema = ConfigSchema.fromClasspath("network.schema.json");
+Config cfg = factory.getConfig("network", schema);
 int port = cfg.getInteger("port");  // Validates!
 ```
 
-**Why?** Centralized scheme—no call-site defaults.
+**Why?** Centralized schema—no call-site defaults.
 
-[Configuration Schemes](23_configuration_schemes.md)
+[Configuration Schemas](23_configuration_schemas.md)
 
 ## 4. Hot-Reload on File Changes
 
@@ -93,7 +93,7 @@ factory.listAvailableConfigurations().forEach(cdi ->
 
 **Problem:** Passwords in logs/heap.
 
-In scheme: `"type":"secret"`
+In schema: `"type":"secret"`
 
 ```java
 SecretValue pw = (SecretValue) cfg.getEntry("db.password");  // Masked: ********

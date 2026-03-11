@@ -4,7 +4,6 @@ import org.metabit.platform.support.config.ConfigException;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
-import org.metabit.platform.support.config.impl.SourceChangeNotifier;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 
 import java.io.IOException;
@@ -197,7 +196,7 @@ public class FileChangeWatcher extends TimerTask
             throw new IllegalArgumentException("parameter is not a directory");
         if (directoryWatchMap.get(dir) != null)
             {
-            logger.warn("trying to re-watch directory "+dir);
+            logger.debug("directory "+dir+" already registered for watching; not adding twice.");
             return;
             }
         try

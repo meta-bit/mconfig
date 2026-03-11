@@ -30,7 +30,7 @@ class SetCommandTest
         System.setOut(new PrintStream(out));
 
         // Use a dummy application and key
-        int exitCode = cmd.execute("set", "metabit:testapp:config:mykey", "--value", "myvalue", "--scope", "USER", "--dry-run");
+        int exitCode = cmd.execute("set", "metabit:testapp:config:mykey", "--key", "mykey", "--value", "myvalue", "--scope", "USER", "--dry-run");
 
         assertEquals(0, exitCode);
         String output = out.toString();

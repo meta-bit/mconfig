@@ -3,7 +3,7 @@ package org.metabit.platform.support.config;
 import org.metabit.platform.support.config.interfaces.BasicConfiguration;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretValue;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -171,6 +171,91 @@ public interface Configuration extends BasicConfiguration
     // ---- writing interface ----
     // put as opposed to putString etc, because compiler knows the type
     // we can't do that for the gets, because you may want conversion.
+
+    /**
+     * put = write a value to a key, using the preferred scope from the schema if available.
+     * <p>
+     * If the schema defines a {@code WRITE_SCOPE} for this entry, that scope is used.
+     * Otherwise, the library attempts to write to the most specific available scope.
+     *
+     * @param fullKey the full key of the entry to be written
+     * @param value the value to be written. variations of the function with different types exist.
+     * @throws org.metabit.platform.support.config.ConfigException  if not writable in general;
+     *                          or if a parameter was invalid.
+     */
+    void put(final String fullKey, final String value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value a {@link java.lang.Boolean} object
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final Boolean value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value a {@link java.lang.Integer} object
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final Integer value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value a {@link java.lang.Long} object
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final Long value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value a {@link java.lang.Double} object
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final Double value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value a {@link java.math.BigInteger} object
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final BigInteger value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value a {@link java.math.BigDecimal} object
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final BigDecimal value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value an array of {@link byte} objects
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final byte[] value) throws ConfigException;
+
+    /**
+     * <p>put.</p>
+     *
+     * @param fullKey a {@link java.lang.String} object
+     * @param value a {@link java.util.List} object
+     * @throws org.metabit.platform.support.config.ConfigException if any.
+     */
+    void put(final String fullKey, final List<String> value) throws ConfigException;
 
     /**
      * put = write a value to a key, single scope.
@@ -351,20 +436,20 @@ public interface Configuration extends BasicConfiguration
      */
     void put(final String fullKey, final List<String> value, final EnumSet<ConfigScope> scopes) throws ConfigException;
 
-    /*
+    /**
      * get a list of all ConfigEvents for this Configuration.
-     * for ConfigEvents not specific to any single Configuration, see the respective function in the {ConfigFactory}.
+     * for ConfigEvents not specific to any single Configuration, see the respective function in the {@link ConfigFactory}.
      *
      * @return ConfigEventList
      */
-    // ConfigEventList getEvents();
+    ConfigEventList getEvents();
 
     /**
      * get the config scheme associated with this configuration.
      *
      * @return return the config scheme; or return null if this configuration hasn't any.
      */
-    ConfigScheme getConfigScheme();
+    ConfigSchema getConfigSchema();
 
     /**
      * get notified when the configuration changes.
@@ -428,7 +513,7 @@ public interface Configuration extends BasicConfiguration
      * @return a {@link Map} with flattened keys as keys and their {@link ConfigEntrySpecification} as values.
      *         Values can be null if no matching scheme entry exists.
      */
-    Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemesFlattened(EnumSet<ConfigScope> scopes);
+    Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes);
 
     /**
      * Limit the scopes from which this configuration reads values on subsequent get operations (typed gets, getSecret).

@@ -4,18 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.metabit.platform.support.config.ConfigException;
-
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
-import org.metabit.platform.support.config.ConfigEntryType;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeEntry;
 
 // tests MLIB-65 implementation
 public class LimitScopesTest {

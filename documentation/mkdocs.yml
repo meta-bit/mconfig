@@ -1,20 +1,30 @@
 site_name: mConfig Documentation
 docs_dir: src/site/markdown
 site_dir: target/mkdocs
-site_url: https://meta-bit.github.io/mconfig/
 use_directory_urls: false
 
 theme:
-  name: material
+#  name: material
+  name: readthedocs
   features:
     - navigation.footer
 
 markdown_extensions:
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+  - tables
+  - fenced_code
+  - toc:
+      permalink: true
+  - admonition
+  - footnotes
+  - attr_list
+  - def_list
+#  - pymdownx.details
+#  - pymdownx.superfences:
+#      custom_fences:
+#        - name: mermaid
+#          class: mermaid
+#          format: !!python/name:pymdownx.superfences.fence_code_custom.simple
+#  - pymdownx.highlight
 
 plugins:
   - search
@@ -30,7 +40,7 @@ nav:
   - Part 2 Core Concepts:
       - 2.1 How it Works: 21_how_it_works.md
       - 2.2 Priorities and Hierarchies: 22_priorities_and_hierarchies.md
-      - 2.3 Configuration Schemes: 23_configuration_schemes.md
+      - 2.3 Configuration Schemes: 23_configuration_schemas.md
       - 2.4 Comment Handling: 24_comment_handling.md
       - 2.5 Config Features: 25_config_features.md
   - Part 3 Advanced Topics:

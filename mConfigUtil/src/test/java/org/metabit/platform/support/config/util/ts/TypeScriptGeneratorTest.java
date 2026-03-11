@@ -3,9 +3,8 @@ package org.metabit.platform.support.config.util.ts;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.ConfigEntry;
 import org.metabit.platform.support.config.ConfigEntryType;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
-import org.metabit.platform.support.config.scheme.ConfigSchemeEntry;
-import org.metabit.platform.support.config.scheme.ConfigSchemeFactory;
+import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.ConfigSchemaFactory;
 
 import java.util.EnumSet;
 
@@ -16,24 +15,24 @@ public class TypeScriptGeneratorTest
     @Test
     public void testGenerateInterface() throws Exception
         {
-        ConfigSchemeFactory factory = ConfigSchemeFactory.create();
-        ConfigScheme scheme = factory.createScheme();
+        ConfigSchemaFactory factory = ConfigSchemaFactory.create();
+        ConfigSchema scheme = factory.createSchema();
 
-        scheme.addSchemeEntry(factory.createEntry("server/port", ConfigEntryType.NUMBER)
+        scheme.addSchemaEntry(factory.createEntry("server/port", ConfigEntryType.NUMBER)
                 .setDescription("The port the server listens on")
                 .setFlags(EnumSet.of(ConfigEntry.ConfigEntryFlags.MANDATORY)));
 
-        scheme.addSchemeEntry(factory.createEntry("server/host", ConfigEntryType.STRING)
+        scheme.addSchemaEntry(factory.createEntry("server/host", ConfigEntryType.STRING)
                 .setDefault("localhost"));
 
-        scheme.addSchemeEntry(factory.createEntry("database/type", ConfigEntryType.ENUM)
+        scheme.addSchemaEntry(factory.createEntry("database/type", ConfigEntryType.ENUM)
                 .setValidationPattern("POSTGRES|MYSQL|SQLITE")
                 .setFlags(EnumSet.of(ConfigEntry.ConfigEntryFlags.MANDATORY)));
 
-        scheme.addSchemeEntry(factory.createEntry("features/enabled", ConfigEntryType.ENUM_SET)
+        scheme.addSchemaEntry(factory.createEntry("features/enabled", ConfigEntryType.ENUM_SET)
                 .setValidationPattern("AUTH|METRICS|LOGGING"));
 
-        scheme.addSchemeEntry(factory.createEntry("debugMode", ConfigEntryType.BOOLEAN));
+        scheme.addSchemaEntry(factory.createEntry("debugMode", ConfigEntryType.BOOLEAN));
 
         TypeScriptGenerator generator = new TypeScriptGenerator();
         String tsInterface = generator.generateInterface(scheme, "AppConfig");

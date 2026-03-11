@@ -6,7 +6,7 @@ import org.metabit.platform.support.config.impl.*;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.*;
-import org.metabit.platform.support.config.scheme.ConfigScheme;
+import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.source.core.InMemoryLayer;
 import org.metabit.platform.support.osdetection.OperatingSystem;
 import org.metabit.platform.support.osdetection.PlatformDetector;
@@ -396,7 +396,7 @@ public class WindowsRegistryConfigSource implements ConfigStorageInterface
         }
 
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigScheme configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         {
         return null;
         }

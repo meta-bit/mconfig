@@ -2,7 +2,6 @@ package org.metabit.platform.support.config.impl.format.ini;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.ConfigLocation;
-import org.metabit.platform.support.config.ConfigSource;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
@@ -109,6 +108,7 @@ public class INIFileFormat implements ConfigFileFormatInterface
         Map<String, Map<String, String>> data = layer.getData();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile())))
             {
+            // Global header comments
             for (String comment : layer.getGlobalHeaderComments())
                 {
                 writer.write(comment);
@@ -118,9 +118,51 @@ public class INIFileFormat implements ConfigFileFormatInterface
                 {
                 writer.newLine();
                 }
+
+            // First pass: write top-level (empty section) keys, if present
+            Map<String, String> rootSection = data.get("");
+            if (rootSection != null)
+                {
+                List<String> rootLeading = layer.getSectionLeadingComments("");
+                if (rootLeading != null)
+                    {
+                    for (String c : rootLeading)
+                        {
+                        writer.write(c);
+                        writer.newLine();
+                        }
+                    }
+                // No header for empty section
+                for (Map.Entry<String, String> entry : rootSection.entrySet())
+                    {
+                    List<String> keyLeading = layer.getKeyLeadingComments("", entry.getKey());
+                    if (keyLeading != null)
+                        {
+                        for (String c : keyLeading)
+                            {
+                            writer.write(c);
+                            writer.newLine();
+                            }
+                        }
+                    writer.write(entry.getKey() + "=" + entry.getValue());
+                    String inlineComment = layer.getKeyInlineComment("", entry.getKey());
+                    if (inlineComment != null)
+                        {
+                        writer.write(" " + inlineComment);
+                        }
+                    writer.newLine();
+                    }
+                writer.newLine();
+                }
+
+            // Second pass: write all named sections in insertion order
             for (Map.Entry<String, Map<String, String>> sectionEntry : data.entrySet())
                 {
                 String sectionName = sectionEntry.getKey();
+                if (sectionName.isEmpty())
+                    {
+                    continue; // already emitted
+                    }
                 List<String> sectionLeading = layer.getSectionLeadingComments(sectionName);
                 if (sectionLeading != null)
                     {
@@ -130,16 +172,14 @@ public class INIFileFormat implements ConfigFileFormatInterface
                         writer.newLine();
                         }
                     }
-                if (!sectionName.isEmpty())
+                writer.write("[" + sectionName + "]");
+                String sectionInline = layer.getSectionInlineComment(sectionName);
+                if (sectionInline != null)
                     {
-                    writer.write("[" + sectionName + "]");
-                    String sectionInline = layer.getSectionInlineComment(sectionName);
-                    if (sectionInline != null)
-                        {
-                        writer.write(" " + sectionInline);
-                        }
-                    writer.newLine();
+                    writer.write(" " + sectionInline);
                     }
+                writer.newLine();
+
                 for (Map.Entry<String, String> entry : sectionEntry.getValue().entrySet())
                     {
                     List<String> keyLeading = layer.getKeyLeadingComments(sectionName, entry.getKey());

@@ -25,7 +25,7 @@ Above is just a little text dump.
 ## 3.3.2 Legacy support: BLOBs, and where to put files?
 
 Use Configuration mechanisms where possible; this enables all the features,
-including scheme checking, network storage, and so on.
+including schema checking, network storage, and so on.
 
 ### 3.3.2.1 Raw Files (Text and Binary)
 You may need to access the entire content of a file as a single String or byte array. mConfig provides two specialized formats for this purpose: `text_file` and `binary_file`.
@@ -60,7 +60,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("myCompany", "myApplica
 In modern formats like JSON and YAML, binary data can be part of the hierarchical structure.
 
 **JSON (Base64):**
-If a `ConfigScheme` defines a key as type `BYTES`, mConfig will automatically decode a Base64-encoded string in a JSON file.
+If a `ConfigSchema` defines a key as type `BYTES`, mConfig will automatically decode a Base64-encoded string in a JSON file.
 
 **YAML (!!binary):**
 YAML supports binary data natively using the `!!binary` tag. mConfig will correctly retrieve these as byte arrays.

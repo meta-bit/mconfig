@@ -57,17 +57,17 @@ wherever in the standard directories or other places they are kept.
 
 If it's not working as expected, consult the **[Quick Verification Checklist](43_faq.md#quick-verification-checklist)** in the FAQ.
 
-For more information on how to define the contract for your configurations (keys, types, defaults, and validation), see **[Configuration Schemes](23_configuration_schemes.md)**.
+For more information on how to define the contract for your configurations (keys, types, defaults, and validation), see **[Configuration Schemas](23_configuration_schemas.md)**.
 
 ## 1.3.3 Common Pitfalls
 For advice on avoiding typical mistakes and leveraging feature flags effectively, see [Code Improvements and Best Practices](38_code_improvements.md).
 
 ## 1.3.4 Resource Placement (the .config/ folder)
-To bundle configurations, schemes, or library settings with your application, 
+To bundle configurations, schemas, or library settings with your application, 
 use the `.config/` resource folder in your classpath (e.g., `src/main/resources/.config/`).
 
 *   **Configurations**: `.config/<company>/<application>/<configName>.<ext>`
-*   **Schemes**: `.config/<company>/<application>/<configName>.scheme.json`
+*   **Schemas**: `.config/<company>/<application>/<configName>.schema.json`
 *   **Library Self-Configuration**: `.config/metabit/mConfig/mconfig.properties`
 
 For testing, as a starting point, 

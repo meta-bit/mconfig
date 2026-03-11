@@ -18,16 +18,15 @@ public class JsonStringConversionTests
 @Test
 void testHardcodedBasics()
     {
-    JsonStreamParser jsp = new JsonStreamParser();
     JsonTestStringExtractor tmpOutput = new JsonTestStringExtractor();
 
     String test1 =  "{\"testKey\":\"testValue\"}";
-    jsp.parse(test1,tmpOutput);
+    JsonStreamParser.parseJson(test1,tmpOutput);
     assertEquals("testKey", tmpOutput.getKey());
     assertEquals("testValue", tmpOutput.getBuffer());
 
     String test2 = "{\"testKey\":\"" + JsonStreamWriter.jsonEscapeStringContent("a \"naughty\" value with a quote in it") + "\"}";
-    jsp.parse(test2,tmpOutput);
+    JsonStreamParser.parseJson(test2,tmpOutput);
     assertEquals("testKey", tmpOutput.getKey());
     assertEquals("a \"naughty\" value with a quote in it", tmpOutput.getBuffer());
     }
@@ -35,7 +34,6 @@ void testHardcodedBasics()
     @Test
     void testControlCharacterEscaping()
         {
-        JsonStreamParser jsp = new JsonStreamParser();
         JsonTestStringExtractor tmpOutput = new JsonTestStringExtractor();
 
         final char[] controlCharacters = new char[32];
@@ -46,7 +44,7 @@ void testHardcodedBasics()
         String encoded = JsonStreamWriter.jsonEscapeStringContent(testString);
         String testJson = "{\"testKey\":\"" + encoded + "\"}";
         // decode again
-        jsp.parse(testJson, tmpOutput); // would throw an  JsonStreamParser.JsonParsingException on parsing errors.
+        JsonStreamParser.parseJson(testJson, tmpOutput); // would throw an  JsonStreamParser.JsonParsingException on parsing errors.
         // check expected key we provided
         assertEquals("testKey", tmpOutput.getKey());
         // compare original input and the encoded-decoded result
@@ -82,7 +80,6 @@ void testHardcodedBasics()
      Random rng = new Random();
      char[] buffer = new char[maxStringLength];
 
-     JsonStreamParser jsp = new JsonStreamParser();
      JsonTestStringExtractor tmpOutput = new JsonTestStringExtractor();
 
      for (int i=0; i<numLoops; i++)
@@ -105,7 +102,7 @@ void testHardcodedBasics()
          String encoded = JsonStreamWriter.jsonEscapeStringContent(testString);
          String testJson = "{\"testKey\":\"" + encoded + "\"}";
          // decode again
-         jsp.parse(testJson, tmpOutput); // would throw an  JsonStreamParser.JsonParsingException on parsing errors.
+         JsonStreamParser.parseJson(testJson, tmpOutput); // would throw an  JsonStreamParser.JsonParsingException on parsing errors.
          // check expected key we provided
          assertEquals("testKey", tmpOutput.getKey());
          // compare original input and the encoded-decoded result
