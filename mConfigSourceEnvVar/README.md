@@ -1,3 +1,4 @@
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,6 +19,7 @@
   "keywords": "environment-variables, runtime-control, debugging-tools"
 }
 </script>
+-->
 
 This is a mConfig module for accessing environment variables for configuration purposes.
 

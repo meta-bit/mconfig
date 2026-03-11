@@ -1,5 +1,6 @@
 # mConfigStandard
 
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -20,6 +21,7 @@
   "keywords": "pom-aggregator, mconfig-standard, dependency-management"
 }
 </script>
+-->
 
 mConfigStandard is the recommended starting point for mConfig. It is a `pom`-packaged
 aggregator that pulls in the core API plus the essential sources and formats.

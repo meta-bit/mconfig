@@ -1,5 +1,6 @@
 # mConfigBase
 
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -20,6 +21,7 @@
   "keywords": "shaded-jar, batteries-included, mconfig-core"
 }
 </script>
+-->
 
 mConfigBase is the "batteries-included" base distribution of mConfig packaged as a
 single, (signed), shaded JAR. It bundles the core API plus the most common sources

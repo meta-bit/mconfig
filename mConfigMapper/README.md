@@ -1,5 +1,6 @@
 # mConfigMapper
 
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -20,6 +21,7 @@
   "keywords": "pojo-mapping, experimental, configuration-binding"
 }
 </script>
+-->
 
 STATUS: **Experimental**
 

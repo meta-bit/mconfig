@@ -1,3 +1,4 @@
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,6 +19,7 @@
   "keywords": "jar-resources, classpath-config, defaults-provider"
 }
 </script>
+-->
 
 This is a mConfig module for accessing JAR file contents for configuration purposes,
 from the "inside" of a JAR especially.

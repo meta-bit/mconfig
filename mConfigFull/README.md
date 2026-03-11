@@ -1,5 +1,6 @@
 # mConfigFull
 
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -20,6 +21,7 @@
   "keywords": "full-distribution, multi-format, slf4j-logging, mapper"
 }
 </script>
+-->
 
 mConfigFull is the "everything included" distribution: it aggregates mConfigStandard
 plus mature sources, formats, mapper, and SLF4J logging.

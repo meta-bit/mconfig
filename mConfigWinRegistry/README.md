@@ -1,5 +1,6 @@
 # mConfig Windows Registry Module (JNR-FFI)
 
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -20,6 +21,7 @@
   "keywords": "windows-registry, jnr-ffi, native-access"
 }
 </script>
+-->
 
 This module provides native access to the Windows Registry using JNR-FFI (Java Native Runtime - Foreign Function Interface).
 It allows mConfig to read and discover configurations stored in the Windows Registry without requiring custom native binaries (DLLs), as JNR-FFI handles the native mapping dynamically.

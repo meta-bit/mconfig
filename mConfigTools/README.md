@@ -1,5 +1,6 @@
 # mConfig CLI tool
 
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -21,6 +22,7 @@
   "keywords": "cli, devops, configuration-audit, monitoring, schema-generation, picocli"
 }
 </script>
+-->
 
 mConfig CLI: 60-Second "Magic" Cheat Sheet
 

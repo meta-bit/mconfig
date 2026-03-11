@@ -1,3 +1,4 @@
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,6 +19,7 @@
   "keywords": "api-facade, convenience-api, coding-flavors"
 }
 </script>
+-->
 
 A smell is not a stench if you find it pleasant!
 

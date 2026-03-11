@@ -1,3 +1,4 @@
+<!--
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -214,6 +215,7 @@
   ]
  }
 </script>
+-->
 # mConfig
 
 The "Hen-and-Egg" Problem Solved.
