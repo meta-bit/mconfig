@@ -16,6 +16,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -35,6 +37,8 @@ jobs:
   publish:
     needs: build             # Only runs if the build passes
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     environment: production   # This creates the "Manual Approval" button
     permissions:
       contents: read
