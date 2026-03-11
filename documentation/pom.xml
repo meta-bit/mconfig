@@ -14,12 +14,7 @@
     <packaging>pom</packaging>
     <url>http://www.metabit.com/</url>
 
-    <distributionManagement>
-        <site>
-            <id>website</id>
-            <url>scp://webhost.company.com/www/website</url>
-        </site>
-    </distributionManagement>
+    <!-- distribution management configuration -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
