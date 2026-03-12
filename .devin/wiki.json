@@ -1,0 +1,300 @@
+{
+  "repo_notes": [
+    {
+      "content": ""
+    }
+  ],
+  "pages": [
+    {
+      "title": "Overview",
+      "purpose": "Introduce mConfig, its purpose as a unified configuration management library, the 10-tier scope hierarchy, and high-level architecture",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Architecture",
+      "purpose": "Deep dive into mConfig's architectural principles and design patterns",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "10-Tier Scope System",
+      "purpose": "Explain the hierarchical scope resolution (POLICY through PRODUCT), priorities, and how configuration values cascade",
+      "parent": "Architecture",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Test Mode",
+      "purpose": "support for development and automated testing, CI and CD",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Module Organization",
+      "purpose": "Document the 25+ module structure, categorization (core, sources, formats, distributions), and dependencies",
+      "parent": "Architecture",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Configuration Resolution",
+      "purpose": "Explain how mConfig resolves configuration values, including storage priority, source-to-scope mapping, and deep origin traceability",
+      "parent": "Architecture",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Core Modules",
+      "purpose": "Overview of the three foundational modules that form mConfig's kernel",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigCore",
+      "purpose": "Document the kernel module: scope resolution engine, interfaces, and core abstractions",
+      "parent": "Core Modules",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigSchema",
+      "purpose": "Explain schema-based type safety, validation, documentation generation, and default value handling",
+      "parent": "Core Modules",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigSecrets",
+      "purpose": "Document secrets management: JIT decryption, automatic masking, heap protection, and cryptographic provider integration (JCE, BouncyCastle)",
+      "parent": "Core Modules",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Configuration Sources",
+      "purpose": "Overview of pluggable source modules that abstract where configuration data originates",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Filesystem Source",
+      "purpose": "Document filesystem configuration loading with OS-native path resolution (XDG, AppData), modular .d directories, and scope mapping",
+      "parent": "Configuration Sources",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "JAR Resources",
+      "purpose": "Explain how mConfigSourceJAR loads embedded defaults from classpath resources for PRODUCT scope",
+      "parent": "Configuration Sources",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Environment Variables",
+      "purpose": "Document environment variable configuration source for SESSION scope and 12-factor app compatibility",
+      "parent": "Configuration Sources",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Windows Registry",
+      "purpose": "Document Windows Registry integration: GPO mapping to POLICY scope, JNR-FFI vs JNI implementations, HKLM/HKCU access",
+      "parent": "Configuration Sources",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "ZooKeeper and Distributed Sources",
+      "purpose": "Explain ZooKeeper integration for CLUSTER scope in distributed systems",
+      "parent": "Configuration Sources",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Format Support",
+      "purpose": "Overview of format parsers and the abstraction between configuration sources and data formats",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "JSON and YAML Formats",
+      "purpose": "Document JSON/YAML support with Jackson and SnakeYAML implementations, including trade-offs between them",
+      "parent": "Format Support",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "TOML Format",
+      "purpose": "Explain TOML support with Jackson and native implementations",
+      "parent": "Format Support",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Properties and INI Formats",
+      "purpose": "Document Java Properties and INI file format support",
+      "parent": "Format Support",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Distribution Packages",
+      "purpose": "Explain the three pre-composed distributions and guidance on choosing the right one",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigStandard",
+      "purpose": "Document the lightweight POM distribution for basic projects with minimal dependencies",
+      "parent": "Distribution Packages",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigBase",
+      "purpose": "Explain the shaded JAR distribution for enterprise: single dependency, JPMS support, signed artifacts",
+      "parent": "Distribution Packages",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigFull",
+      "purpose": "Document the comprehensive cloud-native distribution with environment variables, Jackson formats, logging, and mapping",
+      "parent": "Distribution Packages",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Tools and Utilities",
+      "purpose": "Overview of supporting modules: CLI tool, mapper, utilities, and specialized components",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigTools CLI",
+      "purpose": "Document the command-line tool: operations, distribution formats (JAR, native, .deb), and usage examples",
+      "parent": "Tools and Utilities",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "mConfigMapper",
+      "purpose": "Explain POJO mapping capabilities for type-safe configuration binding",
+      "parent": "Tools and Utilities",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Utility Modules",
+      "purpose": "Document mConfigUtil (legacy adapters), mConfigCheese (alternative patterns), and logging integration",
+      "parent": "Tools and Utilities",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Development Guide",
+      "purpose": "Information for developers working on mConfig itself: building, testing, and contributing",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Build System",
+      "purpose": "Document the Maven multi-module structure, parent POM configuration, plugin usage, and Java version targeting",
+      "parent": "Development Guide",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    }
+  ]
+}
