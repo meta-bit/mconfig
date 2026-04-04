@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
 
     <artifactId>mconfigwinregistryjni</artifactId>
-    <name>mConfigWinRegistryJNI</name>
+    <name>mConfig :: Source :: Windows Registry (JNI)</name>
     <description>JNI implementation for Windows Registry support in the mConfig platform.</description>
 
     <properties>

@@ -4,11 +4,11 @@ Frustration-free boilerplates to start with mConfig in seconds.
 
 ## Starters
 
-| Starter | Build Tool | JPMS | Run Command |
-|---------|------------|------|-------------|
-| [maven-minimal](maven-minimal) | Maven | No | `mvn compile exec:java` |
-| [gradle-kotlin](gradle-kotlin) | Gradle Kotlin DSL | No | `./gradlew run` |
-| [jpms-maven](jpms-maven) | Maven | **Yes** | `mvn compile exec:java` |
+| Starter                        | Build Tool        | JPMS    | Run Command             |
+|--------------------------------|-------------------|---------|-------------------------|
+| [maven-minimal](maven-minimal) | Maven             | No      | `mvn compile exec:java` |
+| [gradle-kotlin](gradle-kotlin) | Gradle Kotlin DSL | No      | `./gradlew run`         |
+| [jpms-maven](jpms-maven)       | Maven             | **Yes** | `mvn compile exec:java` |
 
 ## How to Use
 1. `git clone https://github.com/meta-bit/mconfig`

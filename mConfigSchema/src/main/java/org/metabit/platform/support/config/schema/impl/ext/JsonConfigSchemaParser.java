@@ -149,7 +149,7 @@ public class JsonConfigSchemaParser
         }
 
     // mapping class internal to the Schema converter.
-    static class ConfigSchemaSetter implements JsonStreamParser.JsonStreamConsumer
+    static class ConfigSchemaSetter extends org.metabit.library.format.json.DummyJsonStreamConsumer
     {
         enum ConfigEntryLabel
         {NONE, TYPE, KEY, DESCRIPTION, FLAGS, DEFAULT, PATTERN, SCOPES, SECRET, WRITE_SCOPE}
@@ -179,26 +179,31 @@ public class JsonConfigSchemaParser
         @Override
         public void consumeString(int line, int column, int level, String string)
             {
-            if (currentArray != null)
-                {
-                currentArray.add(string);
-                }
-            else if (currentKey != null)
-                {
-                data.put(currentKey, string);
-                }
+            addValue(string);
             }
 
         @Override
         public void consumeTrue(int line, int column, int level)
             {
-            if (currentKey != null) data.put(currentKey, Boolean.TRUE);
+            addValue(Boolean.TRUE);
             }
 
         @Override
         public void consumeFalse(int line, int column, int level)
             {
-            if (currentKey != null) data.put(currentKey, Boolean.FALSE);
+            addValue(Boolean.FALSE);
+            }
+
+        private void addValue(Object value)
+            {
+            if (currentArray != null)
+                {
+                currentArray.add(value);
+                }
+            else if (currentKey != null)
+                {
+                data.put(currentKey, value);
+                }
             }
 
         @Override
@@ -391,13 +396,11 @@ public class JsonConfigSchemaParser
             return Integer.parseInt(part);
             }
 
-        @Override public void consumeNull(int line, int column, int level) {}
-        @Override public void consumeNumberInteger(int line, int column, int level, int i) { if (currentKey != null) data.put(currentKey, i); }
-        @Override public void consumeNumberLong(int line, int column, int level, long l) { if (currentKey != null) data.put(currentKey, l); }
-        @Override public void consumeNumberDouble(int line, int column, int level, double v) { if (currentKey != null) data.put(currentKey, v); }
-        @Override public void consumeNumberBigInteger(int line, int column, int level, BigInteger bigInteger) { if (currentKey != null) data.put(currentKey, bigInteger); }
-        @Override public void consumeNumberBigDecimal(int line, int column, int level, BigDecimal bigDecimal) { if (currentKey != null) data.put(currentKey, bigDecimal); }
-        @Override public void consumeObjectStart(int line, int column, int level) {}
+        @Override public void consumeNumberInteger(int line, int column, int level, int i) { addValue(i); }
+        @Override public void consumeNumberLong(int line, int column, int level, long l) { addValue(l); }
+        @Override public void consumeNumberDouble(int line, int column, int level, double v) { addValue(v); }
+        @Override public void consumeNumberBigInteger(int line, int column, int level, BigInteger bigInteger) { addValue(bigInteger); }
+        @Override public void consumeNumberBigDecimal(int line, int column, int level, BigDecimal bigDecimal) { addValue(bigDecimal); }
     }
 
     /**
@@ -412,7 +415,7 @@ public class JsonConfigSchemaParser
      * the end-of-structure consumption to maintain data integrity and linkage. 
      * See {@code devdoc/config_schemes_internals.md} for more details.</p>
      */
-    private static class MultiFormatConfigSchemaParser implements JsonStreamParser.JsonStreamConsumer
+    private static class MultiFormatConfigSchemaParser extends org.metabit.library.format.json.DummyJsonStreamConsumer
     {
         private final ConfigLoggingInterface    logger;
         private final Map<String, ConfigSchema> resultStorage;
@@ -631,118 +634,62 @@ public class JsonConfigSchemaParser
         @Override
         public void consumeString(int line, int column, int level, String string)
             {
-            ParsingScope scope = scopeStack.peek();
-            if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
-                {
-                if (currentArrayData != null) currentArrayData.add(string);
-                }
-            else if (currentObjectData != null && currentKey != null)
-                {
-                currentObjectData.put(currentKey, string);
-                }
+            addValue(string);
             }
 
         @Override
         public void consumeTrue(int line, int column, int level)
             {
-            ParsingScope scope = scopeStack.peek();
-            if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
-                {
-                if (currentArrayData != null) currentArrayData.add(Boolean.TRUE);
-                }
-            else if (currentObjectData != null && currentKey != null)
-                {
-                currentObjectData.put(currentKey, Boolean.TRUE);
-                }
+            addValue(Boolean.TRUE);
             }
 
         @Override
         public void consumeFalse(int line, int column, int level)
             {
+            addValue(Boolean.FALSE);
+            }
+
+        private void addValue(Object value)
+            {
             ParsingScope scope = scopeStack.peek();
             if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
                 {
-                if (currentArrayData != null) currentArrayData.add(Boolean.FALSE);
+                if (currentArrayData != null) currentArrayData.add(value);
                 }
             else if (currentObjectData != null && currentKey != null)
                 {
-                currentObjectData.put(currentKey, Boolean.FALSE);
+                currentObjectData.put(currentKey, value);
                 }
-            }
-
-        @Override
-        public void consumeNull(int line, int column, int level)
-            {
             }
 
         @Override
         public void consumeNumberInteger(int line, int column, int level, int i)
             {
-            ParsingScope scope = scopeStack.peek();
-            if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
-                {
-                if (currentArrayData != null) currentArrayData.add(i);
-                }
-            else if (currentObjectData != null && currentKey != null)
-                {
-                currentObjectData.put(currentKey, i);
-                }
+            addValue(i);
             }
 
         @Override
         public void consumeNumberLong(int line, int column, int level, long l)
             {
-            ParsingScope scope = scopeStack.peek();
-            if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
-                {
-                if (currentArrayData != null) currentArrayData.add(l);
-                }
-            else if (currentObjectData != null && currentKey != null)
-                {
-                currentObjectData.put(currentKey, l);
-                }
+            addValue(l);
             }
 
         @Override
         public void consumeNumberDouble(int line, int column, int level, double v)
             {
-            ParsingScope scope = scopeStack.peek();
-            if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
-                {
-                if (currentArrayData != null) currentArrayData.add(v);
-                }
-            else if (currentObjectData != null && currentKey != null)
-                {
-                currentObjectData.put(currentKey, v);
-                }
+            addValue(v);
             }
 
         @Override
         public void consumeNumberBigInteger(int line, int column, int level, BigInteger bigInteger)
             {
-            ParsingScope scope = scopeStack.peek();
-            if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
-                {
-                if (currentArrayData != null) currentArrayData.add(bigInteger);
-                }
-            else if (currentObjectData != null && currentKey != null)
-                {
-                currentObjectData.put(currentKey, bigInteger);
-                }
+            addValue(bigInteger);
             }
 
         @Override
         public void consumeNumberBigDecimal(int line, int column, int level, BigDecimal bigDecimal)
             {
-            ParsingScope scope = scopeStack.peek();
-            if (scope == ParsingScope.SCHEME_LIST || scope == ParsingScope.ENTRY_LIST || scope == ParsingScope.NESTED_ARRAY)
-                {
-                if (currentArrayData != null) currentArrayData.add(bigDecimal);
-                }
-            else if (currentObjectData != null && currentKey != null)
-                {
-                currentObjectData.put(currentKey, bigDecimal);
-                }
+            addValue(bigDecimal);
             }
     }
 }

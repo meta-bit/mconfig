@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
-import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.format.json.jackson.JSONJacksonConfigLayer;
 import org.metabit.platform.support.config.impl.format.json.jackson.JSONwithJacksonFormat;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
-import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 
 import java.io.IOException;
 import java.nio.file.Path;

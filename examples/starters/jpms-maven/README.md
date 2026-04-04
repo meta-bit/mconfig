@@ -12,7 +12,7 @@
 3. Expected output: Same as Maven minimal.
 
 ## Key Differences
-- `mConfigBase` dep (JPMS-ready).
+- `mConfigBasicBinary` dep (JPMS-ready).
 - `module-info.java` with correct `requires`.
 - Compiler `--add-modules ALL-MODULE-PATH` for auto deps.
 

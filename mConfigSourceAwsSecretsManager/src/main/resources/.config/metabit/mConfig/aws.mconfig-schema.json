@@ -1,0 +1,14 @@
+[
+  {
+    "KEY": "region",
+    "TYPE": "STRING",
+    "DESCRIPTION": "The AWS region to use (e.g., 'us-east-1'). If not specified, the default AWS region provider chain is used."
+  },
+  {
+    "KEY": "pollInterval",
+    "TYPE": "NUMBER",
+    "DESCRIPTION": "Polling interval in milliseconds to check for secret updates. Set to 0 to disable polling. NOTE: AWS API calls have costs.",
+    "DEFAULT": "300000",
+    "PATTERN": "uint32"
+  }
+]

@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigsourcezookeeper</artifactId>
-    <name>mConfigSourceZooKeeper</name>
+    <name>mConfig :: Source :: ZooKeeper</name>
     <description>mConfig module for Apache ZooKeeper configuration storage</description>
 
     <dependencies>
@@ -66,4 +66,20 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>metabit.mconfig.source.zookeeper</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

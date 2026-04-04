@@ -35,6 +35,7 @@ Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > 
 - [1.5 Test Mode](15_test_mode.md)
 
 ## Part 2: Core Concepts
+- [2.0 Scopes](20_scopes.md)
 - [2.1 How it Works](21_how_it_works.md)
 - [2.2 Priorities and Hierarchies](22_priorities_and_hierarchies.md)
 - [2.3 Configuration Schemas](23_configuration_schemas.md)
@@ -50,7 +51,9 @@ Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > 
 - [3.6 Handling Secrets](35_handling_secrets.md)
 - [3.7 Windows Registry Access](36_windows_registry.md)
 - [3.8 Extensions and Advanced Use](37_extensions_and_advanced_use.md)
-- [3.9 Code Improvements and Best Practices](38_code_improvements.md)
+- [3.9 Utilities and Adapters](39_utilities_and_adapters.md)
+- [3.10 Code Improvements and Best Practices](38_code_improvements.md)
+- [3.11 Experimental POJO Mapping](https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md)
 
 ## Part 4: Reference & Project
 - [4.1 mConfig Tool](41_mconfig_tool.md)

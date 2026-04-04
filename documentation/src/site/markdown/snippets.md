@@ -49,13 +49,13 @@ try (ConfigFactory f = ConfigFactoryBuilder.create("myco", "myapp").build()) {
 
 **Problem:** Runtime `NumberFormatException`; scattered defaults.
 
-`src/main/resources/.config/myco/myapp/network.schema.json`:
+`src/main/resources/.config/myco/myapp/network.mconfig-schema.json`:
 ```json
 [{"name":"port","type":"int","default":8080,"min":1,"max":65535}]
 ```
 
 ```java
-ConfigSchema schema = ConfigSchema.fromClasspath("network.schema.json");
+ConfigSchema schema = ConfigSchema.fromClasspath("network.mconfig-schema.json");
 Config cfg = factory.getConfig("network", schema);
 int port = cfg.getInteger("port");  // Validates!
 ```
@@ -112,7 +112,7 @@ module com.example {
 }
 ```
 
-*Deps:* `mConfigStandard` (BOM) or `mConfigBase`.
+*Deps:* `mconfigbasic` (BOM) or `mconfigbasicbinary`.
 
 [JPMS FAQ](43_faq.md#jpms-module-access-errors)
 

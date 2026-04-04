@@ -1,1 +1,0 @@
-package org.metabit.platform.support.osdetection;

@@ -11,7 +11,7 @@ import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 
 import java.util.*;
 
@@ -129,10 +129,7 @@ public class ConfigSchemaImpl implements ConfigSchema
         if (this.replaceDefaultLayer)
             defaultLayer.clear();
 
-
-        //  @TODO CHECK, old comment was: ConfigLocationImpl lacks the correct constructor - we don't have a file "Path"; and the correct value for writeFlag would be a brownian "mu".
         ConfigSource defaultLayerSchemaLocation = new ConfigLocationImpl(ConfigScope.PRODUCT, schemaDefaultConfigSource, null, schemaDefaultConfigSource);
-
         for (Map.Entry<String, ConfigSchemaEntry> entry : lut.entrySet())
             {
             String key = entry.getKey();
@@ -142,7 +139,7 @@ public class ConfigSchemaImpl implements ConfigSchema
 
             ConfigEntryMetadata meta = new ConfigEntryMetadata(defaultLayerSchemaLocation);
             meta.setSpecification(cse);
-            ConfigEntry ce = new StringConfigEntryLeaf(key, stringDefault, meta);
+            ConfigEntry ce = new GenericConfigEntryLeaf(key, stringDefault, ConfigEntryType.STRING, meta);
             defaultLayer.putEntry(key, ce);
             }
         return;

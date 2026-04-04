@@ -44,13 +44,17 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("company", "app")
 
 ## 3.6.3 Base Path Configuration
 
-By default, the registry source looks under `Software\\[<CompanyName>\\\\]<ApplicationName>` (company segment omitted if `COMPANY_NAME` blank/null/whitespace). You can override this using the `REGISTRY_BASE_PATH` feature:
+By default, the registry source looks under `Software\\[<CompanyName>\\\\]<ApplicationName>` (company segment omitted if `COMPANY_NAME` blank/null/whitespace). You can override this using the `REGISTRY_BASE_PATH` feature. 
+
+You can use the module-specific feature classes, or a string-based key to avoid a compile-time dependency on a specific implementation:
 
 ```java
-try (ConfigFactory factory = ConfigFactoryBuilder.create("company", "app")
-    .setFeature(ConfigFeature.REGISTRY_BASE_PATH, "Software\\LegacyPath\\App")
-    .build())
-    {
-    // ...
-    }
+// Option 1: Using module-specific classes
+// For mConfigWinRegistry
+builder.setFeature(WinRegistryFeatures.REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
+// For mConfigWinRegistryJNI
+builder.setFeature(WinRegistryJNIFeatures.REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
+
+// Option 2: Using a string key (works for both modules)
+builder.setFeature("REGISTRY_BASE_PATH", "Software\\LegacyPath\\App");
 ```

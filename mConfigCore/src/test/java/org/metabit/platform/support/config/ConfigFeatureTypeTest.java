@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.metabit.platform.support.config.ConfigFeature.*;
 
-class ConfigFeatureTypesTest
+class ConfigFeatureTypeTest
 {
 
     private ConfigFactoryBuilder newBuilder()
@@ -248,7 +248,6 @@ class ConfigFeatureTypesTest
         assertTrue(EXCEPTION_ON_MISSING_ENTRY.isBooleanType());
         assertTrue(EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND.isBooleanType());
         assertTrue(FILENAME_EXTENSION_MAPPINGS.isStringListType());
-        assertTrue(FREE_CONFIGURATION.isBooleanType());
         assertTrue(NO_DEFAULT_DIRECTORIES.isBooleanType());
         assertTrue(DEFAULT_TEXTFILE_CHARSET.isStringType());
         assertTrue(CURRENT_PLATFORM_OS.isSpecialClassType(org.metabit.platform.support.osdetection.OperatingSystem.class));

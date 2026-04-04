@@ -22,7 +22,9 @@ import java.util.Map;
  */
 public class ClasspathConfigSchemaProvider implements ConfigSchemaProvider
 {
-    private static final String CONFIG_RESOURCE_PATH_PREFIX = ".config/";
+    public static final String CONFIG_RESOURCE_PATH_PREFIX = ".config/";
+    public static final String SCHEMA_FILE_SUFFIX = ".mconfig-schema.json";
+    private static final int   STREAM_READING_BUFFER_SIZE  = 4096;
 
     @Override
     public Map<String, ConfigSchema> discoverSchemas(ConfigFactoryInstanceContext ctx)
@@ -33,7 +35,7 @@ public class ClasspathConfigSchemaProvider implements ConfigSchemaProvider
 
         scanResources(classLoader, logger, CONFIG_RESOURCE_PATH_PREFIX, (name, is)->
             {
-            if (name.endsWith(".mconfig-schema.json") || name.endsWith(".schema.json") || name.endsWith(".scheme.json"))
+            if (name.endsWith(SCHEMA_FILE_SUFFIX))
                 {
                 String configName = extractConfigNameFromPath(name);
                 if (configName != null)
@@ -158,17 +160,9 @@ public class ClasspathConfigSchemaProvider implements ConfigSchemaProvider
             {
             fileName = name.substring(lastSlash+1);
             }
-        if (fileName.endsWith(".mconfig-schema.json"))
+        if (fileName.endsWith(SCHEMA_FILE_SUFFIX))
             {
-            return fileName.substring(0, fileName.length()-".mconfig-schema.json".length());
-            }
-        if (fileName.endsWith(".schema.json"))
-            {
-            return fileName.substring(0, fileName.length()-".schema.json".length());
-            }
-        if (fileName.endsWith(".scheme.json"))
-            {
-            return fileName.substring(0, fileName.length()-".scheme.json".length());
+            return fileName.substring(0, fileName.length()-SCHEMA_FILE_SUFFIX.length());
             }
         return null;
         }
@@ -176,7 +170,7 @@ public class ClasspathConfigSchemaProvider implements ConfigSchemaProvider
     private String readStreamToString(InputStream is)
             throws IOException
         {
-        byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[STREAM_READING_BUFFER_SIZE];
         int bytesRead;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         while ((bytesRead = is.read(buffer)) != -1)

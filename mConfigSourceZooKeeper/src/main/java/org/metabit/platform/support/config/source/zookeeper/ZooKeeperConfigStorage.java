@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018-2026 metabit GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.metabit.platform.support.config.source.zookeeper;
 
 import org.apache.curator.framework.CuratorFramework;
@@ -18,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
     /**
      * Experimental ZooKeeper configuration storage.
-     * 
+     * <p/>
      * FUTURE EXECUTION PLAN:
      * This storage currently uses a BLOB-based approach (one ZNode = one full config file).
      * A plan for transitioning to a Tree-based design (hierarchical ZNodes = hierarchical keys)
@@ -27,6 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ZooKeeperConfigStorage implements ConfigStorageInterface
 {
     private ConfigLoggingInterface logger;
+    private ConfigFactoryInstanceContext ctx;
     private CuratorFramework client;
     private String rootPath;
     private boolean initialized = false;
@@ -55,18 +71,25 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
     public boolean init(ConfigFactoryInstanceContext ctx)
     {
         this.logger = ctx.getLogger();
+        this.ctx = ctx;
+        return true;
+    }
+
+    @Override
+    public void postInit(org.metabit.platform.support.config.ConfigFactory factory)
+    {
         ConfigFactorySettings settings = ctx.getSettings();
 
-        String bootstrapName = settings.getString(ConfigFeature.ZOOKEEPER_BOOTSTRAP_CONFIG_NAME);
+        String bootstrapName = settings.getString(ZooKeeperFeatures.BOOTSTRAP_CONFIG_NAME);
         Configuration bootstrapConfig = null;
         try
         {
-            bootstrapConfig = ctx.getFactory().getConfig(bootstrapName);
+            bootstrapConfig = factory.getConfig(bootstrapName);
         }
         catch (Exception e)
         {
             logger.info("ZooKeeper bootstrap config '" + bootstrapName + "' not found, skipping ZooKeeper storage activation.");
-            return false;
+            return;
         }
 
         String connectString = null;
@@ -77,13 +100,13 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
         }
         if (connectString == null)
         {
-            connectString = settings.getString(ConfigFeature.ZOOKEEPER_CONNECT_STRING);
+            connectString = settings.getString(ZooKeeperFeatures.CONNECT_STRING);
         }
 
         if (connectString == null || connectString.isEmpty())
         {
             logger.debug("ZooKeeper connect string not found, ZooKeeper storage remains inactive.");
-            return false;
+            return;
         }
 
         this.rootPath = null;
@@ -100,7 +123,7 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
         }
         if (this.rootPath == null)
         {
-            this.rootPath = settings.getString(ConfigFeature.ZOOKEEPER_ROOT_PATH);
+            this.rootPath = settings.getString(ZooKeeperFeatures.ROOT_PATH);
         }
 
         Integer sessionTimeout = null;
@@ -117,7 +140,7 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
         }
         if (sessionTimeout == null)
         {
-            sessionTimeout = settings.getInteger(ConfigFeature.ZOOKEEPER_SESSION_TIMEOUT_MS);
+            sessionTimeout = settings.getInteger(ZooKeeperFeatures.SESSION_TIMEOUT_MS);
         }
 
         Integer retryBaseSleepMs = null;
@@ -134,7 +157,7 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
         }
         if (retryBaseSleepMs == null)
         {
-            retryBaseSleepMs = settings.getInteger(ConfigFeature.ZOOKEEPER_RETRY_BASE_SLEEP_MS);
+            retryBaseSleepMs = settings.getInteger(ZooKeeperFeatures.RETRY_BASE_SLEEP_MS);
         }
 
         Integer retryMaxRetries = null;
@@ -151,7 +174,7 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
         }
         if (retryMaxRetries == null)
         {
-            retryMaxRetries = settings.getInteger(ConfigFeature.ZOOKEEPER_RETRY_MAX_RETRIES);
+            retryMaxRetries = settings.getInteger(ZooKeeperFeatures.RETRY_MAX_RETRIES);
         }
 
         try
@@ -168,13 +191,10 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
             // Register default locations for CLUSTER and ORGANIZATION scopes
             ctx.getSearchList().insertAtScopeEnd(new ZooKeeperConfigLocation(this, ConfigScope.CLUSTER, rootPath + "/cluster"), ConfigScope.CLUSTER);
             ctx.getSearchList().insertAtScopeEnd(new ZooKeeperConfigLocation(this, ConfigScope.ORGANIZATION, rootPath + "/organization"), ConfigScope.ORGANIZATION);
-
-            return true;
         }
         catch (Exception e)
         {
             logger.error("Failed to initialize ZooKeeper client", e);
-            return false;
         }
     }
 
@@ -205,7 +225,7 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
     }
 
     @Override
-    public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation location, LayeredConfigurationInterface layeredCfg)
+    public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation location, LayeredConfigurationInterface layeredCfg)
     {
         if (!initialized) return;
 
@@ -276,12 +296,12 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
 
     /**
      * Check if the configuration has changed since the last check.
-     * 
+     * <p/>
      * LESSONS LEARNED (Real-time updates):
      * 1. Handle Mapping: mConfig passes different types of handles depending on where the check is triggered.
      *    - Location handles (String path) for top-level search list checks.
      *    - Stream handles (InputStream) when checking specific instantiated layers.
-     * 2. Re-read Triggering: Returning 'true' here causes mConfig to call tryToReadConfigurationLayers again.
+     * 2. Re-read Triggering: Returning 'true' here causes mConfig to call updateConfigurationLayers again.
      * 3. Cache Consistency: After a change is detected, we must clear the local change tracking to avoid 
      *    infinite update loops, while ensuring the re-read gets the latest data from ZooKeeper.
      */
@@ -369,13 +389,13 @@ public class ZooKeeperConfigStorage implements ConfigStorageInterface
     }
 
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
     {
         return null; // Writing not yet fully implemented in this experimental version
     }
 
     @Override
-    public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
+    public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
     {
         // Not implemented for ZK yet
     }

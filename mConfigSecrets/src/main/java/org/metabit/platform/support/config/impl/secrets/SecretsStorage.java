@@ -102,7 +102,7 @@ public class SecretsStorage implements ConfigStorageInterface
         }
 
     @Override
-    public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
+    public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
         {
         }
 
@@ -118,13 +118,13 @@ public class SecretsStorage implements ConfigStorageInterface
         }
 
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         {
         return null;
         }
 
     @Override
-    public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
+    public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
         {
         }
 

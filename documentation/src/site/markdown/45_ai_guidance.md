@@ -40,7 +40,7 @@ Related docs:
 - For a standard Maven layout, the default location is:
   - `src/main/resources/.config/<company>/<app>/<config>.properties`
 - Schemas (typed defaults and validation) live next to the config file:
-  - `src/main/resources/.config/<company>/<app>/<config>.schema.json`
+  - `src/main/resources/.config/<company>/<app>/<config>.mconfig-schema.json`
 - Avoid manual loading of `Properties` defaults. mConfig already layers JAR
   defaults with filesystem, environment, and other sources.
 - Avoid null checks. mConfig has ConfigFeature flags to control behaviour, 

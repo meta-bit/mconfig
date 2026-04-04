@@ -5,16 +5,16 @@ import org.metabit.platform.support.config.impl.ConfigSearchList;
 
 /**
  * Initializes Android search paths for config discovery.
- *
+ * <p/>
  * Android is special because it has strict sandboxing and specific directory structures.
  * Since we are a library and don't have direct access to the Android 'Context' object,
  * we rely on system properties and environment variables.
- *
+ * <p/>
  * Scopes on Android:
  * - USER/APPLICATION: Internal app files directory (/data/data/<package>/files/)
  * - USER: External files directory (/storage/emulated/0/Android/data/<package>/files/)
  * - SESSION: Cache directory (/data/data/<package>/cache/)
- *
+ * <p/>
  * Note: Android-specific paths are constructed using environment variables and system properties,
  * which might not be available in all Android environments.
  * Fallback to standard Linux paths (XDG/FHS) is provided for broader compatibility.

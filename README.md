@@ -55,7 +55,7 @@
     {
       "@type": "DefinedTerm",
       "name": "HOST Scope",
-      "description": "Machine-specific settings located in /etc/ files or the Windows Registry (HKLM).",
+      "description": "System-wide settings located in /etc/ files, %ProgramData%, or the Windows Registry (HKLM).",
       "sameAs": "https://en.wikipedia.org/wiki/Configuration_file"
     },
     {
@@ -196,21 +196,21 @@
     },
     {
       "@type": "SoftwareSourceCode",
-      "name": "mConfigBase",
+      "name": "mConfigBasicBinary",
       "description": "Batteries-included base distribution of mConfig. Shaded JAR.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigBase/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigBasicBinary/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigBasic",
+      "description": "Standard set of mConfig modules for basic usage. POM aggregator.",
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigBasic/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigStandard",
-      "description": "Standard set of mConfig modules for basic usage. POM aggregator.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigStandard/README.md"
-    },
-    {
-      "@type": "SoftwareSourceCode",
-      "name": "mConfigFull",
       "description": "Extended set of mConfig modules for advanced usage. POM aggregator.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigFull/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigStandard/README.md"
     }
   ]
  }
@@ -243,7 +243,7 @@ from embedded I2C storage to cloud-native orchestration.
   (e.g., Kubernetes ConfigMaps mounted after startup).
 * OS-Native Intelligence:
   Respects XDG Base Directory standards on Linux and 
-  Registry/Known Folder conventions on Windows.
+  Registry/ProgramData conventions on Windows.
 * Modular Drop-in Support:
   mConfig implements Modular Directory Discovery, automatically layering .d fragments into the configuration stack without manual setup.
 * Multi-Format Support: comes with format modules for TOML, YAML, JSON5, JSON, INI, and Java Properties.¹
@@ -255,16 +255,18 @@ from embedded I2C storage to cloud-native orchestration.
   so you always have the latest configuration available. ("zero-code data binding")
 * Minimal Footprint: The core library is about 200kB (JAR size).
   This is exceptionally small compared to frameworks like Spring Boot or Apache Commons, making it ideal for microservices, serverless functions, and environments where memory/disk space is critical.
-* CLI Tool: mConfig comes with a command-line tool for auditing and troubleshooting.
+* CLI Tool: mConfig comes with a command-line tool for scripting, auditing, and troubleshooting.
+* Test Mode: for CI/CD and local development, test mode provides a clean environment separate from deployment paths.
 
-¹ parsing of TOML,YAML,JSON5,JSON is done using mature external libraries,
-so using these formats will increase your application's footprint. 
+¹ parsing of TOML,YAML,JSON5,JSON can be done using mature external libraries,
+so using these formats will increase your application's footprint.
+For TOML, INI, and Java Properties formats, mConfig provides native modules, which are smaller and preserve comments.
 
 ## usage
 
 Choose the entry point that fits your project architecture:
 
-### 1. Standard Core (`mConfigStandard`)
+### 1. Basic Set (`mConfigBasic`)
 
 Best for: Lightweight Java projects requiring standard filesystem support.
 
@@ -273,7 +275,7 @@ Maven:
 ```xml
 <dependency>
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfigStandard</artifactId>
+    <artifactId>mconfigbasic</artifactId>
     <version>${mconfig.version}</version>
     <type>pom</type>
 </dependency>
@@ -282,10 +284,10 @@ Maven:
 Gradle:
 
 ```gradle
-implementation 'org.metabit.platform.support.config:mConfigStandard:${mconfig.version}'
+implementation 'org.metabit.platform.support.config:mconfigbasic:${mconfig.version}'
 ```
 
-### 2. Binary Signed Package (`mConfigBase`)
+### 2. Binary Signed Package (`mConfigBasicBinary`)
 
 Best for: Enterprise environments requiring signed artifacts or a single "fat" JAR.
 Fully compatible with the Java Module System (JPMS) since v0.7.26.
@@ -295,7 +297,7 @@ Maven:
 ```xml
 <dependency>
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfigBase</artifactId>
+    <artifactId>mconfigbasicbinary</artifactId>
     <version>${mconfig.version}</version>
 </dependency>
 ```
@@ -303,10 +305,10 @@ Maven:
 Gradle:
 
 ```gradle
-implementation 'org.metabit.platform.support.config:mConfigBase:${mconfig.version}'
+implementation 'org.metabit.platform.support.config:mconfigbasicbinary:${mconfig.version}'
 ```
 
-### 3. Full Mature Set (`mConfigFull`)
+### 3. Standard Mature Set (`mConfigStandard`)
 
 Best for: Modern cloud applications.
 Includes Environment Variables, Windows Registry, Slf4j, and full JSON/YAML support via Jackson.
@@ -316,7 +318,7 @@ Maven:
 ```xml
 <dependency>
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfigFull</artifactId>
+    <artifactId>mconfigstandard</artifactId>
     <version>${mconfig.version}</version>
     <type>pom</type>
 </dependency>
@@ -325,14 +327,14 @@ Maven:
 Gradle:
 
 ```gradle
-implementation 'org.metabit.platform.support.config:mConfigFull:${mconfig.version}'
+implementation 'org.metabit.platform.support.config:mconfigstandard:${mconfig.version}'
 ```
 
 ## quick links
-* [getting started - usage](documentation/src/site/markdown/2_how_do_I_use_it.md)
+* [getting started - usage](documentation/src/site/markdown/13_getting_started.md)
 * the [documentation](documentation/src/site/markdown/index.md) - read from the start
-* [notes for code-generating tools](documentation/src/site/markdown/ai-guidance.md)
-* Jump to [design documentation](documentation/src/site/markdown/design_consolidated.md)
+* [notes for code-generating tools](documentation/src/site/markdown/45_ai_guidance.md)
+* Jump to [design documentation](documentation/src/site/markdown/44_design_consolidated.md)
 
 
 ## Why a CLI for a Java Library?
@@ -348,17 +350,30 @@ of code or restarting your service.
 ### Quick CLI Examples
 ```bash
 # Diagnose a value's origin
-mconfig mycompany:myapp get database.port -v
+mconfig mycompany:myapp:database get port -v
 
 # List all discovered configs
 mconfig mycompany:myapp list
 
+# Show the full combined config contents
+mconfig mycompany:myapp:database show
+
+# Show the combined config contents as JSON
+mconfig mycompany:myapp:database show --format json
+
+# set a value
+mconfig mycompany:myapp:database set port=3306 
+
+# set a value, create file if none existed yet. 
+mconfig mycompany:myapp:database set frequency=0.5s --create 
+
 # Monitor for changes (live-tail)
 mconfig mycompany:myapp:network monitor --dump
-
+```
+<!--
 # Generate schema from existing configs
 mconfig mycompany:myapp propose-scheme > network.scheme.json
-```
+-->
 **Pro Tip:** Install via `.deb` package: `mvn -pl mConfigTools package && sudo dpkg -i mConfigTools/target/*.deb`
 
 ## Starters 🚀

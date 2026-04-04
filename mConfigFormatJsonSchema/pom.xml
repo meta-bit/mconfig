@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigformatjsonschema</artifactId>
-    <name>mConfigFormatJsonSchema</name>
+    <name>mConfig :: Format :: JSON Schema</name>
     <description>Standard JSON Schema (json-schema.org) support for mConfig</description>
 
     <properties>

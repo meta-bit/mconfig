@@ -60,14 +60,6 @@ public class MockConfigFactory extends DefaultConfigFactory implements ConfigFac
         /// the init call here performs important internal initialization; but it also adds our InMemoryLayerSource to the search list.
         testStorageInRAM.init(ctx); // important to call init() first!
         assert (!ctx.getSearchList().getEntries().isEmpty());
-        // create a location handle for it
-        ConfigLocationImpl location = new ConfigLocationImpl(ConfigScope.RUNTIME, testStorageInRAM, null, null);
-        ctx.getSearchList().insertAtScopeStart(location, ConfigScope.RUNTIME);
-        // create a config layer for the memory storage
-        InMemoryLayer testLayer = new InMemoryLayer(ctx, location, ConfigScope.RUNTIME);
-        // add this to the handle which we created above.
-        location.setLayer(testLayer);
-        //
         }
 
     // @TODO here, add a function to add file test paths, with scopes.

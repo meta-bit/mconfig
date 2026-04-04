@@ -6,8 +6,9 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
+    <name>mConfig :: Source :: Environment Variables</name>
     <description>mConfig module to obtain configuration information from OS/runtime environment</description>
     <dependencies>
         <dependency>
@@ -33,8 +34,6 @@
         </dependency>
     </dependencies>
     <artifactId>mconfigsourceenvvar</artifactId>
-    <name>mConfigSourceEnvVar</name>
-
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

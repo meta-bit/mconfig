@@ -6,11 +6,13 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigcore</artifactId>
-    <name>mConfigCore</name>
+    <name>mConfig :: Core</name>
+    <inceptionYear>2017</inceptionYear>
+    <!-- original concept dates back to 1996 -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

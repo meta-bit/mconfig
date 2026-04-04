@@ -3,7 +3,7 @@ package org.metabit.testing.platform.support.config.test;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
@@ -222,26 +222,26 @@ public class SchemeTests
         // port
         ConfigSchemaEntry portEntry = sf.createEntry("port", ConfigEntryType.NUMBER, "", null, "port", null, null);
         meta.setSpecification(portEntry);
-        assertTrue(portEntry.validateEntry(new TypedConfigEntryLeaf("port", "80", ConfigEntryType.NUMBER, meta)));
-        assertFalse(portEntry.validateEntry(new TypedConfigEntryLeaf("port", "99999", ConfigEntryType.NUMBER, meta)));
+        assertTrue(portEntry.validateEntry(new GenericConfigEntryLeaf("port", "80", ConfigEntryType.NUMBER, meta)));
+        assertFalse(portEntry.validateEntry(new GenericConfigEntryLeaf("port", "99999", ConfigEntryType.NUMBER, meta)));
 
         // email
         ConfigSchemaEntry emailEntry = sf.createEntry("email", ConfigEntryType.STRING, "", null, "email", null, null);
         meta.setSpecification(emailEntry);
-        assertTrue(emailEntry.validateEntry(new TypedConfigEntryLeaf("email", "test@example.com", ConfigEntryType.STRING, meta)));
-        assertFalse(emailEntry.validateEntry(new TypedConfigEntryLeaf("email", "invalid-email", ConfigEntryType.STRING, meta)));
+        assertTrue(emailEntry.validateEntry(new GenericConfigEntryLeaf("email", "test@example.com", ConfigEntryType.STRING, meta)));
+        assertFalse(emailEntry.validateEntry(new GenericConfigEntryLeaf("email", "invalid-email", ConfigEntryType.STRING, meta)));
 
         // duration
         ConfigSchemaEntry durationEntry = sf.createEntry("duration", ConfigEntryType.DURATION, "", null, "duration", null, null);
         meta.setSpecification(durationEntry);
-        assertTrue(durationEntry.validateEntry(new TypedConfigEntryLeaf("duration", "PT1H", ConfigEntryType.DURATION, meta)));
-        assertFalse(durationEntry.validateEntry(new TypedConfigEntryLeaf("duration", "invalid", ConfigEntryType.DURATION, meta)));
+        assertTrue(durationEntry.validateEntry(new GenericConfigEntryLeaf("duration", "PT1H", ConfigEntryType.DURATION, meta)));
+        assertFalse(durationEntry.validateEntry(new GenericConfigEntryLeaf("duration", "invalid", ConfigEntryType.DURATION, meta)));
 
         // size
         ConfigSchemaEntry sizeEntry = sf.createEntry("size", ConfigEntryType.NUMBER, "", null, "size", null, null);
         meta.setSpecification(sizeEntry);
-        assertTrue(sizeEntry.validateEntry(new TypedConfigEntryLeaf("size", "1024", ConfigEntryType.NUMBER, meta)));
-        assertFalse(sizeEntry.validateEntry(new TypedConfigEntryLeaf("size", "abc", ConfigEntryType.NUMBER, meta)));
+        assertTrue(sizeEntry.validateEntry(new GenericConfigEntryLeaf("size", "1024", ConfigEntryType.NUMBER, meta)));
+        assertFalse(sizeEntry.validateEntry(new GenericConfigEntryLeaf("size", "abc", ConfigEntryType.NUMBER, meta)));
         }
 
     public static final  String COMPANY_NAME     = "metabit";

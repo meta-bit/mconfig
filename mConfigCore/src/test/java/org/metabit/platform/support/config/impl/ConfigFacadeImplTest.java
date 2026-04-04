@@ -2,6 +2,7 @@ package org.metabit.platform.support.config.impl;
 
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.util.ConfigIOUtil;
 import org.metabit.platform.support.config.mockups.MockConfigFactory;
 
 import java.math.BigDecimal;
@@ -20,16 +21,16 @@ class ConfigFacadeImplTest
 
         byte[] result;
 
-        result = ConfigFacadeImpl.hexDecode("DEADBEEF");
+        result = ConfigIOUtil.hexDecode("DEADBEEF");
         assertNotNull(result);
         // assertEquals...
-        result = ConfigFacadeImpl.hexDecode("DE AD BE EF");
+        result = ConfigIOUtil.hexDecode("DE AD BE EF");
         assertNotNull(result);
 
-        result = ConfigFacadeImpl.hexDecode("DEADBEEF  ; ended before this valid comment");
+        result = ConfigIOUtil.hexDecode("DEADBEEF  ; ended before this valid comment");
         assertNotNull(result);
 
-        result = ConfigFacadeImpl.hexDecode("DEADBEEF");
+        result = ConfigIOUtil.hexDecode("DEADBEEF");
         assertNotNull(result);
         }
 
@@ -44,9 +45,9 @@ class ConfigFacadeImplTest
             // which go into a mock context
             ConfigFactoryInstanceContext mockCtx = new ConfigFactoryInstanceContext(cfSettings);
             ConfigFactory mockFactory = new MockConfigFactory(mockCtx);
-            ConfigFacadeImpl cfiInstance = new ConfigFacadeImpl("dummyTest",null,mockCtx,mockFactory);
+            LayeredConfiguration cfiInstance = new LayeredConfiguration("dummyTest",null,mockCtx,mockFactory);
             // we're testing the facade implemetation, not the factory itself. still, checking we can get one and the setup is complete.
-            Configuration cfg = cfiInstance.configFactory.getConfig("dummyTest");
+            Configuration cfg = mockFactory.getConfig("dummyTest");
             assertNotNull(cfg);
             // preparing the test setup complete.
 

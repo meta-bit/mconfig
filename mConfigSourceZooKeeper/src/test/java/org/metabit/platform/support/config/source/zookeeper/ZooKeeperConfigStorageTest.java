@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018-2026 metabit GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.metabit.platform.support.config.source.zookeeper;
 
 import org.apache.curator.framework.CuratorFramework;
@@ -7,6 +22,8 @@ import org.apache.curator.test.TestingServer;
 import org.junit.jupiter.api.*;
 import org.metabit.platform.support.config.ConfigFactory;
 import org.metabit.platform.support.config.ConfigFactoryBuilder;
+import org.metabit.platform.support.config.ConfigFeature;
+import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.Configuration;
 
 import java.nio.charset.StandardCharsets;
@@ -59,8 +76,8 @@ public class ZooKeeperConfigStorageTest
 
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test-app");
         builder.setTestMode(true);
-        builder.setFeature(org.metabit.platform.support.config.ConfigFeature.EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND, false);
-        builder.setTestConfigPaths(org.metabit.platform.support.config.ConfigScope.USER, java.util.Collections.singletonList(userConfigDir.toString()));
+        builder.setFeature(ConfigFeature.EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND, false);
+        builder.setTestConfigPaths(ConfigScope.USER, java.util.Collections.singletonList(userConfigDir.toString()));
         
         try (ConfigFactory factory = builder.build())
         {
@@ -91,7 +108,7 @@ public class ZooKeeperConfigStorageTest
 
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test-app");
         builder.setTestMode(true);
-        builder.setTestConfigPaths(org.metabit.platform.support.config.ConfigScope.USER, java.util.Collections.singletonList(userConfigDir.toString()));
+        builder.setTestConfigPaths(ConfigScope.USER, java.util.Collections.singletonList(userConfigDir.toString()));
 
         try (ConfigFactory factory = builder.build())
         {
@@ -107,10 +124,10 @@ public class ZooKeeperConfigStorageTest
         // No bootstrap config, set via builder features
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test-app");
         builder.setTestMode(true);
-        builder.setFeature(org.metabit.platform.support.config.ConfigFeature.ZOOKEEPER_CONNECT_STRING, zkServer.getConnectString());
-        builder.setFeature(org.metabit.platform.support.config.ConfigFeature.ZOOKEEPER_ROOT_PATH, "/mconfig-test");
-        builder.setFeature(org.metabit.platform.support.config.ConfigFeature.ZOOKEEPER_RETRY_BASE_SLEEP_MS, 500);
-        builder.setFeature(org.metabit.platform.support.config.ConfigFeature.ZOOKEEPER_RETRY_MAX_RETRIES, 5);
+        builder.setFeature(ZooKeeperFeatures.CONNECT_STRING, zkServer.getConnectString());
+        builder.setFeature(ZooKeeperFeatures.ROOT_PATH, "/mconfig-test");
+        builder.setFeature(ZooKeeperFeatures.RETRY_BASE_SLEEP_MS, 500);
+        builder.setFeature(ZooKeeperFeatures.RETRY_MAX_RETRIES, 5);
 
         try (ConfigFactory factory = builder.build())
         {

@@ -1,3 +1,23 @@
+# Changelog
+
+### 0.8.12
+* internal refactoring to reduce core library footprint.
+* unified internal configuration leaf representations.
+* simplified core configuration API and centralized type conversion.
+
+### 0.8.11
+* renamed `mConfigFull` to `mConfigStandard`, `mConfigStandard` to `mConfigBasic`, and `mConfigBase` to `mConfigBasicBinary`.
+* new integration modules for HashiCorp Vault and AWS Secrets Manager.
+* improved self-configuration robustness and fixed type handling in `mconfig.properties`.
+
+### 0.8.10
+* implemented additional initialization phase
+* improved CLI tool (`mconfig`) with improved error reporting and improved configuration discovery.
+
+### 0.8.9
+* restored dynamic discovery of new configuration files in search paths.
+* expanded default search locations on Linux and Windows.
+* improved robustness of manual configuration instantiation.
 
 ### 0.8.8
 * upgraded Jackson dependencies to 2.21.1 across all Jackson-based format modules.

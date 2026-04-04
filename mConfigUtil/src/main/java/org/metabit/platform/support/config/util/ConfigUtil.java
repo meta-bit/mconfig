@@ -127,7 +127,7 @@ public class ConfigUtil
      * this call here.
      * <p>
      * <p>
-     * FYI: If a testing framework is detected as caller, {@link ConfigFeature.TEST_MODE } is activated for your convenience.
+     * FYI: If a testing framework is detected as caller, {@link ConfigFeature#TEST_MODE} is activated for your convenience.
      *
      *
      * @param orgOrCompany organization or company
@@ -311,7 +311,7 @@ public class ConfigUtil
             if (TestDetector.isRunByTestingLibrary())
                 configFactoryBuilder.setFeature(ConfigFeature.TEST_MODE, true);
             // more automatic stuff could go here.
-            ConfigFactory configFactory = configFactoryBuilder.build();
+            ConfigFactory configFactory = configFactoryBuilder.build(); 
             return configFactory.getConfig(configName);
             }
     }

@@ -7,9 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
-import org.metabit.platform.support.config.impl.entry.BlobConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
@@ -219,18 +218,8 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
     @Override
     public ConfigEntry getEntry(final String hierarchicalKeyPath)
         {
-        String[] nodes = hierarchicalKeyPath.split("/");
-        JsonNode current = jsonTreeRoot;
-        for (int i = 0; i < nodes.length; i++)
-            {
-            current = current.get(nodes[i]);
-            if (current == null)
-                {
-                return null;
-                }
-            }
-
-        if (current.isMissingNode() || current.isNull())
+        JsonNode current = navigateToJsonNode(hierarchicalKeyPath);
+        if (current == null)
             {
             return null;
             }
@@ -242,18 +231,8 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
     @Override
     public ConfigEntry getEntry(String hierarchicalKeyPath, ConfigEntrySpecification specification)
         {
-        String[] nodes = hierarchicalKeyPath.split("/");
-        JsonNode current = jsonTreeRoot;
-        for (int i = 0; i < nodes.length; i++)
-            {
-            current = current.get(nodes[i]);
-            if (current == null)
-                {
-                return null;
-                }
-            }
-
-        if (current.isMissingNode() || current.isNull())
+        JsonNode current = navigateToJsonNode(hierarchicalKeyPath);
+        if (current == null)
             {
             return null;
             }
@@ -264,6 +243,26 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
             meta.setSpecification(specification);
             }
         return jacksonJsonNodeToConfigEntry(hierarchicalKeyPath, current, meta);
+        }
+
+    private JsonNode navigateToJsonNode(String hierarchicalKeyPath)
+        {
+        String[] nodes = hierarchicalKeyPath.split("/");
+        JsonNode current = jsonTreeRoot;
+        for (String node : nodes)
+            {
+            current = current.get(node);
+            if (current == null)
+                {
+                return null;
+                }
+            }
+
+        if (current.isMissingNode() || current.isNull())
+            {
+            return null;
+            }
+        return current;
         }
 
 
@@ -280,42 +279,42 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
                     try
                         {
                         byte[] decoded = java.util.Base64.getDecoder().decode(jsonNode.textValue());
-                        return new BlobConfigEntryLeaf(leafKey, decoded, meta);
+                        return new GenericConfigEntryLeaf(leafKey, decoded, ConfigEntryType.BYTES, meta);
                         }
                     catch (IllegalArgumentException e)
                         {
                         // fall back to string if not valid base64
                         }
                     }
-                return new TypedConfigEntryLeaf(leafKey, jsonNode.textValue(), ConfigEntryType.STRING, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.textValue(), ConfigEntryType.STRING, meta);
             case NUMBER:
                 if (jsonNode.isInt())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.intValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.intValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isLong())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.longValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.longValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isDouble())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.doubleValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.doubleValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isBigInteger())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.bigIntegerValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.bigIntegerValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isBigDecimal())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.decimalValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.decimalValue(), ConfigEntryType.NUMBER, meta);
                     }
-                return new TypedConfigEntryLeaf(leafKey, jsonNode.numberValue(), ConfigEntryType.NUMBER, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.numberValue(), ConfigEntryType.NUMBER, meta);
             case BOOLEAN:
-                return new TypedConfigEntryLeaf(leafKey, jsonNode.booleanValue(), ConfigEntryType.BOOLEAN, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.booleanValue(), ConfigEntryType.BOOLEAN, meta);
             case BINARY:
                 try
                     {
-                    return new BlobConfigEntryLeaf(leafKey, jsonNode.binaryValue(), meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.binaryValue(), ConfigEntryType.BYTES, meta);
                     }
                 catch (Exception e)
                     {

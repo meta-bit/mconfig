@@ -49,12 +49,12 @@ Each entry in a schema (within the `ENTRIES` list) can have the following proper
 |:-----------------|:--------|:----------------------------------------------------------------------------------------------------------------------------------------------|
 | `KEY`            | String  | The hierarchical path of the entry (e.g., `database/host`).                                                                                   |
 | `TYPE`           | String  | The data type: `STRING`, `NUMBER`, `BOOLEAN`, `BYTES`, `MULTIPLE_STRINGS`, `ENUM`, `ENUM_SET`, `URI`, `FILEPATH`, `DATE`, `TIME`, `DATETIME`. |
-| `DESCRIPTION`    | String  | Human-readable description or Resource Bundle key for localized description. (Optional)                                                                  |
-| `DEFAULT`        | (any)   | The default value used if no other value is provided. (Optional)                                                                                         |
-| `PATTERN`        | String  | A validation pattern (Regex, range specification, or enum list). (Optional)                                                                              |
-| `SECRET`         | Boolean | If `true`, the entry is treated as sensitive data (redacted in logs). (Optional, defaults to `false`)                                                                         |
-| `HIDDEN`         | Boolean | If `true`, the entry is hidden from automatic documentation. (Optional, defaults to `false`)                                                                                  |
-| `ARITY`          | String  | The number of allowed occurrences (e.g., `1`, `0..1`, `1..*`). (Optional; see defaults below)                                                                                |
+| `DESCRIPTION`    | String  | Human-readable description or Resource Bundle key for localized description. (Optional)                                                       |
+| `DEFAULT`        | (any)   | The default value used if no other value is provided. (Optional)                                                                              |
+| `PATTERN`        | String  | A validation pattern (Regex, range specification, or enum list). (Optional)                                                                   |
+| `SECRET`         | Boolean | If `true`, the entry is treated as sensitive data (redacted in logs). (Optional, defaults to `false`)                                         |
+| `HIDDEN`         | Boolean | If `true`, the entry is hidden from automatic documentation. (Optional, defaults to `false`)                                                  |
+| `ARITY`          | String  | The number of allowed occurrences (e.g., `1`, `0..1`, `1..*`). (Optional; see defaults below)                                                 |
 | `MANDATORY`      | Object  | (Optional) Block for future-proofing and strict requirements. See below.                                                                      |
 | `AFTER`          | String  | (Optional) For temporal types, value must be after this (ISO format or `now`).                                                                |
 | `BEFORE`         | String  | (Optional) For temporal types, value must be before this (ISO format or `now`).                                                               |
@@ -164,7 +164,7 @@ If a JSON file contains only a list of entries, it is treated as a schema for th
 
 Schemas are automatically discovered from multiple locations:
 
-1.  **Classpath**: Scanned within `.config/` directories. Filenames should follow the pattern `name.mconfig-schema.json` or `name.schema.json`.
+1.  **Classpath**: Scanned within `.config/` directories. Filenames should follow the pattern `name.mconfig-schema.json`.
 2.  **Filesystem (Local Repository)**: Scanned in prioritized OS-specific locations to allow system-wide sharing and hardening. Schemas are stored under an app-scoped subdirectory:
     *   `[<company>/]<application>/<configName>.mconfig-schema.json`
     *   If company is blank/null/whitespace, the company segment is omitted (app-only paths).

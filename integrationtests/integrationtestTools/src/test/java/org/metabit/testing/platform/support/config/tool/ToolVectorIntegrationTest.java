@@ -40,13 +40,9 @@ class ToolVectorIntegrationTest
         // Run command: mconfig get mycompany:myapp:sub:dir:myconf@some.key
         // We need to set the environment variable for the process or mock it.
         // Since we are running in same JVM, we might need to rely on system property if we can't set env.
-        // Wait, Main.java uses System.getenv().
-        
-        // For testing, I'll temporarily use System.setProperty and modify Main.java if needed,
-        // but let's see if I can use a simpler approach.
-        // Actually, I can just call the command and see if it parses correctly.
-        
-        CommandLine cmd = new CommandLine(new org.metabit.platform.support.config.tool.Main());
+        // Main.java uses System.getenv().
+        // just call the command and see if it parses correctly.
+        // CommandLine cmd = new CommandLine(new org.metabit.platform.support.config.tool.Main());
         // Use -c -a etc to bypass discovery for now just to test parsing
         String vector = "mycompany:myapp:sub:dir:myconf@some.key";
         

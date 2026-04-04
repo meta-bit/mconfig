@@ -4,11 +4,11 @@ mConfig uses a custom logging abstraction defined by the `ConfigLoggingInterface
 
 ## Available Implementations
 
-| Implementation   | Module                | Priority | Service Name   | Use Case                                         |
-|:-----------------|:----------------------|:---------|:---------------|:-------------------------------------------------|
-| `NullLogging`    | `mConfigCore`         | 0        | `null`         | Default; silent operation.                       |
-| `ConsoleLogging` | `mConfigCore`         | 1        | `console`      | Dev/tests; prints to stdout/stderr. **Not for production.** |
-| `Slf4j2Logger`   | `mConfigLoggingSlf4j` | 5        | `slf4j`        | Production use; forwards to SLF4J.               |
+| Implementation   | Module                | Priority | Service Name | Use Case                                                    |
+|:-----------------|:----------------------|:---------|:-------------|:------------------------------------------------------------|
+| `NullLogging`    | `mConfigCore`         | 0        | `null`       | Default; silent operation.                                  |
+| `ConsoleLogging` | `mConfigCore`         | 1        | `console`    | Dev/tests; prints to stdout/stderr. **Not for production.** |
+| `Slf4j2Logger`   | `mConfigLoggingSlf4j` | 5        | `slf4j`      | Production use; forwards to SLF4J.                          |
 
 ### Internal and Hidden Implementations
 `InternalLogger` (`mConfigCore`, `impl.core`): Activated if `ConfigFeature.LOGGING_REDIRECT_TARGET` is set. Redirects to specified target.

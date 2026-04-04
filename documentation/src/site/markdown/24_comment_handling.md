@@ -30,16 +30,16 @@ The behavior of comment handling is governed by several `ConfigFeature` flags:
 
 Preservation of comments depends on the underlying format module. Some high-level libraries (like Jackson) may strip comments by design.
 
-| File Format | mConfig Module | Preserve Comments |
-| :--- | :--- | :--- |
-| `.properties` | `mConfigFormatJavaProperties` | Yes |
-| `INI` | `mConfigFormatINI` | Yes |
-| `TOML` | `mConfigFormatTOML` | Yes |
-| `YAML` | `mConfigFormatYAMLwithSnakeYAML` | Partially |
-| `TOML` | `mConfigFormatTOMLwithJackson` | No |
-| `YAML` | `mConfigFormatYAMLwithJackson` | No |
-| `JSON` | `mConfigFormatJSONwithJackson` | No |
-| `JSON5` | `mConfigFormatJSONwithJackson` | No |
+| File Format   | mConfig Module                   | Preserve Comments |
+|:--------------|:---------------------------------|:------------------|
+| `.properties` | `mConfigFormatJavaProperties`    | Yes               |
+| `INI`         | `mConfigFormatINI`               | Yes               |
+| `TOML`        | `mConfigFormatTOML`              | Yes               |
+| `YAML`        | `mConfigFormatYAMLwithSnakeYAML` | Partially         |
+| `TOML`        | `mConfigFormatTOMLwithJackson`   | No                |
+| `YAML`        | `mConfigFormatYAMLwithJackson`   | No                |
+| `JSON`        | `mConfigFormatJSONwithJackson`   | No                |
+| `JSON5`       | `mConfigFormatJSONwithJackson`   | No                |
 
 ## Implementation Details
 

@@ -27,7 +27,7 @@ server.tls=false
 
 ## 3. Optional: add a schema
 Add a schema next to the config file to define types and defaults:
-`src/main/resources/.config/ACME/ourApp/network.schema.json`
+`src/main/resources/.config/ACME/ourApp/network.mconfig-schema.json`
 
 ```json
 [

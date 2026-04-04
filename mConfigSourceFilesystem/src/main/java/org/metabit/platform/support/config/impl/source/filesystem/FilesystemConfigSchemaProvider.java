@@ -35,7 +35,7 @@ public class FilesystemConfigSchemaProvider implements ConfigSchemaProvider
                 {
                 if (Files.isDirectory(dir))
                     {
-                    File[] files = dir.toFile().listFiles((d, name)->name.endsWith(".mconfig-schema.json") || name.endsWith(".schema.json"));
+                    File[] files = dir.toFile().listFiles((d, name)->name.endsWith(".mconfig-schema.json"));
                     if (files != null)
                         {
                         for (File file : files)
@@ -119,10 +119,6 @@ public class FilesystemConfigSchemaProvider implements ConfigSchemaProvider
         if (filename.endsWith(".mconfig-schema.json"))
             {
             return filename.substring(0, filename.length()-".mconfig-schema.json".length());
-            }
-        if (filename.endsWith(".schema.json"))
-            {
-            return filename.substring(0, filename.length()-".schema.json".length());
             }
         return filename;
         }

@@ -1,6 +1,6 @@
 # 2.1 How it Works
 
-To get started, we need a lot of preparation and settings.
+To get library operation started, we need a lot of preparation and settings.
 These are collected in a factory builder, `ConfigFactoryBuilder`,
 which then builds a `ConfigFactory` with specific settings.
 
@@ -19,33 +19,24 @@ using its standard resource discovery layout.
 
 The ConfigFactory in turn produces individual Configuration objects.
 
+### 2-Phase Bootstrapping (Post-Initialization)
+For advanced self-configuration, mConfig supports a 2-phase bootstrapping process. Once the `ConfigFactory` is fully initialized and the initial configuration stack is built, a `postInit(ConfigFactory)` hook is called on all registered `ConfigStorageInterface`, `ConfigSecretsProviderInterface`, `ConfigFactoryComponent`, and `ConfigLoggingInterface` modules.
+
+The execution order for the `postInit` hook is deterministic:
+1.  **`ConfigStorageInterface`**: Storages can use the factory for their own connection settings.
+2.  **`ConfigSecretsProviderInterface`**: Secrets providers can fetch credentials from the now-ready storages.
+3.  **`ConfigFactoryComponent`**: Administrative components (e.g., schema exporters) perform their tasks.
+4.  **`ConfigLoggingInterface`**: The logger refines its configuration (e.g., remote endpoints) using the complete stack.
+
+This allows modules to use the fully functional `ConfigFactory` to retrieve their own settings from any available source (including other modules) or perform post-startup administrative tasks. For example, a cloud storage module could use `postInit` to fetch its access credentials from a secrets provider that was initialized in the first phase, or a schema exporter component could automatically write discovered schemas to a specific directory. Advanced logging implementations can also use this hook to refine their remote endpoints or tokens using the fully resolved configuration hierarchy.
+
 That's the startup phase; once that is done, you use the Configuration objects.
 
 ---
 ## Concept: Scopes
-mConfig uses the concept of hierarchical scopes (from the pre-2000 metabit MAUS project).
+mConfig uses the concept of hierarchical **Scopes**. This determines the priority and visibility of configuration entries across different environments.
 
-The software may have its generic defaults, which can be overridden by settings
-of the individual local installation. But if you allow user-based settings,
-these take precedence over the local installation; and settings given for the
-individual software instance run may override those, in turn. It's a hierarchy.
-
-**Scope order (lowest to highest priority):**
-`PRODUCT` -> `ORGANIZATION` -> `CLOUD` -> `CLUSTER` -> `HOST` -> `APPLICATION` -> `USER` -> `SESSION` -> `RUNTIME` -> `POLICY`
-
-### Scope meanings (short version)
-| Scope        | Intended use                                                               | Typical sources                         |
-|--------------|----------------------------------------------------------------------------|-----------------------------------------|
-| PRODUCT      | Defaults shipped with the software.                                        | ConfigSchema defaults, JAR resources    |
-| ORGANIZATION | Company-level defaults and licensing.                                      | Registry, network services              |
-| CLOUD        | Cloud-based configurations, shared across multiple clusters.               | Cloud services, network services        |
-| CLUSTER      | Cluster-wide settings.                                                     | ZooKeeper, network services             |
-| HOST         | System-wide settings for one host.                                         | Filesystem, Registry, System properties |
-| APPLICATION  | Installation-specific settings (portable installs, side-by-side versions). | Filesystem near the binary              |
-| USER         | Per-user overrides and preferences.                                        | Filesystem, Registry                    |
-| SESSION      | Shell/session overrides.                                                   | Environment variables, command-line     |
-| RUNTIME      | In-memory changes at runtime.                                              | RAM layer                               |
-| POLICY       | Enforced overrides (highest priority).                                     | GPO/Registry, policy files              |
+See the dedicated **[Scopes](20_scopes.md)** section for a detailed explanation of the scope hierarchy and its importance.
 
 ### Default scope and source hierarchy
 
@@ -79,6 +70,10 @@ HOST scope:
 - `/etc/opt/<app>/<subPath>`
 - `/usr/local/etc/<app>/<subPath>`
 - `/etc/<app>/<subPath>`
+- `/etc/opt/[<company>/]` (broader HOST scope)
+- `/etc/opt/` (broader HOST scope)
+- `/usr/local/etc/` (broader HOST scope)
+- `/etc/` (broader HOST scope)
 
 USER scope:
 - `$XDG_CONFIG_HOME/[<company>/]<app>/<subPath>` (if set)
@@ -107,6 +102,10 @@ APPLICATION scope:
 HOST scope:
 - `%ProgramData%\\[<company>\\<]<app>`
 - `%AllUsersProfile%\\[<company>\\<]<app>`
+- `%ProgramData%\\[<company>\\<]` (broader HOST scope)
+- `%ProgramData%` (broader HOST scope)
+- `%AllUsersProfile%\\[<company>\\<]` (broader HOST scope)
+- `%AllUsersProfile%` (broader HOST scope)
 
 **macOS (experimental)**
 
@@ -175,24 +174,30 @@ Note the mention of **valid** data.
 You can, and should, provide a ConfigSchema which declares the expected
 entries, and some information about them.
 
-Mandatory for this is a key (~ name), and a *type*.
-The types match or are translated to types in the different config sources.
-The type is also used for initial conversion of the data.
-So if the type is NUMBER, then "xyyyzy" is not a valid value.
+#### Schema Components
+A schema entry typically includes:
+- **Key**: The hierarchical name of the configuration entry.
+- **Type**: The expected data type (e.g., `STRING`, `NUMBER`, `BOOLEAN`, `BYTES`, `DATE`, `DURATION`).
+- **Default Value**: A fallback value used if the entry is missing from all other layers.
+- **Description**: Documentation for the entry, used in reports and UI.
+- **Flags**: Metadata like `MANDATORY`, `SECRET`, or `HIDDEN`.
+- **Validation Rules**: Patterns or ranges (e.g., regex for strings, min/max for numbers) to ensure data integrity.
 
-The default behaviour is to skip such entries, but log a warning - we want to
-provide usable data to continue your program code with, best-effort. 
+#### The Validation Process
+When a configuration is accessed:
+1. **Discovery**: The library searches for the key through the layered stack.
+2. **Type Enforcement**: If a schema is active, the raw data from a `ConfigSource` is converted to the type specified in the schema. If conversion fails (e.g., "abc" for a `NUMBER`), the entry is considered invalid, and the search continues in lower priority layers.
+3. **Constraint Checking**: The converted value is checked against validation rules (regex, ranges, enums).
+4. **Outcome**:
+   - **Valid**: The entry is returned and potentially cached.
+   - **Invalid**: By default, the library logs a warning and skips the invalid entry, continuing the search in lower priority layers.
+   - **Missing Mandatory**: If a `MANDATORY` entry is not found in any layer (including the default layer), a `ConfigException` is thrown upon access.
 
-An optional field allows for more specific restrictions to be applied to fields,
-listing which contents are acceptable values.
-
-When a ConfigSchema is activated for a Configuration
-- it sets the DefaultLayer contents, if defaults are not disabled
-- it becomes available for the Configuration, to check entries against. 
-- it also is available for documentation generation
-
-The checks are performed
-@TODO continue
+#### Schema Activation
+When a `ConfigSchema` is activated for a `Configuration`:
+- It populates the **Default Layer** (PRODUCT scope) with any default values defined in the schema.
+- It provides the metadata required for automated documentation and schema export.
+- It acts as a gatekeeper for all data entering the `Configuration` facade, ensuring type safety.
 
 ## Changes & Monitoring
 

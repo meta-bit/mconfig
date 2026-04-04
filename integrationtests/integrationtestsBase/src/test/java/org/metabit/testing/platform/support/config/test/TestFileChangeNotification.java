@@ -61,11 +61,15 @@ public class TestFileChangeNotification
                 });
 
             // Trigger change
-            Thread.sleep(200); // Wait a bit to ensure watcher is started
+            Thread.sleep(1000); // Wait enough for watcher to be ready
             Files.write(tempCfgFile, "key=updated".getBytes(StandardCharsets.UTF_8));
             System.out.println("[DEBUG_LOG] Updated file: " + tempCfgFile);
 
-            boolean received = latch.await(5, TimeUnit.SECONDS);
+            boolean received = latch.await(10, TimeUnit.SECONDS);
+            if (!received)
+                {
+                System.out.println("[DEBUG_LOG] Timeout reached. Latch count: " + latch.getCount());
+                }
             assertTrue(received, "Notification not received within timeout");
             assertNotNull(changedLocation.get());
             

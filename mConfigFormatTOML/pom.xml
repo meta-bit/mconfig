@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigformattoml</artifactId>
-    <name>mConfigFormatTOML</name>
-    <description>TOML support for mConfig without external dependencies</description>
+    <name>mConfig :: Format :: TOML</name>
+    <description>TOML format support for mConfig, without external dependencies</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

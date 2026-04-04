@@ -183,9 +183,12 @@ public class FileChangeWatcher extends TimerTask
     int howManyDirectoriesAreWatched() { synchronized(directoryWatchMap) { return directoryWatchMap.size(); } }
     int howManyDirectoriesAreWaitedForToComeIntoExistence() { synchronized(cantWatchThis) { return cantWatchThis.size(); } }
 
-    //--------------------------------------------------------------------------
-    // create directory watches, and watch keys.
-    protected void addDirectory(final Path dir)
+    /**
+     * add a directory path for watching for NEW files.
+     *
+     * @param dir directory path to be watched. It must exist.
+     */
+    public synchronized void addDirectory(final Path dir)
         {
         if (!watchServiceAvailable)
             {
@@ -209,6 +212,24 @@ public class FileChangeWatcher extends TimerTask
             throw new ConfigException(e);
             }
         return;
+        }
+
+    /**
+     * add a directory path for watching for NEW files, with a location to notify.
+     *
+     * @param dir directory path to be watched.
+     * @param location the ConfigLocation this directory belongs to.
+     */
+    public synchronized void addDirectory(final Path dir, final ConfigLocation location)
+        {
+        if (!dir.toFile().exists())
+            {
+            cantWatchThis.put(dir, dir); // mark directory itself as something to watch later
+            pathToLocationMap.put(dir, location);
+            return;
+            }
+        addDirectory(dir);
+        pathToLocationMap.put(dir, location);
         }
 
     // remove directory watches, and watch keys.
@@ -246,79 +267,77 @@ public class FileChangeWatcher extends TimerTask
             {
             return;
             }
-        // Snapshot the directoryWatchMap to avoid holding the lock while processing
-        final List<Map.Entry<Path, WatchKey>> snapshot;
-        synchronized (this)
-            { snapshot = new ArrayList<>(directoryWatchMap.entrySet()); }
+            // Snapshot the directoryWatchMap to avoid holding the lock while processing
+            final List<Map.Entry<Path, WatchKey>> snapshot;
+            synchronized (this)
+                { snapshot = new ArrayList<>(directoryWatchMap.entrySet()); }
 
-        for (Map.Entry<Path, WatchKey> e : snapshot)
-            {
-            Path key = e.getKey();
-            WatchKey watchKey = e.getValue();
-            if (!watchKey.isValid())
+            for (Map.Entry<Path, WatchKey> e : snapshot)
                 {
-                // cause: directory has been deleted.
-                logger.debug("detected DELETION of \""+key+"\"");
-                // 1. remove the watch.
-                watchKey.cancel(); // un-register this watchKey from watch service
-                // 2. remove the respective entry from the directoryWatchMap
-                synchronized (this)
+                Path key = e.getKey();
+                WatchKey watchKey = e.getValue();
+                if (!watchKey.isValid())
                     {
-                    directoryWatchMap.remove(key);
-                    // 3. re-add all files for this directory to the to-be-watched map.
-                    Collection<Path> files = fileWatchMapBackward.internalRepresentation.remove(key);
-                    if (files != null) {
+                    // cause: directory has been deleted.
+                    logger.debug("detected DELETION of \""+key+"\"");
+                    // 1. remove the watch.
+                    watchKey.cancel(); // un-register this watchKey from watch service
+                    // 2. remove the respective entry from the directoryWatchMap
+                    synchronized (this)
+                        {
+                        directoryWatchMap.remove(key);
+                        // 3. re-add all files for this directory to the to-be-watched map.
+                        Set<Path> files = fileWatchMapBackward.removeAllValues(key);
                         for (Path file : files)
                             { cantWatchThis.put(key, file); }
                     }
-                }
-                continue; // nothing to be done any more for this watchKey.
-                }
-            for (WatchEvent<?> event : watchKey.pollEvents())
-                {
-                // Path events is the only kind (not "kind") we have here.
-                WatchEvent.Kind<?> kind = event.kind();
-                Path file;
-                try
-                    {
-                    // NB: each access to "event.context()" seams to clear or modify its contents.
-                    file = key.resolve((Path) event.context()); // The "resolve" is important.
+                    continue; // nothing to be done any more for this watchKey.
                     }
-                catch (ClassCastException ex)
+                for (WatchEvent<?> event : watchKey.pollEvents())
                     {
-                    logger.error("invalid WatchEvent type (should never happen), stopping", ex);
-                    this.timer.cancel(); // big issue if this ever happens, reason to stop the timer.
-                    continue; // skip any subsequent event handling for this.
-                    }
-                if (kind == StandardWatchEventKinds.ENTRY_MODIFY) // existing file (or subdirectory) has been changed.
-                    {
-                    logger.debug("detected CHANGE in \""+file+"\"");
-                    // check for subscribed file
-                    if (!fileWatchMapForward.containsKey(file))
+                    // Path events is the only kind (not "kind") we have here.
+                    WatchEvent.Kind<?> kind = event.kind();
+                    Path file;
+                    try
                         {
-                        logger.debug("file without watch changed: "+file);
-                        continue;
+                        // NB: each access to "event.context()" seams to clear or modify its contents.
+                        file = key.resolve((Path) event.context()); // The "resolve" is important.
                         }
-                    processFileChangeEvent(file); // modify implicit
+                    catch (ClassCastException ex)
+                        {
+                        logger.error("invalid WatchEvent type (should never happen), stopping", ex);
+                        this.timer.cancel(); // big issue if this ever happens, reason to stop the timer.
+                        continue; // skip any subsequent event handling for this.
+                        }
+                    if (kind == StandardWatchEventKinds.ENTRY_MODIFY) // existing file (or subdirectory) has been changed.
+                        {
+                        logger.debug("detected CHANGE in \""+file+"\"");
+                        // check for subscribed file
+                        if (!fileWatchMapForward.containsKey(file) && !pathToLocationMap.containsKey(key))
+                            {
+                            logger.debug("file without watch changed: "+file);
+                            continue;
+                            }
+                        processFileChangeEvent(file); // modify implicit
+                        }
+                    else if (kind == StandardWatchEventKinds.ENTRY_DELETE) // existing file or directory deleted
+                        {
+                        logger.debug("detected directory entry deletion: \""+file+"\"");
+                        processFileChangeEvent(file); // deletion is a big change, too.
+                        }
+                    else if (kind == StandardWatchEventKinds.ENTRY_CREATE) // new file or directory
+                        {
+                        logger.debug("detected directory entry creation: \""+file+"\"");
+                        processFileChangeEvent(file);
+                        }
+                    else
+                        {
+                        logger.warn("unknown/invalid watch event kind "+kind);
+                        }
                     }
-                else if (kind == StandardWatchEventKinds.ENTRY_DELETE) // existing file or directory deleted
-                    {
-                    logger.debug("detected directory entry deletion: \""+file+"\"");
-                    processFileChangeEvent(file); // deletion is a big change, too.
-                    }
-                else if (kind == StandardWatchEventKinds.ENTRY_CREATE) // new file or directory
-                    {
-                    logger.debug("detected directory entry creation: \""+file+"\"");
-                    processFileChangeEvent(file);
-                    }
-                else
-                    {
-                    logger.warn("unknown/invalid watch event kind "+kind);
-                    }
+                // reset watchkey to continue receiving events for the watch. important.
+                watchKey.reset();
                 }
-            // reset watchkey to continue receiving events for the watch. important.
-            watchKey.reset();
-            }
         // now check the "can't watch this" set whether the directories started to exist, and if so, add the respective watches.
 
         // iterate over a snapshot to avoid CME; remove using iterator under lock
@@ -338,12 +357,28 @@ public class FileChangeWatcher extends TimerTask
                     // remove from the live structure while holding the lock
                     cantWatchThis.internalRepresentation.remove(dirPath);
                     }
-                for (Path file : files)
+                for (Path target : files)
                     {
-                    ConfigLocation location = pathToLocationMap.get(file);
-                    addFile(file, location);
+                    ConfigLocation location = pathToLocationMap.get(target);
+                    if (target.equals(dirPath))
+                        {
+                        addDirectory(dirPath); // Now exists, add normal directory watch
+                        // notify about the newly available directory
+                        if (location != null && ctx.getSourceChangeNotifier() != null)
+                            {
+                            ctx.getSourceChangeNotifier().sendNotificationsAboutChangeInConfigLocation(location);
+                            }
+                        }
+                    else
+                        {
+                        addFile(target, location);
+                        // also notify if the file already exists (unlikely but possible if created just before we got here)
+                        if (target.toFile().exists() && location != null && ctx.getSourceChangeNotifier() != null)
+                            {
+                            ctx.getSourceChangeNotifier().sendNotificationsAboutChangeInConfigLocation(location);
+                            }
+                        }
                     }
-                addDirectory(dirPath);
                 }
             }
         return;
@@ -353,6 +388,7 @@ public class FileChangeWatcher extends TimerTask
         {
         synchronized(this)
             {
+            // 1. check for direct file watch
             if (fileChangedFlags.containsKey(file))
                 {
                 fileChangedFlags.put(file, Boolean.TRUE);
@@ -360,6 +396,17 @@ public class FileChangeWatcher extends TimerTask
                 ConfigLocation location = pathToLocationMap.get(file);
                 if (location != null && ctx.getSourceChangeNotifier() != null)
                     {
+                    ctx.getSourceChangeNotifier().sendNotificationsAboutChangeInConfigLocation(location);
+                    }
+                }
+            // 2. check if the parent directory is watched
+            Path parent = file.getParent();
+            if (parent != null)
+                {
+                ConfigLocation location = pathToLocationMap.get(parent);
+                if (location != null && ctx.getSourceChangeNotifier() != null)
+                    {
+                    // notification for the location associated with the directory
                     ctx.getSourceChangeNotifier().sendNotificationsAboutChangeInConfigLocation(location);
                     }
                 }

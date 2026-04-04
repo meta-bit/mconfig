@@ -1,8 +1,6 @@
 package org.metabit.platform.support.config.util.impl;
 
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretValue;
 import org.metabit.platform.support.config.schema.ConfigSchema;
@@ -50,21 +48,7 @@ public class RemappedConfiguration implements Configuration
 
     private boolean validate(String key, String strVal)
         {
-        if (scheme == null) // no scheme, nothing to validate by
-            { return true; }
-        ConfigEntrySpecification spec = scheme.getSpecification(key);
-        if (spec == null) // key not found in scheme, nothing to validate by
-            { return true; }
-        try
-            {
-            ConfigEntryMetadata dummyMeta = new ConfigEntryMetadata((ConfigSource) null);
-            ConfigEntry tempEntry = new StringConfigEntryLeaf(key, strVal != null ? strVal : "", dummyMeta);
-            return scheme.checkConfigEntryValidity(key, tempEntry);
-            }
-        catch (Exception e)
-            {
-            throw new IllegalArgumentException("Configuration validation failed for remapped key '"+key+"': "+strVal, e);
-            }
+        return AdapterValidator.validate(scheme, key, strVal);
         }
 
     // Typed getters - delegate with validation
@@ -74,8 +58,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getString(mappedKey);
         }
 
@@ -85,8 +68,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getBoolean(mappedKey);
         }
 
@@ -96,8 +78,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getInteger(mappedKey);
         }
 
@@ -107,8 +88,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getLong(mappedKey);
         }
 
@@ -118,8 +98,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getDouble(mappedKey);
         }
 
@@ -129,8 +108,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getBigInteger(mappedKey);
         }
 
@@ -140,8 +118,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getBigDecimal(mappedKey);
         }
 
@@ -151,8 +128,7 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getBytes(mappedKey);
         }
 
@@ -162,186 +138,49 @@ public class RemappedConfiguration implements Configuration
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getListOfStrings(mappedKey);
         }
 
     @Override
-    public SecretValue getSecret(String fullKey)
+    public SecretValue getSecret(String fullKey) throws ConfigException
         {
         String key = fullKey.trim();
         String mappedKey = computeMapped(key);
         String strVal = source.getString(mappedKey);
-        if (strVal != null)
-            { validate(key, strVal); }
+        if (strVal != null) { validate(key, strVal); }
         return source.getSecret(mappedKey);
         }
 
-    // Puts UOE
-    // ... (same as OverridingConfiguration, throw UOE for all put*)
+    private void throwReadOnly() { throw new UnsupportedOperationException("RemappedConfiguration is read-only"); }
 
-    @Override
-    public void put(String fullKey, String value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, String value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Boolean value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Boolean value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Integer value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Integer value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Long value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Long value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Double value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Double value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigInteger value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigInteger value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigDecimal value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigDecimal value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, byte[] value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, byte[] value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("RemappedConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, List<String> value, ConfigScope scope)
-        {
-        source.put(computeMapped(fullKey), value, scope);
-        }
-
-    @Override
-    public void put(String fullKey, List<String> value, EnumSet<ConfigScope> scopes)
-        {
-        source.put(computeMapped(fullKey), value, scopes);
-        }
-
-    @Override
-    public void put(String fullKey, String value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, Boolean value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, Integer value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, Long value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, Double value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, BigInteger value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, BigDecimal value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, byte[] value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
-
-    @Override
-    public void put(String fullKey, List<String> value)
-        {
-        source.put(computeMapped(fullKey), value);
-        }
+    @Override public void put(String fullKey, String value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, String value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Boolean value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Boolean value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Integer value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Integer value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Long value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Long value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Double value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Double value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigInteger value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigInteger value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigDecimal value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigDecimal value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, byte[] value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, byte[] value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, List<String> value, ConfigScope scope) { source.put(computeMapped(fullKey), value, scope); }
+    @Override public void put(String fullKey, List<String> value, EnumSet<ConfigScope> scopes) { source.put(computeMapped(fullKey), value, scopes); }
+    @Override public void put(String fullKey, String value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, Boolean value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, Integer value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, Long value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, Double value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, BigInteger value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, BigDecimal value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, byte[] value) { source.put(computeMapped(fullKey), value); }
+    @Override public void put(String fullKey, List<String> value) { source.put(computeMapped(fullKey), value); }
 
     @Override
     public ConfigSchema getConfigSchema()
@@ -349,7 +188,6 @@ public class RemappedConfiguration implements Configuration
         return scheme;
         }
 
-    // Subscribe UOE
     @Override
     public void subscribeToUpdates(Consumer<ConfigLocation> listener)
         {
@@ -367,8 +205,6 @@ public class RemappedConfiguration implements Configuration
         {
         throw new UnsupportedOperationException("RemappedConfiguration does not support updates");
         }
-
-    // ... other subscribe
 
     @Override
     public ConfigCursor getConfigCursor()
@@ -423,7 +259,6 @@ public class RemappedConfiguration implements Configuration
         return res;
         }
 
-    // Basic
     @Override
     public String getConfigName()
         {
@@ -489,15 +324,6 @@ public class RemappedConfiguration implements Configuration
         return source.getEntryKeyTreeIterator();
         }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void limitScopes(EnumSet<ConfigScope> scopes)
-        {
-        source.limitScopes(scopes);
-        }
-
     @Override
     public boolean isClosed()
         {
@@ -510,5 +336,9 @@ public class RemappedConfiguration implements Configuration
         // no-op
         }
 
-    // Add all missing put methods with UOE...
+    @Override
+    public void limitScopes(EnumSet<ConfigScope> scopes)
+        {
+        source.limitScopes(scopes);
+        }
 }

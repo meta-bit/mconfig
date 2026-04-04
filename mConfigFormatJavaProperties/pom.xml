@@ -6,11 +6,12 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigformatjavaproperties</artifactId>
-    <name>mConfigFormatJavaProperties</name>
+    <name>mConfig :: Format :: Java Properties</name>
+    <description>mConfig module for reading and writing configurations from/to Java properties files</description>
 
     <dependencies>
         <dependency>

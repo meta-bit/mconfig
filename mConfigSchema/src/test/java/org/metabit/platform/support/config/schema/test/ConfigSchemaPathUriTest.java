@@ -33,12 +33,12 @@ public class ConfigSchemaPathUriTest
         ConfigSchema scheme = schemes.get("");
         ConfigEntrySpecification spec = scheme.getSpecification("myUri");
 
-        ConfigEntry validEntry = new org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf(
+        ConfigEntry validEntry = new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf(
                 "myUri", URI.create("https://example.com"), ConfigEntryType.URI, null);
         assertTrue(spec.validateEntry(validEntry));
 
-        ConfigEntry invalidEntry = new org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf(
-                "myUri", "not a uri space", null);
+        ConfigEntry invalidEntry = new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf(
+                "myUri", "not a uri space", ConfigEntryType.STRING, null);
         assertFalse(spec.validateEntry(invalidEntry));
     }
 
@@ -68,21 +68,21 @@ public class ConfigSchemaPathUriTest
 
         // Test File
         ConfigEntrySpecification fileSpec = scheme.getSpecification("myFile");
-        ConfigEntry fileEntry = new org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf(
+        ConfigEntry fileEntry = new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf(
                 "myFile", testFile, ConfigEntryType.FILEPATH, null);
         assertTrue(fileSpec.validateEntry(fileEntry), "Should be valid file");
 
-        ConfigEntry dirAsFileEntry = new org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf(
+        ConfigEntry dirAsFileEntry = new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf(
                 "myFile", testDir, ConfigEntryType.FILEPATH, null);
         assertFalse(fileSpec.validateEntry(dirAsFileEntry), "Directory should not be valid as IS_FILE");
 
         // Test Directory
         ConfigEntrySpecification dirSpec = scheme.getSpecification("myDir");
-        ConfigEntry dirEntry = new org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf(
+        ConfigEntry dirEntry = new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf(
                 "myDir", testDir, ConfigEntryType.FILEPATH, null);
         assertTrue(dirSpec.validateEntry(dirEntry), "Should be valid directory");
 
-        ConfigEntry fileAsDirEntry = new org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf(
+        ConfigEntry fileAsDirEntry = new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf(
                 "myDir", testFile, ConfigEntryType.FILEPATH, null);
         assertFalse(dirSpec.validateEntry(fileAsDirEntry), "File should not be valid as IS_DIRECTORY");
     }

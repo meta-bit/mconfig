@@ -8,7 +8,7 @@ Maven:
 ```xml
 <dependency>
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfigStandard</artifactId>
+    <artifactId>mconfigbasic</artifactId>
     <version>${mconfig.version}</version>
     <type>pom</type>
 </dependency>
@@ -16,7 +16,7 @@ Maven:
 
 Gradle:
 ```gradle
-implementation 'org.metabit.platform.support.config:mConfigStandard:${mconfig.version}'
+implementation 'org.metabit.platform.support.config:mconfigbasic:${mconfig.version}'
 ```
 (update version as needed)
 
@@ -67,7 +67,7 @@ To bundle configurations, schemas, or library settings with your application,
 use the `.config/` resource folder in your classpath (e.g., `src/main/resources/.config/`).
 
 *   **Configurations**: `.config/<company>/<application>/<configName>.<ext>`
-*   **Schemas**: `.config/<company>/<application>/<configName>.schema.json`
+*   **Schemas**: `.config/<company>/<application>/<configName>.mconfig-schema.json`
 *   **Library Self-Configuration**: `.config/metabit/mConfig/mconfig.properties`
 
 For testing, as a starting point, 
@@ -121,7 +121,7 @@ or the storage types priority, or the file format priority...
 
 You can add extra directories to the search list, or change the priority of the storage types.
 
-see [2.2 Priorities and Hierarchies](22_priorities_and_hierarchies.md) for details.
+See **[2.0 Scopes](20_scopes.md)** for an overview of the hierarchy, and **[2.2 Priorities and Hierarchies](22_priorities_and_hierarchies.md)** for more technical details on the search list.
 
 
 ## 1.3.6 Navigating Lists with ConfigCursor
@@ -162,13 +162,15 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("myCompany", "myApp").b
 
 mConfig uses the Java Module System. The architecture is:
 
-- `mConfigBase`: Aggregator module that bundles some standard dependencies
+- `mconfigbasicbinary`: Shaded binary distribution (batteries-included)
+- `mconfigbasic`: Recommended POM aggregator for most projects
+- `mconfigstandard`: Extended POM aggregator for advanced usage
 - `metabit.mconfig.core`: Core functionality
 - `metabit.mconfig.util`: Utility functions
 - Additional modules (e.g. Formats and configuration sources)
 
 When using Java modules, you must:
-1. Include `mConfigBase` as a Maven/Gradle dependency
+1. Include `mconfigbasicbinary` (or `mconfigbasic`) as a Maven/Gradle dependency
 2. Explicitly require the core modules in your `module-info.java`
 3. Require any additional modules you may need
 

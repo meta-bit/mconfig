@@ -4,7 +4,7 @@ import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 
 import java.io.BufferedReader;
@@ -166,7 +166,7 @@ public class INIConfigLayer implements ConfigLayerInterface
                         meta.setComment(current == null ? inline : current + " " + inline);
                         }
                     }
-                return new StringConfigEntryLeaf(hierarchicalKey, value, meta);
+                return new GenericConfigEntryLeaf(hierarchicalKey, value, ConfigEntryType.STRING, meta);
                 }
             }
         return null;

@@ -3,7 +3,7 @@ package org.metabit.platform.support.config.source.windowsregistry.jni;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.*;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.source.core.InMemoryLayer;
@@ -103,7 +103,7 @@ public class WindowsRegistryJNISource implements ConfigStorageInterface
 
         this.jni = new WindowsRegistryJNI();
         this.winRegistryFormat = new WindowsRegistryJNIFORMAT();
-        this.basePath = ctx.getSettings().getString(ConfigFeature.REGISTRY_BASE_PATH);
+        this.basePath = ctx.getSettings().getString(WinRegistryJNIFeatures.REGISTRY_BASE_PATH);
         if (this.basePath == null)
             {
             String companyName = ctx.getSettings().getString(ConfigFeature.COMPANY_NAME);
@@ -195,7 +195,7 @@ public class WindowsRegistryJNISource implements ConfigStorageInterface
         }
 
     @Override
-    public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
+    public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
         {
         Object handle = possibleSource.getStorageInstanceHandle();
         int hive;
@@ -261,7 +261,7 @@ public class WindowsRegistryJNISource implements ConfigStorageInterface
             Object value = winRegistryFormat.convertRegistryValue(regValue.type, regValue.data);
             ConfigEntryType configType = winRegistryFormat.mapRegistryTypeToConfigType(regValue.type);
             
-            TypedConfigEntryLeaf entry = new TypedConfigEntryLeaf(key, value, configType, meta);
+            GenericConfigEntryLeaf entry = new GenericConfigEntryLeaf(key, value, configType, meta);
             layer.putEntry(key, entry);
             index++;
             }
@@ -310,7 +310,7 @@ public class WindowsRegistryJNISource implements ConfigStorageInterface
             Object value = winRegistryFormat.convertRegistryValue(regValue.type, regValue.data);
             ConfigEntryType configType = winRegistryFormat.mapRegistryTypeToConfigType(regValue.type);
             
-            TypedConfigEntryLeaf entry = new TypedConfigEntryLeaf(key, value, configType, meta);
+            GenericConfigEntryLeaf entry = new GenericConfigEntryLeaf(key, value, configType, meta);
             layer.putEntry(key, entry);
             index++;
             }
@@ -342,13 +342,13 @@ public class WindowsRegistryJNISource implements ConfigStorageInterface
         }
 
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         {
         return null;
         }
 
     @Override
-    public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
+    public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
         {
         }
 

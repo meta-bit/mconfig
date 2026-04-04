@@ -2,8 +2,8 @@ package org.metabit.platform.support.config.impl.secrets;
 
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.*;
-import org.metabit.platform.support.config.impl.secrets.SecretConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.entry.SecretEntryFactory;
+import org.metabit.platform.support.config.interfaces.ConfigFactoryComponent;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigSecretsProviderInterface;
 import org.metabit.platform.support.config.interfaces.SecretValue;
@@ -18,6 +18,7 @@ import java.util.Map;
 public class SecretsFactoryComponent implements ConfigFactoryComponent, SecretEntryFactory
 {
     private final Map<String, ConfigSecretsProviderInterface> activeSecretsProviders = new HashMap<>();
+    private ConfigFactoryInstanceContext ctx;
 
     @Override
     public String getComponentID()
@@ -34,6 +35,13 @@ public class SecretsFactoryComponent implements ConfigFactoryComponent, SecretEn
     @Override
     public boolean initialize(ConfigFactoryInstanceContext ctx)
     {
+        this.ctx = ctx;
+        return true;
+    }
+
+    @Override
+    public void postInit(org.metabit.platform.support.config.ConfigFactory factory)
+    {
         ConfigLoggingInterface logger = ctx.getLogger();
         ConfigFactorySettings settings = ctx.getSettings();
 
@@ -41,7 +49,7 @@ public class SecretsFactoryComponent implements ConfigFactoryComponent, SecretEn
         String secretsProviderID = settings.getString(ConfigFeature.SECRETS_PROVIDER_ID);
         if (secretsProviderID != null && !secretsProviderID.isEmpty())
         {
-            initProvider(ctx, secretsProviderID, (Map<String, Object>) settings.getObject(ConfigFeature.SECRETS_PROVIDER_CONFIG, Map.class), ConfigScope.APPLICATION);
+            initProvider(ctx, factory, secretsProviderID, (Map<String, Object>) settings.getObject(ConfigFeature.SECRETS_PROVIDER_CONFIG, Map.class), ConfigScope.APPLICATION);
         }
 
         // 2. process additional secrets providers
@@ -55,14 +63,12 @@ public class SecretsFactoryComponent implements ConfigFactoryComponent, SecretEn
                 String scopeName = (String) entry.get("scope");
                 ConfigScope scope = scopeName != null ? ConfigScope.valueOf(scopeName) : ConfigScope.APPLICATION;
 
-                initProvider(ctx, providerID, config, scope);
+                initProvider(ctx, factory, providerID, config, scope);
             }
         }
-
-        return true;
     }
 
-    private void initProvider(ConfigFactoryInstanceContext ctx, String providerID, Map<String, Object> config, ConfigScope scope)
+    private void initProvider(ConfigFactoryInstanceContext ctx, org.metabit.platform.support.config.ConfigFactory factory, String providerID, Map<String, Object> config, ConfigScope scope)
     {
         ConfigLoggingInterface logger = ctx.getLogger();
         ConfigSecretsProviderInterface provider = activeSecretsProviders.get(providerID);
@@ -73,16 +79,9 @@ public class SecretsFactoryComponent implements ConfigFactoryComponent, SecretEn
             {
                 try
                 {
-                    // Use a wrapper to prevent circularity during initialization
-                    if (ctx.getFactory() != null)
-                    {
-                        Configuration contextConfig = new ConfigurationPhaseWrapper(ctx.getFactory().getConfig(""));
-                        provider.init(config, contextConfig);
-                    }
-                    else
-                    {
-                        provider.init(config);
-                    }
+                    // Use the fully functional factory for self-configuration
+                    Configuration contextConfig = factory.getConfig("");
+                    provider.init(config, contextConfig);
                     activeSecretsProviders.put(providerID, provider);
                 }
                 catch (Exception e)

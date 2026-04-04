@@ -5,12 +5,12 @@ import org.metabit.platform.support.config.impl.ConfigSearchList;
 
 /**
  * Initializes Linux search paths for config discovery
- *
+ * <br/>
  *     LINUX OS family
  *     Standards:
  *          - XDG Base Directory Specification: specifications.freedesktop.org
  *          - Filesystem Hierarchy Standard (FHS): refspecs.linuxfoundation.org
- *
+ * <br/>
  * note: Linux uses HOST scope primarily. APPLICATION scope is atypical for linux.
  */
 class LinuxSearchPaths implements SearchPathInitializer
@@ -52,16 +52,13 @@ class LinuxSearchPaths implements SearchPathInitializer
         storage.addPathToSearchList(searchList, System.getProperty("user.home"), ConfigScope.USER, "."+applicationName, subDir);
 
         // not official Linux FHS but allows for a cleaner structure.
-        storage.addPathToSearchList(searchList, "/etc/opt/", ConfigScope.HOST, companyName, applicationName, subDir);
+        storage.addPathToSearchList(searchList, "/etc/opt", ConfigScope.HOST, companyName, applicationName, subDir);
 
         // this is the best place according to FHS for most cases.
         storage.addPathToSearchList(searchList, "/etc/opt", ConfigScope.HOST, applicationName, subDir);
 
         // Common for self-compiled or local admin software
         storage.addPathToSearchList(searchList, "/usr/local/etc", ConfigScope.HOST, applicationName, subDir);
-
-        // according to FHS, there may be no binary configurations in /etc. Not adding an exclusion rule there, though.
-        storage.addPathToSearchList(searchList, "/etc/", ConfigScope.HOST, applicationName, subDir);
 
         // relative to the current working directory the application was started from.
         storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);

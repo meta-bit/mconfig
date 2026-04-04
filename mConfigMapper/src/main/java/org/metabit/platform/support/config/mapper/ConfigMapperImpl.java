@@ -309,8 +309,8 @@ public class ConfigMapperImpl implements ConfigMapper
         // (ServiceLoader instances might not be initialized)
         ConfigFactorySettings settings = new ConfigFactorySettings();
         // try to preserve comments by default
-        settings.put(ConfigFeature.COMMENTS_WRITING, true);
-        settings.put(ConfigFeature.COMMENTS_READING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_WRITING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, true);
         format.testComponent(settings, NullLogging.getSingletonInstance());
 
         // 2. Create the file and get a writeable layer for it

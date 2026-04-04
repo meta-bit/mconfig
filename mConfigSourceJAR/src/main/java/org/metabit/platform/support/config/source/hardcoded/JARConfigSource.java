@@ -173,7 +173,12 @@ public class JARConfigSource implements ConfigStorageInterface
         // Also add locations for the specific search paths so discovery can find them if it iterates locations
         for (String path : searchPaths)
             {
-            ctx.getSearchList().insertAtScopeEnd(new ConfigLocationImpl(ConfigScope.PRODUCT, this, null, path), ConfigScope.PRODUCT);
+            String displayPath = path;
+            if (displayPath.startsWith("/"))
+                {
+                displayPath = displayPath.substring(1);
+                }
+            ctx.getSearchList().insertAtScopeEnd(new ConfigLocationImpl(ConfigScope.PRODUCT, this, null, displayPath), ConfigScope.PRODUCT);
             }
 
         return true;
@@ -193,7 +198,7 @@ public class JARConfigSource implements ConfigStorageInterface
         }
 
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         { throw new ConfigException(ConfigException.ConfigExceptionReason.CODE_LOGIC_ERROR); }
 
 
@@ -312,6 +317,7 @@ public class JARConfigSource implements ConfigStorageInterface
         
         for (String resourcePath : pathsToScan)
             {
+            final String currentScanPath = resourcePath;
             scanResources(resourcePath, (name, inputStreamSupplier) ->
                 {
                 String fileName = name.substring(name.lastIndexOf('/') + 1);
@@ -329,8 +335,20 @@ public class JARConfigSource implements ConfigStorageInterface
                             String dotExt = ext.startsWith(".") ? ext : "." + ext;
                             if (fileName.endsWith(dotExt))
                                 {
-                                String configName = fileName.substring(0, fileName.length() - dotExt.length());
-                                URI uri = getURIforConfigLocation(location, configName, null);
+                                String relativePath = name.substring(currentScanPath.length());
+                                String configPath;
+                                if (relativePath.contains("/"))
+                                    {
+                                    configPath = relativePath.substring(0, relativePath.lastIndexOf('/') + 1);
+                                    }
+                                else
+                                    {
+                                    configPath = "";
+                                    }
+                                String configName = configPath + fileName.substring(0, fileName.length() - dotExt.length());
+                                URI currentPathURI = URI.create(currentScanPath);
+                                ConfigLocation specificLocation = new ConfigLocationImpl(location.getScope(), this, null, currentPathURI);
+                                URI uri = getURIforConfigLocation(specificLocation, configName, null);
                                 foundConfigs.add(new ConfigDiscoveryInfo(configName, location.getScope(), uri, fileFormat.getFormatID(), false));
                                 break;
                                 }
@@ -359,9 +377,13 @@ public class JARConfigSource implements ConfigStorageInterface
         {
         if (configLocation.getStorage() != this)
             throw new ConfigException(ConfigException.ConfigExceptionReason.CODE_LOGIC_ERROR);
+        
         String keyString = (key == null) ? "" : URLEncoder.encode(key, StandardCharsets.UTF_8);
+        
+        Object handle = configLocation.getStorageInstanceHandle();
+        
         String locationString = URLEncoder.encode(configLocation.toLocationString(), StandardCharsets.UTF_8);
-        String uristring = String.format("mconfig:staticdefaults/JAR/%s/%s", locationString, keyString); //@CHECK
+        String uristring = String.format("mconfig:staticdefaults/JAR/%s/%s", locationString, keyString);
         if (optionalFragment != null)
             uristring += "#"+URLEncoder.encode(optionalFragment, StandardCharsets.UTF_8);
         return URI.create(uristring);
@@ -372,40 +394,13 @@ public class JARConfigSource implements ConfigStorageInterface
         {
         }
 
-    private String extractConfigNameFromPath(String name)
-        {
-        String fileName = name;
-        int lastSlash = name.lastIndexOf('/');
-        if (lastSlash != -1)
-            {
-            fileName = name.substring(lastSlash + 1);
-            }
-        if (fileName.endsWith(".scheme.json"))
-            {
-            return fileName.substring(0, fileName.length() - ".scheme.json".length());
-            }
-        return null;
-        }
-
-    private String readStreamToString(InputStream is) throws IOException
-        {
-        byte[] buffer = new byte[4096];
-        int bytesRead;
-        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-        while ((bytesRead = is.read(buffer)) != -1)
-            {
-            baos.write(buffer, 0, bytesRead);
-            }
-        return baos.toString(StandardCharsets.UTF_8);
-        }
-
     /**
      * @param sanitizedConfigName the name of the configuration; may be used as filename
      * @param location            location to look in
      * @param blobConfig          the blob config we're working on
      */
     @Override
-    public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
+    public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
         {
         // for reading resources from within JARs, using the thread-own class loader by default.
         ClassLoader cl = this.classLoader;
@@ -451,7 +446,7 @@ public class JARConfigSource implements ConfigStorageInterface
      * @param cfgCollector        configuration object to store the results in
      */
     @Override
-    public void tryToReadConfigurationLayers(final String sanitizedConfigName, final ConfigLocation location, LayeredConfigurationInterface cfgCollector)
+    public void updateConfigurationLayers(final String sanitizedConfigName, final ConfigLocation location, LayeredConfigurationInterface cfgCollector)
         {
         // for reading resources from within JARs, using the thread-own class loader by default.
         ClassLoader cl = this.classLoader;
@@ -487,7 +482,7 @@ public class JARConfigSource implements ConfigStorageInterface
 
     private ConfigLayerInterface getConfigLayerInterfaceInner(ClassLoader cl, ConfigLocation location, ConfigFileFormatInterface fileFormat, String pathname)
         {
-        //@TODO change to a list of patterns
+        //@TODO change to a list of patterns?
         URL url = cl.getResource(pathname);
         // ClassLoader.getResource searches in
         if (logger.isDebugEnabled())
@@ -521,7 +516,7 @@ public class JARConfigSource implements ConfigStorageInterface
     @Override
     public String toString()
         {
-        return "JAR Resources";
+        return getStorageName();
         }
     private boolean isGhostFile(String fileName)
         {
@@ -533,4 +528,33 @@ public class JARConfigSource implements ConfigStorageInterface
         }
 
 }
+
+/* code attic, for removal
+private String extractConfigNameFromPath(String name)
+    {
+    String fileName = name;
+    int lastSlash = name.lastIndexOf('/');
+    if (lastSlash != -1)
+        {
+        fileName = name.substring(lastSlash + 1);
+        }
+    if (fileName.endsWith(".scheme.json"))
+        {
+        return fileName.substring(0, fileName.length() - ".scheme.json".length());
+        }
+    return null;
+    }
+
+private String readStreamToString(InputStream is) throws IOException
+    {
+    byte[] buffer = new byte[4096];
+    int bytesRead;
+    java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+    while ((bytesRead = is.read(buffer)) != -1)
+        {
+        baos.write(buffer, 0, bytesRead);
+        }
+    return baos.toString(StandardCharsets.UTF_8);
+    }
+*/
 //___EOF___

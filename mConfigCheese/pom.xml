@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigcheese</artifactId>
-    <name>mConfigCheese</name>
+    <name>mConfig :: Extension :: Cheese</name>
     <description>mConfig cheese, for those who want their code with a scent!
             &#10;&#10;
             To keep mConfig clean, and at the same time make things easy for
@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigbase</artifactId>
+            <artifactId>mconfigbasicbinary</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -44,6 +44,18 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>metabit.mconfig.cheese</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

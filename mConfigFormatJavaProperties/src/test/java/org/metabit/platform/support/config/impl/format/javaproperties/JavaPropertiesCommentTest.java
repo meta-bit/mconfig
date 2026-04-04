@@ -26,7 +26,7 @@ public class JavaPropertiesCommentTest
         {
         FileJavaPropertiesFormat format = new FileJavaPropertiesFormat();
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_READING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, true);
         format.testComponent(settings, NullLogging.getSingletonInstance());
 
         String properties = ""
@@ -49,7 +49,7 @@ public class JavaPropertiesCommentTest
         {
         FileJavaPropertiesFormat format = new FileJavaPropertiesFormat();
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_WRITING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_WRITING, true);
         format.testComponent(settings, NullLogging.getSingletonInstance());
 
         Path tempFile = Files.createTempFile("mConfigPropsCommentWriteTest", ".properties");
@@ -62,7 +62,7 @@ public class JavaPropertiesCommentTest
             assertNull(entry);
 
             // Create entry with comment
-            ConfigEntry newEntry = new org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf("newKey", "newValue", new org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata((ConfigSource)location));
+            ConfigEntry newEntry = new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf("newKey", "newValue", ConfigEntryType.STRING, new org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata((ConfigSource)location));
             newEntry.setComment("this is a programmatic comment");
             layer.writeEntry(newEntry);
             layer.flush();
@@ -82,7 +82,7 @@ public class JavaPropertiesCommentTest
         {
         FileJavaPropertiesFormat format = new FileJavaPropertiesFormat();
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_READING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, true);
         format.testComponent(settings, NullLogging.getSingletonInstance());
 
         String properties = ""
@@ -103,7 +103,7 @@ public class JavaPropertiesCommentTest
         {
         FileJavaPropertiesFormat format = new FileJavaPropertiesFormat();
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_READING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, true);
         format.testComponent(settings, NullLogging.getSingletonInstance());
 
         String properties = ""
@@ -125,8 +125,8 @@ public class JavaPropertiesCommentTest
         {
         FileJavaPropertiesFormat format = new FileJavaPropertiesFormat();
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_WRITING, true);
-        settings.put(ConfigFeature.COMMENTS_READING, false); // Scenario B: Preserve-Only
+        settings.setBoolean(ConfigFeature.COMMENTS_WRITING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, false); // Scenario B: Preserve-Only
         format.testComponent(settings, NullLogging.getSingletonInstance());
 
         Path tempFile = Files.createTempFile("mConfigPropsAppendTest", ".properties");
@@ -161,9 +161,9 @@ public class JavaPropertiesCommentTest
         @Override public void exit() { }
         @Override public boolean isGenerallyWriteable() { return true; }
         @Override public URI getURIforConfigLocation(ConfigLocation configLocation, String key, String optionalFragment) { return URI.create("test://properties"); }
-        @Override public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg) { }
-        @Override public org.metabit.platform.support.config.interfaces.ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration) { return null; }
-        @Override public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig) { }
+        @Override public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg) { }
+        @Override public org.metabit.platform.support.config.interfaces.ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration) { return null; }
+        @Override public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig) { }
         @Override public java.util.Set<org.metabit.platform.support.config.ConfigDiscoveryInfo> listAvailableConfigurations(ConfigLocation location) { return Collections.emptySet(); }
         @Override public boolean hasChangedSincePreviousCheck(Object storageInstanceHandle) { return false; }
         @Override public void triggerChangeCheck(Object storageInstanceHandle) { }

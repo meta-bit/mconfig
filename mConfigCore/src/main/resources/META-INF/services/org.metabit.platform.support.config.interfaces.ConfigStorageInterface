@@ -1,2 +1,3 @@
-org.metabit.platform.support.config.source.core.InMemoryLayerSource
 org.metabit.platform.support.config.source.core.DefaultLayerStorage
+org.metabit.platform.support.config.source.core.RuntimeInMemoryLayerSource
+org.metabit.platform.support.config.source.core.SessionInMemoryLayerSource

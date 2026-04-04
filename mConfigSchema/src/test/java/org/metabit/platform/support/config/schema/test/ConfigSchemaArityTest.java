@@ -75,6 +75,6 @@ public class ConfigSchemaArityTest
     }
 
     private ConfigEntry createListEntry(String key, java.util.List<String> values) {
-        return new org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf(key, values, ConfigEntryType.MULTIPLE_STRINGS, null);
+        return new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf(key, values, ConfigEntryType.MULTIPLE_STRINGS, null);
     }
 }

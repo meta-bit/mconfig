@@ -10,8 +10,6 @@ import org.metabit.platform.support.config.impl.logging.ConsoleLogging;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.mockito.Mockito;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,7 +68,7 @@ public class YAMLCommentPersistenceTest
         assertTrue(updatedYaml.contains("# Comment before block"), "Should contain comment before block");
 
         // Now modify something and see if comments persist
-        layer.writeEntry(new org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf("foo", "updated", null));
+        layer.writeEntry(new org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf("foo", "updated", ConfigEntryType.STRING, null));
         format.writeFile(layer);
 
         String finalYaml = new String(Files.readAllBytes(yamlFile), StandardCharsets.UTF_8);

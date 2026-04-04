@@ -1,4 +1,4 @@
-# 3.8 Code Improvements and Best Practices
+# 3.10 Code Improvements and Best Practices
 
 ## Defaults
 

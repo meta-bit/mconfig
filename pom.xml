@@ -24,7 +24,7 @@
 
     <groupId>org.metabit.platform.support.config</groupId>
     <artifactId>mconfig</artifactId>
-    <version>0.8.9</version>
+    <version>0.8.12</version>
     <packaging>pom</packaging>
     <name>mConfig</name>
     <description>
@@ -42,8 +42,8 @@
         </license>
     </licenses>
     <modules>
-        <module>mConfigFull</module>
         <module>mConfigStandard</module>
+        <module>mConfigBasic</module>
         <module>mConfigCore</module>
         <module>mConfigSchema</module>
         <module>mConfigSecrets</module>
@@ -55,7 +55,7 @@
         <module>mConfigSourceEnvVar</module>
         <module>mConfigWinRegistry</module>
         <module>mConfigWinRegistryJNI</module>
-        <module>mConfigBase</module>
+        <module>mConfigBasicBinary</module>
         <module>mConfigLoggingSlf4j</module>
         <module>mConfigMapper</module>
         <module>integrationtests</module>
@@ -69,6 +69,8 @@
         <module>mConfigFormatTOML</module>
         <module>mConfigFormatJsonSchema</module>
         <module>mConfigSourceZooKeeper</module>
+        <module>mConfigSourceVault</module>
+        <module>mConfigSourceAwsSecretsManager</module>
         <module>documentation</module>
     </modules>
     <organization>

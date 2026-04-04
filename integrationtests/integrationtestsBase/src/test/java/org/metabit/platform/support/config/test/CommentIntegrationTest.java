@@ -19,7 +19,7 @@ class CommentIntegrationTest {
     @Test
     void testDescriptionOnCreate() throws Exception {
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test");
-        builder.setTestConfigPaths(ConfigScope.SESSION, List.of(tempDir.toAbsolutePath().toString()));
+        builder.setTestConfigPaths(ConfigScope.USER, List.of(tempDir.toAbsolutePath().toString()));
         builder.setTestMode(true);
         builder.setFeature(ConfigFeature.AUTOMATIC_CONFIG_CREATION, true);
         builder.setFeature(ConfigFeature.WRITE_SYNC, true);
@@ -34,10 +34,10 @@ class CommentIntegrationTest {
         Configuration cfg = factory.getConfig("testconfig", scheme);
 
         // This should trigger DESCRIPTION_ON_CREATE
-        cfg.put("mykey", "myvalue", ConfigScope.SESSION);
+        cfg.put("mykey", "myvalue", ConfigScope.USER);
 
         // Read back via API and verify the entry exists
-        ConfigEntry entry = cfg.getConfigEntryFromFullKey("mykey", java.util.EnumSet.of(ConfigScope.SESSION));
+        ConfigEntry entry = cfg.getConfigEntryFromFullKey("mykey", java.util.EnumSet.of(ConfigScope.USER));
         assertNotNull(entry, "Entry should be present after put");
         assertEquals("myvalue", entry.getValueAsString());
 

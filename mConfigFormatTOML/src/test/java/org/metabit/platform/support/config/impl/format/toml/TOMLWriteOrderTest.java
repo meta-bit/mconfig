@@ -5,7 +5,7 @@ import org.metabit.platform.support.config.ConfigEntry;
 import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 
@@ -36,7 +36,7 @@ class TOMLWriteOrderTest
         assertNotNull(layer);
 
         // Add a new entry that should be at the top level
-        ConfigEntry newEntry = new TypedConfigEntryLeaf("newKey", "newValue", org.metabit.platform.support.config.ConfigEntryType.STRING, null);
+        ConfigEntry newEntry = new GenericConfigEntryLeaf("newKey", "newValue", org.metabit.platform.support.config.ConfigEntryType.STRING, null);
         layer.writeEntry(newEntry);
 
         TomlWriter writer = new TomlWriter();

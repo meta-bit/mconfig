@@ -3,8 +3,7 @@ import org.metabit.platform.support.config.schema.*;
 
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 
 import java.util.Arrays;
 
@@ -79,18 +78,14 @@ public class ConfigSchemaEnhancementTest
     }
 
     private ConfigEntry createNumberEntry(String key, Number value) {
-        return new StringConfigEntryLeaf(key, String.valueOf(value), null) {
-            @Override public ConfigEntryType getType() { return ConfigEntryType.NUMBER; }
-        };
+        return new GenericConfigEntryLeaf(key, value, ConfigEntryType.NUMBER, null);
     }
 
     private ConfigEntry createStringEntry(String key, String value, ConfigEntryType type) {
-        return new StringConfigEntryLeaf(key, value, null) {
-            @Override public ConfigEntryType getType() { return type; }
-        };
+        return new GenericConfigEntryLeaf(key, value, type, null);
     }
 
     private ConfigEntry createListEntry(String key, java.util.List<String> values) {
-        return new TypedConfigEntryLeaf(key, values, ConfigEntryType.ENUM_SET, null);
+        return new GenericConfigEntryLeaf(key, values, ConfigEntryType.ENUM_SET, null);
     }
 }

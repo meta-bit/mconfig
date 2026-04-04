@@ -18,7 +18,7 @@
    (Plus logging if DEBUG enabled.)
 
 ## Features Included
-- `mConfigStandard` (filesystem, JAR).
+- `mConfigBasic` (filesystem, JAR).
 - `mConfigLoggingSlf4j` + Logback (hints on issues).
 - Sample config loads from classpath `.config/myco/myapp/network.properties`.
 - Ready for JPMS (add `module-info.java` if needed).

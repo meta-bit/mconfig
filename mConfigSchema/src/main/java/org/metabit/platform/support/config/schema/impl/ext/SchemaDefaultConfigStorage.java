@@ -114,7 +114,7 @@ public class SchemaDefaultConfigStorage implements ConfigStorageInterface
 
     /** {@inheritDoc} */
     @Override
-    public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
+    public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
         {
         throw new ConfigException(new UnsupportedOperationException()); // nope, we don't do that.
         }
@@ -126,7 +126,7 @@ public class SchemaDefaultConfigStorage implements ConfigStorageInterface
      * thus not for create, either.
      */
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configSchema, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configSchema, LayeredConfiguration layeredConfiguration)
         { throw new ConfigException(ConfigException.ConfigExceptionReason.CODE_LOGIC_ERROR); }
 
     /**
@@ -135,7 +135,7 @@ public class SchemaDefaultConfigStorage implements ConfigStorageInterface
      * @param blobConfig          the blob config we're working on
      */
     @Override
-    public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
+    public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
         {
         throw new ConfigException(new UnsupportedOperationException()); // nope, we don't do that.
         }

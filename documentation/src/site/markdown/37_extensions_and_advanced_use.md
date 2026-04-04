@@ -1,6 +1,48 @@
 # 3.7 Extensions and Advanced Use
 
-## 3.7.1 Using extensions
+## 3.7.1 Extensions and Advanced Features
+
+mConfig allows you to extend its functionality by adding new configuration features without modifying the core library. This is useful for building custom storage backends or format providers.
+
+### 3.7.1.1 ConfigFeatureBase
+
+To create a new feature, use `ConfigFeatureBase`. It provides a standard implementation of `ConfigFeatureInterface` that defines the feature name, value type, and optional default value.
+
+```java
+import org.metabit.platform.support.config.ConfigFeature;
+import org.metabit.platform.support.config.ConfigFeatureBase;
+import org.metabit.platform.support.config.ConfigFeatureInterface;
+import org.metabit.platform.support.config.ConfigFeatureRegistry;
+
+public class MyModuleFeatures {
+    public static final ConfigFeatureInterface MY_SETTING = 
+        new ConfigFeatureBase("MY_MODULE_SETTING", ConfigFeature.ValueType.STRING, "default_val");
+
+    static {
+        // Register the feature so it can be set by its string name
+        ConfigFeatureRegistry.register(MY_SETTING);
+    }
+}
+```
+
+By registering the feature in the `ConfigFeatureRegistry`, you enable the library to:
+1. Validate values set via string names: `builder.setFeature("MY_MODULE_SETTING", "custom_val")`.
+2. Access the feature without a direct dependency on the module's feature class.
+3. Support "self-configuration" via `mconfig.properties`.
+4. Provide case-insensitive lookups (ignoring underscores and case).
+
+For example, a user of your module could configure it without importing `MyModuleFeatures`:
+
+```java
+ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "App")
+    .setFeature("MY_MODULE_SETTING", "some-value");
+```
+
+### 3.7.1.2 Writing Custom Extensions
+
+For details on implementing custom `ConfigStorageInterface` or `ConfigFormatInterface`, please refer to the developer documentation in `devdocs/library_development.md`.
+
+For common utility adapters (Properties, Overrides, Remapping), see [3.9 Utilities and Adapters](39_utilities_and_adapters.md).
 
 ## 3.7.2 Advanced use
 
@@ -33,10 +75,10 @@ and mConfig takes care of the checking.
 
 Multi-language descriptions are supported by providing a map of language codes to description texts. When requested via `getDescription(Locale)`, the library will first check this map, then fall back to standard `ResourceBundle` lookup (using `.config/messages.properties`), and finally fall back to the single string description if provided.
 
-**PLAN**: For FLAGS, in the future we may chose an alternative form - each being a pair with string
+**PLAN**: For FLAGS, in the future we may choose an alternative form – each being a pair with string
 key and boolean value.
 
-#### 3.7.3.1.2 Internal format 1:  ConfigSchemas, in an array. internal use only!
+#### 3.7.3.1.2 Internal format 1: ConfigSchemas, in an array. internal use only!
     [ 
     SCHEME_ENTRIES,
     GO_HERE,
@@ -68,11 +110,11 @@ stateDiagram-v2
 
 ### 3.7.4 configure priorities
 #### 3.7.4.1 File Type Priority
-You can control the resolution priority between different file types (e.g., JSON, YAML) using the `FILE_TYPE_PRIORITIES` feature. This re-orders the search list within each scope.
+You can control the resolution priority between different file types (e.g. JSON, YAML) using the `FILE_TYPE_PRIORITIES` feature. This re-orders the search list within each scope.
 
 #### 3.7.4.2 Storage Type Priority
 
-You can control the resolution priority between different storage types (e.g., Files vs. Registry) using the `STORAGE_TYPE_PRIORITIES` feature. This re-orders the search list within each scope.
+You can control the resolution priority between different storage types (e.g. Files vs. Registry) using the `STORAGE_TYPE_PRIORITIES` feature. This re-orders the search list within each scope.
 
 ```java
 ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("company", "app")

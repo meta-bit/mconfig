@@ -97,6 +97,9 @@ public class RawWriteTest
         try
             {
             String subPath = "level1/level2/level3";
+            Path targetDir = tempDir.resolve(subPath);
+            Files.createDirectories(targetDir);
+
             ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(COMPANY_NAME, APPLICATION_NAME, subPath);
             builder.setFeature(ConfigFeature.ADDITIONAL_USER_DIRECTORIES, List.of(tempDir.toString()));
             builder.setFeature(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES, List.of("text_file"));
@@ -105,11 +108,6 @@ public class RawWriteTest
                 {
                 Configuration cfg = factory.getConfig("subPathTest");
                 String content = "Nested content";
-                
-                // Ensure directories exist so mConfig can find the location if it checks for existence
-                // Some versions of mConfig might only add existing directories to the search list
-                Path targetDir = tempDir.resolve(subPath);
-                Files.createDirectories(targetDir);
                 
                 cfg.put("", content, ConfigScope.USER);
 

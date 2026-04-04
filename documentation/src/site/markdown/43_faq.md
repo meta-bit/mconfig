@@ -113,8 +113,9 @@ Add the required `requires` directives to your `module-info.java`.
 
 The list depends on the mConfig variant:
 
-* [mConfigFull](../../../../mConfigFull/README.md) (JPMS `requires` section)
-* [mConfigStandard](../../../../mConfigStandard/README.md) (JPMS `requires` section)
+* [mconfigbasic](../../../../mConfigBasic/README.md) (JPMS `requires` section)
+* [mconfigstandard](../../../../mConfigStandard/README.md) (JPMS `requires` section)
+* [mconfigbasicbinary](../../../../mConfigBasicBinary/README.md) (JPMS `requires` section)
 
 See also [JPMS introduction](examples/java-modules.md).
 

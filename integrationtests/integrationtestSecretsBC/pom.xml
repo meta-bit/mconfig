@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.metabit.testing.platform.support.config.test</groupId>
         <artifactId>integrationtests</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>integrationtestsecretsbc</artifactId>
@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigbase</artifactId>
+            <artifactId>mconfigbasicbinary</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -3,9 +3,8 @@ package org.metabit.platform.support.config.impl.format.raw;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
-import org.metabit.platform.support.config.impl.entry.BlobConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 
 import java.nio.file.Files;
@@ -34,9 +33,9 @@ public class FileRawConfigLayer implements ConfigLayerInterface
         ConfigEntryMetadata meta = new ConfigEntryMetadata(source);
         if (binaryContents != null || (format != null && format.getFormatID().equals("binary_file")))
             {
-            return new BlobConfigEntryLeaf("", binaryContents, meta);
+            return new GenericConfigEntryLeaf("", binaryContents, ConfigEntryType.BYTES, meta);
             }
-        return new StringConfigEntryLeaf("", contents, meta);
+        return new GenericConfigEntryLeaf("", contents, ConfigEntryType.STRING, meta);
         }
 
     @Override

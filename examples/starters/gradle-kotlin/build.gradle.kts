@@ -18,8 +18,8 @@ java {
 }
 
 dependencies {
-    implementation("org.metabit.platform.support.config:mConfigStandard:$mconfigVersion")
-    implementation("org.metabit.platform.support.config:mConfigLoggingSlf4j:$mconfigVersion")
+    implementation("org.metabit.platform.support.config:mconfigbasic:$mconfigVersion")
+    implementation("org.metabit.platform.support.config:mconfigloggingslf4j:$mconfigVersion")
     implementation("ch.qos.logback:logback-classic:1.4.14")
 }
 

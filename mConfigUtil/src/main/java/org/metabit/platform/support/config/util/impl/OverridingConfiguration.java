@@ -3,7 +3,7 @@ package org.metabit.platform.support.config.util.impl;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.entry.BasicSecretValue;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.SecretType;
 import org.metabit.platform.support.config.interfaces.SecretValue;
@@ -15,7 +15,6 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Immutable {@link Configuration} view that overlays {@code overrides} on top of {@code parent}.
@@ -54,117 +53,10 @@ public class OverridingConfiguration implements Configuration
 
     private boolean validate(String key, String strVal)
         {
-        if (scheme == null) // nothing to validate
-            { return true; }
-        ConfigEntrySpecification spec = scheme.getSpecification(key);
-        if (spec == null) // unknown key, still nothing to validate
-            { return true; }
-        try
-            {
-            ConfigEntryMetadata dummyMeta = new ConfigEntryMetadata((ConfigSource) null);
-            ConfigEntry tempEntry = new StringConfigEntryLeaf(key, strVal != null ? strVal : "", dummyMeta);
-            return scheme.checkConfigEntryValidity(key, tempEntry);
-            }
-        catch (Exception e)
-            {
-            throw new IllegalArgumentException("Configuration validation failed for override key '"+key+"': "+strVal, e);
-            }
+        return AdapterValidator.validate(scheme, key, strVal);
         }
 
-    private String parseString(String s)
-        { return s; }
-
-    private Boolean parseBoolean(String s)
-        {
-        if (s == null || s.trim().isEmpty())
-            { return null; }
-        String lower = s.trim().toLowerCase(Locale.ROOT);
-        switch (lower)
-            {
-            case "true":
-            case "1":
-            case "yes":
-                return Boolean.TRUE;
-            case "false":
-            case "0":
-            case "no":
-                return Boolean.FALSE;
-            default:
-                return null;
-            }
-        }
-
-    private Integer parseInteger(String s)
-        {
-        if (s == null || s.trim().isEmpty())
-            { return null; }
-        try
-            { return Integer.valueOf(s.trim()); }
-        catch (NumberFormatException e)
-            { return null; }
-        }
-
-    private Long parseLong(String s)
-        {
-        if (s == null || s.trim().isEmpty())
-            { return null; }
-        try
-            { return Long.valueOf(s.trim()); }
-        catch (NumberFormatException e)
-            { return null; }
-        }
-
-    private Double parseDouble(String s)
-        {
-        if (s == null || s.trim().isEmpty())
-            { return null; }
-        try
-            { return Double.valueOf(s.trim()); }
-        catch (NumberFormatException e)
-            { return null; }
-        }
-
-    private BigInteger parseBigInteger(String s)
-        {
-        if (s == null || s.trim().isEmpty())
-            { return null; }
-        try
-            { return new BigInteger(s.trim()); }
-        catch (NumberFormatException e)
-            { return null; }
-        }
-
-    private BigDecimal parseBigDecimal(String s)
-        {
-        if (s == null || s.trim().isEmpty())
-            { return null; }
-        try
-            { return new BigDecimal(s.trim()); }
-        catch (NumberFormatException e)
-            { return null; }
-        }
-
-    private byte[] parseBytes(String s)
-        { return s != null ? s.getBytes(StandardCharsets.UTF_8) : null; }
-
-    private List<String> parseListOfStrings(String s)
-        {
-        if (s == null || s.trim().isEmpty())
-            { return null; }
-        return Arrays.stream(s.split(","))
-                .map(String::trim)
-                .filter(str->!str.isEmpty())
-                .collect(Collectors.toList());
-        }
-
-    private SecretValue parseSecret(String s)
-        {
-        return s == null ? null : new BasicSecretValue(s.getBytes(StandardCharsets.UTF_8), SecretType.PLAIN_TEXT);
-        }
-
-    // Typed getters
-    @Override
-    public String getString(String fullKey)
+    private ConfigEntry getEntryFromOverrides(String fullKey, ConfigEntryType type)
         {
         String key = fullKey.trim();
         if (overrides.containsKey(key))
@@ -172,7 +64,21 @@ public class OverridingConfiguration implements Configuration
             Object raw = overrides.get(key);
             String strVal = rawToString(raw);
             validate(key, strVal);
-            return parseString(strVal);
+            ConfigEntryMetadata dummyMeta = new ConfigEntryMetadata((ConfigSource) null);
+            return new GenericConfigEntryLeaf(key, strVal != null ? strVal : "", type, dummyMeta);
+            }
+        return null;
+        }
+
+    @Override
+    public String getString(String fullKey)
+        {
+        String key = fullKey.trim();
+        if (overrides.containsKey(key))
+            {
+            String s = rawToString(overrides.get(key));
+            validate(key, s);
+            return s;
             }
         return parent.getString(fullKey);
         }
@@ -180,291 +86,109 @@ public class OverridingConfiguration implements Configuration
     @Override
     public Boolean getBoolean(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseBoolean(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.BOOLEAN);
+        if (entry != null) { try { return entry.getValueAsBoolean(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getBoolean(fullKey);
         }
 
     @Override
     public Integer getInteger(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseInteger(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.NUMBER);
+        if (entry != null) { try { return entry.getValueAsInteger(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getInteger(fullKey);
         }
 
     @Override
     public Long getLong(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseLong(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.NUMBER);
+        if (entry != null) { try { return entry.getValueAsLong(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getLong(fullKey);
         }
 
     @Override
     public Double getDouble(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseDouble(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.NUMBER);
+        if (entry != null) { try { return entry.getValueAsDouble(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getDouble(fullKey);
         }
 
     @Override
     public BigInteger getBigInteger(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseBigInteger(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.NUMBER);
+        if (entry != null) { try { return entry.getValueAsBigInteger(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getBigInteger(fullKey);
         }
 
     @Override
     public BigDecimal getBigDecimal(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseBigDecimal(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.NUMBER);
+        if (entry != null) { try { return entry.getValueAsBigDecimal(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getBigDecimal(fullKey);
         }
 
     @Override
     public byte[] getBytes(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseBytes(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.BYTES);
+        if (entry != null) { try { return entry.getValueAsBytes(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getBytes(fullKey);
         }
 
     @Override
     public List<String> getListOfStrings(String fullKey)
         {
-        String key = fullKey.trim();
-        if (overrides.containsKey(key))
-            {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
-            validate(key, strVal);
-            return parseListOfStrings(strVal);
-            }
+        ConfigEntry entry = getEntryFromOverrides(fullKey, ConfigEntryType.MULTIPLE_STRINGS);
+        if (entry != null) { try { return entry.getValueAsStringList(); } catch (ConfigCheckedException e) { return null; } }
         return parent.getListOfStrings(fullKey);
         }
 
     @Override
-    public SecretValue getSecret(String fullKey)
+    public SecretValue getSecret(String fullKey) throws ConfigException
         {
         String key = fullKey.trim();
         if (overrides.containsKey(key))
             {
-            Object raw = overrides.get(key);
-            String strVal = rawToString(raw);
+            String strVal = rawToString(overrides.get(key));
             validate(key, strVal);
-            return parseSecret(strVal);
+            return strVal == null ? null : new BasicSecretValue(strVal.getBytes(StandardCharsets.UTF_8), SecretType.PLAIN_TEXT);
             }
         return parent.getSecret(fullKey);
         }
 
-    // Put methods - UOE
-    @Override
-    public void put(String fullKey, String value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
+    private void throwReadOnly() { throw new UnsupportedOperationException("OverridingConfiguration is read-only"); }
 
-    @Override
-    public void put(String fullKey, String value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Boolean value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Boolean value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Integer value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Integer value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Long value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Long value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Double value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Double value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigInteger value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigInteger value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigDecimal value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigDecimal value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, byte[] value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, byte[] value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, List<String> value, ConfigScope scope)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, List<String> value, EnumSet<ConfigScope> scopes)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, String value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Boolean value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Integer value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Long value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, Double value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigInteger value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, BigDecimal value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, byte[] value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
-
-    @Override
-    public void put(String fullKey, List<String> value)
-        {
-        throw new UnsupportedOperationException("OverridingConfiguration is read-only");
-        }
+    @Override public void put(String fullKey, String value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, String value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Boolean value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Boolean value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Integer value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Integer value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Long value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Long value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, Double value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, Double value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigInteger value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigInteger value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigDecimal value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigDecimal value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, byte[] value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, byte[] value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, List<String> value, ConfigScope scope) { throwReadOnly(); }
+    @Override public void put(String fullKey, List<String> value, EnumSet<ConfigScope> scopes) { throwReadOnly(); }
+    @Override public void put(String fullKey, String value) { throwReadOnly(); }
+    @Override public void put(String fullKey, Boolean value) { throwReadOnly(); }
+    @Override public void put(String fullKey, Integer value) { throwReadOnly(); }
+    @Override public void put(String fullKey, Long value) { throwReadOnly(); }
+    @Override public void put(String fullKey, Double value) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigInteger value) { throwReadOnly(); }
+    @Override public void put(String fullKey, BigDecimal value) { throwReadOnly(); }
+    @Override public void put(String fullKey, byte[] value) { throwReadOnly(); }
+    @Override public void put(String fullKey, List<String> value) { throwReadOnly(); }
 
     @Override
     public ConfigSchema getConfigSchema()
@@ -539,7 +263,7 @@ public class OverridingConfiguration implements Configuration
             String strVal = rawToString(overrides.get(key));
             validate(key, strVal);
             ConfigEntryMetadata dummyMeta = new ConfigEntryMetadata((ConfigSource) null);
-            return new StringConfigEntryLeaf(key, strVal != null ? strVal : "", dummyMeta);
+            return new GenericConfigEntryLeaf(key, strVal != null ? strVal : "", ConfigEntryType.STRING, dummyMeta);
             }
         return parent.getConfigEntryFromFullKey(fullKey, scopes);
         }
@@ -580,17 +304,9 @@ public class OverridingConfiguration implements Configuration
     public Iterator<String> getEntryKeyTreeIterator()
         {
         // Simple union; assumes flat keys
-        Set<String> allKeys = getAllConfigurationKeysFlattened(ConfigUtil.ALL_SCOPES);
+        Set<String> allKeys = new HashSet<>(overrides.keySet());
+        parent.getEntryKeyTreeIterator().forEachRemaining(allKeys::add);
         return allKeys.iterator();
-        }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void limitScopes(EnumSet<ConfigScope> scopes)
-        {
-        parent.limitScopes(scopes);
         }
 
     @Override
@@ -603,5 +319,11 @@ public class OverridingConfiguration implements Configuration
     public void close()
         {
         // no-op
+        }
+
+    @Override
+    public void limitScopes(EnumSet<ConfigScope> scopes)
+        {
+        parent.limitScopes(scopes);
         }
 }

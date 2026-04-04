@@ -6,11 +6,12 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigformatrawfile</artifactId>
-    <name>mConfigFormatRawFile</name>
+    <name>mConfig :: Format :: Raw File</name>
+    <description>mConfig format module for reading and writing configurations from/to raw files (plain text, and binary)</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

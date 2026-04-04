@@ -33,8 +33,17 @@ import java.math.BigInteger;
  * @see <a href="https://www.rfc-editor.org/rfc/rfc8259">RFC 8259</a>
  * @see <a href="https://www.json.org/json-en.html">JSON specification</a>
  */
+// This is a parser.
+// It needs many constant values, a single time, for a specific purpose, local to where they are used.
+// And there is no benefit in spreading its single functionality over multiple files.
+@SuppressWarnings({"MagicNumber", "ClassWithTooManyMethods"})
 public class JsonStreamParser
 {
+    // constants with multiple uses
+    public static final char CR = '\r';
+    public static final char LF = '\n';
+    public static final char TAB = '\t';
+
     /** exception class derived from IllegalArgumentException, with position data. */
     public static class
     JsonParsingException extends IllegalArgumentException
@@ -83,21 +92,21 @@ public class JsonStreamParser
      */
     public static interface JsonStreamConsumer
     {
-        void consumeNull(int line, int column, int level)                                           throws JsonParsingException;
-        void consumeFalse(int line, int column, int level)                                          throws JsonParsingException;
-        void consumeTrue(int line, int column, int level)                                           throws JsonParsingException;
-        void consumeString(int line, int column, int level, final String string)                    throws JsonParsingException;
-        void consumeNumberInteger(int line, int column, int level, int i)                           throws JsonParsingException;
-        void consumeNumberLong(int line, int column, int level, long l)                             throws JsonParsingException;
-        void consumeNumberDouble(int line, int column, int level, double v)                         throws JsonParsingException;
-        void consumeNumberBigInteger(int line, int column, int level, final BigInteger bigInteger)  throws JsonParsingException;
-        void consumeNumberBigDecimal(int line, int column, int level, final BigDecimal bigDecimal)  throws JsonParsingException;
-        void consumeObjectEntryStart(int line, int column, int level, final String key)             throws JsonParsingException;
-        void consumeObjectEntryEnd(int line, int column, int level)                                 throws JsonParsingException;
-        void consumeObjectStart(int line, int column, int level)                                    throws JsonParsingException;
-        void consumeObjectEnd(int line, int column, int level)                                      throws JsonParsingException;
-        void consumeArrayStart(int line, int column, int level)                                     throws JsonParsingException;
-        void consumeArrayEnd(int line, int column, int level)                                       throws JsonParsingException;
+        default void consumeNull(int line, int column, int level) throws JsonParsingException {}
+        default void consumeFalse(int line, int column, int level) throws JsonParsingException {}
+        default void consumeTrue(int line, int column, int level) throws JsonParsingException {}
+        default void consumeString(int line, int column, int level, final String string) throws JsonParsingException {}
+        default void consumeNumberInteger(int line, int column, int level, int i) throws JsonParsingException {}
+        default void consumeNumberLong(int line, int column, int level, long l) throws JsonParsingException {}
+        default void consumeNumberDouble(int line, int column, int level, double v) throws JsonParsingException {}
+        default void consumeNumberBigInteger(int line, int column, int level, final BigInteger bigInteger) throws JsonParsingException {}
+        default void consumeNumberBigDecimal(int line, int column, int level, final BigDecimal bigDecimal) throws JsonParsingException {}
+        default void consumeObjectEntryStart(int line, int column, int level, final String key) throws JsonParsingException {}
+        default void consumeObjectEntryEnd(int line, int column, int level) throws JsonParsingException {}
+        default void consumeObjectStart(int line, int column, int level) throws JsonParsingException {}
+        default void consumeObjectEnd(int line, int column, int level) throws JsonParsingException {}
+        default void consumeArrayStart(int line, int column, int level) throws JsonParsingException {}
+        default void consumeArrayEnd(int line, int column, int level) throws JsonParsingException {}
     }
 
     /**
@@ -522,7 +531,7 @@ public class JsonStreamParser
                  * Using 15 as a threshold ensures that we preserve full precision by switching to
                  * BigDecimal for longer digit sequences.
                  */
-                if (sb.length() <= 15)
+                if (sb.length() <= 15) // that's how much fits into a double
                     { output.consumeNumberDouble(line, column, level, Double.parseDouble(sb.toString())); }
                 else
                     { output.consumeNumberBigDecimal(line, column, level, new BigDecimal(sb.toString())); }
@@ -534,11 +543,11 @@ public class JsonStreamParser
                 // <=9 digits: integer. (+-2147483647 as actual max)
                 // 10-18 digits: long. (+- 9223372036854775807 actual max)
                 // >18 digits: bignum
-                if (sb.length() <= 9) //
+                if (sb.length() <= 9) // short enough to fit into an int
                     { output.consumeNumberInteger(line, column, level, Integer.parseInt(sb.toString())); }
-                else if (sb.length() <= 18)
+                else if (sb.length() <= 18) // short enough to fit into a long
                     { output.consumeNumberLong(line, column, level, Long.parseLong(sb.toString())); }
-                else
+                else // too long, we have to use BigInteger
                     { output.consumeNumberBigInteger(line, column, level, new BigInteger(sb.toString())); }
                 }
             }
@@ -585,13 +594,13 @@ public class JsonStreamParser
                             sb.append('\f');
                             break; // FF
                         case 'n':
-                            sb.append('\n');
+                            sb.append(LF);
                             break; // LF
                         case 'r':
-                            sb.append('\r');
+                            sb.append(CR);
                             break; // CR
                         case 't':
-                            sb.append('\t');
+                            sb.append(TAB);
                             break; // tab
                         case 'u':   // unicode escape; 4 hexits to follow.
                             sb2.setLength(0);
@@ -697,9 +706,9 @@ public class JsonStreamParser
                     { break; }
                 // else intentional fallthrough
                 // these standard whitespace are defined in JSON explicitly
-            case '\t':  // 0x09
-            case '\n':  // 0x0A
-            case '\r':  // 0x0D
+            case TAB:  // 0x09
+            case LF:  // 0x0A
+            case CR:  // 0x0D
             case ' ':   // 0x20
                 return true;
             default:
@@ -745,17 +754,17 @@ public class JsonStreamParser
         // that out of the way... back to the actual code.
         switch (c)
             {
-            case '\r': // CR
+            case CR: // CR
                 if (ignoreCR)
                 {
                     break;
                 }
             // else intentional fallthrough to LF
-            case '\n': // LF
+            case LF: // LF
                 line++;
                 column = 0;
                 break;
-            case '\t': // tab. for column handling.
+            case TAB: // tab. for column handling.
                 column += (tabStep - (column % tabStep));
                 break;
             default:
@@ -764,7 +773,8 @@ public class JsonStreamParser
         return c;
         }
 
-
+    // --- class members ---
+    // handles
     private       Reader             input;
     private       JsonStreamConsumer output;
     // variables
@@ -773,7 +783,7 @@ public class JsonStreamParser
     private       int                column;
     private       int                level;
     private       int                currentChar;
-    private       boolean            putback; // workaround.
+    private       boolean            putback; // workaround for the lack of peek() in Reader
     private final StringBuilder      sb; // reused local buffer.
     private final StringBuilder      sb2; // reused local buffer.
     // settings.

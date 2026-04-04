@@ -2,7 +2,7 @@ package org.metabit.platform.support.config.impl;
 
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -33,22 +33,22 @@ public class TypePreservationTest
         ConfigEntry bigIntEntry = cfg.getConfigEntryFromFullKey("bigIntKey", null);
         ConfigEntry bigDecEntry = cfg.getConfigEntryFromFullKey("bigDecKey", null);
 
-        assertInstanceOf(TypedConfigEntryLeaf.class, intEntry);
+        assertInstanceOf(GenericConfigEntryLeaf.class, intEntry);
         assertEquals(ConfigEntryType.NUMBER, intEntry.getType());
         assertEquals(42, intEntry.getValueAsInteger());
 
-        assertInstanceOf(TypedConfigEntryLeaf.class, boolEntry);
+        assertInstanceOf(GenericConfigEntryLeaf.class, boolEntry);
         assertEquals(ConfigEntryType.BOOLEAN, boolEntry.getType());
         assertEquals(true, boolEntry.getValueAsBoolean());
 
-        assertInstanceOf(TypedConfigEntryLeaf.class, doubleEntry);
+        assertInstanceOf(GenericConfigEntryLeaf.class, doubleEntry);
         assertEquals(ConfigEntryType.NUMBER, doubleEntry.getType());
         assertEquals(3.14, doubleEntry.getValueAsDouble());
 
-        assertInstanceOf(TypedConfigEntryLeaf.class, bigIntEntry);
+        assertInstanceOf(GenericConfigEntryLeaf.class, bigIntEntry);
         assertEquals(new BigInteger("12345678901234567890"), bigIntEntry.getValueAsBigInteger());
 
-        assertInstanceOf(TypedConfigEntryLeaf.class, bigDecEntry);
+        assertInstanceOf(GenericConfigEntryLeaf.class, bigDecEntry);
         assertEquals(new BigDecimal("123.456"), bigDecEntry.getValueAsBigDecimal());
         }
 }

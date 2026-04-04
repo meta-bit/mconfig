@@ -36,7 +36,10 @@ modifications** in regard to mConfig.
 
 ### Activate Test Mode
 
-`ConfigFactoryBuilder.setTestMode(true);`
+```java
+ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("company", "app");
+builder.setTestMode(true);
+```
 
 or with Environment Variables, e.g.
 `MCONFIG_RUNTIME_TEST_MODE=true`
@@ -81,19 +84,19 @@ So, activating test mode results in these directories searched for entries:
 
 ##### Test mode search paths
 
-In test mode, standard OS paths are bypassed. Use explicit paths via `ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of("USER:/tmp/test-user"))` **or** fallbacks like `src/test/resources/.config/&lt;company&gt;/&lt;app&gt;/` and `src/test/resources/config/{SCOPE}` (resources > project configs).
+In test mode, standard OS paths are bypassed. Use explicit paths via `ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, Collections.singletonList("USER:/tmp/test-user"))` **or** fallbacks like `src/test/resources/.config/&lt;company&gt;/&lt;app&gt;/` and `src/test/resources/config/{SCOPE}` (resources > project configs).
 
-| Scope        | Path                                                                      | Notes   |
-|--------------|---------------------------------------------------------------------------|---------|
-| POLICY       | TESTMODE_DIRECTORIES "POLICY:/path" or src/test/resources/config/POLICY   | Highest |
-| RUNTIME      | src/test/resources/config/RUNTIME                                         |         |
-| SESSION      | src/test/resources/config/SESSION                                         |         |
-| USER         | src/test/resources/config/USER                                            |         |
+| Scope        | Path                                                                                  | Notes   |
+|--------------|---------------------------------------------------------------------------------------|---------|
+| POLICY       | TESTMODE_DIRECTORIES "POLICY:/path" or src/test/resources/config/POLICY               | Highest |
+| RUNTIME      | src/test/resources/config/RUNTIME                                                     |         |
+| SESSION      | src/test/resources/config/SESSION                                                     |         |
+| USER         | src/test/resources/config/USER                                                        |         |
 | APPLICATION  | src/test/config/&lt;company&gt;/&lt;app&gt;/ or src/test/resources/config/APPLICATION |         |
-| HOST         | src/test/resources/config/HOST                                            |         |
-| CLUSTER      | src/test/resources/config/CLUSTER                                         |         |
-| CLOUD        | src/test/resources/config/CLOUD                                           |         |
-| ORGANIZATION | src/test/resources/config/ORGANIZATION                                    |         |
+| HOST         | src/test/resources/config/HOST                                                        |         |
+| CLUSTER      | src/test/resources/config/CLUSTER                                                     |         |
+| CLOUD        | src/test/resources/config/CLOUD                                                       |         |
+| ORGANIZATION | src/test/resources/config/ORGANIZATION                                                |         |
 | PRODUCT      | src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/                               | Lowest  |
 
 NB: "COMPANY" and "APP" placeholders replaced by code values. Scope dirs verbatim UPPERCASE. Resources override project configs; scopes follow enum priority (higher scopes override lower).
@@ -113,24 +116,61 @@ In `TEST_MODE`, `ADDITIONAL_RUNTIME_DIRECTORIES` and `ADDITIONAL_USER_DIRECTORIE
 are intentionally ignored to prevent tests from accidentally interacting with real production data.
 Only `TESTMODE_DIRECTORIES` and the default test resource locations are used.
 
-### Set your own paths (legacy API for some test environments)
+### Set your own paths
 
-ConfigFactoryBuilder.setTestConfigPaths() allows you to set multiple paths for 
-each scope, to be used in test mode. Deprecated; use the custom test directories above.
+The `ConfigFactoryBuilder.setTestConfigPaths()` method allows you to set multiple paths for 
+each scope to be used in test mode.
 
 ```java
-
 @BeforeAll
-void setUpTestEnvironment()
+static void setUpTestEnvironment() throws ConfigCheckedException
     {
-    List<String> paths = List.of("/my/local/fixed/config/environment");
-    ConfigFactoryBuilder.setTestMode(true); // activate and set defaults
-    ConfigFactoryBuilder.setTestFilePaths(paths); // replace
-    ConfigFactoryBuilder.setTestJARURIs(null); // turn off
+    ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("myCompany", "myApp")
+        .setTestMode(true);
+    
+    // Set specific test paths for USER scope
+    builder.setTestConfigPaths(ConfigScope.USER, Collections.singletonList("/my/local/fixed/config/environment"));
+    
+    // The resulting factory will use these paths
+    ConfigFactory factory = builder.build();
     }
 ```
 
-**Deprecated legacy API**: Paths added at `RUNTIME` scope.
+
+## Automated Test Directory Management
+
+The recommended way to handle configuration directories in tests is to use
+**JUnit 5's `@TempDir`** annotation (or the corresponding feature of other test frameworks)
+combined with the `CREATE_MISSING_PATHS` feature. This ensures that:
+1. Tests run in isolation.
+2. Directories are created only for the duration of the test.
+3. The entire directory tree is automatically deleted by the test runner after the test completes.
+
+When `CREATE_MISSING_PATHS` is active, the library will automatically include designated test directories in the search list even if they do not exist yet, and create them upon the first write.
+
+### Example Implementation:
+```java
+class MyConfigTest {
+    @TempDir
+    Path tempDir; // JUnit 5 automatically creates and cleans this up
+
+    @Test
+    void testWithAutoCreatedPaths() throws ConfigCheckedException {
+        ConfigFactory configFactory = ConfigFactoryBuilder.create("myCompany", "myApp")
+            .setTestMode(true)
+            .setFeature(ConfigFeature.CREATE_MISSING_PATHS, true)
+            // Point a specific scope to our temp directory
+            .setTestConfigPaths(ConfigScope.USER, Collections.singletonList(tempDir.toString()))
+            .build();
+
+        Configuration cfg = configFactory.getConfig("app-settings");
+        // This will create the file AND any missing parent directories inside tempDir
+        cfg.set("key", "value"); 
+        
+        // No manual cleanup required; @TempDir handles it.
+    }
+}
+```
 
 ## Security Considerations
 
@@ -195,7 +235,7 @@ else
 
 ### 1.5.3 Self-Configuration Security
 
-mConfig's self-configuration feature (loading `mconfig.properties` from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable it:
+mConfig's self-configuration feature (loading `mconfig.properties` from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable that:
 
 ```java
 ConfigFactoryBuilder.create("metabit", "APP")

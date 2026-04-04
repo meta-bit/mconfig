@@ -2,11 +2,9 @@ package org.metabit.platform.support.config.impl.format.ini;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.metabit.platform.support.config.ConfigEntry;
-import org.metabit.platform.support.config.ConfigLocation;
-import org.metabit.platform.support.config.ConfigScope;
+import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 
@@ -16,7 +14,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,7 +28,7 @@ class INIWriteOrderTest
         {
         INIFileFormat format = new INIFileFormat();
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(org.metabit.platform.support.config.ConfigFeature.COMMENTS_WRITING, true);
+        settings.setBoolean(org.metabit.platform.support.config.ConfigFeature.COMMENTS_WRITING, true);
         format.testComponent(settings, NullLogging.getSingletonInstance());
 
         String ini = "[section]\n" +
@@ -44,7 +41,7 @@ class INIWriteOrderTest
         assertNotNull(layer);
 
         // Add a new entry that should be at the top level
-        ConfigEntry newEntry = new StringConfigEntryLeaf("newKey", "newValue", null);
+        ConfigEntry newEntry = new GenericConfigEntryLeaf("newKey", "newValue", ConfigEntryType.STRING, null);
         newEntry.setComment("new comment");
         
         // We need a writable layer to use writeEntry

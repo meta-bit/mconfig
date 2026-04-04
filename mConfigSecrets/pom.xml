@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigsecrets</artifactId>
-    <name>mConfigSecrets</name>
+    <name>mConfig :: Secrets</name>
     <description>mConfig module for secrets handling</description>
 
     <properties>

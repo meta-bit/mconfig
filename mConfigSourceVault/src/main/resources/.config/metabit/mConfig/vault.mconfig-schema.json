@@ -1,0 +1,47 @@
+[
+  {
+    "KEY": "address",
+    "TYPE": "URI",
+    "DESCRIPTION": "The URL of the HashiCorp Vault server.",
+    "DEFAULT": "http://127.0.0.1:8200",
+    "FLAGS": ["MANDATORY"]
+  },
+  {
+    "KEY": "engine",
+    "TYPE": "STRING",
+    "DESCRIPTION": "The path to the KV secret engine.",
+    "DEFAULT": "secret"
+  },
+  {
+    "KEY": "kvVersion",
+    "TYPE": "NUMBER",
+    "DESCRIPTION": "The version of the KV secret engine (e.g., 1 or 2).",
+    "DEFAULT": "2",
+    "PATTERN": "[1,2]"
+  },
+  {
+    "KEY": "auth.kubernetes.role",
+    "TYPE": "STRING",
+    "DESCRIPTION": "The Vault role to use for Kubernetes authentication.",
+    "DEFAULT": "default"
+  },
+  {
+    "KEY": "auth.kubernetes.mount",
+    "TYPE": "STRING",
+    "DESCRIPTION": "The mount path for the Kubernetes auth method in Vault.",
+    "DEFAULT": "kubernetes"
+  },
+  {
+    "KEY": "token",
+    "TYPE": "STRING",
+    "DESCRIPTION": "Static Vault token to use if Kubernetes auth is not available.",
+    "SECRET": true
+  },
+  {
+    "KEY": "pollInterval",
+    "TYPE": "NUMBER",
+    "DESCRIPTION": "Polling interval in milliseconds to check for secret updates. Set to 0 to disable polling.",
+    "DEFAULT": "60000",
+    "PATTERN": "uint32"
+  }
+]

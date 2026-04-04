@@ -7,9 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
-import org.metabit.platform.support.config.impl.entry.BlobConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 
@@ -219,9 +218,9 @@ public class YAMLJacksonConfigLayer implements ConfigLayerInterface
         {
         String[] nodes = hierarchicalKeyPath.split("/");
         JsonNode current = yamlTreeRoot;
-        for (int i = 0; i < nodes.length; i++)
+        for (String node : nodes)
             {
-            current = current.get(nodes[i]);
+            current = current.get(node);
             if (current == null)
                 {
                 return null;
@@ -242,35 +241,35 @@ public class YAMLJacksonConfigLayer implements ConfigLayerInterface
         switch (jsonNode.getNodeType())
             {
             case STRING:
-                return new TypedConfigEntryLeaf(leafKey, jsonNode.textValue(), ConfigEntryType.STRING, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.textValue(), ConfigEntryType.STRING, meta);
             case NUMBER:
                 if (jsonNode.isInt())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.intValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.intValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isLong())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.longValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.longValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isDouble())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.doubleValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.doubleValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isBigInteger())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.bigIntegerValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.bigIntegerValue(), ConfigEntryType.NUMBER, meta);
                     }
                 else if (jsonNode.isBigDecimal())
                     {
-                    return new TypedConfigEntryLeaf(leafKey, jsonNode.decimalValue(), ConfigEntryType.NUMBER, meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.decimalValue(), ConfigEntryType.NUMBER, meta);
                     }
-                return new TypedConfigEntryLeaf(leafKey, jsonNode.numberValue(), ConfigEntryType.NUMBER, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.numberValue(), ConfigEntryType.NUMBER, meta);
             case BOOLEAN:
-                return new TypedConfigEntryLeaf(leafKey, jsonNode.booleanValue(), ConfigEntryType.BOOLEAN, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.booleanValue(), ConfigEntryType.BOOLEAN, meta);
             case BINARY:
                 try
                     {
-                    return new BlobConfigEntryLeaf(leafKey, jsonNode.binaryValue(), meta);
+                    return new GenericConfigEntryLeaf(leafKey, jsonNode.binaryValue(), ConfigEntryType.BYTES, meta);
                     }
                 catch (Exception e)
                     {

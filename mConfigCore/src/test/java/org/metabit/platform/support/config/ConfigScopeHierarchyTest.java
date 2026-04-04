@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.metabit.platform.support.config.impl.*;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.source.core.InMemoryLayer;
 import org.metabit.platform.support.config.source.core.InMemoryLayerSource;
  
@@ -64,7 +64,7 @@ class ConfigScopeHierarchyTest
             {
             ConfigLocationImpl loc = new ConfigLocationImpl(scope, ramStorage, null, null);
             InMemoryLayer layer = new InMemoryLayer(ctx, loc, scope);
-            layer.putEntry("key", new StringConfigEntryLeaf("key", "value_at_" + scope.name(), new ConfigEntryMetadata(loc)));
+            layer.putEntry("key", new GenericConfigEntryLeaf("key", "value_at_" + scope.name(), ConfigEntryType.STRING, new ConfigEntryMetadata(loc)));
             layeredCfg.add(layer, loc);
             }
 
@@ -96,10 +96,10 @@ class ConfigScopeHierarchyTest
         ConfigLocationImpl loc2 = new ConfigLocationImpl(ConfigScope.RUNTIME, ramStorage, null, null);
         
         InMemoryLayer layer1 = new InMemoryLayer(ctx, loc1, ConfigScope.RUNTIME);
-        layer1.putEntry("key", new StringConfigEntryLeaf("key", "first", new ConfigEntryMetadata(loc1)));
+        layer1.putEntry("key", new GenericConfigEntryLeaf("key", "first", ConfigEntryType.STRING, new ConfigEntryMetadata(loc1)));
         
         InMemoryLayer layer2 = new InMemoryLayer(ctx, loc2, ConfigScope.RUNTIME);
-        layer2.putEntry("key", new StringConfigEntryLeaf("key", "second", new ConfigEntryMetadata(loc2)));
+        layer2.putEntry("key", new GenericConfigEntryLeaf("key", "second", ConfigEntryType.STRING, new ConfigEntryMetadata(loc2)));
         
         // Later added layer should win
         layeredCfg.add(layer1, loc1);

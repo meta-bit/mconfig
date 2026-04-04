@@ -32,7 +32,7 @@ class WindowsSearchPaths implements SearchPathInitializer
         // relative to the current working directory the application was started from.
         storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);
         // legacy .ini etc. in the same directory as the application is installed in
-        storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION);
+        storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, applicationName, subDir);
 
 
         // ---------------------------------------------------------------------
@@ -74,8 +74,8 @@ class WindowsSearchPaths implements SearchPathInitializer
             // If it's a JAR, the path includes the filename, so get the parent
             Path appDir = appPath.toFile().isDirectory() ? appPath : appPath.getParent();
 
-            storage.addPathToSearchList(searchList, appDir.toString(), ConfigScope.APPLICATION, ".config");
-            storage.addPathToSearchList(searchList, appDir.toString(), ConfigScope.APPLICATION);
+            storage.addPathToSearchList(searchList, appDir.toString(), ConfigScope.APPLICATION, ".config", applicationName, subDir);
+            storage.addPathToSearchList(searchList, appDir.toString(), ConfigScope.APPLICATION, applicationName, subDir);
             }
         catch (URISyntaxException|SecurityException|NullPointerException ignored)
             {
@@ -86,13 +86,13 @@ class WindowsSearchPaths implements SearchPathInitializer
         // HOST scope. hardware/sandbox specific
 
         // 1st Priority: %ProgramData% (The gold standard for file-based machine config).
-        storage.addPathToSearchList(searchList, System.getenv("ProgramData"), ConfigScope.HOST, companyName, applicationName);
+        storage.addPathToSearchList(searchList, System.getenv("ProgramData"), ConfigScope.HOST, companyName, applicationName, subDir);
 
         // 2nd Priority: Windows Registry (HKLM\Software\...)
         // -- this is not a directory; separate mConfig modules for Windows Registry handle the access. No init here.
 
         // 3. %AllUsersProfile% - legacy at HOST scope, resolves to C:\ProgramData by default.
-        storage.addPathToSearchList(searchList, System.getenv("AllUsersProfile"), ConfigScope.HOST, companyName, applicationName);
+        storage.addPathToSearchList(searchList, System.getenv("AllUsersProfile"), ConfigScope.HOST, companyName, applicationName, subDir);
 
         // ---------------------------------------------------------------------
         // CLUSTER scope:

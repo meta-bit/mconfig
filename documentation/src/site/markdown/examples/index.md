@@ -8,14 +8,15 @@ Maven:
 ```xml
 <dependency>
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfigStandard</artifactId>
+    <artifactId>mconfigbasic</artifactId>
     <version>${mconfig.version}</version>
+    <type>pom</type>
 </dependency>
 ```
 
 Gradle:
 ```gradle
-implementation 'org.metabit.platform.support.config:mConfigStandard:${mconfig.version}'
+implementation 'org.metabit.platform.support.config:mconfigbasic:${mconfig.version}'
 ```
 
 Next, in your code, instantiate a Configuration object/handle.
@@ -77,8 +78,8 @@ And this is also why you should place your defaults in the resources folder,
 instead of hardcoding them in your code.
 But if you want to, you can do that too - there's the "cheese" module for that.
 
-The mConfigStandard module is a sensible minimum to get you started.
-The mConfigFull module has everything (stable), and in between, your choice.
+The mConfigBasic module is a sensible minimum to get you started.
+The mConfigStandard module has everything (stable), and in between, your choice.
 
 mConfig is *not a framework*, it is a modular library. You pick and choose what you need.
 See the [mConfig Modules](mconfig-modules.md) page for more details.
@@ -93,4 +94,5 @@ See the [mConfig Modules](mconfig-modules.md) page for more details.
 * [Integration with CI/CD](integration_with_cicd.md)
 * [Crypto Keys and Certificates](handling_crypto_keys_and_certificates.md)
 * [ZooKeeper Configuration Source](zookeeper.md)
+* [Modular Extension Features](extension_features.md)
 

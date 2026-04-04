@@ -29,6 +29,7 @@ java -jar mConfigTools-*.jar [OPTIONS] [COMMAND] [COMMAND_OPTIONS]
 - `-T, --type=<type>`: `ConfigEntryType` (optional, inferred from schema if available).
 - `-F, --file-format=<fmt>`: Preferred file format when creating a new file (e.g., `PROPERTIES`, `YAML`, `TOML`).
 - `-d, --dry-run`: Display what would be changed without performing the actual write.
+- `--create`: Create missing parent directories and configuration files if they do not exist yet.
 
 You can also pass one or more `key=value` pairs as positional arguments after the vector, e.g. `mconfig set acme:app:conf db.port=5432`.
 

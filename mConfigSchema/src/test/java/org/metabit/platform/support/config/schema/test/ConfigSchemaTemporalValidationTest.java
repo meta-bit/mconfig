@@ -7,7 +7,7 @@ import org.metabit.platform.support.config.ConfigEntryType;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.schema.impl.ext.JsonConfigSchemaParser;
 
@@ -37,17 +37,17 @@ public class ConfigSchemaTemporalValidationTest
         ConfigSchema scheme = schemes.get("");
 
         // Test DATE
-        ConfigEntry validDate = new TypedConfigEntryLeaf("startDate", LocalDate.of(2021, 1, 1), ConfigEntryType.DATE, new ConfigEntryMetadata(null));
+        ConfigEntry validDate = new GenericConfigEntryLeaf("startDate", LocalDate.of(2021, 1, 1), ConfigEntryType.DATE, new ConfigEntryMetadata(null));
         assertTrue(scheme.checkConfigEntryValidity("startDate", validDate));
 
-        ConfigEntry invalidDate = new TypedConfigEntryLeaf("startDate", LocalDate.of(2019, 1, 1), ConfigEntryType.DATE, new ConfigEntryMetadata(null));
+        ConfigEntry invalidDate = new GenericConfigEntryLeaf("startDate", LocalDate.of(2019, 1, 1), ConfigEntryType.DATE, new ConfigEntryMetadata(null));
         assertFalse(scheme.checkConfigEntryValidity("startDate", invalidDate));
 
         // Test DATETIME with REQUIRE_OFFSET
-        ConfigEntry validDateTime = new TypedConfigEntryLeaf("eventTime", OffsetDateTime.parse("2026-01-14T22:00:00Z"), ConfigEntryType.DATETIME, new ConfigEntryMetadata(null));
+        ConfigEntry validDateTime = new GenericConfigEntryLeaf("eventTime", OffsetDateTime.parse("2026-01-14T22:00:00Z"), ConfigEntryType.DATETIME, new ConfigEntryMetadata(null));
         assertTrue(scheme.checkConfigEntryValidity("eventTime", validDateTime));
 
-        ConfigEntry invalidDateTime = new TypedConfigEntryLeaf("eventTime", "2026-01-14T22:00:00", ConfigEntryType.DATETIME, new ConfigEntryMetadata(null));
+        ConfigEntry invalidDateTime = new GenericConfigEntryLeaf("eventTime", "2026-01-14T22:00:00", ConfigEntryType.DATETIME, new ConfigEntryMetadata(null));
         assertFalse(scheme.checkConfigEntryValidity("eventTime", invalidDateTime), "Should fail because REQUIRE_OFFSET is true but value has no offset");
         }
 }

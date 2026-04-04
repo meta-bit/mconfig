@@ -49,7 +49,7 @@ class EnvVarConfigStorageTest
         LayeredConfigurationInterface layeredCfg = mock(LayeredConfigurationInterface.class);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, storage, null, null);
 
-        storage.tryToReadConfigurationLayers("myconfig", location, layeredCfg);
+        storage.updateConfigurationLayers("myconfig", location, layeredCfg);
 
         ArgumentCaptor<org.metabit.platform.support.config.interfaces.ConfigLayerInterface> layerCaptor = ArgumentCaptor.forClass(org.metabit.platform.support.config.interfaces.ConfigLayerInterface.class);
         verify(layeredCfg).add(layerCaptor.capture(), eq(location));
@@ -67,7 +67,7 @@ class EnvVarConfigStorageTest
         LayeredConfigurationInterface layeredCfg = mock(LayeredConfigurationInterface.class);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, storage, null, null);
 
-        storage.tryToReadConfigurationLayers("myconfig", location, layeredCfg);
+        storage.updateConfigurationLayers("myconfig", location, layeredCfg);
 
         ArgumentCaptor<org.metabit.platform.support.config.interfaces.ConfigLayerInterface> layerCaptor = ArgumentCaptor.forClass(org.metabit.platform.support.config.interfaces.ConfigLayerInterface.class);
         verify(layeredCfg).add(layerCaptor.capture(), eq(location));

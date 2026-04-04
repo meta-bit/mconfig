@@ -30,7 +30,7 @@ Schemas are recommended in CI because they:
 2. Enforce mandatory values and validation rules early.
 
 Add a schema in test resources:
-- `src/test/resources/.config/ACME/ourApp/network.schema.json`
+- `src/test/resources/.config/ACME/ourApp/network.mconfig-schema.json`
 
 ```json
 [

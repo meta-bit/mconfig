@@ -135,18 +135,18 @@ public class FileJavaPropertiesFormatTest
             }
 
         @Override
-        public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg)
+        public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg)
             {
             }
 
         @Override
-        public org.metabit.platform.support.config.interfaces.ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration)
+        public org.metabit.platform.support.config.interfaces.ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration)
             {
             return null;
             }
 
         @Override
-        public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig)
+        public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig)
             {
             }
 

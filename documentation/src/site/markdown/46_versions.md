@@ -1,5 +1,9 @@
 # 4.6 Versions
 
+0.8.11
+renamed mConfigFull to mConfigStandard, mConfigStandard to mConfigBasic, and mConfigBase to mConfigBasicBinary.
+new integration modules for HashiCorp Vault and AWS Secrets Manager.
+
 0.8.5 
 comprehensive documentation overhaul and restructuring
 full comment preservation for TOML, INI, and (partial) YAML; separate TOML module
@@ -11,7 +15,7 @@ public relase on github and maven central
 formats: .properties, .json, .yaml, .toml, .ini
 sources: JAR, filesystem, environment variables, ZooKeeper, Windows registry
 dynamic configuration updates, config schemas, input validation, secrets,
-packaged in multiple modules, mConfigStandard and mConfigFull as POM collections.
+packaged in multiple modules, mConfigStandard and mConfigBasic as POM collections.
 .deb generated in mConfigTools, in addition to .jar. 
 user-requested code smell pattern finds its place in mConfigCheese.
 

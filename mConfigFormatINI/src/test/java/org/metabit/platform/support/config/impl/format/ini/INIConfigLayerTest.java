@@ -1,14 +1,11 @@
 package org.metabit.platform.support.config.impl.format.ini;
 
 import org.junit.jupiter.api.Test;
-import org.metabit.platform.support.config.ConfigEntry;
-import org.metabit.platform.support.config.ConfigFeature;
-import org.metabit.platform.support.config.ConfigLocation;
-import org.metabit.platform.support.config.ConfigScope;
+import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.schema.ConfigSchema;
@@ -30,7 +27,7 @@ public class INIConfigLayerTest
     public void testLoadAndGetEntry() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
+        settings.setBoolean(ConfigFeature.TRIM_TEXTVALUE_SPACES, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
         INIConfigLayer layer = new INIConfigLayer(settings, location, format, null);
@@ -70,7 +67,7 @@ public class INIConfigLayerTest
     public void testGetKeyIterator() throws IOException
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
+        settings.setBoolean(ConfigFeature.TRIM_TEXTVALUE_SPACES, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
         INIConfigLayer layer = new INIConfigLayer(settings, location, format, null);
@@ -93,8 +90,8 @@ public class INIConfigLayerTest
     public void testWriteEntry() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
-        settings.put(ConfigFeature.WRITE_SYNC, Boolean.TRUE);
+        settings.setBoolean(ConfigFeature.TRIM_TEXTVALUE_SPACES, true);
+        settings.setBoolean(ConfigFeature.WRITE_SYNC, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
 
@@ -103,7 +100,7 @@ public class INIConfigLayerTest
             {
             INIConfigLayer layer = new INIConfigLayer(settings, location, format, tempFile);
 
-            ConfigEntry entry = new StringConfigEntryLeaf("s1/k1", "v1", new ConfigEntryMetadata(layer.getSource()));
+            ConfigEntry entry = new GenericConfigEntryLeaf("s1/k1", "v1", ConfigEntryType.STRING, new ConfigEntryMetadata(layer.getSource()));
             layer.writeEntry(entry);
 
             Map<String, Map<String, String>> data = layer.getData();
@@ -124,7 +121,7 @@ public class INIConfigLayerTest
     public void testCommentsRoundTrip() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.TRIM_TEXTVALUE_SPACES, Boolean.TRUE);
+        settings.setBoolean(ConfigFeature.TRIM_TEXTVALUE_SPACES, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
 
@@ -203,18 +200,18 @@ public class INIConfigLayerTest
             }
 
         @Override
-        public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg)
+        public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg)
             {
             }
 
         @Override
-        public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration)
+        public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration)
             {
             return null;
             }
 
         @Override
-        public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig)
+        public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig)
             {
             }
 

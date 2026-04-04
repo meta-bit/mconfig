@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * configuration source: read configuration files from filesystem.
  * The thing people tend to think as the main config source still.
- *
+ * <br/>
  * .d directory support:
  *  - discovers <configName>.d/ directories.
  *  - Fragments are sorted lexicographically.
@@ -49,6 +49,9 @@ public class FileConfigStorage implements ConfigStorageInterface
     private ArrayList<ConfigFileFormatInterface> readFormatList;
     private ArrayList<ConfigFileFormatInterface> writeFormatList;
     private FileChangeWatcher                    fileChangeWatcher;
+    private boolean                              createMissingPaths;
+    private boolean                              testMode;
+    private Set<Path>                            additionalTestDirsList = new HashSet<>();
 
     @Override
     public String getStorageName()
@@ -102,6 +105,8 @@ public class FileConfigStorage implements ConfigStorageInterface
             return false;
             }
         ConfigFactorySettings settings = ctx.getSettings();
+        this.createMissingPaths = settings.getBoolean(ConfigFeature.CREATE_MISSING_PATHS);
+        this.testMode = settings.getBoolean(ConfigFeature.TEST_MODE);
 
         Map<String, ConfigFileFormatInterface> formatMap = new HashMap<>(); //@CHECK permanent field?
         // attach fileformats
@@ -120,13 +125,13 @@ public class FileConfigStorage implements ConfigStorageInterface
         // init search list
         ConfigSearchList searchList = ctx.getSearchList();
         // fill search list for test mode, or for normal operation
-        if (ctx.getSettings().getBoolean(ConfigFeature.TEST_MODE))
+        if (settings.getBoolean(ConfigFeature.TEST_MODE))
             {
-            String companyName = ctx.getSettings().getString(ConfigFeature.COMPANY_NAME);
-            String applicationName = ctx.getSettings().getString(ConfigFeature.APPLICATION_NAME);
-            String subDir = ctx.getSettings().getString(ConfigFeature.SUB_PATH);
+            String companyName = settings.getString(ConfigFeature.COMPANY_NAME);
+            String applicationName = settings.getString(ConfigFeature.APPLICATION_NAME);
+            String subDir = settings.getString(ConfigFeature.SUB_PATH);
             final EnumMap<ConfigScope, List<String>> additionalDirs = convertStringListToConfigScopeEnumMap(settings.getStrings(ConfigFeature.TESTMODE_DIRECTORIES));
-            if (!initTestModeFileSearchLocations(ctx.getSearchList(), companyName, applicationName, subDir, additionalDirs))
+            if (!initTestModeFileSearchLocations(searchList, companyName, applicationName, subDir, additionalDirs))
                 {
                 logger.error("none of the configuration file directories is accessible");
                 // we continue nevertheless; other config sources may take over.
@@ -134,19 +139,19 @@ public class FileConfigStorage implements ConfigStorageInterface
             // SECURITY: in TEST_MODE, we intentionally DO NOT use ADDITIONAL_USER_DIRECTORIES
             // or ADDITIONAL_RUNTIME_DIRECTORIES to avoid accidental modification of real
             // production configuration data. Only directories specifically designated for tests
-            // (e.g., via TESTMODE_DIRECTORIES or derived from src/test) are used.
+            // (via TESTMODE_DIRECTORIES or derived from src/test) are used.
             }
         else // normal operation.
             {
-            OperatingSystem os = ctx.getSettings().getObject(ConfigFeature.CURRENT_PLATFORM_OS, OperatingSystem.class);
-            String companyName = ctx.getSettings().getString(ConfigFeature.COMPANY_NAME);
-            String applicationName = ctx.getSettings().getString(ConfigFeature.APPLICATION_NAME);
-            String subDir = ctx.getSettings().getString(ConfigFeature.SUB_PATH);
+            OperatingSystem os = settings.getObject(ConfigFeature.CURRENT_PLATFORM_OS, OperatingSystem.class);
+            String companyName = settings.getString(ConfigFeature.COMPANY_NAME);
+            String applicationName = settings.getString(ConfigFeature.APPLICATION_NAME);
+            String subDir = settings.getString(ConfigFeature.SUB_PATH);
             try
                 {
-                if (!initFileSearchLocations(ctx.getSearchList(), os, companyName, applicationName, subDir))
+                if (!initFileSearchLocations(searchList, os, companyName, applicationName, subDir))
                     {
-                    logger.error("none of the configuration file directories is accessible");
+                    logger.warn("none of the configuration file directories is accessible");
                     // we continue nevertheless; other config sources may take over.
                     }
                 }
@@ -154,7 +159,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                 {
                 logger.error("critical error during search location initialization - some default paths might be missing", e);
                 }
-            // use settings.
+            // use RUNTIME settings.
             prependToSearchlistScope(settings, ConfigFeature.ADDITIONAL_RUNTIME_DIRECTORIES, searchList, ConfigScope.RUNTIME);
             // now the same for the USER
             prependToSearchlistScope(settings, ConfigFeature.ADDITIONAL_USER_DIRECTORIES, searchList, ConfigScope.USER);
@@ -166,7 +171,7 @@ public class FileConfigStorage implements ConfigStorageInterface
         readFormatList = new ArrayList<ConfigFileFormatInterface>();
         initFormatPreferenceList(fileFormatReadPreferenceList, readFormatList, formatMap, fallbackFlag);
 
-        logger.debug("Read formats: "+readFormatList.stream().map(f->f.getFormatID()).collect(java.util.stream.Collectors.joining(",")));
+        logger.debug("Read formats: "+readFormatList.stream().map(ConfigFormatInterface::getFormatID).collect(java.util.stream.Collectors.joining(",")));
 
         List<String> fileFormatWritePreferenceList = settings.getStrings(ConfigFeature.FILE_FORMAT_WRITING_PRIORITIES);
         fallbackFlag = settings.getBoolean(ConfigFeature.FILE_FORMAT_WRITING_ALLOW_ALL_FORMATS);
@@ -257,7 +262,7 @@ public class FileConfigStorage implements ConfigStorageInterface
      * @param layeredCfg          layered config collection to collect this into. -- abstract to ConfigCollection?
      */
     @Override
-    public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation location, LayeredConfigurationInterface layeredCfg)
+    public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation location, LayeredConfigurationInterface layeredCfg)
         {
         // 1. test entry to match with this source.
         if (location.getStorage() != this)
@@ -272,6 +277,9 @@ public class FileConfigStorage implements ConfigStorageInterface
         // shouldn't this be in the location, and be returned by location.get
         // iterate through all locations
         // use the prioritized read-list
+
+        // Watch the parent directory for ANY new files appearing
+        fileChangeWatcher.addDirectory(locationPath, location);
 
         // First: the Main File (lowest priority)
         for (ConfigFileFormatInterface fileFormat : readFormatList)
@@ -371,7 +379,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             }
         else
             {
-            // Watch for the .d directory to be created
+            // @TODO Watch for the .d directory to be created
             // fileChangeWatcher.addFile(dotDPath, location); // cannot watch directory via addFile
             }
 
@@ -386,7 +394,7 @@ public class FileConfigStorage implements ConfigStorageInterface
      * @return newly instantiated layer interface, or null
      */
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredCfg)
+    public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredCfg)
         {
         // 1. test entry to match with this source.
         if (location.getStorage() != this)
@@ -410,7 +418,25 @@ public class FileConfigStorage implements ConfigStorageInterface
             List<String> extensions = fileformat.getFilenameExtensions();
             for (final String extension : extensions)
                 {
-                ConfigLayerInterface cfg = attemptToCreateConfigOrReturnNull(locationPath, configName+extension, location, fileformat);
+                final String expectedFilename = configName + extension;
+                // Check if we already have a matching writeable layer loaded from this search location
+                for (ConfigLayerInterface existing : layeredCfg.getLayers())
+                    {
+                    if (existing.getScope() == location.getScope() && existing.isWriteable())
+                        {
+                        ConfigLocation source = existing.getSource();
+                        if (source.getStorage() == this)
+                            {
+                            Path actualFile = (Path) source.getStorageInstanceHandle();
+                            if (actualFile.getParent().equals(locationPath) && actualFile.getFileName().toString().equals(expectedFilename))
+                                {
+                                return existing;
+                                }
+                            }
+                        }
+                    }
+
+                ConfigLayerInterface cfg = attemptToCreateConfigOrReturnNull(locationPath, expectedFilename, location, fileformat);
                 if (cfg != null)
                     {
                     // Re-set the source for the created layer to have a more precise location
@@ -433,7 +459,7 @@ public class FileConfigStorage implements ConfigStorageInterface
      * @param blobConfig          the blob config we're working on
      */
     @Override
-    public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation searchLocation, BlobConfiguration blobConfig)
+    public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation searchLocation, BlobConfiguration blobConfig)
         {
         // 1. test entry to match with this source.
         if (searchLocation.getStorage() != this)
@@ -444,7 +470,6 @@ public class FileConfigStorage implements ConfigStorageInterface
         // 2. go looking.
         // we may cast, because "this" = us is who set the storage instance handle in the first place, so we know what type it is.
         Path locationPath = (Path) searchLocation.getStorageInstanceHandle();
-        // shouldn't this be in the location, and be returned by location.get
         blobConfig.addPath(searchLocation, locationPath);
 
         // iterate through all locations
@@ -569,13 +594,31 @@ public class FileConfigStorage implements ConfigStorageInterface
             File file = fileWithPath.toFile();
             if (file.exists())
                 {
-                logger.warn("strange behaviour: trying to re-create existing file instead of reading it");
-                return null;
+                logger.debug("Config file already exists at \""+fileWithPath+"\", returning existing content as layer");
+                return attemptToReadConfigOrReturnNull(fileLocation, fileName, location, fileformat);
                 }
-            if (!fileWithPath.getParent().toFile().canWrite())
+            
+            File parentDir = fileWithPath.getParent().toFile();
+            if (!parentDir.exists())
                 {
-                logger.debug("config file directory \""+fileWithPath.toAbsolutePath()+"\" not writeable");
-                return null; // not here, try another location.
+                if (createMissingPaths)
+                    {
+                    if (!parentDir.mkdirs())
+                        {
+                        logger.debug("could not create config file directory \""+parentDir.getAbsolutePath()+"\"");
+                        return null;
+                        }
+                    }
+                else
+                    {
+                    logger.debug("config file directory \""+parentDir.getAbsolutePath()+"\" does not exist and createMissingPaths is false");
+                    return null;
+                    }
+                }
+            else if (!parentDir.canWrite())
+                {
+                logger.debug("config file directory \""+parentDir.getAbsolutePath()+"\" not writeable");
+                return null;
                 }
             // OK, all ready - now let's try to create a file, by file format.
             logger.trace("attempting to create file "+file.getAbsolutePath().toString());
@@ -703,7 +746,11 @@ public class FileConfigStorage implements ConfigStorageInterface
     public boolean initTestModeFileSearchLocations(ConfigSearchList searchList, final String companyName, final String applicationName, String subDir, EnumMap<ConfigScope, List<String>> additionalTestDirs)
         {
         int successes = 0;
-        // third: scoped testmode directories, as explicitly added/specified in settings.
+
+        // 1. third: scoped testmode directories, as explicitly added/specified in settings.
+        // These are added FIRST and at the START of the scope. 
+        // Then default resources are added at the END of the scope.
+        // This ensures these intentional overrides have HIGHEST priority.
         if (additionalTestDirs != null)
             {
             try // type check implicit here
@@ -716,7 +763,10 @@ public class FileConfigStorage implements ConfigStorageInterface
                         if ((subDir != null) && (!subDir.isEmpty()))
                             searchPath = searchPath.resolve(subDir);
                         final ConfigScope scope = entry.getKey();
-                        searchList.insertAtScopeStart(new ConfigLocationImpl(scope, this, null, searchPath), scope);
+                        // always add these, even if they don't exist, as they are intentional test overrides.
+                        additionalTestDirsList.add(searchPath);
+                        logger.error("[DEBUG_LOG] adding additional test dir to search list: " + searchPath + " scope: " + scope);
+                        addDirectoryToSearchListIfAccessible(searchList, searchPath, scope, false);
                         successes++;
                         }
                     }
@@ -728,18 +778,10 @@ public class FileConfigStorage implements ConfigStorageInterface
                 }
             }
 
-        // check whether we can access ./src/test at all.
+        // 2. check whether we can access ./src/test at all.
         Path mavenTestBaseDirPath = Paths.get(".", "src", "test");
         File mavenTestBaseDir = mavenTestBaseDirPath.toFile();
-        if (!mavenTestBaseDir.exists())
-            {
-            logger.debug("no test resources found at \""+mavenTestBaseDirPath+"\"");
-            }
-        else if (!mavenTestBaseDir.canRead())
-            {
-            logger.warn("test resource directory at \""+mavenTestBaseDirPath+"\" cannot be read");
-            }
-        else
+        if (mavenTestBaseDir.exists() && mavenTestBaseDir.canRead())
             {
             // first: the application defaults at ./src/test/config/<COMPANYNAME>/<APPLICATIONNAME>/ for the application-wide, pseudo-generic configs.
             // these are entered at APPLICATION scope. The "config" is to mirror the paths on *ix systems, but without the leading dot for test mode ease.
@@ -756,7 +798,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                 companyNameRelative = companyNameRelative.resolve(subDir);
             Path applicationTestConfigs = mavenTestBaseDirPath.resolve(companyNameRelative);
             logger.debug("checking TEST_MODE application directory \""+applicationTestConfigs+"\"");
-            searchList.insertAtScopeEnd(new ConfigLocationImpl(ConfigScope.APPLICATION, this, null, applicationTestConfigs), ConfigScope.APPLICATION);
+            addDirectoryToSearchListIfAccessible(searchList, applicationTestConfigs, ConfigScope.APPLICATION, true);
             successes++;
 
             // second: test-specific ./src/test/resources/config with subdirectories, subdirectories using scope name in caps
@@ -766,15 +808,18 @@ public class FileConfigStorage implements ConfigStorageInterface
                 Path subdirRelativePath = mavenTestResourceDirectory2.resolve(scope.name());
                 if ((subDir != null) && (!subDir.isEmpty()))
                     subdirRelativePath = subdirRelativePath.resolve(subDir);
-                logger.debug("checking TEST_MODE scope "+scope.name()+" directory \""+subdirRelativePath+"\"");
-                if (scope == ConfigScope.SESSION || scope == ConfigScope.RUNTIME)
-                    searchList.insertAtScopeEnd(new ConfigLocationImpl(scope, this, null, subdirRelativePath), scope);
-                else
-                    searchList.insertAtScopeStart(new ConfigLocationImpl(scope, this, null, subdirRelativePath), scope);
-                successes++;
+                if (java.nio.file.Files.exists(subdirRelativePath))
+                    {
+                    logger.debug("checking TEST_MODE scope "+scope.name()+" directory \""+subdirRelativePath+"\"");
+                    addDirectoryToSearchListIfAccessible(searchList, subdirRelativePath, scope, true);
+                    successes++;
+                    }
                 }
             }
-
+        else
+            {
+            logger.debug("no test resources found or readable at \""+mavenTestBaseDirPath+"\"");
+            }
 
         // evaluation
         if (successes == 0)
@@ -865,6 +910,24 @@ public class FileConfigStorage implements ConfigStorageInterface
         }
 
 
+    @Override
+    public boolean isPreferredTestLocation(ConfigLocation location)
+        {
+        if (location == null || location.getStorage() != this)
+            return false;
+        Object handle = location.getStorageInstanceHandle();
+        if (handle instanceof Path)
+            {
+            return additionalTestDirsList.contains((Path) handle);
+            }
+        return false;
+        }
+
+    private boolean isAdditionalTestDir(Path path)
+        {
+        return additionalTestDirsList.contains(path);
+        }
+
     /**
      * Safely adds a directory to the search list.
      * This implements the internal logic where the Storage itself is responsible
@@ -905,6 +968,11 @@ public class FileConfigStorage implements ConfigStorageInterface
             else
                 { searchList.insertAtScopeStart(location, scope); }
 
+            // CRITICAL: if the path doesn't exist yet, we must NOT let it be a write target 
+            // unless CREATE_MISSING_PATHS is enabled.
+            // Since ConfigLocation doesn't have a direct 'setWriteable', we'll rely on 
+            // the storage's 'attemptToCreateConfigOrReturnNull' to check 'createMissingPaths'.
+            
             return true;
             }
         catch (UnsupportedOperationException|InvalidPathException ex)
@@ -914,7 +982,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             }
         }
 
-    private boolean isGhostFile(String fileName)
+    public static boolean isGhostFile(String fileName)
         {
         if (fileName.endsWith("~") || fileName.endsWith(".bak") || fileName.endsWith(".swp") || fileName.endsWith(".tmp") || "Thumbs.db".equalsIgnoreCase(fileName))
             {
@@ -958,7 +1026,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             Path path = Paths.get(segments.get(0));
             for (int i = 1; i < segments.size(); i++)
                 path = path.resolve(segments.get(i));
-            searchList.insertAtScopeEnd(new ConfigLocationImpl(scope, this, null, path), scope);
+            addDirectoryToSearchListIfAccessible(searchList, path, scope, true);
             }
         catch (InvalidPathException|NullPointerException e)
             {

@@ -10,7 +10,7 @@ import org.metabit.platform.support.config.ConfigSource;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.impl.format.toml.TomlModel.TomlArray;
 import org.metabit.platform.support.config.impl.format.toml.TomlModel.TomlArrayTable;
@@ -30,7 +30,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +85,7 @@ final class TOMLConfigLayer implements ConfigLayerInterface
                 {
                 return null;
                 }
-            return new TypedConfigEntryLeaf(hierarchicalKey, list, ConfigEntryType.MULTIPLE_STRINGS, meta);
+            return new GenericConfigEntryLeaf(hierarchicalKey, list, ConfigEntryType.MULTIPLE_STRINGS, meta);
             }
         if (value instanceof TomlScalar)
             {
@@ -439,18 +438,18 @@ final class TOMLConfigLayer implements ConfigLayerInterface
         switch (scalar.getType())
             {
             case STRING:
-                return new TypedConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.STRING, meta);
+                return new GenericConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.STRING, meta);
             case BOOLEAN:
-                return new TypedConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.BOOLEAN, meta);
+                return new GenericConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.BOOLEAN, meta);
             case INTEGER:
             case FLOAT:
-                return new TypedConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.NUMBER, meta);
+                return new GenericConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.NUMBER, meta);
             case DATE:
-                return new TypedConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.DATE, meta);
+                return new GenericConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.DATE, meta);
             case TIME:
-                return new TypedConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.TIME, meta);
+                return new GenericConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.TIME, meta);
             case DATETIME:
-                return new TypedConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.DATETIME, meta);
+                return new GenericConfigEntryLeaf(key, scalar.getValue(), ConfigEntryType.DATETIME, meta);
             default:
                 return null;
             }

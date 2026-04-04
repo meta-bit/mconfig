@@ -6,7 +6,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   "name": "mConfigStandard",
-  "description": "The recommended POM-packaged aggregator for mConfig. Pulls in the core API plus essential sources (JAR, Filesystem) and formats (Java Properties).",
+  "description": "Full-featured mConfig distribution including core, mature sources (Filesystem, JAR, EnvVar, WinRegistry), multiple formats (Properties, JSON, YAML, TOML, INI), mapper, and SLF4J support.",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "Java",
@@ -18,23 +18,26 @@
     "name": "mConfig",
     "url": "https://github.com/meta-bit/mconfig"
   },
-  "keywords": "pom-aggregator, mconfig-standard, dependency-management"
+  "keywords": "full-distribution, multi-format, slf4j-logging, mapper"
 }
 </script>
 -->
 
-mConfigStandard is the recommended starting point for mConfig. It is a `pom`-packaged
-aggregator that pulls in the core API plus the essential sources and formats.
+mConfigStandard is the "everything included" distribution: it aggregates mConfigBasic
+plus mature sources, formats, mapper, and SLF4J logging.
 
 ## What it includes
 
-- `mConfigCore` (core API)
-- `mConfigScheme` (schema validation and defaults)
-- `mConfigSecrets` (secret handling)
-- `mConfigUtil` (utility helpers)
-- `mConfigSourceJAR` (read config from classpath/JAR resources)
-- `mConfigSourceFilesystem` (OS-aware filesystem locations)
-- `mConfigFormatJavaProperties` (Java properties format)
+- `mConfigBasic` (core + schemes + secrets + util + JAR/filesystem + properties)
+- `mConfigSourceEnvVar` (environment variable source)
+- `mConfigFormatJavaProperties` (properties format)
+- `mConfigFormatJSONwithJackson` (JSON/JSON5 via Jackson)
+- `mConfigFormatYAMLwithJackson` (YAML via Jackson)
+- `mConfigFormatTOMLwithJackson` (TOML via Jackson)
+- `mConfigFormatINI` (INI format)
+- `mConfigLoggingSlf4j` (SLF4J logging)
+- `mConfigMapper` (map configs to Java objects)
+- `mConfigWinRegistry` (Windows Registry source, JNR-FFI based)
 
 ## Usage
 
@@ -43,7 +46,7 @@ Maven:
 ```xml
 <dependency>
     <groupId>org.metabit.platform.support.config</groupId>
-    <artifactId>mConfigStandard</artifactId>
+    <artifactId>mconfigstandard</artifactId>
     <version>${mconfig.version}</version>
     <type>pom</type>
 </dependency>
@@ -52,7 +55,7 @@ Maven:
 Gradle:
 
 ```gradle
-implementation 'org.metabit.platform.support.config:mConfigStandard:${mconfig.version}'
+implementation 'org.metabit.platform.support.config:mconfigstandard:${mconfig.version}'
 ```
 
 Note: Do not omit the `pom` type in Maven.
@@ -62,7 +65,12 @@ Note: Do not omit the `pom` type in Maven.
 - Minimum JDK: 11
 - Required JDK modules: `java.base`, `java.logging`
 
-full JPMS `requires`:
+External runtime deps (via included modules):
+- Jackson: `jackson-core`, `jackson-databind`, `jackson-dataformat-yaml`, `jackson-dataformat-toml`
+- SLF4J API: `org.slf4j:slf4j-api`
+- JNR-FFI (Windows Registry): `org.jnrproject:jnr-ffi`
+
+JPMS `requires` (modules with explicit `module-info.java`):
 
 ```java
 requires metabit.mconfig.core;
@@ -72,6 +80,12 @@ requires metabit.mconfig.util;
 requires metabit.mconfig.modules.jar;
 requires metabit.mconfig.modules.filesystem;
 requires metabit.mconfig.format.javaproperties;
+requires metabit.mconfig.format.ini;
+requires metabit.mconfig.modules.envvar;
+requires metabit.mconfig.winregistry;
+requires metabit.mconfig.modules.jsonwithjackson;
+requires metabit.mconfig.modules.yamlwithjackson;
+requires metabit.mconfig.modules.tomlwithjackson;
+requires metabit.mconfig.mapper;
+requires metabit.mconfig.modules.mConfigLoggingSlf4j;
 ```
-
-The above set is needed for the runtime service discovery to find all modules.

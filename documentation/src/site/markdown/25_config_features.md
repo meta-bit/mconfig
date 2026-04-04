@@ -3,18 +3,37 @@
 ConfigFeature flags tune how a ConfigFactory is built and how it behaves.
 Set them on the ConfigFactoryBuilder before calling `build()`.
 
-Example:
+mConfig uses a two-tier system for features:
+1.  **Core Features**: Standard settings defined in the `ConfigFeature` enum (e.g., `TEST_MODE`, `LOGLEVEL_NUMBER`).
+2.  **Extension Features**: Module-specific settings (e.g., `VaultFeatures.BOOTSTRAP_CONFIG_NAME`) that are automatically registered when the module is on the classpath.
+
+Example using both:
 ```java
 ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
+        // Core features (using enum)
         .setFeature(ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS, true)
         .setFeature(ConfigFeature.DEFAULT_ON_MISSING_ENTRY, true)
-        .setFeature(ConfigFeature.ADDITIONAL_USER_DIRECTORIES, List.of("/opt/acme/overrides"));
+        // Extension feature (using module-specific class)
+        .setFeature(VaultFeatures.BOOTSTRAP_CONFIG_NAME, "custom-vault");
 ```
+
+## Config Feature Registry
+
+mConfig maintains a central `ConfigFeatureRegistry` that handles all features case-insensitively. This allows you to set features using their string names, which is particularly useful if you want to avoid a compile-time dependency on a specific extension module:
+
+```java
+// Using a string key for a core feature
+builder.setFeature("ALLOW_MCONFIG_RUNTIME_SETTINGS", true);
+
+// Using a string key for an extension feature
+builder.setFeature("VAULT_BOOTSTRAP_CONFIG_NAME", "custom-vault");
+```
+
+If a feature is not yet registered (e.g., because the module hasn't been initialized), the value is stored as a raw property and validated once the module attempts to access it.
 
 Notes:
 - Booleans default to `false` unless a default is explicitly listed below.
-- Some features are only used when the corresponding module is on the classpath
-  (e.g., ZooKeeper, Registry, Secrets, JAR).
+- Extension features are only available when the corresponding module is on the classpath.
 - Runtime environment variables can override a subset of settings if
   `ALLOW_MCONFIG_RUNTIME_SETTINGS` is enabled. See "Runtime overrides" below.
 
@@ -46,7 +65,6 @@ settings via environment variables with the prefix `MCONFIG_RUNTIME_`:
 ### Filesystem and registry paths
 - `ADDITIONAL_RUNTIME_DIRECTORIES` (`List<String>`): Extra filesystem directories (prepended) for `RUNTIME` scope.
 - `ADDITIONAL_USER_DIRECTORIES` (`List<String>`): Extra filesystem directories (prepended) for `USER` scope.
-- `REGISTRY_BASE_PATH` (`String`): Registry root path (default `Software/[<company>/]<application>`; omits company if blank).
 - `FILENAME_EXTENSION_MAPPINGS` (`List<String>`): Extra filename extensions to try when reading config files.
 - `DEFAULT_TEXTFILE_CHARSET` (`String`, default: `UTF-8`): Charset for text formats.
 - `TRIM_TEXTVALUE_SPACES` (Boolean, default: true): Trim leading/trailing spaces in text values.
@@ -78,7 +96,7 @@ settings via environment variables with the prefix `MCONFIG_RUNTIME_`:
 ### Cache and update checks
 - `UPDATE_CHECK_FREQUENCY_MS` (Integer, default: 2000): Polling interval for cached sources.
 - `UPDATE_CHECK_SCOPES` (`List<String>`, default: all scopes): Limit update checks by scope.
-- `CACHE_CONFIGS` (Boolean): Cache configurations in memory (experimental).
+- `CACHE_CONFIGS` (Boolean): Cache configurations in memory.
 - `AUTOMATIC_CONFIG_LOADING` (Boolean): Auto-load configs before first read (experimental).
 - `AUTOMATIC_CONFIG_CREATION` (Boolean): Auto-create configs on write (experimental).
 - `WRITE_SYNC` (Boolean): Sync writes immediately (storage-dependent).
@@ -102,6 +120,19 @@ settings via environment variables with the prefix `MCONFIG_RUNTIME_`:
 - `ZOOKEEPER_RETRY_BASE_SLEEP_MS` (Integer, default: 1000): Retry base sleep.
 - `ZOOKEEPER_RETRY_MAX_RETRIES` (Integer, default: 3): Retry count.
 - `ZOOKEEPER_BOOTSTRAP_CONFIG_NAME` (String, default: `zookeeper`): Bootstrap config name.
+  (Available via `ZooKeeperFeatures` in `mConfigSourceZooKeeper`)
+
+### Vault (mConfigSourceVault)
+- `VAULT_BOOTSTRAP_CONFIG_NAME` (String, default: `vault`): Bootstrap config name.
+  (Available via `VaultFeatures` in `mConfigSourceVault`)
+
+### AWS Secrets Manager (mConfigSourceAwsSecretsManager)
+- `AWS_BOOTSTRAP_CONFIG_NAME` (String, default: `aws`): Bootstrap config name.
+  (Available via `AwsFeatures` in `mConfigSourceAwsSecretsManager`)
+
+### Windows Registry (mConfigWinRegistry / mConfigWinRegistryJNI)
+- `REGISTRY_BASE_PATH` (String): Registry root path (default `Software/[<company>/]<application>`; omits company if blank).
+  (Available via `WinRegistryFeatures` in `mConfigWinRegistry` or `WinRegistryJNIFeatures` in `mConfigWinRegistryJNI`)
 
 ### Class loading
 - `USE_CONTEXT_CLASS_LOADER` (Boolean, default: false): Prefer thread context loader.

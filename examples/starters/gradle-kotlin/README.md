@@ -18,7 +18,7 @@
    ```
 
 ## Features Included
-- Same as Maven: `mConfigStandard` + Logging + sample config.
+- Same as Maven: `mConfigBasic` + Logging + sample config.
 - Kotlin DSL `build.gradle.kts`.
 
 ## Logging

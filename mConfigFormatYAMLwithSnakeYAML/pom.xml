@@ -6,11 +6,12 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigformatyamlwithsnakeyaml</artifactId>
-    <name>mConfigFormatYAMLwithSnakeYAML</name>
+    <name>mConfig :: Format :: YAML (SnakeYAML)</name>
+    <description>YAML format support for mConfig, using the SnakeYAML library</description>
 
 
     <properties>
@@ -51,7 +52,7 @@
         </dependency>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigbase</artifactId>
+            <artifactId>mconfigbasicbinary</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -14,8 +14,7 @@ remain agnostic of specific packaging formats (like JARs) or environment-specifi
   - **No Filesystem Assumption**: Core logic MUST NOT assume the presence of a filesystem or writeable persistent storage. 
   - **Modular IO**: All filesystem-specific operations (like reading/writing configuration files or exporting schemas to local storage) are isolated in separate modules (like `mConfigSourceFilesystem`).
   - **Plugin-based Initialization**: Administrative tasks requiring filesystem access (e.g., auto-exporting schemas) use the `ConfigFactoryComponent` SPI, ensuring they only run if the relevant modules are present.
-- **Module Isolation**: Platform-specific logic (e.g., scanning Java classpath for resources)
-must be isolated in dedicated modules (like `mConfigSourceJAR`).
+- **Module Isolation**: Platform-specific logic (e.g., scanning Java classpath for resources) must be isolated in dedicated modules (like `mConfigSourceJAR`).
 - **Standardized Interfaces**: Use generic interfaces for discovery and storage
 to ensure that the core behavior can be mirrored in other language environments
 without significant architectural changes.
@@ -27,18 +26,18 @@ Configurations are resolved through a stack of layers, prioritized by scope spec
 ## 4.4.2 Scopes and Priority
 Scopes define the visibility and precedence of configuration data.
 
-| Scope        | Description                                                         | Priority    |
-|--------------|---------------------------------------------------------------------|-------------|
-| POLICY       | Enforced policy settings (e.g., GPO), overriding everything else.   | 1 (Highest) |
-| RUNTIME      | Volatile, in-memory settings for the current process.               | 2           |
-| SESSION      | Specific to the current user session or working directory.          | 3           |
-| USER         | Personal settings for the current user (e.g., `~/.config/`).        | 4           |
-| APPLICATION  | Settings specific to the application installation/portable root.    | 5           |
-| HOST         | Host / OS instance settings (e.g., `/etc/`, Windows Registry HKLM). | 6           |
-| CLUSTER      | Settings for a cluster of hosts.                                    | 7           |
-| CLOUD        | Cloud-based configurations, shared across multiple clusters.        | 8           |
-| ORGANIZATION | Settings shared across an organization/licensee.                    | 9           |
-| PRODUCT      | Hardcoded defaults provided by the application or modules.          | 10 (Lowest) |
+| Scope        | Description                                                       | Priority    |
+|--------------|-------------------------------------------------------------------|-------------|
+| POLICY       | Enforced policy settings (e.g., GPO), overriding everything else. | 1 (Highest) |
+| RUNTIME      | Volatile, in-memory settings for the current process.             | 2           |
+| SESSION      | Specific to the current user session or working directory.        | 3           |
+| USER         | Personal settings for the current user (e.g., `~/.config/`).      | 4           |
+| APPLICATION  | Settings specific to the application installation/portable root.  | 5           |
+| HOST         | System-wide settings (e.g., `/etc/`, `%ProgramData%`, HKLM).      | 6           |
+| CLUSTER      | Settings for a cluster of hosts.                                  | 7           |
+| CLOUD        | Cloud-based configurations, shared across multiple clusters.      | 8           |
+| ORGANIZATION | Settings shared across an organization/licensee.                  | 9           |
+| PRODUCT      | Hardcoded defaults provided by the application or modules.        | 10 (Lowest) |
 
 **Tie-breaking within the same scope:** Later-added layers take precedence over earlier-added ones.
 
@@ -88,7 +87,15 @@ Networked sources (like ZooKeeper) can also retrieve their own connection settin
     - It requests its own configuration (default name: `"zookeeper"`) from the factory via `ctx.getFactory().getConfig("zookeeper")`.
     - If settings are found in JAR defaults or local files, it connects and registers its locations (e.g., `CLUSTER`, `ORGANIZATION`).
     - If settings are missing, it remains inactive (zero-config support).
-5.  **Finalization**: The factory is ready, including any successfully activated networked layers.
+5.  **2-Phase Post-Initialization**: 
+    - `postInit(ConfigFactory)` is called for all `ConfigStorageInterface`, `ConfigSecretsProviderInterface`, `ConfigFactoryComponent`, and `ConfigLoggingInterface` instances.
+    - **Execution Order**:
+        1.  **`ConfigStorageInterface`**: Storages get the first chance to configure themselves.
+        2.  **`ConfigSecretsProviderInterface`**: Secrets providers configure themselves using the now-ready storages.
+        3.  **`ConfigFactoryComponent`**: General administrative components (e.g., `SecretsFactoryComponent`) run next.
+        4.  **`ConfigLoggingInterface`**: The final step, allowing the logger to refine its configuration using all other components.
+    - This allows modules to perform complex self-configuration (e.g., obtaining credentials from an already initialized secret provider) or administrative tasks (e.g., auto-exporting schemas, refining remote logging endpoints) using the fully functional `ConfigFactory`.
+6.  **Finalization**: The factory is ready, including any successfully activated networked layers.
 
 See [ZooKeeper Example](examples/zookeeper.md) for detailed configuration snippets.
 
@@ -306,11 +313,11 @@ In case a specific config format is to be supported as well, it can go into the 
 ### 4.4.11.2 Adding New ConfigFeatures
 This is not for library consumers; only project owners should need to perform this step.
 
-When adding a new constant to the `ConfigFeature` enum in `mConfigCore`, you MUST perform the following steps to ensure technical consistency and avoid runtime errors:
+When adding a new constant to the `ConfigFeature` enum in `mConfigCore`, or to a module-specific features class, you MUST perform the following steps to ensure technical consistency and avoid runtime errors:
 
-1.  **Enum Constant**: Add the new constant to the `ConfigFeature` enum.
-2.  **Type Initialization**: In the `static` initialization block of `ConfigFeature`, you MUST assign a `ValueType` to the `valueType` field of the new constant.
-    *   Example: `REGISTRY_BASE_PATH.valueType = ValueType.STRING;`
+1.  **Constant Definition**: Add the new constant to the `ConfigFeature` enum or create a new `ConfigFeatureInterface` instance.
+2.  **Type Initialization**: You MUST assign a `ValueType` to the `valueType` field (or return it via `getValueType()`).
+    *   Example: `MY_FEATURE.valueType = ValueType.STRING;`
 3.  **Default Values (Optional)**: If the feature should have a default value, assign it to the `defaultValue` field in the same `static` block.
     *   Example: `MY_FEATURE.defaultValue = Boolean.TRUE;`
 4.  **Verification**: Run the `ConfigFeatureTypesTest` unit test to ensure that all features have a valid type assigned. A missing type will cause a `NullPointerException` when the feature is accessed via `ConfigFactorySettings`.
@@ -320,7 +327,7 @@ When adding a new constant to the `ConfigFeature` enum in `mConfigCore`, you MUS
 ### Classpath Layout
 - **Production Defaults**: `src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/&lt;config&gt;.&lt;ext&gt;` (JARConfigSource).
 - **Test Mode**: `src/test/resources/.config/&lt;company&gt;/&lt;app&gt;/` + `config/{SCOPE}` (overrides project).
-- **Schemas**: Same path + `.schema.json`.
+- **Schemas**: Same path + `.mconfig-schema.json`.
 
 ### Logging
 - Implement `ConfigLoggingInterface` for structured logs (SLF4J/JUL/Logback).

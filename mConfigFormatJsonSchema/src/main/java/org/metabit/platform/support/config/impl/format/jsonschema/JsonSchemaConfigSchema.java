@@ -10,7 +10,7 @@ import com.networknt.schema.ValidationMessage;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
@@ -23,7 +23,8 @@ import java.util.*;
  */
 public class JsonSchemaConfigSchema implements ConfigSchema
 {
-    private static final ObjectMapper                   mapper          = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
+    public static final String MCONFIG_SCHEMA_FILENAME_EXTENSION = ".mconfig-schema.json";
     private final        JsonSchema                     jsonSchema;
     private final        Map<String, ConfigSchemaEntry> inferredEntries = new HashMap<>();
     private              String                         company;
@@ -72,7 +73,7 @@ public class JsonSchemaConfigSchema implements ConfigSchema
                     if (configName == null)
                         {
                         String last = parts[parts.length-1];
-                        if (last.endsWith(".schema.json")) configName = last.substring(0, last.length()-12);
+                        if (last.endsWith(MCONFIG_SCHEMA_FILENAME_EXTENSION)) configName = last.substring(0, last.length()-MCONFIG_SCHEMA_FILENAME_EXTENSION.length());
                         else if (last.endsWith(".json")) configName = last.substring(0, last.length()-5);
                         }
                     if (application == null) application = parts[parts.length-2];
@@ -214,14 +215,14 @@ public class JsonSchemaConfigSchema implements ConfigSchema
     public void transferDefaults(DefaultLayer defaultLayer)
         {
         // Create a dummy source for defaults
-        ConfigSource source = new org.metabit.platform.support.config.impl.ConfigLocationImpl(ConfigScope.PRODUCT, null, null, null);
+        ConfigSource source = defaultLayer.getSource();
         for (Map.Entry<String, ConfigSchemaEntry> entry : inferredEntries.entrySet())
             {
             if (entry.getValue().getDefault() != null)
                 {
                 ConfigEntryMetadata meta = new ConfigEntryMetadata(source);
                 meta.setSpecification(entry.getValue());
-                defaultLayer.putEntry(entry.getKey(), new StringConfigEntryLeaf(entry.getKey(), entry.getValue().getDefault(), meta));
+                defaultLayer.putEntry(entry.getKey(), new GenericConfigEntryLeaf(entry.getKey(), entry.getValue().getDefault(), ConfigEntryType.STRING, meta));
                 }
             }
         }

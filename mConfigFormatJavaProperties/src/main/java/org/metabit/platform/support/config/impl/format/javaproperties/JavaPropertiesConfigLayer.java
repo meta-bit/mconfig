@@ -5,7 +5,7 @@ import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -148,7 +148,7 @@ public class JavaPropertiesConfigLayer implements ConfigLayerInterface
                 meta.setComment(String.join("\n", comments));
                 }
             }
-        StringConfigEntryLeaf ce = new StringConfigEntryLeaf(key, propsValue, meta);
+        ConfigEntry ce = new GenericConfigEntryLeaf(key, propsValue, ConfigEntryType.STRING, meta);
         return ce;
         }
 
@@ -412,6 +412,7 @@ public class JavaPropertiesConfigLayer implements ConfigLayerInterface
                         String hex = value.substring(i + 1, i + 5);
                         try
                             {
+                            @SuppressWarnings("MagicNumber") // hex *is* based on 16.
                             int code = Integer.parseInt(hex, 16);
                             sb.append((char) code);
                             i += 4;

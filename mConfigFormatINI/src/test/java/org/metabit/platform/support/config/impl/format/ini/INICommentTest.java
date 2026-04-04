@@ -5,7 +5,7 @@ import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.StringConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 
@@ -26,7 +26,7 @@ public class INICommentTest
     public void testReadComments() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_READING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
         INIConfigLayer layer = new INIConfigLayer(settings, location, format, null);
@@ -48,8 +48,8 @@ public class INICommentTest
     public void testWriteComments() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_WRITING, true);
-        settings.put(ConfigFeature.WRITE_SYNC, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_WRITING, true);
+        settings.setBoolean(ConfigFeature.WRITE_SYNC, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
 
@@ -58,7 +58,7 @@ public class INICommentTest
             {
             INIConfigLayer layer = new INIConfigLayer(settings, location, format, tempFile);
 
-            ConfigEntry newEntry = new StringConfigEntryLeaf("section/key", "value", new ConfigEntryMetadata(layer.getSource()));
+            ConfigEntry newEntry = new GenericConfigEntryLeaf("section/key", "value", ConfigEntryType.STRING, new ConfigEntryMetadata(layer.getSource()));
             newEntry.setComment("programmatic comment");
             layer.writeEntry(newEntry);
 
@@ -77,7 +77,7 @@ public class INICommentTest
     public void testMultiLineComments() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_READING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
         INIConfigLayer layer = new INIConfigLayer(settings, location, format, null);
@@ -97,7 +97,7 @@ public class INICommentTest
     public void testGlobalHeaderComments() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_READING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
         INIConfigLayer layer = new INIConfigLayer(settings, location, format, null);
@@ -118,9 +118,9 @@ public class INICommentTest
     public void testAppendProgrammaticComment() throws Exception
         {
         ConfigFactorySettings settings = new ConfigFactorySettings();
-        settings.put(ConfigFeature.COMMENTS_WRITING, true);
-        settings.put(ConfigFeature.COMMENTS_READING, false);
-        settings.put(ConfigFeature.WRITE_SYNC, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_WRITING, true);
+        settings.setBoolean(ConfigFeature.COMMENTS_READING, false);
+        settings.setBoolean(ConfigFeature.WRITE_SYNC, true);
         ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, new TestStorage(), null, null);
         INIFileFormat format = new INIFileFormat();
 
@@ -153,9 +153,9 @@ public class INICommentTest
         @Override public void exit() { }
         @Override public boolean isGenerallyWriteable() { return true; }
         @Override public URI getURIforConfigLocation(ConfigLocation configLocation, String key, String optionalFragment) { return URI.create("test://ini"); }
-        @Override public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg) { }
-        @Override public org.metabit.platform.support.config.interfaces.ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration) { return null; }
-        @Override public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig) { }
+        @Override public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface layeredCfg) { }
+        @Override public org.metabit.platform.support.config.interfaces.ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, org.metabit.platform.support.config.impl.LayeredConfiguration layeredConfiguration) { return null; }
+        @Override public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, org.metabit.platform.support.config.impl.BlobConfiguration blobConfig) { }
         @Override public java.util.Set<org.metabit.platform.support.config.ConfigDiscoveryInfo> listAvailableConfigurations(ConfigLocation location) { return Collections.emptySet(); }
         @Override public boolean hasChangedSincePreviousCheck(Object storageInstanceHandle) { return false; }
         @Override public void triggerChangeCheck(Object storageInstanceHandle) { }

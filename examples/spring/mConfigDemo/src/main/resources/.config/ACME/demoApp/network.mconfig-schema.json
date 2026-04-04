@@ -1,0 +1,29 @@
+[
+  {
+    "KEY": "server.host",
+    "TYPE": "STRING",
+    "DESCRIPTION": "Hostname or IP address of the target server.",
+    "DEFAULT": "127.0.0.1",
+    "FLAGS": ["MANDATORY"]
+  },
+  {
+    "KEY": "server.port",
+    "TYPE": "NUMBER",
+    "DESCRIPTION": "TCP port of the target server.",
+    "DEFAULT": "8080",
+    "PATTERN": "uint16",
+    "FLAGS": ["MANDATORY"]
+  },
+  {
+    "KEY": "server.tls",
+    "TYPE": "BOOLEAN",
+    "DESCRIPTION": "Enable TLS for the target connection.",
+    "DEFAULT": "false"
+  },
+  {
+    "KEY": "server.password",
+    "TYPE": "STRING",
+    "DESCRIPTION": "Optional password for authenticated connections.",
+    "SECRET": true
+  }
+]

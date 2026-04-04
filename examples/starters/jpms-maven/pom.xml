@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigbase</artifactId>
+            <artifactId>mconfigbasicbinary</artifactId>
             <version>${mconfig.version}</version>
         </dependency>
         <dependency>

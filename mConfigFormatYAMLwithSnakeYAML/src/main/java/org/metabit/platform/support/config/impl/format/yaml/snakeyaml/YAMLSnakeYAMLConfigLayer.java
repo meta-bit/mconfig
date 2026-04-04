@@ -3,9 +3,8 @@ package org.metabit.platform.support.config.impl.format.yaml.snakeyaml;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
-import org.metabit.platform.support.config.impl.entry.BlobConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
-import org.metabit.platform.support.config.impl.entry.TypedConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 
@@ -301,13 +300,13 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
         if (data instanceof Map)
             {
             Object current = data;
-            for (int i = 0; i < nodes.length; i++)
+            for (String node : nodes)
                 {
                 if (!(current instanceof Map))
                     {
                     return null;
                     }
-                current = ((Map<?, ?>) current).get(nodes[i]);
+                current = ((Map<?, ?>) current).get(node);
                 if (current == null)
                     {
                     return null;
@@ -358,18 +357,18 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
 
         if (Tag.BOOL.equals(tag))
             {
-            return new TypedConfigEntryLeaf(leafKey, Boolean.valueOf(scalar.getValue()), ConfigEntryType.BOOLEAN, meta);
+            return new GenericConfigEntryLeaf(leafKey, Boolean.valueOf(scalar.getValue()), ConfigEntryType.BOOLEAN, meta);
             }
         else if (Tag.INT.equals(tag) || Tag.FLOAT.equals(tag))
             {
-            return new TypedConfigEntryLeaf(leafKey, scalar.getValue(), ConfigEntryType.NUMBER, meta);
+            return new GenericConfigEntryLeaf(leafKey, scalar.getValue(), ConfigEntryType.NUMBER, meta);
             }
         else if (Tag.BINARY.equals(tag))
             {
-            return new BlobConfigEntryLeaf(leafKey, java.util.Base64.getDecoder().decode(scalar.getValue()), meta);
+            return new GenericConfigEntryLeaf(leafKey, java.util.Base64.getDecoder().decode(scalar.getValue()), ConfigEntryType.BYTES, meta);
             }
 
-        return new TypedConfigEntryLeaf(leafKey, scalar.getValue(), ConfigEntryType.STRING, meta);
+        return new GenericConfigEntryLeaf(leafKey, scalar.getValue(), ConfigEntryType.STRING, meta);
         }
 
     ConfigEntry snakeYamlObjectToConfigEntry(final String leafKey, final Object value)
@@ -381,20 +380,20 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
         ConfigEntryMetadata meta = new ConfigEntryMetadata(this.source);
         if (value instanceof String)
             {
-            return new TypedConfigEntryLeaf(leafKey, value, ConfigEntryType.STRING, meta);
+            return new GenericConfigEntryLeaf(leafKey, value, ConfigEntryType.STRING, meta);
             }
         else if (value instanceof Number)
             {
-            return new TypedConfigEntryLeaf(leafKey, value, ConfigEntryType.NUMBER, meta);
+            return new GenericConfigEntryLeaf(leafKey, value, ConfigEntryType.NUMBER, meta);
             }
         else if (value instanceof Boolean)
             {
-            return new TypedConfigEntryLeaf(leafKey, value, ConfigEntryType.BOOLEAN, meta);
+            return new GenericConfigEntryLeaf(leafKey, value, ConfigEntryType.BOOLEAN, meta);
             }
         else if (value instanceof byte[])
             {
-            return new BlobConfigEntryLeaf(leafKey, (byte[]) value, meta);
+            return new GenericConfigEntryLeaf(leafKey, (byte[]) value, ConfigEntryType.BYTES, meta);
             }
-        return new TypedConfigEntryLeaf(leafKey, String.valueOf(value), ConfigEntryType.STRING, meta);
+        return new GenericConfigEntryLeaf(leafKey, String.valueOf(value), ConfigEntryType.STRING, meta);
         }
 }

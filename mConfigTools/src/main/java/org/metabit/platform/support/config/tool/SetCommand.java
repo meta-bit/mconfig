@@ -48,6 +48,9 @@ public class SetCommand implements Callable<Integer>
     @Option(names = {"-m", "--comment"}, description = "Comment for the configuration entry")
     private String comment;
 
+    @Option(names = {"--create"}, description = "Create configuration file and directories if missing")
+    private boolean create;
+
     @Option(names = {"-F", "--file-format"}, description = "Preferred file format for new files (TOML, YAML, JSON, JSON5, PROPERTIES, INI)")
     private FileFormat fileFormat;
 
@@ -66,25 +69,39 @@ public class SetCommand implements Callable<Integer>
         {
         String context = shortened;
         String kv = keyValue;
-        if (context != null && kv == null && context.contains("="))
+        if (context != null && context.contains("="))
             {
+            // If it's the shortened syntax e.g. company:app:config@key=value
+            // we need to split it carefully.
+            int lastAt = context.lastIndexOf('@');
             int lastColon = context.lastIndexOf(':');
-            if (lastColon >= 0)
+            int lastSeparator = Math.max(lastAt, lastColon);
+            
+            if (lastSeparator >= 0)
                 {
-                kv = context.substring(lastColon+1);
-                context = context.substring(0, lastColon);
+                // we must be careful NOT to treat a path as a key=value
+                // A key=value pair MUST contain '='.
+                String potentialKv = context.substring(lastSeparator + 1);
+                if (potentialKv.contains("="))
+                    {
+                    kv = potentialKv;
+                    context = context.substring(0, lastSeparator);
+                    }
+                else
+                    {
+                    // No '=' in the last segment, so it's not a shortened key=value
+                    }
                 }
             else
                 {
-                kv = context;
-                context = null;
+                // No colon or @, but contains '='.
+                // Only treat it as kv if kv wasn't already set
+                if (kv == null)
+                    {
+                    kv = context;
+                    context = null;
+                    }
                 }
-            }
-
-        // Copy shortened syntax from subcommand to parent if provided
-        if (context != null)
-            {
-            main.shortened = context;
             }
 
         if (kv != null)
@@ -111,6 +128,11 @@ public class SetCommand implements Callable<Integer>
             value = kv.substring(eq+1);
             }
 
+        if (context != null)
+            {
+            main.shortened = context;
+            }
+
         if (value == null)
             {
             System.err.println("Error: Missing value. Use --value or key=value syntax.");
@@ -121,6 +143,11 @@ public class SetCommand implements Callable<Integer>
             {
             ctx.validate(true, true);
             ConfigFactoryBuilder builder = ctx.createBuilder();
+
+            if (create)
+                {
+                builder.setFeature(ConfigFeature.CREATE_MISSING_PATHS, true);
+                }
 
             FileFormat effectiveFormat = fileFormat;
             if (effectiveFormat == null && commonOptions.format != null)

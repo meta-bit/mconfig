@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
     <artifactId>mconfigtools</artifactId>
-    <name>mConfigTools</name>
+    <name>mConfig :: Tool :: CLI</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

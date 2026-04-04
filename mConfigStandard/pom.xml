@@ -4,68 +4,108 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mconfigstandard</artifactId>
-    <name>mConfigStandard</name>
-    <packaging>pom</packaging>
-    <description>mConfig package for basic usage (core, filesystem, JAR, properties)</description>
-
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.12</version>
     </parent>
 
+    <artifactId>mconfigstandard</artifactId>
+    <name>mConfig :: Package :: Standard (POM)</name>
+    <description>
+        Extended set of mConfig modules for advanced usage. POM aggregator.
+        mConfig with all mature sources and formats.
+    </description>
+    <packaging>pom</packaging>
+
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.source.skip>true</maven.source.skip>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
+    <!-- We omit the more specialized module *variants* here.
+
+    We use a combined Jackson approach to cover formats, since they
+    share the common dependencies.
+    Also, for the windows registry access, we use the variant which
+    does not require a cross-compiler setup
+    -->
+
     <dependencies>
-        <!-- the core library, required -->
+        <!-- Standard Core -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigcore</artifactId>
+            <artifactId>mconfigbasic</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+
+        <!-- Additional Mature Sources -->
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigsourceenvvar</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- config schemes, for validation, documentation, etc. - very much recommended -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigschema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- handling of secrets and sensitive information. not only passwords -->
-        <dependency>
-            <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigsecrets</artifactId>
+            <artifactId>mconfigwinregistry</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- utility library, optional -->
-        <dependency>
-            <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigutil</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- reading hardcoded resources from within a JAR or similar Java packaging -->
-        <dependency>
-            <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigsourcejar</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- reading configuration files from the filesystem. encapsulates and implements OS conventions -->
-        <dependency>
-            <groupId>org.metabit.platform.support.config</groupId>
-            <artifactId>mconfigsourcefilesystem</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- configuration format Java Properties is a standard format for configuration files with Java -->
+        <!-- Mature Formats -->
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigformatjavaproperties</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatjsonwithjackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatyamlwithjackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformattomlwithjackson</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatini</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!-- Other Mature Modules -->
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigmapper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config.logging</groupId>
+            <artifactId>mconfigloggingslf4j</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigwinregistryjni</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        -->
+        <!--
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatyamlwithsnakeyaml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        -->
     </dependencies>
 </project>

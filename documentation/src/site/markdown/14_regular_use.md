@@ -28,7 +28,7 @@ to *replace* existing defaults rather than merge them, use `SCHEME_RESETS_DEFAUL
 the JAR source still reads resources from the classpath, so the same paths work in IDE runs.
 
 ## 1.4.2 Configuration Schemas Discovery
-Config Schemas (`*.mconfig-schema.json` and `*.schema.json`) are automatically discovered from multiple locations:
+Config Schemas (`*.mconfig-schema.json`) are automatically discovered from multiple locations:
 
 1.  **Classpath:** Scanned within `.config/` directories (e.g., `src/main/resources/.config/`).
 2.  **Filesystem (system-wide and user):** Scanned in prioritized OS-specific locations. Schemas are stored under an app-scoped subdirectory:
@@ -83,7 +83,7 @@ Normally, you'll place a JSON file in a subfolder of your resource directory,
 and that's it. 
 
 The file name is the name of the Configuration you want to use,
-plus the suffix ".schema.json". It is a JSON(-style) file, following a specific
+plus the suffix ".mconfig-schema.json". It is a JSON(-style) file, following a specific
 format (see [Configuration Schemas](23_configuration_schemas.md))
 
 You declare all the configuration parameters your code can or will use.
@@ -92,7 +92,7 @@ mConfig will automatically detect and use these files.
 Example: If your code uses a Configuration named "MyConfig" for
 Company "MyCompany" and Application "MyApplication",
 you would place the corresponding schema file in
-`src/main/resources/.config/MyCompany/MyApplication/MyConfig.schema.json`
+`src/main/resources/.config/MyCompany/MyApplication/MyConfig.mconfig-schema.json`
 
 
 ### 1.4.3.3 Explicit setting
@@ -112,11 +112,12 @@ Example:
 ```java
 configFactory.put("voting.database.name", "dynamicDB", ConfigScope.RUNTIME);
 ```
-The RUNTIME scope is at the highest priority ¹, so it overrides all others.
+The `RUNTIME` scope is at the highest priority ¹, so it overrides all others.
+See **[Scopes](20_scopes.md)** for the full list.
 
 So dynamically changing the configuration at runtime is quite possible.
 
-¹: the highest priority of all regular scopes, that is. the POLICY scope
+¹: the highest priority of all regular scopes, that is. the `POLICY` scope
 can enforce its settings over everything else; that's for security reasons.
 
 ## 1.4.5 Put and write

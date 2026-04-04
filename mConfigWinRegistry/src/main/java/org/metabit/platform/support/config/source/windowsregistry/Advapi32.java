@@ -2,9 +2,9 @@ package org.metabit.platform.support.config.source.windowsregistry;
 
 import jnr.ffi.LibraryLoader;
 import jnr.ffi.Pointer;
-import jnr.ffi.Runtime;
-import jnr.ffi.annotations.In;
-import jnr.ffi.annotations.Out;
+// import jnr.ffi.Runtime;
+// import jnr.ffi.annotations.In;
+// import jnr.ffi.annotations.Out;
 import jnr.ffi.byref.IntByReference;
 import jnr.ffi.byref.PointerByReference;
 import jnr.ffi.types.u_int32_t;

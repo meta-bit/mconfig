@@ -8,6 +8,7 @@ module metabit.mconfig.util
     requires java.logging;
 
     exports org.metabit.platform.support.config.util;
+    exports org.metabit.platform.support.config.util.impl;
 
     uses ConfigLoggingInterface;
 

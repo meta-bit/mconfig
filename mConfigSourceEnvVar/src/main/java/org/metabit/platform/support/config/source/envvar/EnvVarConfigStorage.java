@@ -98,7 +98,7 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
         }
 
     @Override
-    public void tryToReadConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
+    public void updateConfigurationLayers(String sanitizedConfigName, ConfigLocation possibleSource, LayeredConfigurationInterface layeredCfg)
         {
         if (possibleSource.getScope() != ConfigScope.SESSION)
             {
@@ -113,13 +113,13 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
         }
 
     @Override
-    public ConfigLayerInterface tryToCreateConfiguration(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
+    public ConfigLayerInterface createConfigurationLayer(String configName, ConfigLocation location, ConfigSchema configScheme, LayeredConfiguration layeredConfiguration)
         {
         return null; // Environment variables are typically read-only and discovered, not created
         }
 
     @Override
-    public void tryToReadBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
+    public void updateBlobConfigurations(String sanitizedConfigName, ConfigLocation location, BlobConfiguration blobConfig)
         {
         // Not supported for env vars
         }
