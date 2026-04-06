@@ -1,8 +1,9 @@
 package org.metabit.platform.support.config.impl.format.json.jackson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
@@ -62,7 +63,7 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
 
     protected ObjectMapper createObjectMapper()
         {
-        return new ObjectMapper();
+        return JsonMapper.builder().build();
         }
 
     @Override
@@ -84,7 +85,7 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
             logger.warn("JSON file "+file.getAbsolutePath()+" having top-level type other than object or array");
             // different constructors?
             }
-        catch (JsonProcessingException ex)
+        catch (JacksonException ex)
             {
             // looks like this is not a valid JSON file!
             String msgstring = MessageFormat.format("not a valid JSON file: {0}:[{1},{2}] because of {3}", file.getAbsolutePath(), ex.getLocation().getLineNr(), ex.getLocation().getColumnNr(), ex.getOriginalMessage());
@@ -141,9 +142,14 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
         try
             {
             JsonNode rootNode = mapper.readTree(inputStream); // parse to tree
+            if (rootNode == null)
+                {
+                logger.warn("JSON parsing failed on input stream");
+                return null;
+                }
             return getJsonJacksonConfigLayer(configLocation, rootNode, inputStream);
             }
-        catch (JsonProcessingException ex)
+        catch (JacksonException ex)
             {
             logger.warn(ex.getMessage(), ex);
 

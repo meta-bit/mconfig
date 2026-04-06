@@ -9,7 +9,7 @@
         <version>0.8.12</version>
     </parent>
 
-    <artifactId>mConfigSourceVault</artifactId>
+    <artifactId>mconfigsourcevault</artifactId>
     <name>mConfig :: Source :: Vault</name>
     <inceptionYear>2026</inceptionYear>
     <description>Source module for HashiCorp Vault integration in mConfig, providing secure secret retrieval and management from Vault.</description>

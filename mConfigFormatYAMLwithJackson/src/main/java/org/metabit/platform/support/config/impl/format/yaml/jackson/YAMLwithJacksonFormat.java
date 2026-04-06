@@ -1,10 +1,10 @@
 package org.metabit.platform.support.config.impl.format.yaml.jackson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.dataformat.yaml.YAMLFactory;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
@@ -67,7 +67,7 @@ public class YAMLwithJacksonFormat implements ConfigFileFormatInterface
                 }
             logger.warn("YAML file "+file.getAbsolutePath()+" having top-level type other than object or array");
             }
-        catch (JsonProcessingException ex)
+        catch (JacksonException ex)
             {
             String msgstring = MessageFormat.format("not a valid YAML file: {0}:[{1},{2}] because of {3}", file.getAbsolutePath(), ex.getLocation().getLineNr(), ex.getLocation().getColumnNr(), ex.getOriginalMessage());
             logger.warn(msgstring);
@@ -89,7 +89,7 @@ public class YAMLwithJacksonFormat implements ConfigFileFormatInterface
             JsonNode rootNode = mapper.readTree(inputStream);
             return getYamlJacksonConfigLayer(configLocation, rootNode, inputStream);
             }
-        catch (JsonProcessingException ex)
+        catch (JacksonException ex)
             {
             logger.warn(ex.getMessage(), ex);
             }

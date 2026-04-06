@@ -58,19 +58,19 @@
         <module>mConfigBasicBinary</module>
         <module>mConfigLoggingSlf4j</module>
         <module>mConfigMapper</module>
-        <module>integrationtests</module>
-        <module>mConfigUtil</module>
-        <module>mConfigTools</module>
         <module>mConfigCheese</module>
         <module>mConfigFormatYAMLwithJackson</module>
         <module>mConfigFormatYAMLwithSnakeYAML</module>
         <module>mConfigFormatINI</module>
         <module>mConfigFormatTOMLwithJackson</module>
         <module>mConfigFormatTOML</module>
-        <module>mConfigFormatJsonSchema</module>
+        <module>mConfigFormatJsonSchema</module><!-- removal considered -->
         <module>mConfigSourceZooKeeper</module>
         <module>mConfigSourceVault</module>
         <module>mConfigSourceAwsSecretsManager</module>
+        <module>integrationtests</module>
+        <module>mConfigUtil</module>
+        <module>mConfigTools</module>
         <module>documentation</module>
     </modules>
     <organization>
@@ -246,13 +246,19 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>5.14.2</version>
+                <version>5.2.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-inline</artifactId>
+                <version>5.2.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>5.14.2</version>
+                <version>5.2.0</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

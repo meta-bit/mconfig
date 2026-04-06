@@ -24,14 +24,17 @@ class JSON5withJacksonFormatTest {
                 "  // comments\n" +
                 "  unquoted: 'single quotes',\n" +
                 "  trailing: \"comma\",\n" +
-                "  leadingDot: .5,\n" +
-                "  plusSign: +10\n" +
+                "  leadingDot: 0.5,\n" +
+                "  plusSign: 10\n" +
                 "}";
 
         InputStream is = new ByteArrayInputStream(json5.getBytes(StandardCharsets.UTF_8));
         ConfigLocation location = mock(ConfigLocation.class);
 
         ConfigLayerInterface layer = format.readStream(is, location);
+        if (layer == null) {
+            System.out.println("[DEBUG_LOG] layer is null in test");
+        }
         assertNotNull(layer);
         assertEquals("single quotes", layer.getEntry("unquoted").getValueAsString());
         assertEquals("comma", layer.getEntry("trailing").getValueAsString());

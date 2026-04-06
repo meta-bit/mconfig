@@ -15,10 +15,21 @@
 
     <properties>
         <json-schema-validator.version>1.0.87</json-schema-validator.version>
+        <jackson.version>3.1.1</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.18.2</version>
+        </dependency>
         <dependency>
             <groupId>com.ethlo.time</groupId>
             <artifactId>itu</artifactId>

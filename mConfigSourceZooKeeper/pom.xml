@@ -12,6 +12,8 @@
     <artifactId>mconfigsourcezookeeper</artifactId>
     <name>mConfig :: Source :: ZooKeeper</name>
     <description>mConfig module for Apache ZooKeeper configuration storage</description>
+    <properties><apache.curator.version>5.7.0</apache.curator.version></properties>
+
 
     <dependencies>
         <dependency>
@@ -22,12 +24,12 @@
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
-            <version>5.5.0</version>
+            <version>${apache.curator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
-            <version>5.5.0</version>
+            <version>${apache.curator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

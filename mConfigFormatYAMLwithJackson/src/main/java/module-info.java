@@ -2,9 +2,9 @@
 module metabit.mconfig.modules.yamlwithjackson
     {
     requires metabit.mconfig.core;
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
-    requires com.fasterxml.jackson.dataformat.yaml;
+    requires tools.jackson.core;
+    requires tools.jackson.databind;
+    requires tools.jackson.dataformat.yaml;
 
     exports org.metabit.platform.support.config.impl.format.yaml.jackson;
 

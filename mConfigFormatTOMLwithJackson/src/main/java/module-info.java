@@ -4,9 +4,9 @@ module metabit.mconfig.modules.tomlwithjackson
     {
     requires metabit.mconfig.modules.jsonwithjackson;
     requires transitive metabit.mconfig.core;
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
-    requires com.fasterxml.jackson.dataformat.toml;
+    requires tools.jackson.core;
+    requires tools.jackson.databind;
+    requires tools.jackson.dataformat.toml;
 
     exports org.metabit.platform.support.config.impl.format.toml.jackson;
 

@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SecretsJCETest
 {
+    // Lowest keysize for RSA in many JCE providers. this is a temporary, one-time use key for conversion testing - no security relevance.
+    final static int TEST_KEY_SIZE = 1024;
+
     @TempDir
     Path userDir;
 
@@ -28,9 +31,9 @@ public class SecretsJCETest
     {
         // 1. Generate two key pairs and a self-signed certificate using JCE
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-        kpg.initialize(1024); // Lowest keysize for RSA in many JCE providers
+        kpg.initialize(TEST_KEY_SIZE); // NOSONAR
         KeyPair kp1 = kpg.generateKeyPair();
-        KeyPair kp2 = kpg.generateKeyPair();
+//        KeyPair kp2 = kpg.generateKeyPair();
 
         // Note: generating a self-signed certificate with pure JCE (without BC or other libs)
         // is surprisingly hard in standard Java without using internal sun.security classes.

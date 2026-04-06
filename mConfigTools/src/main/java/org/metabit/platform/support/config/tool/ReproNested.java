@@ -1,6 +1,6 @@
 package org.metabit.platform.support.config.tool;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class ReproNested
 
         ObjectMapper mapper = new ObjectMapper();
         ModerateWhitesmithsPrettyPrinter pp = new ModerateWhitesmithsPrettyPrinter();
-        String json = mapper.writer(pp).writeValueAsString(root);
+        String json = mapper.writer().with(pp).writeValueAsString(root);
         System.out.println(json);
         }
 }

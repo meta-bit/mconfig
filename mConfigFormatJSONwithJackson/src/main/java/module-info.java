@@ -2,8 +2,8 @@
 module metabit.mconfig.modules.jsonwithjackson
     {
     requires metabit.mconfig.core;
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
+    requires tools.jackson.core;
+    requires tools.jackson.databind;
 
     exports org.metabit.platform.support.config.impl.format.json.jackson;
 

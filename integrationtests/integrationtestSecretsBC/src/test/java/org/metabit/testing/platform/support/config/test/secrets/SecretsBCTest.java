@@ -39,6 +39,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SecretsBCTest
 {
+    // Lowest keysize for RSA in many JCE providers. this is a temporary, one-time use key for conversion testing - no security relevance.
+    final static int TEST_KEY_SIZE = 1024;
+
     @TempDir
     Path userDir;
 
@@ -53,9 +56,9 @@ public class SecretsBCTest
         {
         // 1. Generate two key pairs and a self-signed certificate using BouncyCastle
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
-        kpg.initialize(1024);
+        kpg.initialize(TEST_KEY_SIZE); // NOSONAR
         KeyPair kp1 = kpg.generateKeyPair();
-        KeyPair kp2 = kpg.generateKeyPair();
+//        KeyPair kp2 = kpg.generateKeyPair();
 
         long now = System.currentTimeMillis();
         Date startDate = new Date(now);

@@ -14,8 +14,8 @@ module mConfigTools.main
     requires metabit.mconfig.util;
     requires metabit.mconfig.modules.mConfigLoggingSlf4j;
     requires info.picocli;
-    requires com.fasterxml.jackson.databind;
-    requires com.fasterxml.jackson.dataformat.yaml;
-    requires com.fasterxml.jackson.dataformat.toml;
+    requires tools.jackson.databind;
+    requires tools.jackson.dataformat.yaml;
+    requires tools.jackson.dataformat.toml;
     opens org.metabit.platform.support.config.tool to info.picocli;
     }

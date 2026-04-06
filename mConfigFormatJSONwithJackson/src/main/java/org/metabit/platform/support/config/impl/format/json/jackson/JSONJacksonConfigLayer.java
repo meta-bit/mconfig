@@ -1,9 +1,9 @@
 package org.metabit.platform.support.config.impl.format.json.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeType;
+import tools.jackson.databind.node.ObjectNode;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
@@ -196,7 +196,7 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
         {
         if (node.isObject())
             {
-            Iterator<java.util.Map.Entry<String, JsonNode>> fields = node.fields();
+            Iterator<java.util.Map.Entry<String, JsonNode>> fields = node.properties().iterator();
             while (fields.hasNext())
                 {
                 java.util.Map.Entry<String, JsonNode> entry = fields.next();
@@ -278,7 +278,7 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
                     {
                     try
                         {
-                        byte[] decoded = java.util.Base64.getDecoder().decode(jsonNode.textValue());
+                        byte[] decoded = java.util.Base64.getDecoder().decode(jsonNode.asText());
                         return new GenericConfigEntryLeaf(leafKey, decoded, ConfigEntryType.BYTES, meta);
                         }
                     catch (IllegalArgumentException e)
@@ -286,7 +286,7 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
                         // fall back to string if not valid base64
                         }
                     }
-                return new GenericConfigEntryLeaf(leafKey, jsonNode.textValue(), ConfigEntryType.STRING, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.asText(), ConfigEntryType.STRING, meta);
             case NUMBER:
                 if (jsonNode.isInt())
                     {
@@ -296,7 +296,7 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
                     {
                     return new GenericConfigEntryLeaf(leafKey, jsonNode.longValue(), ConfigEntryType.NUMBER, meta);
                     }
-                else if (jsonNode.isDouble())
+                else if (jsonNode.isFloatingPointNumber())
                     {
                     return new GenericConfigEntryLeaf(leafKey, jsonNode.doubleValue(), ConfigEntryType.NUMBER, meta);
                     }

@@ -1,8 +1,8 @@
 package org.metabit.platform.support.config.tool;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.toml.TomlMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.toml.TomlMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 import org.metabit.platform.support.config.ConfigEntry;
 import org.metabit.platform.support.config.ConfigEntryType;
 import org.metabit.platform.support.config.ConfigEvent;
@@ -31,9 +31,9 @@ final class OutputFormatter
             {
             if (whitesmiths)
                 {
-                return mapper.writer(new ModerateWhitesmithsPrettyPrinter()).writeValueAsString(data);
+                return mapper.writer().with(new ModerateWhitesmithsPrettyPrinter()).writeValueAsString(data);
                 }
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
+            return mapper.writer().withDefaultPrettyPrinter().writeValueAsString(data);
             }
         catch (Exception e)
             {
@@ -53,9 +53,9 @@ final class OutputFormatter
             {
             if (whitesmiths)
                 {
-                return mapper.writer(new ModerateWhitesmithsPrettyPrinter()).writeValueAsString(data);
+                return mapper.writer().with(new ModerateWhitesmithsPrettyPrinter()).writeValueAsString(data);
                 }
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
+            return mapper.writer().withDefaultPrettyPrinter().writeValueAsString(data);
             }
         catch (Exception e)
             {
@@ -75,9 +75,9 @@ final class OutputFormatter
             {
             if (whitesmiths)
                 {
-                return mapper.writer(new ModerateWhitesmithsPrettyPrinter()).writeValueAsString(data);
+                return mapper.writer().with(new ModerateWhitesmithsPrettyPrinter()).writeValueAsString(data);
                 }
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
+            return mapper.writer().withDefaultPrettyPrinter().writeValueAsString(data);
             }
         catch (Exception e)
             {

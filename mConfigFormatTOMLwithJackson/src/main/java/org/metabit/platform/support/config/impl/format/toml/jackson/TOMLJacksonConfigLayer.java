@@ -1,6 +1,6 @@
 package org.metabit.platform.support.config.impl.format.toml.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.metabit.platform.support.config.ConfigEntry;
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;

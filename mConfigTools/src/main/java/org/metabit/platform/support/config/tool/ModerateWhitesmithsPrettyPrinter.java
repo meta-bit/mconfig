@@ -1,12 +1,12 @@
 package org.metabit.platform.support.config.tool;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.util.DefaultPrettyPrinter;
 
 import java.io.IOException;
 
 /**
- * A Jackson {@link com.fasterxml.jackson.core.PrettyPrinter} that implements the "Moderate Whitesmiths" indentation style.
+ * A Jackson {@link tools.jackson.core.PrettyPrinter} that implements the "Moderate Whitesmiths" indentation style.
  * <p>
  * Key characteristics of Whitesmiths style in this implementation:
  * <ul>
@@ -37,13 +37,13 @@ public class ModerateWhitesmithsPrettyPrinter extends DefaultPrettyPrinter
         }
 
     @Override
-    public void writeRootValueSeparator(JsonGenerator g) throws IOException
+    public void writeRootValueSeparator(JsonGenerator g)
         {
         g.writeRaw(System.lineSeparator());
         }
 
     @Override
-    public void writeStartObject(JsonGenerator g) throws IOException
+    public void writeStartObject(JsonGenerator g)
         {
         if (_nesting > 0)
             {
@@ -54,7 +54,7 @@ public class ModerateWhitesmithsPrettyPrinter extends DefaultPrettyPrinter
         }
 
     @Override
-    public void writeEndObject(JsonGenerator g, int nrOfEntries) throws IOException
+    public void writeEndObject(JsonGenerator g, int nrOfEntries)
         {
         _nesting--;
         if (nrOfEntries > 0)
@@ -65,7 +65,7 @@ public class ModerateWhitesmithsPrettyPrinter extends DefaultPrettyPrinter
         }
 
     @Override
-    public void writeStartArray(JsonGenerator g) throws IOException
+    public void writeStartArray(JsonGenerator g)
         {
         if (_nesting > 0)
             {
@@ -76,7 +76,7 @@ public class ModerateWhitesmithsPrettyPrinter extends DefaultPrettyPrinter
         }
 
     @Override
-    public void writeEndArray(JsonGenerator g, int nrOfValues) throws IOException
+    public void writeEndArray(JsonGenerator g, int nrOfValues)
         {
         _nesting--;
         if (nrOfValues > 0)
@@ -92,7 +92,7 @@ public class ModerateWhitesmithsPrettyPrinter extends DefaultPrettyPrinter
     public static class WhitesmithsIndenter extends FixedSpaceIndenter
     {
         @Override
-        public void writeIndentation(JsonGenerator g, int level) throws IOException
+        public void writeIndentation(JsonGenerator g, int level)
             {
             g.writeRaw(System.lineSeparator());
             for (int i = 0; i < level; i++)

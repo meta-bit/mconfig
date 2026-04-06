@@ -1,8 +1,8 @@
 package org.metabit.platform.support.config.impl.format.toml.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.toml.TomlMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.toml.TomlMapper;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.impl.format.json.jackson.JSONJacksonConfigLayer;
