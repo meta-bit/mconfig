@@ -19,8 +19,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <maven.source.skip>true</maven.source.skip>
     </properties>
 
 
@@ -108,4 +106,42 @@
         </dependency>
         -->
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>javadoc</classifier>
+                            <classesDirectory>${project.basedir}</classesDirectory>
+                            <includes>
+                                <include>nothing</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>empty-sources-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>sources</classifier>
+                            <classesDirectory>${project.basedir}</classesDirectory>
+                            <includes>
+                                <include>nothing</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
