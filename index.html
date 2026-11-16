@@ -208,20 +208,19 @@
 <p>mConfig is a modular Java library for unified, portable configuration management. It abstracts OS-specific locations (e.g., <code>~/.config/</code>, <code>/etc/</code>, Windows Registry), multiple sources (files, env vars, JAR resources, ZooKeeper), and formats (JSON, YAML, TOML, Properties, etc.).
 The <a href="41_mconfig_tool.html">mConfig Tool</a> is a powerful companion for exploring and managing these configurations from the command line.</p>
 <p><strong>Core Principle</strong>: Layered resolution stack prioritizes scopes (highest first):</p>
-<p>```mermaid
-graph LR
-  POLICY[POLICY<br/>Enforced/GPO] --&gt; RUNTIME[RUNTIME<br/>Volatile RAM]
-  RUNTIME --&gt; SESSION[SESSION<br/>Env/CLI]
-  SESSION --&gt; USER[USER<br/>~/.config/]
-  USER --&gt; APPLICATION[APPLICATION<br/>Portable/Install]
-  APPLICATION --&gt; HOST[HOST<br/>/etc/, HKLM]
-  HOST --&gt; CLUSTER[CLUSTER<br/>ZK/Networks]
-  CLUSTER --&gt; CLOUD[CLOUD<br/>Providers]
-  CLOUD --&gt; ORGANIZATION[ORGANIZATION<br/>Licensee]
-  ORGANIZATION --&gt; PRODUCT[PRODUCT<br/>JAR Defaults]</p>
-<p>classDef high fill:#ff9999
-  class POLICY,RUNTIME high
-  ```</p>
+<div class="mermaid">graph LR
+  POLICY[POLICY&lt;br/&gt;Enforced/GPO] --&gt; RUNTIME[RUNTIME&lt;br/&gt;Volatile RAM]
+  RUNTIME --&gt; SESSION[SESSION&lt;br/&gt;Env/CLI]
+  SESSION --&gt; USER[USER&lt;br/&gt;~/.config/]
+  USER --&gt; APPLICATION[APPLICATION&lt;br/&gt;Portable/Install]
+  APPLICATION --&gt; HOST[HOST&lt;br/&gt;/etc/, HKLM]
+  HOST --&gt; CLUSTER[CLUSTER&lt;br/&gt;ZK/Networks]
+  CLUSTER --&gt; CLOUD[CLOUD&lt;br/&gt;Providers]
+  CLOUD --&gt; ORGANIZATION[ORGANIZATION&lt;br/&gt;Licensee]
+  ORGANIZATION --&gt; PRODUCT[PRODUCT&lt;br/&gt;JAR Defaults]
+
+  classDef high fill:#ff9999
+  class POLICY,RUNTIME high</div>
 <p>Ties within scope: Later-added &gt; earlier; storage prio: RAM &gt; secrets &gt; files &gt; registry &gt; JAR.</p>
 <p><strong>Quick Start</strong>: <a href="11_what_is_mconfig.html">What is mConfig?</a> → <a href="13_getting_started.html">Getting Started</a></p>
 <p><strong>Architecture</strong>: <a href="44_design_consolidated.html">Design Consolidated</a></p>
@@ -310,6 +309,8 @@ graph LR
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {
@@ -322,5 +323,5 @@ graph LR
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-11-16 14:10:06.610894+00:00
+Build Date UTC : 2026-11-16 14:19:34.334479+00:00
 -->

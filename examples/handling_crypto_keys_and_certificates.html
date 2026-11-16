@@ -211,39 +211,35 @@ PEM can be stored as <code>STRING</code> or <code>BYTES</code> and parsed with B
 <li><strong>JCE</strong>: Included in JDK.</li>
 <li><strong>BouncyCastle</strong> (optional, for PEM/EC/FIPS): Add to classpath:
   Maven:
-  <code>xml
-  &lt;dependency&gt;
-    &lt;groupId&gt;org.bouncycastle&lt;/groupId&gt;
-    &lt;artifactId&gt;bcprov-jdk18on&lt;/artifactId&gt;
-    &lt;version&gt;1.78&lt;/version&gt;
-  &lt;/dependency&gt;</code>
+  <pre class="highlight"><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.bouncycastle&lt;/groupId&gt;
+  &lt;artifactId&gt;bcprov-jdk18on&lt;/artifactId&gt;
+  &lt;version&gt;1.78&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
   Gradle:
-  <code>gradle
-  implementation 'org.bouncycastle:bcprov-jdk18on:1.78'</code></li>
+  <pre class="highlight"><code class="language-gradle">implementation 'org.bouncycastle:bcprov-jdk18on:1.78'</code></pre></li>
 <li>Mark schema entries with <code>"SECRET": true</code>. The schema file is an array of entry objects:
-  <code>json
-  [
-    {
-      "KEY": "keys/rsa/private",
-      "TYPE": "BYTES",
-      "SECRET": true
-    },
-    {
-      "KEY": "certs/server",
-      "TYPE": "BYTES",
-      "SECRET": true
-    }
-  ]</code>
+  <pre class="highlight"><code class="language-json">[
+  {
+    "KEY": "keys/rsa/private",
+    "TYPE": "BYTES",
+    "SECRET": true
+  },
+  {
+    "KEY": "certs/server",
+    "TYPE": "BYTES",
+    "SECRET": true
+  }
+]</code></pre>
   <code>"FLAGS": ["SECRET"]</code> does not mark an entry as secret (see
   <a href="../35_handling_secrets.html">Handling Secrets</a>). The schema has no field for the kind of secret;
   pass the <code>SecretType</code> when storing the value, as shown below.</li>
 </ul>
 <h2 id="2-setup-configfactory">2. Setup ConfigFactory<a class="headerlink" href="#2-setup-configfactory" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">String schemaJson = ...; // the JSON array shown above
-ConfigFactory factory = ConfigFactoryBuilder.create(&quot;mycompany&quot;, &quot;myapp&quot;).build();
-factory.addConfigSchema(&quot;crypto&quot;, schemaJson); // throws ConfigCheckedException
-Configuration config = factory.getConfig(&quot;crypto&quot;);
-</code></pre>
+<pre class="highlight"><code class="language-java">String schemaJson = ...; // the JSON array shown above
+ConfigFactory factory = ConfigFactoryBuilder.create("mycompany", "myapp").build();
+factory.addConfigSchema("crypto", schemaJson); // throws ConfigCheckedException
+Configuration config = factory.getConfig("crypto");</code></pre>
 <p><code>ConfigSchema.fromJSON(String, ConfigFactoryInstanceContext)</code> needs the factory-internal context and is
 not meant for application code; <code>addConfigSchema()</code> parses the JSON in the factory's context.</p>
 <p>Instead of specifying the schema programmatically, you can also 
@@ -257,10 +253,10 @@ available yet</strong>; <code>Configuration</code> has no such method. How secre
 (MLIB-152). The lines marked <code>NOT AVAILABLE YET</code> below show the intended use and do not compile.
 Reading (<code>getSecret()</code>, sections 4 and 6) works today.</p>
 </blockquote>
-<pre><code class="language-java">import java.security.*;
+<pre class="highlight"><code class="language-java">import java.security.*;
 
 // Generate
-KeyPairGenerator kpg = KeyPairGenerator.getInstance(&quot;RSA&quot;);
+KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 kpg.initialize(2048);
 KeyPair kp = kpg.generateKeyPair();
 
@@ -269,87 +265,81 @@ byte[] privDer = kp.getPrivate().getEncoded();
 byte[] pubDer = kp.getPublic().getEncoded();
 
 // Store as SecretValue (auto-typed if schema helps)  -- NOT AVAILABLE YET, see status note above
-// config.put(&quot;keys/rsa/private&quot;, new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.USER);
-config.put(&quot;keys/rsa/public&quot;, pubDer, ConfigScope.USER); // Public OK as non-secret
+// config.put("keys/rsa/private", new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.USER);
+config.put("keys/rsa/public", pubDer, ConfigScope.USER); // Public OK as non-secret
 
 // To HOST scope (elevated privs may be needed)  -- NOT AVAILABLE YET
-// config.put(&quot;keys/rsa/private&quot;, new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.HOST);
-</code></pre>
+// config.put("keys/rsa/private", new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.HOST);</code></pre>
 <h2 id="4-read-der-private-key-jce">4. Read DER Private Key (JCE)<a class="headerlink" href="#4-read-der-private-key-jce" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">SecretValue privSecret = config.getSecret(&quot;keys/rsa/private&quot;);
+<pre class="highlight"><code class="language-java">SecretValue privSecret = config.getSecret("keys/rsa/private");
 if (privSecret != null) 
     {
     byte[] derBytes = privSecret.getValue();
-    KeyFactory kf = KeyFactory.getInstance(&quot;RSA&quot;);
+    KeyFactory kf = KeyFactory.getInstance("RSA");
     PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(derBytes);
     PrivateKey privateKey = kf.generatePrivate(keySpec);
     privSecret.erase(); // Secure wipe
-    }
-</code></pre>
+    }</code></pre>
 <h2 id="5-generate-and-store-self-signed-x509-certificate-bouncycastle">5. Generate and Store Self-Signed X.509 Certificate (BouncyCastle)<a class="headerlink" href="#5-generate-and-store-self-signed-x509-certificate-bouncycastle" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">import org.bouncycastle.jce.provider.BouncyCastleProvider;
+<pre class="highlight"><code class="language-java">import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.cert.*; // etc.
 // ...
 Security.addProvider(new BouncyCastleProvider());
 
-KeyPairGenerator kpg = KeyPairGenerator.getInstance(&quot;RSA&quot;, &quot;BC&quot;);
+KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
 kpg.initialize(2048);
 KeyPair kp = kpg.generateKeyPair();
 
 long now = System.currentTimeMillis();
-X500Name issuer = new X500Name(&quot;CN=TestCA&quot;);
+X500Name issuer = new X500Name("CN=TestCA");
 BigInteger serial = BigInteger.valueOf(now);
 Date notBefore = new Date(now - 5000);
 Date notAfter = new Date(now + 365L * 24 * 3600 * 1000);
 
-ContentSigner signer = new JcaContentSignerBuilder(&quot;SHA256withRSA&quot;).setProvider(&quot;BC&quot;).build(kp.getPrivate());
+ContentSigner signer = new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(kp.getPrivate());
 X509v3CertificateBuilder builder = new JcaX509v3CertificateBuilder(issuer, serial, notBefore, notAfter, issuer, kp.getPublic());
 X509CertificateHolder holder = builder.build(signer);
-X509Certificate cert = new JcaX509CertificateConverter().setProvider(&quot;BC&quot;).getCertificate(holder);
+X509Certificate cert = new JcaX509CertificateConverter().setProvider("BC").getCertificate(holder);
 
 // Store DER  -- NOT AVAILABLE YET, see the status note in section 3
 byte[] certDer = cert.getEncoded();
-// config.put(&quot;certs/server&quot;, new BasicSecretValue(certDer, SecretType.CERTIFICATE), ConfigScope.USER);
-</code></pre>
+// config.put("certs/server", new BasicSecretValue(certDer, SecretType.CERTIFICATE), ConfigScope.USER);</code></pre>
 <h2 id="6-read-x509-certificate-jce">6. Read X.509 Certificate (JCE)<a class="headerlink" href="#6-read-x509-certificate-jce" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">SecretValue certSecret = config.getSecret(&quot;certs/server&quot;);
+<pre class="highlight"><code class="language-java">SecretValue certSecret = config.getSecret("certs/server");
 if (certSecret != null)
     {
     byte[] derBytes = certSecret.getValue();
-    CertificateFactory cf = CertificateFactory.getInstance(&quot;X.509&quot;);
+    CertificateFactory cf = CertificateFactory.getInstance("X.509");
     X509Certificate cert = (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(derBytes));
     certSecret.erase();
-    }
-</code></pre>
+    }</code></pre>
 <h2 id="7-pem-handling-bouncycastle">7. PEM Handling (BouncyCastle)<a class="headerlink" href="#7-pem-handling-bouncycastle" title="Permanent link">&para;</a></h2>
 <h3 id="generate-pem-private-key">Generate PEM Private Key<a class="headerlink" href="#generate-pem-private-key" title="Permanent link">&para;</a></h3>
-<pre><code class="language-java">import org.bouncycastle.util.io.pem.PemWriter;
+<pre class="highlight"><code class="language-java">import org.bouncycastle.util.io.pem.PemWriter;
 import org.bouncycastle.openssl.PEMEncryptedKeyPair;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter; // Simpler
 
 try (StringWriter sw = new StringWriter(); JcaPEMWriter pemWriter = new JcaPEMWriter(sw)) {
     pemWriter.writeObject(kp.getPrivate());
     String pem = sw.toString();
-    config.put(&quot;keys/rsa/private.pem&quot;, pem, ConfigScope.USER); // STRING
-}
-</code></pre>
+    config.put("keys/rsa/private.pem", pem, ConfigScope.USER); // STRING
+}</code></pre>
 <h3 id="read-pem-private-key">Read PEM Private Key<a class="headerlink" href="#read-pem-private-key" title="Permanent link">&para;</a></h3>
-<pre><code class="language-java">SecretValue pemSecret = config.getSecret(&quot;keys/rsa/private.pem&quot;); // mark the entry &quot;SECRET&quot;: true in the schema
+<pre class="highlight"><code class="language-java">SecretValue pemSecret = config.getSecret("keys/rsa/private.pem"); // mark the entry "SECRET": true in the schema
 try (PEMParser pemParser = new PEMParser(new CharArrayReader(pemSecret.getChars())))
     {
     Object obj = pemParser.readObject();
     if (obj instanceof PEMKeyPair)
         {
         PEMKeyPair pemPair = (PEMKeyPair) obj;
-        JcaPEMKeyConverter conv = new JcaPEMKeyConverter().setProvider(&quot;BC&quot;);
+        JcaPEMKeyConverter conv = new JcaPEMKeyConverter().setProvider("BC");
         PrivateKey privKey = conv.getPrivateKey(pemPair.getPrivateKeyInfo());
         }
     }
 finally
     {
     pemSecret.erase();
-    }
-</code></pre>
+    }</code></pre>
 <h2 id="8-writing-to-specific-scopesdirs">8. Writing to Specific Scopes/Dirs<a class="headerlink" href="#8-writing-to-specific-scopesdirs" title="Permanent link">&para;</a></h2>
 <p>mConfig writes to OS-standard paths:
 - <strong>USER</strong>: <code>~/.config/&lt;company&gt;/&lt;app&gt;/crypto</code> (JSON/TOML/etc.)
@@ -401,6 +391,8 @@ finally
     <script>var base_url = "..";</script>
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../js/mermaid-init.js"></script>
       <script src="../search/main.js"></script>
     <script>
         jQuery(function () {

@@ -437,19 +437,18 @@ refresh automatically. → <code>ConfigFeature.UPDATE_CHECK_FREQUENCY_MS</code><
 </ul>
 <p><strong>Module naming</strong>: a module named <code>mConfigSource&lt;Name&gt;</code> (e.g. <code>mConfigSourceFilesystem</code>,
 <code>mConfigSourceVault</code>) provides a storage, despite "Source" in its name.</p>
-<pre><code class="language-mermaid">erDiagram
-    Configuration    }|--|| ConfigFactory : &quot;comes from&quot;
+<div class="mermaid">erDiagram
+    Configuration    }|--|| ConfigFactory : "comes from"
     ConfigFactory    ||--|| ConfigSearchList : has
     ConfigSearchList ||--|{ ConfigLocation : contains
-    ConfigLocation   }|--|| ConfigStorage : &quot;accessed through&quot;
-    Configuration    ||--|{ ConfigLayer : &quot;stacks&quot;
-    ConfigLayer      ||--|| ConfigSource : &quot;read from&quot;
-    ConfigSource     ||--|| ConfigLocation : &quot;is an instantiated&quot;
-    ConfigStorage    ||--o{ ConfigFormat : &quot;may use&quot;
+    ConfigLocation   }|--|| ConfigStorage : "accessed through"
+    Configuration    ||--|{ ConfigLayer : "stacks"
+    ConfigLayer      ||--|| ConfigSource : "read from"
+    ConfigSource     ||--|| ConfigLocation : "is an instantiated"
+    ConfigStorage    ||--o{ ConfigFormat : "may use"
 
-    Configuration    ||--o| ConfigSchema : &quot;may use&quot;
-    ConfigSchema     ||--o{ ConfigSchemaEntry : contains
-</code></pre>
+    Configuration    ||--o| ConfigSchema : "may use"
+    ConfigSchema     ||--o{ ConfigSchemaEntry : contains</div>
 <p><strong>Configuration</strong> : the API interface to access configurations; produces/keeps ConfigEntry instances,
 and provides simple access to the values.
 A Configuration is built by going through the search list of its ConfigFactory; for each location,
@@ -471,10 +470,9 @@ and so on - it is an internally shared resource.</p>
 <h3 id="the-secretvalue-api">The SecretValue API<a class="headerlink" href="#the-secretvalue-api" title="Permanent link">&para;</a></h3>
 <p>For programmatically accessing secrets, mConfig provides the <code>SecretValue</code> interface. 
 This allows retrieving the sensitive data without it being accidentally converted to a standard <code>String</code> that might linger in the Java String Pool.</p>
-<pre><code class="language-java">SecretValue password = config.getSecret(&quot;database/password&quot;);
+<pre class="highlight"><code class="language-java">SecretValue password = config.getSecret("database/password");
 byte[] rawBytes = password.getValue();
-// ... use and then potentially clear the bytes
-</code></pre>
+// ... use and then potentially clear the bytes</code></pre>
 <h2 id="binary-data-blobs">Binary Data (BLOBs)<a class="headerlink" href="#binary-data-blobs" title="Permanent link">&para;</a></h2>
 <p>Not all configuration is text-based. mConfig supports Binary Large Objects (BLOBs) for things like license files, binary keys, or certificates.</p>
 <h3 id="hierarchical-blobs">Hierarchical BLOBs<a class="headerlink" href="#hierarchical-blobs" title="Permanent link">&para;</a></h3>
@@ -483,10 +481,9 @@ byte[] rawBytes = password.getValue();
 - <strong>JSON</strong> uses Base64 encoded strings. If a <code>ConfigSchema</code> is provided that marks a key as <code>BYTES</code> type, mConfig will automatically decode the Base64 string into a byte array.</p>
 <h3 id="flat-binary-files">Flat Binary Files<a class="headerlink" href="#flat-binary-files" title="Permanent link">&para;</a></h3>
 <p>For legacy support or specific use cases, an entire file can be treated as a single binary blob. This uses the <code>binary_file</code> format and is accessed via the empty string key (<code>""</code>).</p>
-<pre><code class="language-java">// Retrieving an entire .bin file as a single blob
-Configuration licenseCfg = factory.getConfig(&quot;license&quot;);
-byte[] licenseData = licenseCfg.getBytes(&quot;&quot;);
-</code></pre>
+<pre class="highlight"><code class="language-java">// Retrieving an entire .bin file as a single blob
+Configuration licenseCfg = factory.getConfig("license");
+byte[] licenseData = licenseCfg.getBytes("");</code></pre>
 <h3 id="failure-handling">Failure Handling<a class="headerlink" href="#failure-handling" title="Permanent link">&para;</a></h3>
 <p>If there is no ConfigEntry found at any layer, and no specific default is found,
 the reaction is determined by the ConfigFeature flags set.</p>
@@ -535,6 +532,8 @@ a default value which is sensible and useful in the context of your use case. </
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

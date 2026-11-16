@@ -252,26 +252,24 @@ Both support reading configuration data from <code>HKEY_CURRENT_USER</code> (USE
 - <strong>Signing</strong>: The bundled DLL is provided <strong>unsigned</strong>. For production deployments, application developers are responsible for signing the DLL as part of their distribution to establish a "Chain of Trust".</p>
 <h2 id="362-priority-and-discovery">3.6.2 Priority and Discovery<a class="headerlink" href="#362-priority-and-discovery" title="Permanent link">&para;</a></h2>
 <p>If both modules are present on the classpath, mConfig defaults to using <code>mConfigWinRegistryJNI</code> (<code>registryjni</code>) over <code>mConfigWinRegistry</code> (<code>registry</code>) for better performance.</p>
-<p>To use a specific one, you can configure <code>STORAGE_TYPE_PRIORITIES</code>:</p>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;company&quot;, &quot;app&quot;)
-    .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES, List.of(&quot;registryjni&quot;)) // Force JNI
+<p>To use a specific one, you can configure <code>STORAGE_TYPE_PRIORITIES</code>:
+<pre class="highlight"><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create("company", "app")
+    .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES, List.of("registryjni")) // Force JNI
     .build())
     {
     // ...
-    }
-</code></pre>
+    }</code></pre></p>
 <h2 id="363-base-path-configuration">3.6.3 Base Path Configuration<a class="headerlink" href="#363-base-path-configuration" title="Permanent link">&para;</a></h2>
 <p>By default, the registry source looks under <code>Software\\[&lt;CompanyName&gt;\\\\]&lt;ApplicationName&gt;</code> (company segment omitted if <code>COMPANY_NAME</code> blank/null/whitespace). You can override this using the <code>REGISTRY_BASE_PATH</code> feature. </p>
 <p>You can use the module-specific feature classes, or a string-based key to avoid a compile-time dependency on a specific implementation:</p>
-<pre><code class="language-java">// Option 1: Using module-specific classes
+<pre class="highlight"><code class="language-java">// Option 1: Using module-specific classes
 // For mConfigWinRegistry
-builder.setFeature(WinRegistryFeatures.REGISTRY_BASE_PATH, &quot;Software\\LegacyPath\\App&quot;);
+builder.setFeature(WinRegistryFeatures.REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
 // For mConfigWinRegistryJNI
-builder.setFeature(WinRegistryJNIFeatures.REGISTRY_BASE_PATH, &quot;Software\\LegacyPath\\App&quot;);
+builder.setFeature(WinRegistryJNIFeatures.REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
 
 // Option 2: Using a string key (works for both modules)
-builder.setFeature(&quot;REGISTRY_BASE_PATH&quot;, &quot;Software\\LegacyPath\\App&quot;);
-</code></pre>
+builder.setFeature("REGISTRY_BASE_PATH", "Software\\LegacyPath\\App");</code></pre>
               
             </div>
           </div><footer>
@@ -311,6 +309,8 @@ builder.setFeature(&quot;REGISTRY_BASE_PATH&quot;, &quot;Software\\LegacyPath\\A
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

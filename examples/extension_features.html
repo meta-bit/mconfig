@@ -195,7 +195,7 @@
 <p>This example demonstrates how to define and use extension features in mConfig. Extension features allow modules (like Vault, AWS, or your own custom storage) to define their own settings without modifying the core library.</p>
 <h2 id="defining-an-extension-feature">Defining an Extension Feature<a class="headerlink" href="#defining-an-extension-feature" title="Permanent link">&para;</a></h2>
 <p>To define a feature in your module, use <code>ConfigFeatureBase</code>. It is recommended to register it in a static block so it's available for string-based lookups and self-configuration.</p>
-<pre><code class="language-java">package com.example.mconfig;
+<pre class="highlight"><code class="language-java">package com.example.mconfig;
 
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigFeatureBase;
@@ -209,46 +209,41 @@ public final class MyModuleFeatures {
      * A custom setting for our module.
      */
     public static final ConfigFeatureInterface CUSTOM_API_URL = 
-        new ConfigFeatureBase(&quot;MY_CUSTOM_API_URL&quot;, ConfigFeature.ValueType.STRING, &quot;https://api.example.com&quot;);
+        new ConfigFeatureBase("MY_CUSTOM_API_URL", ConfigFeature.ValueType.STRING, "https://api.example.com");
 
     static {
         // Registering makes the feature visible to the Registry
         ConfigFeatureRegistry.register(CUSTOM_API_URL);
     }
-}
-</code></pre>
+}</code></pre>
 <h2 id="using-the-feature">Using the Feature<a class="headerlink" href="#using-the-feature" title="Permanent link">&para;</a></h2>
 <h3 id="1-using-the-feature-constant-type-safe">1. Using the Feature Constant (Type-Safe)<a class="headerlink" href="#1-using-the-feature-constant-type-safe" title="Permanent link">&para;</a></h3>
 <p>If you have a compile-time dependency on the module, you can use the feature constant directly. This provides full type safety.</p>
-<pre><code class="language-java">ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myOrg&quot;, &quot;myApp&quot;)
-    .setFeature(MyModuleFeatures.CUSTOM_API_URL, &quot;https://api.test.com&quot;)
-    .build();
-</code></pre>
+<pre class="highlight"><code class="language-java">ConfigFactory factory = ConfigFactoryBuilder.create("myOrg", "myApp")
+    .setFeature(MyModuleFeatures.CUSTOM_API_URL, "https://api.test.com")
+    .build();</code></pre>
 <h3 id="2-using-string-names-drop-in-decoupled">2. Using String Names (Drop-in / Decoupled)<a class="headerlink" href="#2-using-string-names-drop-in-decoupled" title="Permanent link">&para;</a></h3>
 <p>If you want to keep your code decoupled from the specific module, you can set the feature using its string name. mConfig will perform a case-insensitive lookup (ignoring underscores).</p>
-<pre><code class="language-java">ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myOrg&quot;, &quot;myApp&quot;)
-    .setFeature(&quot;MY_CUSTOM_API_URL&quot;, &quot;https://api.test.com&quot;)
+<pre class="highlight"><code class="language-java">ConfigFactory factory = ConfigFactoryBuilder.create("myOrg", "myApp")
+    .setFeature("MY_CUSTOM_API_URL", "https://api.test.com")
     // These also work due to normalized lookup:
-    // .setFeature(&quot;mycustomapiurl&quot;, &quot;https://api.test.com&quot;)
-    // .setFeature(&quot;My_Custom_API_URL&quot;, &quot;https://api.test.com&quot;)
-    .build();
-</code></pre>
+    // .setFeature("mycustomapiurl", "https://api.test.com")
+    // .setFeature("My_Custom_API_URL", "https://api.test.com")
+    .build();</code></pre>
 <h3 id="3-using-self-configuration">3. Using Self-Configuration<a class="headerlink" href="#3-using-self-configuration" title="Permanent link">&para;</a></h3>
 <p>You can also set extension features in the <code>mconfig.properties</code> file located in the <code>.config/metabit/mConfig/</code> classpath directory:</p>
-<pre><code class="language-properties"># .config/metabit/mConfig/mconfig.properties
+<pre class="highlight"><code class="language-properties"># .config/metabit/mConfig/mconfig.properties
 MY_CUSTOM_API_URL = https://api.prod.com
-TEST_MODE = true
-</code></pre>
+TEST_MODE = true</code></pre>
 <h2 id="implementation-tip-accessing-the-feature-in-a-module">Implementation Tip: Accessing the Feature in a Module<a class="headerlink" href="#implementation-tip-accessing-the-feature-in-a-module" title="Permanent link">&para;</a></h2>
 <p>Inside your <code>ConfigStorageInterface</code> or <code>ConfigFormatInterface</code> implementation, you can retrieve the value from the settings context:</p>
-<pre><code class="language-java">public void updateConfigurationLayers(ConfigFactorySettings settings) {
+<pre class="highlight"><code class="language-java">public void updateConfigurationLayers(ConfigFactorySettings settings) {
     // Access using the constant
     String apiUrl = (String) settings.getFeature(MyModuleFeatures.CUSTOM_API_URL);
 
     // Or use the provided helper in Settings for core types
     // String apiUrl = settings.getString(MyModuleFeatures.CUSTOM_API_URL);
-}
-</code></pre>
+}</code></pre>
               
             </div>
           </div><footer>
@@ -288,6 +283,8 @@ TEST_MODE = true
     <script>var base_url = "..";</script>
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../js/mermaid-init.js"></script>
       <script src="../search/main.js"></script>
     <script>
         jQuery(function () {

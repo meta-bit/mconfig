@@ -216,21 +216,20 @@
 <p>mConfig allows you to extend its functionality by adding new configuration features without modifying the core library. This is useful for building custom storage backends or format providers.</p>
 <h3 id="3711-configfeaturebase">3.7.1.1 ConfigFeatureBase<a class="headerlink" href="#3711-configfeaturebase" title="Permanent link">&para;</a></h3>
 <p>To create a new feature, use <code>ConfigFeatureBase</code>. It provides a standard implementation of <code>ConfigFeatureInterface</code> that defines the feature name, value type, and optional default value.</p>
-<pre><code class="language-java">import org.metabit.platform.support.config.ConfigFeature;
+<pre class="highlight"><code class="language-java">import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigFeatureBase;
 import org.metabit.platform.support.config.ConfigFeatureInterface;
 import org.metabit.platform.support.config.ConfigFeatureRegistry;
 
 public class MyModuleFeatures {
     public static final ConfigFeatureInterface MY_SETTING = 
-        new ConfigFeatureBase(&quot;MY_MODULE_SETTING&quot;, ConfigFeature.ValueType.STRING, &quot;default_val&quot;);
+        new ConfigFeatureBase("MY_MODULE_SETTING", ConfigFeature.ValueType.STRING, "default_val");
 
     static {
         // Register the feature so it can be set by its string name
         ConfigFeatureRegistry.register(MY_SETTING);
     }
-}
-</code></pre>
+}</code></pre>
 <p>By registering the feature in the <code>ConfigFeatureRegistry</code>, you enable the library to:
 1. Validate values set via string names: <code>builder.setFeature("MY_MODULE_SETTING", "custom_val")</code>.
 2. Access the feature without a direct dependency on the module's feature class.
@@ -238,9 +237,8 @@ public class MyModuleFeatures {
    (module features are level <code>ANY</code> unless the module overrides <code>getSettingLevel()</code>).
 4. Provide case-insensitive lookups (ignoring underscores and case).</p>
 <p>For example, a user of your module could configure it without importing <code>MyModuleFeatures</code>:</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;App&quot;)
-    .setFeature(&quot;MY_MODULE_SETTING&quot;, &quot;some-value&quot;);
-</code></pre>
+<pre class="highlight"><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "App")
+    .setFeature("MY_MODULE_SETTING", "some-value");</code></pre>
 <h3 id="3712-writing-custom-extensions">3.7.1.2 Writing Custom Extensions<a class="headerlink" href="#3712-writing-custom-extensions" title="Permanent link">&para;</a></h3>
 <p>For details on implementing custom <code>ConfigStorageInterface</code> or <code>ConfigFormatInterface</code>, please refer to the developer documentation in project <code>devdocs/library_development.md</code> (not included in public docs).</p>
 <p>For common utility adapters (Properties, Overrides, Remapping), see <a href="39_utilities_and_adapters.html">3.9 Utilities and Adapters</a>.</p>
@@ -291,7 +289,7 @@ DEFINED_AS_IN_FORMAT_1
   FULL_CONFIG_SCHEMA_AS_DEFINED_IN_FORMAT_3
 ]
 </code></pre>
-<pre><code class="language-mermaid">stateDiagram-v2
+<div class="mermaid">stateDiagram-v2
     direction LR
     [*] --&gt; UNDECIDED
     UNDECIDED --&gt; ARRAY : on [
@@ -299,21 +297,19 @@ DEFINED_AS_IN_FORMAT_1
     SCHEME --&gt; SCHEME_ENDED : on }
     SCHEME --&gt; ENTRY_KEY: on string
     ENTRY  --&gt; SCHEME: on next value
-
-</code></pre>
+</div>
 <h3 id="374-configure-priorities">3.7.4 configure priorities<a class="headerlink" href="#374-configure-priorities" title="Permanent link">&para;</a></h3>
 <h4 id="3741-file-type-priority">3.7.4.1 File Type Priority<a class="headerlink" href="#3741-file-type-priority" title="Permanent link">&para;</a></h4>
 <p>You can control the resolution priority between different file types (e.g. JSON, YAML) using the <code>FILE_TYPE_PRIORITIES</code> feature. This re-orders the search list within each scope.</p>
 <h4 id="3742-storage-type-priority">3.7.4.2 Storage Type Priority<a class="headerlink" href="#3742-storage-type-priority" title="Permanent link">&para;</a></h4>
 <p>You can control the resolution priority between different storage types (e.g. Files vs. Registry) using the <code>STORAGE_TYPE_PRIORITIES</code> feature. This re-orders the search list within each scope.</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;company&quot;, &quot;app&quot;)
-        .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES, List.of(&quot;files&quot;, &quot;registry&quot;, &quot;registryjni&quot;, &quot;JAR&quot;));
+<p><pre class="highlight"><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("company", "app")
+        .setFeature(ConfigFeature.STORAGE_TYPE_PRIORITIES, List.of("files", "registry", "registryjni", "JAR"));
 try (ConfigFactory factory = builder.build()) 
         {
         // ...
-        }
-</code></pre>
-<p>Default IDs include: <code>RAM</code>, <code>secrets</code>, <code>files</code>, <code>registry</code>, <code>registryjni</code>, <code>JAR</code>.</p>
+        }</code></pre>
+Default IDs include: <code>RAM</code>, <code>secrets</code>, <code>files</code>, <code>registry</code>, <code>registryjni</code>, <code>JAR</code>.</p>
 <p>Additional directories provided via features like <code>ADDITIONAL_USER_DIRECTORIES</code> are typically <strong>prepended</strong> to the search list for their scope. This makes them the preferred location for creating new configuration files, while still allowing default files in standard locations to provide values (unless the same key is defined in the additional directory).</p>
               
             </div>
@@ -354,6 +350,8 @@ try (ConfigFactory factory = builder.build())
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

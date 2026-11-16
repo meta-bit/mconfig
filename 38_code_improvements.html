@@ -243,198 +243,161 @@ Each item shows the code to look for, what to write instead, and why.</p>
 ("templates" below); names and settings are in the <a href="snippets.html">Snippets Reference</a>.</p>
 <h2 id="part-1-replace-your-own-boilerplate-with-mconfig">Part 1: Replace your own boilerplate with mConfig<a class="headerlink" href="#part-1-replace-your-own-boilerplate-with-mconfig" title="Permanent link">&para;</a></h2>
 <h3 id="11-loading-a-properties-file-by-hand">1.1 Loading a properties file by hand<a class="headerlink" href="#11-loading-a-properties-file-by-hand" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">Properties defaults = new Properties();
-try (InputStream in = getClass().getClassLoader().getResourceAsStream(&quot;defaultconfig.properties&quot;))
+<p>Instead of:
+<pre class="highlight"><code class="language-java">Properties defaults = new Properties();
+try (InputStream in = getClass().getClassLoader().getResourceAsStream("defaultconfig.properties"))
     {
     defaults.load(in);
     }
 catch (IOException e)
     {
     e.printStackTrace();
-    }
-</code></pre>
+    }</code></pre></p>
 <p>Do this: put the file into <code>src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/network.properties</code> and read
-through mConfig.</p>
-<pre><code class="language-java">Configuration net = factory.getConfig(&quot;network&quot;);
-</code></pre>
+through mConfig.
+<pre class="highlight"><code class="language-java">Configuration net = factory.getConfig("network");</code></pre></p>
 <p>Why: mConfig finds defaults in the JAR by itself and layers the files of the host, the user and
 the environment on top. The loading block goes away entirely. Template: "Bootstrap".</p>
 <h3 id="12-a-hand-written-list-of-places-to-look">1.2 A hand-written list of places to look<a class="headerlink" href="#12-a-hand-written-list-of-places-to-look" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">File file = new File(System.getProperty(&quot;user.home&quot;), &quot;.myapp/config.properties&quot;);
+<p>Instead of:
+<pre class="highlight"><code class="language-java">File file = new File(System.getProperty("user.home"), ".myapp/config.properties");
 if (!file.exists())
-    { file = new File(&quot;/etc/myapp/config.properties&quot;); }
-</code></pre>
-<p>Do this: nothing. The search list is built in.</p>
-<pre><code class="language-java">Configuration cfg = factory.getConfig(&quot;config&quot;);
-</code></pre>
+    { file = new File("/etc/myapp/config.properties"); }</code></pre></p>
+<p>Do this: nothing. The search list is built in.
+<pre class="highlight"><code class="language-java">Configuration cfg = factory.getConfig("config");</code></pre></p>
 <p>Why: mConfig knows the standard locations of each operating system (<code>~/.config</code>, <code>/etc</code>,
 <code>%APPDATA%</code>, <code>%PROGRAMDATA%</code>, the registry, …) and their order of precedence.
 <code>mconfig &lt;company&gt;:&lt;app&gt; search-paths</code> lists them.</p>
 <h3 id="13-detecting-the-operating-system-to-find-the-configuration-directory">1.3 Detecting the operating system to find the configuration directory<a class="headerlink" href="#13-detecting-the-operating-system-to-find-the-configuration-directory" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">String os = System.getProperty(&quot;os.name&quot;).toLowerCase();
-Path dir = os.contains(&quot;win&quot;) ? Paths.get(System.getenv(&quot;APPDATA&quot;), &quot;MyApp&quot;)
-                              : Paths.get(System.getProperty(&quot;user.home&quot;), &quot;.config&quot;, &quot;myapp&quot;);
-</code></pre>
-<p>Do this: for reading, nothing (see 1.2). For a directory to write your own files to:</p>
-<pre><code class="language-java">Path dir = ConfigUtil.whereToPutMyFiles(factory, ConfigScope.USER, true);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">String os = System.getProperty("os.name").toLowerCase();
+Path dir = os.contains("win") ? Paths.get(System.getenv("APPDATA"), "MyApp")
+                              : Paths.get(System.getProperty("user.home"), ".config", "myapp");</code></pre></p>
+<p>Do this: for reading, nothing (see 1.2). For a directory to write your own files to:
+<pre class="highlight"><code class="language-java">Path dir = ConfigUtil.whereToPutMyFiles(factory, ConfigScope.USER, true);</code></pre></p>
 <p>Why: the rules differ per platform and change over time; mConfig keeps them in one place.</p>
 <h3 id="14-reading-environment-variables-or-system-properties-directly">1.4 Reading environment variables or system properties directly<a class="headerlink" href="#14-reading-environment-variables-or-system-properties-directly" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">String host = System.getenv(&quot;MYAPP_HOST&quot;);
-int    port = Integer.parseInt(System.getProperty(&quot;myapp.port&quot;, &quot;8080&quot;));
-</code></pre>
-<p>Do this: add <code>mconfigsourceenvvar</code> (part of <code>mconfigstandard</code>) and read the configuration.</p>
-<pre><code class="language-java">String  host = net.getString(&quot;server/host&quot;);
-Integer port = net.getInteger(&quot;server/port&quot;);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">String host = System.getenv("MYAPP_HOST");
+int    port = Integer.parseInt(System.getProperty("myapp.port", "8080"));</code></pre></p>
+<p>Do this: add <code>mconfigsourceenvvar</code> (part of <code>mconfigstandard</code>) and read the configuration.
+<pre class="highlight"><code class="language-java">String  host = net.getString("server/host");
+Integer port = net.getInteger("server/port");</code></pre></p>
 <p>Why: the variable <code>MYAPP_NETWORK_SERVER_HOST</code> then overrides the files without any code, the
 default lives in the schema, and the tool can show where a value came from. Template:
 "Environment variables".</p>
 <h3 id="15-defaults-and-validation-as-if-chains">1.5 Defaults and validation as <code>if</code> chains<a class="headerlink" href="#15-defaults-and-validation-as-if-chains" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">String value = props.getProperty(&quot;port&quot;);
+<p>Instead of:
+<pre class="highlight"><code class="language-java">String value = props.getProperty("port");
 int port = (value == null) ? 8080 : Integer.parseInt(value);
 if (port &lt; 1 || port &gt; 65535)
-    { throw new IllegalArgumentException(&quot;port out of range&quot;); }
-</code></pre>
-<p>Do this: declare it once in <code>network.mconfig-schema.json</code>, then read it.</p>
-<pre><code class="language-json">[ { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080, &quot;PATTERN&quot;: &quot;uint16&quot; } ]
-</code></pre>
-<pre><code class="language-java">Integer port = net.getInteger(&quot;server/port&quot;);
-</code></pre>
+    { throw new IllegalArgumentException("port out of range"); }</code></pre></p>
+<p>Do this: declare it once in <code>network.mconfig-schema.json</code>, then read it.
+<pre class="highlight"><code class="language-json">[ { "KEY": "server/port", "TYPE": "NUMBER", "DEFAULT": 8080, "PATTERN": "uint16" } ]</code></pre>
+<pre class="highlight"><code class="language-java">Integer port = net.getInteger("server/port");</code></pre></p>
 <p>Why: name, type, limits, default and description sit in one place, apply wherever the value is
 read, and can be turned into documentation. Template: "Defaults: schema and resource file".</p>
 <h3 id="16-a-file-watcher-or-a-restart-to-pick-up-changes">1.6 A file watcher or a restart to pick up changes<a class="headerlink" href="#16-a-file-watcher-or-a-restart-to-pick-up-changes" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">WatchService watcher = FileSystems.getDefault().newWatchService();
+<p>Instead of:
+<pre class="highlight"><code class="language-java">WatchService watcher = FileSystems.getDefault().newWatchService();
 configDir.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
-// ... a thread that waits, reloads the file and swaps the values ...
-</code></pre>
-<p>Do this: read the value when you need it; subscribe only if you must react.</p>
-<pre><code class="language-java">net.subscribeToUpdates(location -&gt; connectionPool.resize(net.getInteger(&quot;pool/size&quot;)));
-</code></pre>
+// ... a thread that waits, reloads the file and swaps the values ...</code></pre></p>
+<p>Do this: read the value when you need it; subscribe only if you must react.
+<pre class="highlight"><code class="language-java">net.subscribeToUpdates(location -&gt; connectionPool.resize(net.getInteger("pool/size")));</code></pre></p>
 <p>Why: mConfig checks its sources for changes (every <code>UPDATE_CHECK_FREQUENCY_MS</code>) and the next read
 returns the new value. Template: "Hot reload".</p>
 <h3 id="17-passwords-as-string">1.7 Passwords as <code>String</code><a class="headerlink" href="#17-passwords-as-string" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">String password = props.getProperty(&quot;db.password&quot;);
-log.debug(&quot;connecting with {}&quot;, props);
-</code></pre>
-<p>Do this: mark the entry with <code>"SECRET": true</code> in the schema, then:</p>
-<pre><code class="language-java">SecretValue password = cfg.getSecret(&quot;db/password&quot;);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">String password = props.getProperty("db.password");
+log.debug("connecting with {}", props);</code></pre></p>
+<p>Do this: mark the entry with <code>"SECRET": true</code> in the schema, then:
+<pre class="highlight"><code class="language-java">SecretValue password = cfg.getSecret("db/password");</code></pre></p>
 <p>Why: a <code>SecretValue</code> shows as <code>[REDACTED]</code> in logs and <code>toString()</code>, stays out of exports, and can
 be wiped with <code>erase()</code>. Template: "Secrets".</p>
 <h3 id="18-redirecting-configuration-paths-for-tests-by-hand">1.8 Redirecting configuration paths for tests by hand<a class="headerlink" href="#18-redirecting-configuration-paths-for-tests-by-hand" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">System.setProperty(&quot;user.home&quot;, tempDir.toString());   // and hope nothing else reads it
-</code></pre>
-<p>Do this:</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;demoApp&quot;);
+<p>Instead of:
+<pre class="highlight"><code class="language-java">System.setProperty("user.home", tempDir.toString());   // and hope nothing else reads it</code></pre></p>
+<p>Do this:
+<pre class="highlight"><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "demoApp");
 builder.setTestMode(true);
-builder.setTestConfigPaths(ConfigScope.USER, List.of(tempDir.toString()));
-</code></pre>
+builder.setTestConfigPaths(ConfigScope.USER, List.of(tempDir.toString()));</code></pre></p>
 <p>Why: test mode keeps tests away from the real configuration of the machine and the user, without
 changing production code. Template: "Tests"; details: <a href="15_test_mode.html">Test Mode</a>.</p>
 <h2 id="part-2-if-you-already-use-mconfig-do-it-this-way">Part 2: If you already use mConfig, do it this way<a class="headerlink" href="#part-2-if-you-already-use-mconfig-do-it-this-way" title="Permanent link">&para;</a></h2>
 <h3 id="21-a-default-at-the-call-site">2.1 A default at the call site<a class="headerlink" href="#21-a-default-at-the-call-site" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">Integer port = cfg.getInteger(&quot;server/port&quot;);
+<p>Instead of:
+<pre class="highlight"><code class="language-java">Integer port = cfg.getInteger("server/port");
 if (port == null)
-    { port = 8080; }
-</code></pre>
-<p>Do this: declare <code>"DEFAULT": 8080</code> in the schema.</p>
-<pre><code class="language-java">Integer port = cfg.getInteger(&quot;server/port&quot;);
-</code></pre>
+    { port = 8080; }</code></pre></p>
+<p>Do this: declare <code>"DEFAULT": 8080</code> in the schema.
+<pre class="highlight"><code class="language-java">Integer port = cfg.getInteger("server/port");</code></pre></p>
 <p>Why: a default at the call site is invisible, unvalidated and undocumented, and the second place
 that reads the key will use a different one. With the default settings a missing value throws
 <code>ConfigException</code> anyway, so the <code>null</code> check is dead code.</p>
 <h3 id="22-parsing-or-validating-by-hand">2.2 Parsing or validating by hand<a class="headerlink" href="#22-parsing-or-validating-by-hand" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">int port = Integer.parseInt(cfg.getString(&quot;server/port&quot;));
-</code></pre>
-<p>Do this:</p>
-<pre><code class="language-java">Integer port = cfg.getInteger(&quot;server/port&quot;);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">int port = Integer.parseInt(cfg.getString("server/port"));</code></pre></p>
+<p>Do this:
+<pre class="highlight"><code class="language-java">Integer port = cfg.getInteger("server/port");</code></pre></p>
 <p>Why: the typed getters convert, and <code>TYPE</code> and <code>PATTERN</code> in the schema have already checked the value.</p>
 <h3 id="23-copying-values-into-fields-at-startup">2.3 Copying values into fields at startup<a class="headerlink" href="#23-copying-values-into-fields-at-startup" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">this.port = cfg.getInteger(&quot;server/port&quot;);   // in the constructor, used for the lifetime
-</code></pre>
-<p>Do this: keep the <code>Configuration</code> and read on use, or subscribe to updates (1.6).</p>
-<pre><code class="language-java">int port() { return cfg.getInteger(&quot;server/port&quot;); }
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">this.port = cfg.getInteger("server/port");   // in the constructor, used for the lifetime</code></pre></p>
+<p>Do this: keep the <code>Configuration</code> and read on use, or subscribe to updates (1.6).
+<pre class="highlight"><code class="language-java">int port() { return cfg.getInteger("server/port"); }</code></pre></p>
 <p>Why: a copy never changes; hot reload does nothing for it.</p>
 <h3 id="24-a-factory-per-lookup">2.4 A factory per lookup<a class="headerlink" href="#24-a-factory-per-lookup" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">Configuration c = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;demoApp&quot;).build().getConfig(&quot;network&quot;);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">Configuration c = ConfigFactoryBuilder.create("ACME", "demoApp").build().getConfig("network");</code></pre></p>
 <p>Do this: build one <code>ConfigFactory</code> for the application, share it, close it on shutdown.</p>
 <p>Why: every factory scans the search locations again and owns watcher threads; a factory that is
 never closed leaks them.</p>
 <h3 id="25-a-secret-read-as-a-string-or-marked-the-wrong-way">2.5 A secret read as a string, or marked the wrong way<a class="headerlink" href="#25-a-secret-read-as-a-string-or-marked-the-wrong-way" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">String password = cfg.getString(&quot;db/password&quot;);
-</code></pre>
-<pre><code class="language-json">{ &quot;KEY&quot;: &quot;db/password&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;FLAGS&quot;: [&quot;SECRET&quot;] }
-</code></pre>
-<p>Do this:</p>
-<pre><code class="language-json">{ &quot;KEY&quot;: &quot;db/password&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;SECRET&quot;: true }
-</code></pre>
-<pre><code class="language-java">SecretValue password = cfg.getSecret(&quot;db/password&quot;);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">String password = cfg.getString("db/password");</code></pre>
+<pre class="highlight"><code class="language-json">{ "KEY": "db/password", "TYPE": "STRING", "FLAGS": ["SECRET"] }</code></pre></p>
+<p>Do this:
+<pre class="highlight"><code class="language-json">{ "KEY": "db/password", "TYPE": "STRING", "SECRET": true }</code></pre>
+<pre class="highlight"><code class="language-java">SecretValue password = cfg.getSecret("db/password");</code></pre></p>
 <p>Why: <code>"FLAGS": ["SECRET"]</code> is accepted (with a WARNING) but protects nothing; only
 <code>"SECRET": true</code> does. And a <code>String</code> cannot be wiped and ends up in a log line sooner or later.</p>
 <h3 id="26-a-dot-as-separator-in-hierarchical-keys">2.6 A dot as separator in hierarchical keys<a class="headerlink" href="#26-a-dot-as-separator-in-hierarchical-keys" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">cfg.getString(&quot;server.host&quot;);   // against a JSON, YAML or TOML file with nested &quot;server&quot;
-</code></pre>
-<p>Do this:</p>
-<pre><code class="language-java">cfg.getString(&quot;server/host&quot;);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">cfg.getString("server.host");   // against a JSON, YAML or TOML file with nested "server"</code></pre></p>
+<p>Do this:
+<pre class="highlight"><code class="language-java">cfg.getString("server/host");</code></pre></p>
 <p>Why: the separator is <code>/</code>. A dot is part of the key; in flat formats such as <code>.properties</code> the
 key <code>server.host</code> is one literal name.</p>
 <h3 id="27-chaining-off-settestmode">2.7 Chaining off <code>setTestMode()</code><a class="headerlink" href="#27-chaining-off-settestmode" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;demoApp&quot;).setTestMode(true).build();
-</code></pre>
-<p>Do this:</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;demoApp&quot;);
+<p>Instead of:
+<pre class="highlight"><code class="language-java">ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "demoApp").setTestMode(true).build();</code></pre></p>
+<p>Do this:
+<pre class="highlight"><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "demoApp");
 builder.setTestMode(true);
-ConfigFactory factory = builder.build();
-</code></pre>
+ConfigFactory factory = builder.build();</code></pre></p>
 <p>Why: <code>setTestMode()</code>, <code>setTestConfigPaths()</code> and <code>setTestParameters()</code> return <code>void</code>; the chained
 form does not compile. Only the <code>setFeature(...)</code> family, <code>setSchemas()</code>, <code>addSource()</code> and
 <code>addSecretsProvider()</code> return the builder.</p>
 <h3 id="28-reading-the-environment-next-to-mconfig">2.8 Reading the environment next to mConfig<a class="headerlink" href="#28-reading-the-environment-next-to-mconfig" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">String host = System.getenv(&quot;DEMOAPP_NETWORK_SERVER_HOST&quot;);
+<p>Instead of:
+<pre class="highlight"><code class="language-java">String host = System.getenv("DEMOAPP_NETWORK_SERVER_HOST");
 if (host == null)
-    { host = cfg.getString(&quot;server/host&quot;); }
-</code></pre>
-<p>Do this:</p>
-<pre><code class="language-java">String host = cfg.getString(&quot;server/host&quot;);
-</code></pre>
+    { host = cfg.getString("server/host"); }</code></pre></p>
+<p>Do this:
+<pre class="highlight"><code class="language-java">String host = cfg.getString("server/host");</code></pre></p>
 <p>Why: with <code>mconfigsourceenvvar</code> the variable already arrives in the <code>SESSION</code> scope and overrides
 the files. Your own precedence logic duplicates the hierarchy and hides the origin of the value.</p>
 <h3 id="29-your-own-override-or-fallback-logic">2.9 Your own override or fallback logic<a class="headerlink" href="#29-your-own-override-or-fallback-logic" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">String value = overrides.containsKey(key) ? overrides.get(key) : cfg.getString(key);
-</code></pre>
-<p>Do this:</p>
-<pre><code class="language-java">cfg.put(key, value, ConfigScope.RUNTIME);
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">String value = overrides.containsKey(key) ? overrides.get(key) : cfg.getString(key);</code></pre></p>
+<p>Do this:
+<pre class="highlight"><code class="language-java">cfg.put(key, value, ConfigScope.RUNTIME);</code></pre></p>
 <p>Why: <code>RUNTIME</code> is the scope for in-memory overrides by your own code; it wins over everything
 except <code>POLICY</code>. Fallback between scopes is built in (<code>FALLBACKS_ACROSS_SCOPES</code>). The
 <code>ConfigUtil.withOverrides()</code> view is for cases where the configuration must not be changed.</p>
 <h3 id="210-packing-a-single-jar-with-jar-with-dependencies">2.10 Packing a single JAR with <code>jar-with-dependencies</code><a class="headerlink" href="#210-packing-a-single-jar-with-jar-with-dependencies" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-xml">&lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-xml">&lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;</code></pre></p>
 <p>Do this: use a packaging that merges the <code>META-INF/services</code> files (the merging assembly
 descriptor, shade's <code>ServicesResourceTransformer</code>, or Shadow's <code>mergeServiceFiles()</code>).</p>
 <p>Why: that descriptor keeps one file per service interface, so storages and formats go missing;
@@ -446,9 +409,8 @@ Template: "Dependencies"; details: <a href="13_getting_started.html#138-packagin
 <p>Why: the global file is deprecated and removed before 0.9.0; a component configures the library
 for itself only. Features marked <code>CODE_ONLY</code> can be set in code only.</p>
 <h3 id="212-policy-locations-registered-by-the-application">2.12 POLICY locations registered by the application<a class="headerlink" href="#212-policy-locations-registered-by-the-application" title="Permanent link">&para;</a></h3>
-<p>Instead of:</p>
-<pre><code class="language-java">builder.setFeature(ConfigFeature.ADDITIONAL_RUNTIME_DIRECTORIES, List.of(&quot;POLICY:/opt/myapp/policy&quot;));
-</code></pre>
+<p>Instead of:
+<pre class="highlight"><code class="language-java">builder.setFeature(ConfigFeature.ADDITIONAL_RUNTIME_DIRECTORIES, List.of("POLICY:/opt/myapp/policy"));</code></pre></p>
 <p>Do this: leave <code>POLICY</code> to the administrator's locations (Group Policy, enforced settings). Use
 <code>HOST</code> or <code>APPLICATION</code> for what the application ships.</p>
 <p>Why: <code>POLICY</code> overrides everything, so an application must not grant it to itself. Outside test
@@ -526,6 +488,8 @@ repository). If none can be found, ask.</p>
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

@@ -286,10 +286,9 @@ and apply it to the respective Configuration
 <p>Note: default values in your schema will replace potentially existing defaults.</p>
 <h2 id="144-runtime-dynamic-configurations">1.4.4 Runtime Dynamic Configurations<a class="headerlink" href="#144-runtime-dynamic-configurations" title="Permanent link">&para;</a></h2>
 <p>Mutable Puts: you can change the values of existing entries at runtime.
-Example:</p>
-<pre><code class="language-java">configFactory.put(&quot;voting.database.name&quot;, &quot;dynamicDB&quot;, ConfigScope.RUNTIME);
-</code></pre>
-<p>The <code>RUNTIME</code> scope is at the highest priority ¹, so it overrides all others.
+Example:
+<pre class="highlight"><code class="language-java">configFactory.put("voting.database.name", "dynamicDB", ConfigScope.RUNTIME);</code></pre>
+The <code>RUNTIME</code> scope is at the highest priority ¹, so it overrides all others.
 See <strong><a href="20_scopes.html">Scopes</a></strong> for the full list.</p>
 <p>So dynamically changing the configuration at runtime is quite possible.</p>
 <p>¹: the highest priority of all regular scopes, that is. the <code>POLICY</code> scope
@@ -343,6 +342,8 @@ if there is a writeable layer available within the scope or scopes specified.
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

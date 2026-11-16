@@ -233,22 +233,20 @@ Set them on the ConfigFactoryBuilder before calling <code>build()</code>.</p>
 <p>mConfig uses a two-tier system for features:
 1.  <strong>Core Features</strong>: Standard settings defined in the <code>ConfigFeature</code> enum (e.g., <code>TEST_MODE</code>, <code>LOGLEVEL_NUMBER</code>).
 2.  <strong>Extension Features</strong>: Module-specific settings (e.g., <code>VaultFeatures.BOOTSTRAP_CONFIG_NAME</code>) that are automatically registered when the module is on the classpath.</p>
-<p>Example using both:</p>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;)
+<p>Example using both:
+<pre class="highlight"><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
         // Core features (using enum)
         .setFeature(ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS, true)
         .setFeature(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY, false)
         // Extension feature (using module-specific class)
-        .setFeature(VaultFeatures.BOOTSTRAP_CONFIG_NAME, &quot;custom-vault&quot;);
-</code></pre>
+        .setFeature(VaultFeatures.BOOTSTRAP_CONFIG_NAME, "custom-vault");</code></pre></p>
 <h2 id="config-feature-registry">Config Feature Registry<a class="headerlink" href="#config-feature-registry" title="Permanent link">&para;</a></h2>
 <p>mConfig maintains a central <code>ConfigFeatureRegistry</code> that handles all features case-insensitively. This allows you to set features using their string names, which is particularly useful if you want to avoid a compile-time dependency on a specific extension module:</p>
-<pre><code class="language-java">// Using a string key for a core feature
-builder.setFeature(&quot;ALLOW_MCONFIG_RUNTIME_SETTINGS&quot;, true);
+<pre class="highlight"><code class="language-java">// Using a string key for a core feature
+builder.setFeature("ALLOW_MCONFIG_RUNTIME_SETTINGS", true);
 
 // Using a string key for an extension feature
-builder.setFeature(&quot;VAULT_BOOTSTRAP_CONFIG_NAME&quot;, &quot;custom-vault&quot;);
-</code></pre>
+builder.setFeature("VAULT_BOOTSTRAP_CONFIG_NAME", "custom-vault");</code></pre>
 <p>If a feature is not yet registered (e.g., because the module hasn't been initialized), the value is stored as a raw property and validated once the module attempts to access it.</p>
 <p>Notes:
 - Booleans default to <code>false</code> unless a default is explicitly listed below.
@@ -261,13 +259,11 @@ builder.setFeature(&quot;VAULT_BOOTSTRAP_CONFIG_NAME&quot;, &quot;custom-vault&q
 <p>An application often contains several components that use mConfig, each building its own
 <code>ConfigFactory</code> with its own company and application name. Each component can ship its own settings
 as a classpath resource:</p>
-<pre><code>src/main/resources/.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties
-</code></pre>
+<pre class="highlight"><code>src/main/resources/.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code></pre>
 <p>(without a company name: <code>.config/&lt;application&gt;/mconfig.properties</code>). Keys are feature names, values are
 strings; lists are comma-separated:</p>
-<pre><code class="language-properties">COMMENTS_READING=true
-FILE_FORMAT_READING_PRIORITIES=YAML,properties
-</code></pre>
+<pre class="highlight"><code class="language-properties">COMMENTS_READING=true
+FILE_FORMAT_READING_PRIORITIES=YAML,properties</code></pre>
 <p>The file applies <strong>only</strong> to factories created with that company and application name, so a component
 configures itself without changing the behaviour of the other components or of the main application.</p>
 <p>Precedence, highest first: <strong>code</strong> (<code>setFeature()</code>), <strong>runtime settings</strong> (if delegated, see below),
@@ -629,6 +625,8 @@ that on. Set <code>SCHEMA_STRICT_MODE</code> to true if you want unschemad keys 
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

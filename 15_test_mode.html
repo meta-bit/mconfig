@@ -253,9 +253,8 @@ function before the tests start, while tests and <strong>code stay free of test-
 modifications</strong> in regard to mConfig.</p>
 <h2 id="use">Use<a class="headerlink" href="#use" title="Permanent link">&para;</a></h2>
 <h3 id="activate-test-mode">Activate Test Mode<a class="headerlink" href="#activate-test-mode" title="Permanent link">&para;</a></h3>
-<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;company&quot;, &quot;app&quot;);
-builder.setTestMode(true);
-</code></pre>
+<pre class="highlight"><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("company", "app");
+builder.setTestMode(true);</code></pre>
 <p>or from outside the program, without changing its code: environment variable
 <code>MCONFIG_RUNTIME_TEST_MODE=true</code>, or system property <code>-Dmconfig.runtime.test_mode=true</code>.
 This switches an unchanged binary into test mode, e.g. in a CI/CD pipeline.</p>
@@ -290,11 +289,10 @@ See <a href="25_config_features.html#who-may-set-a-feature">Who may set a featur
   application stores there itself. It is <em>not</em> read from mConfig's internal <code>.config/metabit/mConfig/</code>
   namespace. In tests, one convenient option is a test resource,
   e.g. <code>src/test/resources/.config/&lt;company&gt;/&lt;application&gt;/kubernetes.properties</code>:</p>
-<p><code>properties
-  # Mock API server for tests
-  KUBERNETES_API_ENDPOINT=http://localhost:8080
-  # send the ServiceAccount token to the http mock server
-  KUBERNETES_ALLOW_INSECURE_TRANSPORT=true</code></p>
+<pre class="highlight"><code class="language-properties"># Mock API server for tests
+KUBERNETES_API_ENDPOINT=http://localhost:8080
+# send the ServiceAccount token to the http mock server
+KUBERNETES_ALLOW_INSECURE_TRANSPORT=true</code></pre>
 <p>To let the module run in <code>TEST_MODE</code> at all, set the feature <code>KUBERNETES_BYPASS_TEST=true</code>, in code or in
   the component's <code>src/test/resources/.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code>.</p>
 <p>Alternatively, use environment variables (see <a href="#runtime-overrides">Runtime Overrides</a> below).</p>
@@ -394,19 +392,18 @@ Only <code>TESTMODE_DIRECTORIES</code> and the default test resource locations a
 <h3 id="set-your-own-paths">Set your own paths<a class="headerlink" href="#set-your-own-paths" title="Permanent link">&para;</a></h3>
 <p>The <code>ConfigFactoryBuilder.setTestConfigPaths()</code> method allows you to set multiple paths for 
 each scope to be used in test mode.</p>
-<pre><code class="language-java">@BeforeAll
+<pre class="highlight"><code class="language-java">@BeforeAll
 static void setUpTestEnvironment() throws ConfigCheckedException
     {
-    ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApp&quot;);
+    ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("myCompany", "myApp");
     builder.setTestMode(true);
 
     // Set specific test paths for USER scope
-    builder.setTestConfigPaths(ConfigScope.USER, Collections.singletonList(&quot;/my/local/fixed/config/environment&quot;));
+    builder.setTestConfigPaths(ConfigScope.USER, Collections.singletonList("/my/local/fixed/config/environment"));
 
     // The resulting factory will use these paths
     ConfigFactory factory = builder.build();
-    }
-</code></pre>
+    }</code></pre>
 <h2 id="automated-test-directory-management">Automated Test Directory Management<a class="headerlink" href="#automated-test-directory-management" title="Permanent link">&para;</a></h2>
 <p>The recommended way to handle configuration directories in tests is to use
 <strong>JUnit 5's <code>@TempDir</code></strong> annotation (or the corresponding feature of other test frameworks)
@@ -416,7 +413,7 @@ combined with the <code>CREATE_MISSING_PATHS</code> feature. This ensures that:
 3. The entire directory tree is automatically deleted by the test runner after the test completes.</p>
 <p>When <code>CREATE_MISSING_PATHS</code> is active, the library will automatically include designated test directories in the search list even if they do not exist yet, and create them upon the first write.</p>
 <h3 id="example-implementation">Example Implementation:<a class="headerlink" href="#example-implementation" title="Permanent link">&para;</a></h3>
-<pre><code class="language-java">class MyConfigTest {
+<pre class="highlight"><code class="language-java">class MyConfigTest {
     @TempDir
     Path tempDir; // JUnit 5 automatically creates and cleans this up
 
@@ -424,7 +421,7 @@ combined with the <code>CREATE_MISSING_PATHS</code> feature. This ensures that:
     void testWithAutoCreatedPaths() throws ConfigCheckedException {
         // NB: setTestMode() and setTestConfigPaths() return void and cannot be chained;
         // only setFeature() returns the builder.
-        ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApp&quot;);
+        ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("myCompany", "myApp");
         builder.setTestMode(true);
         builder.setFeature(ConfigFeature.CREATE_MISSING_PATHS, true);
         builder.setFeature(ConfigFeature.AUTOMATIC_CONFIG_CREATION, true);
@@ -432,16 +429,15 @@ combined with the <code>CREATE_MISSING_PATHS</code> feature. This ensures that:
         builder.setTestConfigPaths(ConfigScope.USER, Collections.singletonList(tempDir.toString()));
 
         try (ConfigFactory configFactory = builder.build()) {
-            Configuration cfg = configFactory.getConfig(&quot;app-settings&quot;);
+            Configuration cfg = configFactory.getConfig("app-settings");
             // This will create the file AND any missing parent directories inside tempDir
-            cfg.put(&quot;key&quot;, &quot;value&quot;, ConfigScope.USER);
+            cfg.put("key", "value", ConfigScope.USER);
             cfg.flush();
         }
 
         // No manual cleanup required; @TempDir handles it.
     }
-}
-</code></pre>
+}</code></pre>
 <h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
 <p>To prevent accidental or malicious activation of test mode in production environments,
 mConfig employs a two-tier security gate system.</p>
@@ -465,20 +461,19 @@ Code wins over files, so a <code>PERMIT_TEST_MODE=false</code> set in code canno
 for some situations.
 In a complex process where <code>TEST_MODE</code> might be enabled globally
 (e.g., via <code>-Dmconfig.runtime.test_mode=true</code>) to facilitate integration testing of some modules, a critical production-facing <code>ConfigFactory</code> can be locked down:</p>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;CRITICAL_APP&quot;)
+<p><pre class="highlight"><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create("metabit", "CRITICAL_APP")
     .setFeature(ConfigFeature.PERMIT_TEST_MODE, false) // Lockdown this instance
     .build())
     {
     // ...
-    }
-</code></pre>
-<p>Even if <code>TEST_MODE</code> is requested externally, this specific instance will remain in production mode, ensuring it never reads from <code>src/test/resources</code> or other untrusted test locations,
+    }</code></pre>
+Even if <code>TEST_MODE</code> is requested externally, this specific instance will remain in production mode, ensuring it never reads from <code>src/test/resources</code> or other untrusted test locations,
 like some dynamically generated test directories and -files.</p>
 <h3 id="activation-logic">Activation Logic<a class="headerlink" href="#activation-logic" title="Permanent link">&para;</a></h3>
 <p>Test mode is only enabled if <strong>both</strong> the global gate and the instance gate allow it. Self-configuration
 files are read before this check, so the gates cover file-set test mode too. The following logic is enforced
 during the <code>build()</code> process:</p>
-<pre><code class="language-java">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.
+<pre class="highlight"><code class="language-java">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.
 if (testModePermitted &amp;&amp; configFactorySettings.getBoolean(PERMIT_TEST_MODE)) 
 {
     // Activation occurs if either the global trigger or instance trigger is set.
@@ -491,14 +486,12 @@ else
 {
     // If either permission gate is closed, test mode is forced to false.
     configFactorySettings.setBoolean(TEST_MODE, false);
-}
-</code></pre>
+}</code></pre>
 <h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security<a class="headerlink" href="#153-self-configuration-security" title="Permanent link">&para;</a></h3>
 <p>mConfig's self-configuration feature (loading <code>mconfig.properties</code> from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable that:</p>
-<pre><code class="language-java">ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;APP&quot;)
+<pre class="highlight"><code class="language-java">ConfigFactoryBuilder.create("metabit", "APP")
     .setFeature(ConfigFeature.ENABLE_SELF_CONFIGURATION, false)
-    .build();
-</code></pre>
+    .build();</code></pre>
 <p>Self-configuration is per component: <code>.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code> applies only to
 factories for that company and application, and settings made in code always win over it. Features such as
 <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> or <code>ALLOW_APPLICATION_POLICY_LOCATIONS</code> can only be set in code; the
@@ -614,6 +607,8 @@ neither by an environment variable nor by a classpath resource.</p>
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

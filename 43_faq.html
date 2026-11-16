@@ -307,16 +307,15 @@ question gives the same answer, and the tool can show why.</p>
 <li>
 <p><strong>Place a test config file:</strong>
    Create <code>~/.config/myCompany/myApplication/network.properties</code> (Linux/Mac) or <code>%APPDATA%\myCompany\myApplication\network.properties</code> (Windows):
-   <code>peer = localhost
-   port = 8080
-   probability = 0.5</code></p>
+   <pre class="highlight"><code>peer = localhost
+port = 8080
+probability = 0.5</code></pre></p>
 </li>
 <li>
 <p><strong>List discovered configs:</strong>
-   <code>java
-   try (ConfigFactory factory = ConfigFactoryBuilder.create("myCompany", "myApplication").build()) {
-       factory.listAvailableConfigurations().forEach(System.out::println);
-   }</code></p>
+   <pre class="highlight"><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create("myCompany", "myApplication").build()) {
+    factory.listAvailableConfigurations().forEach(System.out::println);
+}</code></pre></p>
 </li>
 <li>
 <p><strong>Enable logging:</strong> Add <code>mConfigLoggingSlf4j</code> dep + SLF4J config (see <a href="#no-mconfig-logging-output">No mConfig logging output</a> below).</p>
@@ -349,13 +348,11 @@ current build, it won't be read.</li>
 </ol>
 <h3 id="jpms-module-access-errors">JPMS Module Access Errors<a class="headerlink" href="#jpms-module-access-errors" title="Permanent link">&para;</a></h3>
 <p>If your application uses JPMS (named <code>module-info.java</code>) but omits <code>requires</code> for mConfig modules, you will see access errors.</p>
-<p><strong>Compile-time (javac):</strong></p>
-<pre><code>cannot access metabit.mconfig.core.ConfigFactory
-  module your.module does not read module metabit.mconfig.core
-</code></pre>
-<p><strong>Runtime (java):</strong></p>
-<pre><code>java.lang.IllegalAccessError: class your.package.YourClass cannot access class metabit.mconfig.core.ConfigFactory (in module metabit.mconfig.core) because module your.module does not read module metabit.mconfig.core
-</code></pre>
+<p><strong>Compile-time (javac):</strong>
+<pre class="highlight"><code>cannot access metabit.mconfig.core.ConfigFactory
+  module your.module does not read module metabit.mconfig.core</code></pre></p>
+<p><strong>Runtime (java):</strong>
+<pre class="highlight"><code>java.lang.IllegalAccessError: class your.package.YourClass cannot access class metabit.mconfig.core.ConfigFactory (in module metabit.mconfig.core) because module your.module does not read module metabit.mconfig.core</code></pre></p>
 <p><strong>Fix:</strong>
 Add the required <code>requires</code> directives to your <code>module-info.java</code>.</p>
 <p>The list depends on the mConfig variant:</p>
@@ -381,10 +378,9 @@ Add the required <code>requires</code> directives to your <code>module-info.java
 4. Add missing format modules (e.g., <code>mConfigFormatYAMLwithJackson</code> for YAML).</p>
 <h3 id="faulty-single-jar-packaging">Faulty single-JAR packaging<a class="headerlink" href="#faulty-single-jar-packaging" title="Permanent link">&para;</a></h3>
 <p><strong>Symptoms:</strong> the application works when started from the IDE or with <code>mvn exec</code>, but not as a single
-("fat") JAR. Either <code>build()</code> fails with</p>
-<pre><code>JAVA_SERVICE_CONFIGURATION_ERROR: mConfig did not find all of its components, likely due to faulty JAR packaging, ...
-</code></pre>
-<p>or values from bundled defaults or from files are missing (<code>NO_MATCHING_ENTRY</code>), without any warning.
+("fat") JAR. Either <code>build()</code> fails with
+<pre class="highlight"><code>JAVA_SERVICE_CONFIGURATION_ERROR: mConfig did not find all of its components, likely due to faulty JAR packaging, ...</code></pre>
+or values from bundled defaults or from files are missing (<code>NO_MATCHING_ENTRY</code>), without any warning.
 The log line <code>mConfig initialised, ... storages [...]</code> lacks storages you expect, e.g. <code>JAR</code> or <code>files</code>.</p>
 <p><strong>Cause:</strong> the JAR was built by unpacking all dependency JARs into one, without merging their
 <code>META-INF/services</code> files, e.g. with the <code>jar-with-dependencies</code> descriptor of the Maven assembly plugin.
@@ -413,8 +409,7 @@ fails <code>build()</code> with the message above; in other cases nothing report
 <p><strong>Fix:</strong>
 1. Add dependency: <code>mConfigLoggingSlf4j</code>.
 2. Configure SLF4J backend (e.g., Logback <code>logback.xml</code>):
-   <code>xml
-   &lt;logger name="metabit.config" level="DEBUG"/&gt;</code>
+   <pre class="highlight"><code class="language-xml">&lt;logger name="metabit.config" level="DEBUG"/&gt;</code></pre>
 3. Ensure SLF4J implementation (logback-classic, log4j-slf4j) on classpath.
 See <a href="42_logging.html">Logging</a>.</p>
 <h3 id="environment-variables-dont-provide-config-values">Environment variables don't provide config values<a class="headerlink" href="#environment-variables-dont-provide-config-values" title="Permanent link">&para;</a></h3>
@@ -472,6 +467,8 @@ See <a href="https://github.com/meta-bit/mconfig/blob/master/mConfigSourceEnvVar
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

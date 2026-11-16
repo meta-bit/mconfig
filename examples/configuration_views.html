@@ -190,16 +190,15 @@
 and <code>Properties</code> adaptation. They support chaining and inherit schema validation where applicable.</p>
 <h2 id="withoverrides">withOverrides<a class="headerlink" href="#withoverrides" title="Permanent link">&para;</a></h2>
 <p>Overlay in-memory overrides on a parent <code>Configuration</code>:</p>
-<pre><code class="language-java">Configuration parent = factory.getConfig(&quot;app&quot;);
+<pre class="highlight"><code class="language-java">Configuration parent = factory.getConfig("app");
 Map&lt;String, Object&gt; overrides = Map.of(
-    &quot;db.host&quot;, &quot;localhost&quot;,
-    &quot;db.port&quot;, 5432
+    "db.host", "localhost",
+    "db.port", 5432
     );
 Configuration cfg = ConfigUtil.withOverrides(parent, overrides);
 
-String host = cfg.getString(&quot;db.host&quot;); // &quot;localhost&quot;
-Integer port = cfg.getInteger(&quot;db.port&quot;); // 5432 (auto-convert)
-</code></pre>
+String host = cfg.getString("db.host"); // "localhost"
+Integer port = cfg.getInteger("db.port"); // 5432 (auto-convert)</code></pre>
 <ul>
 <li>Overrides take precedence.</li>
 <li>Lazy type conversion (null on parse fail).</li>
@@ -208,10 +207,9 @@ Integer port = cfg.getInteger(&quot;db.port&quot;); // 5432 (auto-convert)
 </ul>
 <h2 id="remapped">remapped<a class="headerlink" href="#remapped" title="Permanent link">&para;</a></h2>
 <p>Remap prefixed keys for sub-config views (e.g., DB modules):</p>
-<pre><code class="language-java">Configuration cfg = ConfigUtil.remapped(parent, &quot;super_db.&quot;, &quot;db.&quot;);
-String host = cfg.getString(&quot;db.host&quot;); // → parent.getString(&quot;super_db.host&quot;)
-String other = cfg.getString(&quot;other.key&quot;); // passthru
-</code></pre>
+<pre class="highlight"><code class="language-java">Configuration cfg = ConfigUtil.remapped(parent, "super_db.", "db.");
+String host = cfg.getString("db.host"); // → parent.getString("super_db.host")
+String other = cfg.getString("other.key"); // passthru</code></pre>
 <ul>
 <li><code>get("db.xxx")</code> → <code>parent.get("super_db.xxx")</code>.</li>
 <li>Non-matching keys delegate directly.</li>
@@ -221,14 +219,13 @@ String other = cfg.getString(&quot;other.key&quot;); // passthru
 </ul>
 <h2 id="fromproperties">fromProperties<a class="headerlink" href="#fromproperties" title="Permanent link">&para;</a></h2>
 <p>Adapt legacy <code>java.util.Properties</code>:</p>
-<pre><code class="language-java">Properties props = new Properties();
-props.setProperty(&quot;key1&quot;, &quot;value1&quot;);
-props.setProperty(&quot;key2&quot;, &quot;42&quot;);
+<pre class="highlight"><code class="language-java">Properties props = new Properties();
+props.setProperty("key1", "value1");
+props.setProperty("key2", "42");
 Configuration cfg = ConfigUtil.fromProperties(props);
 
-String v1 = cfg.getString(&quot;key1&quot;); // &quot;value1&quot;
-Integer v2 = cfg.getInteger(&quot;key2&quot;); // 42 (null on fail)
-</code></pre>
+String v1 = cfg.getString("key1"); // "value1"
+Integer v2 = cfg.getInteger("key2"); // 42 (null on fail)</code></pre>
 <ul>
 <li>Lazy parsing, null on errors.</li>
 <li>No schema.</li>
@@ -236,11 +233,10 @@ Integer v2 = cfg.getInteger(&quot;key2&quot;); // 42 (null on fail)
 </ul>
 <h2 id="chaining">Chaining<a class="headerlink" href="#chaining" title="Permanent link">&para;</a></h2>
 <p>Combine freely:</p>
-<pre><code class="language-java">Configuration dbView = ConfigUtil.withOverrides(
-    ConfigUtil.remapped(parent, &quot;legacy_db.&quot;, &quot;db.&quot;), 
-    Map.of(&quot;db.timeout&quot;, 30)
-    );
-</code></pre>
+<pre class="highlight"><code class="language-java">Configuration dbView = ConfigUtil.withOverrides(
+    ConfigUtil.remapped(parent, "legacy_db.", "db."), 
+    Map.of("db.timeout", 30)
+    );</code></pre>
 <p>Views are read-only (<code>put*</code> throws <code>UnsupportedOperationException</code>)."</p>
               
             </div>
@@ -281,6 +277,8 @@ Integer v2 = cfg.getInteger(&quot;key2&quot;); // 42 (null on fail)
     <script>var base_url = "..";</script>
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../js/mermaid-init.js"></script>
       <script src="../search/main.js"></script>
     <script>
         jQuery(function () {

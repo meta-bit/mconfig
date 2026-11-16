@@ -249,18 +249,16 @@ mConfig will automatically load them at runtime, when they are in the classpath.
 </tr>
 </tbody>
 </table>
-<p>Maven:</p>
-<pre><code class="language-xml">&lt;dependency&gt;
+<p>Maven:
+<pre class="highlight"><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
     &lt;artifactId&gt;mconfigbasic&lt;/artifactId&gt;
     &lt;version&gt;${mconfig.version}&lt;/version&gt;
     &lt;type&gt;pom&lt;/type&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>Caveat: Do not omit/forget the type being <code>pom</code>.</p>
-<p>Gradle:</p>
-<pre><code class="language-gradle">implementation 'org.metabit.platform.support.config:mconfigbasic:${mconfig.version}'
-</code></pre>
+&lt;/dependency&gt;</code></pre>
+Caveat: Do not omit/forget the type being <code>pom</code>.</p>
+<p>Gradle:
+<pre class="highlight"><code class="language-gradle">implementation 'org.metabit.platform.support.config:mconfigbasic:${mconfig.version}'</code></pre></p>
 <h2 id="mconfigstandard-modules">mConfigStandard Modules<a class="headerlink" href="#mconfigstandard-modules" title="Permanent link">&para;</a></h2>
 <p>The <code>mConfigStandard</code> module includes everything from <code>mConfigBasic</code> plus additional mature, stable modules:</p>
 <table>
@@ -314,13 +312,12 @@ mConfig will automatically load them at runtime, when they are in the classpath.
 </tr>
 </tbody>
 </table>
-<pre><code class="language-xml">&lt;dependency&gt;
+<pre class="highlight"><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
     &lt;artifactId&gt;mconfigstandard&lt;/artifactId&gt;
     &lt;version&gt;${mconfig.version}&lt;/version&gt;
     &lt;type&gt;pom&lt;/type&gt;
-&lt;/dependency&gt;
-</code></pre>
+&lt;/dependency&gt;</code></pre>
 <h2 id="other-available-modules">Other Available Modules<a class="headerlink" href="#other-available-modules" title="Permanent link">&para;</a></h2>
 <p>Additional modules that are not included in <code>mConfigBasic</code> or <code>mConfigStandard</code>:</p>
 <h3 id="core-system">Core System<a class="headerlink" href="#core-system" title="Permanent link">&para;</a></h3>
@@ -573,6 +570,8 @@ mConfig will automatically load them at runtime, when they are in the classpath.
     <script>var base_url = "..";</script>
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../js/mermaid-init.js"></script>
       <script src="../search/main.js"></script>
     <script>
         jQuery(function () {

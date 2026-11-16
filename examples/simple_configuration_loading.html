@@ -186,32 +186,29 @@
                 <h1 id="simple-configuration-loading">Simple Configuration Loading<a class="headerlink" href="#simple-configuration-loading" title="Permanent link">&para;</a></h1>
 <p>This example shows the minimal setup for loading a configuration and reading a few values.</p>
 <h2 id="1-create-a-factory-and-configuration">1. Create a factory and configuration<a class="headerlink" href="#1-create-a-factory-and-configuration" title="Permanent link">&para;</a></h2>
-<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;ACME&quot;, &quot;ourApp&quot;).build())
+<pre class="highlight"><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp").build())
     {
-    Configuration cfg = factory.getConfig(&quot;network&quot;);
+    Configuration cfg = factory.getConfig("network");
 
-    String host = cfg.getString(&quot;server/host&quot;);
-    int port = cfg.getInteger(&quot;server/port&quot;);
-    boolean tls = cfg.getBoolean(&quot;server/tls&quot;);
-    }
-</code></pre>
+    String host = cfg.getString("server/host");
+    int port = cfg.getInteger("server/port");
+    boolean tls = cfg.getBoolean("server/tls");
+    }</code></pre>
 <h2 id="2-provide-defaults-recommended">2. Provide defaults (recommended)<a class="headerlink" href="#2-provide-defaults-recommended" title="Permanent link">&para;</a></h2>
 <p>Add defaults in your resources so the configuration works out of the box:
 <code>src/main/resources/.config/ACME/ourApp/network.properties</code></p>
-<p>Example contents:</p>
-<pre><code class="language-properties">server.host=127.0.0.1
+<p>Example contents:
+<pre class="highlight"><code class="language-properties">server.host=127.0.0.1
 server.port=8080
-server.tls=false
-</code></pre>
+server.tls=false</code></pre></p>
 <h2 id="3-optional-add-a-schema">3. Optional: add a schema<a class="headerlink" href="#3-optional-add-a-schema" title="Permanent link">&para;</a></h2>
 <p>Add a schema next to the config file to define types and defaults:
 <code>src/main/resources/.config/ACME/ourApp/network.mconfig-schema.json</code></p>
-<pre><code class="language-json">[
-  { &quot;KEY&quot;: &quot;server/host&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;DEFAULT&quot;: &quot;127.0.0.1&quot; },
-  { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 },
-  { &quot;KEY&quot;: &quot;server/tls&quot;, &quot;TYPE&quot;: &quot;BOOLEAN&quot;, &quot;DEFAULT&quot;: false }
-]
-</code></pre>
+<pre class="highlight"><code class="language-json">[
+  { "KEY": "server/host", "TYPE": "STRING", "DEFAULT": "127.0.0.1" },
+  { "KEY": "server/port", "TYPE": "NUMBER", "DEFAULT": 8080 },
+  { "KEY": "server/tls", "TYPE": "BOOLEAN", "DEFAULT": false }
+]</code></pre>
 <p>Related docs:
 - <a href="../13_getting_started.html">Getting Started</a>
 - <a href="../23_configuration_schemas.html">Configuration Schemas</a></p>
@@ -254,6 +251,8 @@ server.tls=false
     <script>var base_url = "..";</script>
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../js/mermaid-init.js"></script>
       <script src="../search/main.js"></script>
     <script>
         jQuery(function () {

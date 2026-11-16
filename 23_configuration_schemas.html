@@ -240,22 +240,20 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 <li><strong>Security</strong>: Identify which entries contain sensitive data (secrets).</li>
 </ul>
 <h2 id="232-example">2.3.2 Example<a class="headerlink" href="#232-example" title="Permanent link">&para;</a></h2>
-<p>Minimal example (single schema entry with a default):</p>
-<pre><code class="language-json">[
-  { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080, &quot;DESCRIPTION&quot;: &quot;Listening port&quot; }
-]
-</code></pre>
-<p>Named schema example (multiple entries):</p>
-<pre><code class="language-json">{
-  &quot;my-app-config&quot;: {
-    &quot;NAME&quot;: &quot;my-app-config&quot;,
-    &quot;ENTRIES&quot;: [
-      { &quot;KEY&quot;: &quot;server/host&quot;, &quot;TYPE&quot;: &quot;STRING&quot;, &quot;DEFAULT&quot;: &quot;127.0.0.1&quot; },
-      { &quot;KEY&quot;: &quot;server/port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 }
+<p>Minimal example (single schema entry with a default):
+<pre class="highlight"><code class="language-json">[
+  { "KEY": "server/port", "TYPE": "NUMBER", "DEFAULT": 8080, "DESCRIPTION": "Listening port" }
+]</code></pre></p>
+<p>Named schema example (multiple entries):
+<pre class="highlight"><code class="language-json">{
+  "my-app-config": {
+    "NAME": "my-app-config",
+    "ENTRIES": [
+      { "KEY": "server/host", "TYPE": "STRING", "DEFAULT": "127.0.0.1" },
+      { "KEY": "server/port", "TYPE": "NUMBER", "DEFAULT": 8080 }
     ]
   }
-}
-</code></pre>
+}</code></pre></p>
 <h2 id="233-schema-structure">2.3.3 Schema Structure<a class="headerlink" href="#233-schema-structure" title="Permanent link">&para;</a></h2>
 <p>Schemas are typically defined in JSON format. A schema file can contain a single schema or multiple named schemas.</p>
 <h3 id="2331-schema-entry-properties">2.3.3.1 Schema Entry Properties<a class="headerlink" href="#2331-schema-entry-properties" title="Permanent link">&para;</a></h3>
@@ -463,45 +461,41 @@ redundant and not reported. 0.9.0 will be stricter.</p>
 - Otherwise, the raw <code>DESCRIPTION</code> string is used as a fallback.</p>
 <h2 id="234-configschemafactory">2.3.4 ConfigSchemaFactory<a class="headerlink" href="#234-configschemafactory" title="Permanent link">&para;</a></h2>
 <p>For 1.0 and better multi-language support (JNI/Rust/Python), use <code>ConfigSchemaFactory</code> to create schemas and entries programmatically:</p>
-<pre><code class="language-java">ConfigSchemaFactory factory = ConfigSchemaFactory.create();
+<pre class="highlight"><code class="language-java">ConfigSchemaFactory factory = ConfigSchemaFactory.create();
 ConfigSchema schema = factory.createSchema();
-ConfigSchemaEntry entry = factory.createEntry(&quot;port&quot;, ConfigEntryType.NUMBER)
-    .setValidationPattern(&quot;uint16&quot;)
-    .setDefault(&quot;8080&quot;);
-schema.addSchemaEntry(entry);
-</code></pre>
+ConfigSchemaEntry entry = factory.createEntry("port", ConfigEntryType.NUMBER)
+    .setValidationPattern("uint16")
+    .setDefault("8080");
+schema.addSchemaEntry(entry);</code></pre>
 <h2 id="235-future-proofing-with-the-mandatory-block">2.3.5 Future-Proofing with the <code>MANDATORY</code> block<a class="headerlink" href="#235-future-proofing-with-the-mandatory-block" title="Permanent link">&para;</a></h2>
 <p>To ensure that future extensions to the schema format do not break older versions of the library, or conversely, that newer schemas can demand features that older versions must respect, mConfig uses a <code>MANDATORY</code> sub-item.</p>
 <p>If a schema entry contains a <code>MANDATORY</code> block, the library MUST understand all keys within that block. If any key inside <code>MANDATORY</code> is unknown to the current version of mConfig, the schema loading will fail with an <code>UNKNOWN_MANDATORY_FEATURE</code> error.</p>
-<p><strong>Example:</strong></p>
-<pre><code class="language-json">{
-  &quot;KEY&quot;: &quot;network/timeout&quot;,
-  &quot;TYPE&quot;: &quot;NUMBER&quot;,
-  &quot;MANDATORY&quot;: {
-    &quot;UNIT&quot;: &quot;milliseconds&quot;
+<p><strong>Example:</strong>
+<pre class="highlight"><code class="language-json">{
+  "KEY": "network/timeout",
+  "TYPE": "NUMBER",
+  "MANDATORY": {
+    "UNIT": "milliseconds"
   }
-}
-</code></pre>
-<p>In this example, if a future version of mConfig introduces a <code>UNIT</code> feature and it's placed inside <code>MANDATORY</code>, an older version that doesn't know about <code>UNIT</code> will refuse to load the schema, preventing potential misconfiguration (e.g., interpreting milliseconds as seconds).</p>
+}</code></pre>
+In this example, if a future version of mConfig introduces a <code>UNIT</code> feature and it's placed inside <code>MANDATORY</code>, an older version that doesn't know about <code>UNIT</code> will refuse to load the schema, preventing potential misconfiguration (e.g., interpreting milliseconds as seconds).</p>
 <p>Features outside the <code>MANDATORY</code> block that are unknown to the library are silently ignored.</p>
 <h2 id="236-formats">2.3.6 Formats<a class="headerlink" href="#236-formats" title="Permanent link">&para;</a></h2>
 <p>mConfig supports several JSON structures for defining schemas:</p>
 <h3 id="2361-named-schema-object">2.3.6.1 Named Schema Object<a class="headerlink" href="#2361-named-schema-object" title="Permanent link">&para;</a></h3>
-<pre><code class="language-json">{
-  &quot;my-app-config&quot;: {
-    &quot;NAME&quot;: &quot;my-app-config&quot;,
-    &quot;ENTRIES&quot;: [
-      { &quot;KEY&quot;: &quot;port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 }
+<pre class="highlight"><code class="language-json">{
+  "my-app-config": {
+    "NAME": "my-app-config",
+    "ENTRIES": [
+      { "KEY": "port", "TYPE": "NUMBER", "DEFAULT": 8080 }
     ]
   }
-}
-</code></pre>
+}</code></pre>
 <h3 id="2362-list-of-entries-anonymous-schema">2.3.6.2 List of Entries (Anonymous Schema)<a class="headerlink" href="#2362-list-of-entries-anonymous-schema" title="Permanent link">&para;</a></h3>
-<p>If a JSON file contains only a list of entries, it is treated as a schema for the configuration matching the filename (excluding <code>.mconfig-schema.json</code>).</p>
-<pre><code class="language-json">[
-  { &quot;KEY&quot;: &quot;port&quot;, &quot;TYPE&quot;: &quot;NUMBER&quot;, &quot;DEFAULT&quot;: 8080 }
-]
-</code></pre>
+<p>If a JSON file contains only a list of entries, it is treated as a schema for the configuration matching the filename (excluding <code>.mconfig-schema.json</code>).
+<pre class="highlight"><code class="language-json">[
+  { "KEY": "port", "TYPE": "NUMBER", "DEFAULT": 8080 }
+]</code></pre></p>
 <h2 id="237-discovery">2.3.7 Discovery<a class="headerlink" href="#237-discovery" title="Permanent link">&para;</a></h2>
 <p>Schemas are automatically discovered from multiple locations:</p>
 <ol>
@@ -561,6 +555,8 @@ schema.addSchemaEntry(entry);
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {

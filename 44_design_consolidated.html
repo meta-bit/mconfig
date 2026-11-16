@@ -497,12 +497,11 @@ storages with structured data of their own (Windows registry, environment variab
   This is used by the <code>monitor</code> CLI command to provide real-time reporting of changes.</li>
 </ul>
 <h3 id="4442-self-configuration-security">4.4.4.2 Self-Configuration Security<a class="headerlink" href="#4442-self-configuration-security" title="Permanent link">&para;</a></h3>
-<p>Self-configuration (see section 2.2.1) automatically applies settings from the classpath. In environments where the classpath might contain untrusted JARs, this feature can be disabled:</p>
-<pre><code class="language-java">ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;APP&quot;)
+<p>Self-configuration (see section 2.2.1) automatically applies settings from the classpath. In environments where the classpath might contain untrusted JARs, this feature can be disabled:
+<pre class="highlight"><code class="language-java">ConfigFactoryBuilder.create("metabit", "APP")
     .setFeature(ConfigFeature.ENABLE_SELF_CONFIGURATION, false)
-    .build();
-</code></pre>
-<p>Disabling self-configuration ensures that the <code>ConfigFactory</code> starts with only the settings explicitly provided in code, preventing "configuration injection" via the classpath.</p>
+    .build();</code></pre>
+Disabling self-configuration ensures that the <code>ConfigFactory</code> starts with only the settings explicitly provided in code, preventing "configuration injection" via the classpath.</p>
 <p>Independently of this switch:
 - a component file applies only to its own company and application, and code always wins over it;
 - no file can set <code>CODE_ONLY</code> features (e.g. <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code>, <code>ALLOW_APPLICATION_POLICY_LOCATIONS</code>);
@@ -606,7 +605,7 @@ partially loaded configurations for their own initialization
 </ul>
 <h3 id="44102-discovery-and-binding-flow-mermaid">4.4.10.2 Discovery and Binding Flow (Mermaid)<a class="headerlink" href="#44102-discovery-and-binding-flow-mermaid" title="Permanent link">&para;</a></h3>
 <p>The following diagram illustrates how schemas are discovered by storages, registered in the factory, and finally bound to configuration instances.</p>
-<pre><code class="language-mermaid">sequenceDiagram
+<div class="mermaid">sequenceDiagram
     participant S as ConfigStorage (e.g. JAR)
     participant C as ConfigFactoryInstanceContext
     participant F as ConfigFactory
@@ -622,25 +621,23 @@ partially loaded configurations for their own initialization
 
     Note over F, L: Binding Phase (during factory.getConfig)
     F-&gt;&gt;L: instantiate with matching schema
-    L-&gt;&gt;DL: transferDefaults(schema)
-</code></pre>
+    L-&gt;&gt;DL: transferDefaults(schema)</div>
 <h3 id="layered-configuration-mermaid">Layered Configuration (Mermaid)<a class="headerlink" href="#layered-configuration-mermaid" title="Permanent link">&para;</a></h3>
-<pre><code class="language-mermaid">%%{init: {'theme':'neutral'}}%%
+<div class="mermaid">%%{init: {'theme':'neutral'}}%%
 erDiagram
-    Configuration ||--|| BasicConfiguration : &quot;facade for&quot;
-    BasicConfiguration ||--|| LayeredConfiguration : &quot;implemented by&quot;
-    LayeredConfiguration ||--o| CacheLayer : &quot;at top&quot;
-    LayeredConfiguration ||--o{ ConfigSource : &quot;stacked in the middle&quot;
-    LayeredConfiguration ||--|| DefaultLayer : &quot;at bottom&quot;
-    LayeredConfiguration ||--o| ConfigSchema : &quot;bound to&quot;
-    ConfigSchema ||--|| DefaultLayer : &quot;populates&quot;
-    ConfigSchema ||--o{ ConfigEntrySpecification : &quot;contains&quot;
-    ConfigEntry }|--o| ConfigEntrySpecification : &quot;validated by&quot;
-    ConfigSource }|--|| ConfigScope : &quot;belongs to&quot;
-    ConfigSource ||--|| ConfigLocation : &quot;where to look&quot;
-    ConfigSource }o--|| ConfigStorage : &quot;how to access&quot;
-    ConfigSource }o--|{ ConfigFormat : &quot;maps paths to entries&quot;
-</code></pre>
+    Configuration ||--|| BasicConfiguration : "facade for"
+    BasicConfiguration ||--|| LayeredConfiguration : "implemented by"
+    LayeredConfiguration ||--o| CacheLayer : "at top"
+    LayeredConfiguration ||--o{ ConfigSource : "stacked in the middle"
+    LayeredConfiguration ||--|| DefaultLayer : "at bottom"
+    LayeredConfiguration ||--o| ConfigSchema : "bound to"
+    ConfigSchema ||--|| DefaultLayer : "populates"
+    ConfigSchema ||--o{ ConfigEntrySpecification : "contains"
+    ConfigEntry }|--o| ConfigEntrySpecification : "validated by"
+    ConfigSource }|--|| ConfigScope : "belongs to"
+    ConfigSource ||--|| ConfigLocation : "where to look"
+    ConfigSource }o--|| ConfigStorage : "how to access"
+    ConfigSource }o--|{ ConfigFormat : "maps paths to entries"</div>
 <h2 id="4411-extending-mconfig">4.4.11 Extending mConfig<a class="headerlink" href="#4411-extending-mconfig" title="Permanent link">&para;</a></h2>
 <h3 id="44111-adding-new-storages">4.4.11.1 Adding New Storages<a class="headerlink" href="#44111-adding-new-storages" title="Permanent link">&para;</a></h3>
 <p>This is intended for library maintainers extending mConfig with new backends (e.g., databases, cloud stores).</p>
@@ -728,6 +725,8 @@ erDiagram
     <script>var base_url = ".";</script>
     <script src="js/theme_extra.js"></script>
     <script src="js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="js/mermaid-init.js"></script>
       <script src="search/main.js"></script>
     <script>
         jQuery(function () {
