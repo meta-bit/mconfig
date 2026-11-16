@@ -3,7 +3,7 @@
 Condensed per release. Behaviour changes are listed one by one; check them before upgrading.
 
 ### 0.8.17
-First public release since 0.8.9. It also carries the changes of 0.8.15 and 0.8.16, which were not published on their own; read all three sections.
+First public release since 0.8.13. It also carries the changes of 0.8.14, 0.8.15 and 0.8.16, which were not published on their own; read all four sections.
 
 **Behaviour changes**
 * `build()` fails with `JAVA_SERVICE_CONFIGURATION_ERROR` when the application was packed into a single JAR without merging `META-INF/services` files (MLIB-156), e.g. with the Maven assembly descriptor `jar-with-dependencies`. Such packaging keeps one file per service interface, so storages, formats or components went missing without notice: bundled defaults or configuration files were not read. The check recognises it when core's own registrations are among the lost ones; fix the packaging (see "Packaging as a single JAR" in Getting Started). New feature `ALLOW_INCOMPLETE_SERVICE_REGISTRATION` starts anyway, with a WARNING.
