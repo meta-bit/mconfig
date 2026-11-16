@@ -1,0 +1,13 @@
+Package: mconfig-tools-native
+Version: ${project.version}
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: metabit <support@metabit.com>
+Homepage: https://www.metabit.com
+Conflicts: mconfig-tools, mconfig-tools-jlink
+Replaces: mconfig-tools, mconfig-tools-jlink
+Provides: mconfig-tools
+Suggests: bash-completion
+Description: mConfig command-line tool (GraalVM native standalone)
+ Standalone zero-dependency native binary for inspecting and managing mConfig configuration data.

@@ -22,20 +22,8 @@ public abstract class AbstractConfiguration implements Configuration
 {
     protected boolean exceptionOnNullFlag = false;
 
-    protected EnumSet<ConfigScope> allowedScopes = EnumSet.allOf(ConfigScope.class);
-
     protected AbstractConfiguration()
         {
-        }
-
-    @Override
-    public void limitScopes(EnumSet<ConfigScope> scopes)
-        {
-        if (scopes == null)
-            {
-            throw new IllegalArgumentException("scopes must not be null");
-            }
-        this.allowedScopes = scopes;
         }
 
     private <T> T getTyped(String fullKey, TypedGetter<T> getter)
@@ -48,6 +36,9 @@ public abstract class AbstractConfiguration implements Configuration
             }
         catch (ConfigCheckedException e)
             {
+            // a conversion failure keeps its reason; the value is not put into the message, it may be a secret.
+            if (e.getReason() == ConfigCheckedException.ConfigExceptionReason.CONVERSION_FAILURE)
+                { throw new ConfigException(ConfigException.ConfigExceptionReason.CONVERSION_FAILURE, "the value of key \""+fullKey+"\" cannot be converted to the requested type"); }
             throw new ConfigException(e);
             }
         }
@@ -153,7 +144,7 @@ public abstract class AbstractConfiguration implements Configuration
     private ConfigEntry getEntryWithExceptionCheck(String fullKey)
             throws ConfigCheckedException
         {
-        ConfigEntry entry = getConfigEntryFromFullKey(fullKey, allowedScopes);
+        ConfigEntry entry = getConfigEntryFromFullKey(fullKey, EnumSet.allOf(ConfigScope.class));
         if (entry == null && exceptionOnNullFlag)
             {
             throw new ConfigException(ConfigException.ConfigExceptionReason.NO_MATCHING_ENTRY);
@@ -334,3 +325,4 @@ public abstract class AbstractConfiguration implements Configuration
     public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
         { return Collections.emptyMap(); }
 }
+//___EOF___

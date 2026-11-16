@@ -17,9 +17,13 @@
  *
  * minimal usage example:
  * <code>
- *     ConfigFactory cf = ConfigFactoryBuilder.getConfigFactoryWithDefaultSettings("ourCompanyName","ourApplicationName");
- *     JavaPropertyConfiguration config = configFactory.getConfiguration("test2", JavaPropertyConfiguration.class);
+ *     Configuration config = ConfigUtil.quickConfig("ourCompanyName", "ourApplicationName", "test2");
  * </code>
- * where the resulting JavaPropertyConfiguration is a special class that can be used as drop-in for existing java.util.Properties.
+ *
+ * for a drop-in replacement of an existing java.util.Properties, use the adapters:
+ * <code>
+ *     Properties props = ConfigUtil.copyPrefixedEntriesToJavaProperties(config, "db.");
+ *     Configuration view = ConfigUtil.fromProperties(existingProperties);
+ * </code>
  */
 package org.metabit.platform.support.config.util;

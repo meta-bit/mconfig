@@ -3,8 +3,10 @@ package org.metabit.platform.support.config.source.core;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
+import org.metabit.platform.support.config.impl.entry.SecretConfigEntry;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
+import org.metabit.platform.support.config.interfaces.SecretValue;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +22,7 @@ public class InMemoryLayer implements ConfigLayerInterface
     private final ConfigScope                  scope;
     private final ConfigSource                 source;
     private final ConfigLoggingInterface       logger;
-    private final Object lock;
+    private final Object                       lock;
 
     public InMemoryLayer(ConfigFactoryInstanceContext ctx, ConfigSource source, ConfigScope scopeToUse)
         {
@@ -78,7 +80,7 @@ public class InMemoryLayer implements ConfigLayerInterface
                 throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.INPUT_INVALID);
                 }
             this.map.put(entryToWrite.getKey(), entryToWrite);
-            
+
             // Automatically trigger change check in the storage when writing
             if (this.source instanceof ConfigLocation)
                 {
@@ -96,6 +98,26 @@ public class InMemoryLayer implements ConfigLayerInterface
             map.clear();
             logger.debug("inMemory layer: cleared");
             return 0;
+            }
+        }
+
+    @Override
+    public void erase()
+        {
+        synchronized(lock)
+            {
+            for (ConfigEntry entry : map.values())
+                {
+                if (entry instanceof SecretConfigEntry)
+                    {
+                    SecretValue secretValue = ((SecretConfigEntry) entry).getSecretValue();
+                    if (secretValue != null)
+                        {
+                        secretValue.erase();
+                        }
+                    }
+                }
+            map.clear();
             }
         }
 
@@ -135,3 +157,4 @@ public class InMemoryLayer implements ConfigLayerInterface
             }
         }
 }
+//___EOF___

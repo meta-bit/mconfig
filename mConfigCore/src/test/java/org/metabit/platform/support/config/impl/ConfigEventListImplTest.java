@@ -99,3 +99,4 @@ public class ConfigEventListImplTest
         assertTrue(list.add(e), "Ring should be cleared too");
         }
 }
+//___EOF___

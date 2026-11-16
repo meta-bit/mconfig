@@ -34,3 +34,4 @@ public interface ConfigFactoryComponent
      */
     default void close() {}
 }
+//___EOF___

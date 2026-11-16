@@ -146,7 +146,7 @@ public class SecretsBCTest
             Configuration config = factory.getConfig("pem-test");
             
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
-            kpg.initialize(1024);
+            kpg.initialize(TEST_KEY_SIZE);
             KeyPair kp = kpg.generateKeyPair();
             
             StringWriter sw = new StringWriter();

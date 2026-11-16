@@ -45,6 +45,11 @@ that "just works" out of the box, especially in enterprise or air-gapped
 environments where dependency transparency is less important than ease of
 deployment.
 
+mConfigBasicBinary merges the `META-INF/services` files of the modules it contains. If you add further
+mConfig modules or other libraries and pack your application into one JAR, that packaging must merge
+these files as well; see
+[Packaging as a single JAR](../documentation/src/site/markdown/13_getting_started.md#138-packaging-as-a-single-jar).
+
 ## How it differs from mConfigBasic
 
 - Packaging: mConfigBasicBinary is a shaded JAR;

@@ -52,6 +52,20 @@ for (ConfigEvent ev : factory.getEvents()) {
 }
 ```
 
+## Example: Unavailable Sources
+
+When a source cannot be read (Vault or AWS Secrets Manager unreachable or refusing access, a Kubernetes
+API error, a failing secrets provider), mConfig logs a WARNING and records a `DISCOVERY/SOURCE_UNAVAILABLE`
+event naming the location (since 0.8.16). Lower-precedence sources may then supply the value, so the event
+is the way to notice that a value did not come from where it should have. It counts as a failure for
+`FAILURES_ONLY`.
+
+```java
+factory.getEvents().stream()
+       .filter(ev -> ev.getKind() == ConfigEvent.Kind.SOURCE_UNAVAILABLE)
+       .forEach(ev -> System.err.println(ev.getDetailCode()+": "+ev.getMessage()));
+```
+
 ## Cleanup
 
 To clear accumulated events:

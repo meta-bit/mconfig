@@ -12,3 +12,4 @@ public interface SecretConfigEntry extends org.metabit.platform.support.config.C
      */
     SecretValue getSecretValue();
 }
+//___EOF___

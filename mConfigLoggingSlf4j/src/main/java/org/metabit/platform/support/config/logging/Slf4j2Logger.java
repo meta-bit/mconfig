@@ -17,8 +17,11 @@ import org.slf4j.Marker;
 public class Slf4j2Logger implements ConfigLoggingInterface
 {
     private Logger logger;
-    private Marker marker; //@TODO @CHECK whether this is the right use, and useful - remove if it is not.
+    private Marker marker; //@TODO potential improvement,
+    // // but a generic marker would not say anything.
     // the orthogonal aspect we could sensibly add would be those cases where we *could* throw an exception, but still have a default fallback.
+    // e.g. MCONFIG_SECRET, MCONFIG_RELOAD, MCONFIG_FALLBACK for consideration.
+    // the semantic information needs to be supplied, though - so, API change?
 
     public String getServiceModuleName()
         {

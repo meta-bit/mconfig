@@ -2,7 +2,6 @@ package org.metabit.platform.support.config.impl;
 
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
-import org.metabit.platform.support.config.impl.util.ConfigIOUtil;
 import org.metabit.platform.support.config.mockups.MockConfigFactory;
 
 import java.math.BigDecimal;
@@ -14,27 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ConfigFacadeImplTest
 {
-
-    @Test
-    void hexConversion()
-        {
-
-        byte[] result;
-
-        result = ConfigIOUtil.hexDecode("DEADBEEF");
-        assertNotNull(result);
-        // assertEquals...
-        result = ConfigIOUtil.hexDecode("DE AD BE EF");
-        assertNotNull(result);
-
-        result = ConfigIOUtil.hexDecode("DEADBEEF  ; ended before this valid comment");
-        assertNotNull(result);
-
-        result = ConfigIOUtil.hexDecode("DEADBEEF");
-        assertNotNull(result);
-        }
-
-
 
         @Test void testBinaryPut()
             {
@@ -88,3 +66,4 @@ class ConfigFacadeImplTest
     public static final  String APPLICATION_NAME = "mConfig";
     private static final String CONFIG_NAME      = "testconfig";
 }
+//___EOF___

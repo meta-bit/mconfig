@@ -12,7 +12,7 @@
     "name": "Java",
     "url": "https://www.java.com"
   },
-  "runtimePlatform": "Java 11+",
+  "runtimePlatform": "Java 17+",
   "isPartOf": {
     "@type": "SoftwareApplication",
     "name": "mConfig",
@@ -62,7 +62,8 @@ Note: Do not omit the `pom` type in Maven.
 
 ## Runtime requirements
 
-- Minimum JDK: 11
+- Minimum JDK: 17. The Jackson-based format modules (JSON, YAML, TOML) use Jackson 3, which needs
+  Java 17; the other mConfig modules run on Java 11.
 - Required JDK modules: `java.base`, `java.logging`
 
 External runtime deps (via included modules):

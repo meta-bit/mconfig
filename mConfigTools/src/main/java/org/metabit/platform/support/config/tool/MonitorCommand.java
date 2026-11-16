@@ -1,6 +1,7 @@
 package org.metabit.platform.support.config.tool;
 
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.entry.SecretRedaction;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
@@ -29,6 +30,8 @@ public class MonitorCommand implements Callable<Integer>
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private Map<String, String> lastValues = new ConcurrentHashMap<>();
+    // keys whose values are secret: compared in full, printed redacted (MLIB-130)
+    private Set<String>         secretKeys = ConcurrentHashMap.newKeySet();
 
     @Override
     public Integer call()
@@ -91,6 +94,7 @@ public class MonitorCommand implements Callable<Integer>
     private void captureSnapshot(Configuration cfg)
         {
         lastValues.clear();
+        secretKeys.clear();
         Iterator<String> it = cfg.getEntryKeyTreeIterator();
         while (it.hasNext())
             {
@@ -101,6 +105,7 @@ public class MonitorCommand implements Callable<Integer>
                 if (entry != null)
                     {
                     lastValues.put(key, entry.getValueAsString());
+                    trackSecret(key, entry);
                     }
                 }
             catch (Exception e)
@@ -123,15 +128,16 @@ public class MonitorCommand implements Callable<Integer>
                 ConfigEntry entry = cfg.getConfigEntryFromFullKey(key, EnumSet.allOf(ConfigScope.class));
                 String newValue = (entry != null) ? entry.getValueAsString() : null;
                 String oldValue = lastValues.get(key);
+                trackSecret(key, entry);
 
                 if (oldValue == null)
                     {
-                    System.out.println("["+timestamp+"] [ADDED] "+key+" = "+newValue);
+                    System.out.println("["+timestamp+"] [ADDED] "+key+" = "+shown(key, newValue));
                     lastValues.put(key, newValue);
                     }
                 else if (!Objects.equals(oldValue, newValue))
                     {
-                    System.out.println("["+timestamp+"] [CHANGED] "+key+" = "+newValue+" (was: "+oldValue+")");
+                    System.out.println("["+timestamp+"] [CHANGED] "+key+" = "+shown(key, newValue)+" (was: "+shown(key, oldValue)+")");
                     lastValues.put(key, newValue);
                     }
                 }
@@ -148,6 +154,7 @@ public class MonitorCommand implements Callable<Integer>
                 {
                 System.out.println("["+timestamp+"] [REMOVED] "+key);
                 lastValues.remove(key);
+                secretKeys.remove(key);
                 }
             }
         }
@@ -159,7 +166,20 @@ public class MonitorCommand implements Callable<Integer>
         Collections.sort(sortedKeys);
         for (String key : sortedKeys)
             {
-            System.out.println(key+" = "+lastValues.get(key));
+            System.out.println(key+" = "+shown(key, lastValues.get(key)));
             }
+        }
+
+    private void trackSecret(String key, ConfigEntry entry)
+        {
+        if (SecretRedaction.isConfidential(entry))
+            { secretKeys.add(key); }
+        else
+            { secretKeys.remove(key); }
+        }
+
+    private String shown(String key, String value)
+        {
+        return secretKeys.contains(key) ? SecretRedaction.REDACTED : value;
         }
 }

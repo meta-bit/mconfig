@@ -2,6 +2,7 @@ package org.metabit.platform.support.config.source.hardcoded.provider;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.schema.provider.ConfigSchemaProvider;
@@ -47,17 +48,17 @@ public class ClasspathConfigSchemaProvider implements ConfigSchemaProvider
                         if (schemas.containsKey(""))
                             {
                             discovered.put(configName, schemas.get(""));
-                            logger.debug("Discovered schema for "+configName+" in "+name);
+                            logger.debug("Discovered schema for "+LogSafe.text(configName)+" in "+LogSafe.text(name));
                             }
                         else
                             {
                             discovered.putAll(schemas);
-                            logger.debug("Discovered multiple schemas in "+name);
+                            logger.debug("Discovered multiple schemas in "+LogSafe.text(name));
                             }
                         }
                     catch (ConfigCheckedException|IOException e)
                         {
-                        logger.error("Failed to parse discovered schema "+name, e);
+                        logger.error("Failed to parse discovered schema "+LogSafe.text(name), e);
                         }
                     }
                 }
@@ -92,7 +93,7 @@ public class ClasspathConfigSchemaProvider implements ConfigSchemaProvider
             }
         catch (Exception e)
             {
-            logger.warn("Failed to scan resources at "+resourcePath+": "+e.getMessage());
+            logger.warn("Failed to scan resources at "+LogSafe.text(resourcePath)+": "+LogSafe.text(e.getMessage()));
             }
         }
 

@@ -1,4 +1,13 @@
-# 4.6 Versions
+# 4.5 Versions
+
+0.8.17
+first public release since 0.8.9; includes the internal steps 0.8.10 to 0.8.16 (0.8.15 and 0.8.16 were not published on their own).
+security: secret values never leave their own storage (`saveTo()`, CLI); Vault sends credentials only to a configured
+`https` address; Kubernetes tokens only over verified `https`; POLICY locations from the application need an explicit opt-in.
+self-configuration per component (`.config/<company>/<app>/mconfig.properties`), feature setting levels.
+Vault: KV version 2 reads, re-login on expired tokens; unavailable secret sources are reported (`SOURCE_UNAVAILABLE`).
+schemas without entries fail to load instead of loading empty. Jackson 3.2.
+See the CHANGELOG for the behaviour changes.
 
 0.8.11
 renamed mConfigFull to mConfigStandard, mConfigStandard to mConfigBasic, and mConfigBase to mConfigBasicBinary.
@@ -11,7 +20,7 @@ write support via ConfigCursor
 updated examples and starters
 
 0.8.0 
-public relase on github and maven central
+public release on github and maven central
 formats: .properties, .json, .yaml, .toml, .ini
 sources: JAR, filesystem, environment variables, ZooKeeper, Windows registry
 dynamic configuration updates, config schemas, input validation, secrets,
@@ -26,4 +35,4 @@ config schema basics. packaged as a single JAR. JPMS support.
 
 0.4.2
 first public release, 2018-03-29
-released on macven central and metabit repository + website 
+released on maven central and metabit repository + website

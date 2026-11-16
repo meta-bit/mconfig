@@ -1,8 +1,11 @@
 package org.metabit.platform.support.config.impl.format.toml;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
+import org.metabit.platform.support.config.ConfigEvent;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.impl.format.toml.TomlParser.TomlParseException;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
@@ -43,44 +46,45 @@ public class TOMLFileFormat implements ConfigFileFormatInterface
 
     @Override
     public ConfigLayerInterface readFile(File file, ConfigLocation location)
+            throws ConfigParseException
         {
+        String content;
         try
             {
-            String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
-            TomlParser parser = new TomlParser(content);
-            TomlModel.TomlTable root = parser.parse();
-            
-            TOMLConfigLayer layer = new TOMLConfigLayer(settings, location, this, root, file.toPath());
-            if (root.getHeaderComments() != null)
-                {
-                layer.getGlobalHeaderComments().addAll(root.getHeaderComments());
-                }
-            return layer;
+            content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
             }
-        catch (TomlParseException e)
+        catch (IOException|RuntimeException e)
             {
-            logger.warn("TOML parsing failed at " + file.getAbsolutePath() + ": " + e.getMessage());
+            throw readFailure(e);
             }
-        catch (IOException e)
-            {
-            logger.warn("IOException when reading TOML file: " + file.getAbsolutePath());
-            }
-        catch (Exception e)
-            {
-            logger.error(e.getMessage(), e);
-            }
-        return null;
+        return parse(content, location, file.toPath());
         }
 
     @Override
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation location)
+            throws ConfigParseException
         {
+        String content;
         try
             {
-            byte[] data = inputStream.readAllBytes();
-            TomlParser parser = new TomlParser(new String(data, StandardCharsets.UTF_8));
+            content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
+        catch (IOException|RuntimeException e)
+            {
+            throw readFailure(e);
+            }
+        return parse(content, location, null);
+        }
+
+    /** parse the content into a layer; a syntax error becomes a ConfigParseException with position and key. */
+    private ConfigLayerInterface parse(String content, ConfigLocation location, Path file)
+            throws ConfigParseException
+        {
+        TomlParser parser = new TomlParser(content);
+        try
+            {
             TomlModel.TomlTable root = parser.parse();
-            TOMLConfigLayer layer = new TOMLConfigLayer(settings, location, this, root, null);
+            TOMLConfigLayer layer = new TOMLConfigLayer(settings, location, this, root, file);
             if (root.getHeaderComments() != null)
                 {
                 layer.getGlobalHeaderComments().addAll(root.getHeaderComments());
@@ -89,17 +93,33 @@ public class TOMLFileFormat implements ConfigFileFormatInterface
             }
         catch (TomlParseException e)
             {
-            logger.warn("TOML parsing failed: " + e.getMessage());
+            // the parser's message may quote keys or values; it goes in as parser detail only
+            throw ConfigParseException.builder(getFormatID(), "not valid TOML")
+                    .position(e.getLine(), e.getColumn())
+                    .keyPath(parser.currentKeyPath())
+                    .parserCause(e)
+                    .event(ConfigEvent.Kind.FAILED_GENERIC, "TOML_PARSE_FAILED")
+                    .remediation(ConfigEvent.Remediation.FIX_SYNTAX, "Fix invalid TOML syntax.")
+                    .build();
             }
-        catch (IOException e)
+        catch (RuntimeException e)
             {
-            logger.warn("IOException when reading TOML stream");
+            throw ConfigParseException.builder(getFormatID(), "not valid TOML")
+                    .keyPath(parser.currentKeyPath())
+                    .parserCause(e)
+                    .event(ConfigEvent.Kind.FAILED_GENERIC, "TOML_PARSE_FAILED")
+                    .remediation(ConfigEvent.Remediation.FIX_SYNTAX, "Fix invalid TOML syntax.")
+                    .build();
             }
-        catch (Exception e)
-            {
-            logger.error(e.getMessage(), e);
-            }
-        return null;
+        }
+
+    private ConfigParseException readFailure(Exception e)
+        {
+        return ConfigParseException.builder(getFormatID(), "could not read")
+                .parserCause(e)
+                .event(ConfigEvent.Kind.FAILED_GENERIC, "TOML_READ_FAILED")
+                .remediation(ConfigEvent.Remediation.CHECK_PERMISSIONS, "Check that the content is readable.")
+                .build();
         }
 
     @Override
@@ -119,7 +139,7 @@ public class TOMLFileFormat implements ConfigFileFormatInterface
             }
         catch (IOException e)
             {
-            logger.error("config creation failed at filesystem level: " + fileWithPath, e);
+            logger.error("config creation failed at filesystem level: " + LogSafe.text(fileWithPath), e);
             return null;
             }
         }

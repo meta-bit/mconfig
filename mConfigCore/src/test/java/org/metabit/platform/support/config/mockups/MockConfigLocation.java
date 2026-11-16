@@ -30,3 +30,4 @@ public class MockConfigLocation implements ConfigLocation
     @Override public ConfigLocation derive(Path file) { return null; }
     @Override public String toString() { return description; }
     }
+//___EOF___

@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
  * - Collapse inner whitespace to a single space
  * : converting spaces to dashes or underscores has been disabled
  * - Allow [A-Za-z0-9._- ]
+ * - Reject "." and "..": config names become file and directory names, where these are path operators
  * - contents are case sensitive, for filename matching
  */
 final class ConfigNameSanitizer
@@ -29,13 +30,8 @@ final class ConfigNameSanitizer
         {
         Objects.requireNonNull(name, "config name");
         if (name.isEmpty()) return name;
-
-        // replace all multuple whitespace with a single space, and trim leading/trailing whitespace
-        String trimmed = name.trim().replaceAll("\\s+", " ");
-        // String normalized = trimmed.replace(' ', '-'); //@CHECK!
-        String normalized = trimmed;
-
-        if (!ALLOWED.matcher(normalized).matches())
+        String normalized = normalize(name);
+        if (!isAcceptable(normalized))
             { throw new ConfigException("config name still invalid after normalization: "+normalized); }
         return normalized;
         }
@@ -49,7 +45,19 @@ final class ConfigNameSanitizer
         {
         if (name == null) return false;
         if (name.isEmpty()) return true;
-        String normalized = name.trim().replaceAll("\\s+", " ").replace(' ', '-');
+        return isAcceptable(normalize(name));
+        }
+
+    // replace all multiple whitespace with a single space, and trim leading/trailing whitespace
+    private static String normalize(String name)
+        {
+        return name.trim().replaceAll("\\s+", " ");
+        }
+
+    private static boolean isAcceptable(String normalized)
+        {
+        if (normalized.equals(".") || normalized.equals("..")) return false;
         return ALLOWED.matcher(normalized).matches();
         }
 }
+//___EOF___

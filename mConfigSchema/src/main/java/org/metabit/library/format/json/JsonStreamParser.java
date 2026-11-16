@@ -487,6 +487,7 @@ public class JsonStreamParser
                         }
                     break;
 
+                case ',': // comma ends the number in an object or array
                 case ']': // array ends
                 case '}': // object ends
                     putback = true;

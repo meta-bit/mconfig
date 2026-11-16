@@ -26,7 +26,23 @@ class MacOsSearchPaths implements SearchPathInitializer
         String xdgUserConfig = System.getenv("XDG_CONFIG_HOME");
         if (xdgUserConfig != null && !xdgUserConfig.isEmpty())
             {
-            storage.addPathToSearchList(searchList, xdgUserConfig, ConfigScope.USER, companyName, applicationName, subDir);
+            // sanitize and validate path: ensure XDG_CONFIG_HOME is absolute and doesn't contain traversal
+            try
+                {
+                java.nio.file.Path xdgPath = java.nio.file.Paths.get(xdgUserConfig).normalize();
+                if (xdgPath.isAbsolute())
+                    {
+                    storage.addPathToSearchList(searchList, xdgPath.toString(), ConfigScope.USER, companyName, applicationName, subDir);
+                    }
+                else
+                    {
+                    storage.logInfo("XDG_CONFIG_HOME is not an absolute path, ignoring: " + xdgUserConfig);
+                    }
+                }
+            catch (java.nio.file.InvalidPathException e)
+                {
+                storage.logInfo("XDG_CONFIG_HOME contains an invalid path, ignoring: " + xdgUserConfig);
+                }
             }
 
         // macOS standard locations (per gist references)
@@ -60,7 +76,7 @@ class MacOsSearchPaths implements SearchPathInitializer
             }
 
         // SESSION scope: working dir subdirectory .config
-        storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);
 
         return;
         }

@@ -12,3 +12,4 @@
  * See mConfigCore/LICENSE.md for details.
  */
 package org.metabit.platform.support.config;
+//___EOF___

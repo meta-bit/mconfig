@@ -1,0 +1,13 @@
+Package: mconfig-tools-jlink
+Version: ${project.version}
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: metabit <support@metabit.com>
+Homepage: https://www.metabit.com
+Conflicts: mconfig-tools, mconfig-tools-native
+Replaces: mconfig-tools, mconfig-tools-native
+Provides: mconfig-tools
+Suggests: bash-completion
+Description: mConfig command-line tool (embedded runtime standalone)
+ Standalone zero-dependency package with embedded runtime for inspecting and managing mConfig configuration data.

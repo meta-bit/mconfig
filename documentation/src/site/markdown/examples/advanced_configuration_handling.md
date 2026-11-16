@@ -7,7 +7,7 @@ This page collects higher-level patterns for controlling how mConfig resolves, v
 Writes are scoped and follow a "least surprise" policy:
 
 ```java
-Configuration cfg = factory.getConfiguration("network");
+Configuration cfg = factory.getConfig("network");
 
 cfg.put("server/port", 8081, ConfigScope.USER);
 ```
@@ -29,23 +29,23 @@ To reject unknown keys, turn on strict mode:
 
 ```java
 ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
-        .setFeature(ConfigFeature.SCHEME_STRICT_MODE, true);
+        .setFeature(ConfigFeature.SCHEMA_STRICT_MODE, true);
 ```
 
 ## 4. Missing values behavior
-If you want schema defaults instead of exceptions:
+Schema defaults apply without any setting: a key with a `DEFAULT` in the schema returns it. If a key
+with neither value nor default should return `null` instead of throwing:
 
 ```java
 ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "ourApp")
-        .setFeature(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY, false)
-        .setFeature(ConfigFeature.DEFAULT_ON_MISSING_ENTRY, true);
+        .setFeature(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY, false);
 ```
 
 ## 5. Subscribe to updates
 React when values change at runtime:
 
 ```java
-Configuration cfg = factory.getConfiguration("network");
+Configuration cfg = factory.getConfig("network");
 
 cfg.subscribeToUpdates(location -> {
     System.out.println("Config changed in scope: " + location.getScope());
@@ -65,7 +65,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp")
         .setFeature(ConfigFeature.FALLBACKS_ACROSS_SCOPES, false)
         .build())
     {
-    Configuration cfg = factory.getConfiguration("network");
+    Configuration cfg = factory.getConfig("network");
     // Only the requested scope (plus PRODUCT defaults) is considered.
     }
 ```

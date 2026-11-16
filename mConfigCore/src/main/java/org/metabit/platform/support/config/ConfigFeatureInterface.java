@@ -30,4 +30,19 @@ public interface ConfigFeatureInterface
      */
     Object getDefaultValue();
 
+    /**
+     * Get the channels through which this feature may be set.
+     * <p>
+     * Code ({@code ConfigFactoryBuilder.setFeature()}) may always set a feature. Security-relevant features
+     * are restricted, so that classpath resources and environment variables cannot change them
+     * unless the application allowed it. See {@link ConfigFeature.SettingLevel}.
+     *
+     * @return the setting level; {@link ConfigFeature.SettingLevel#ANY} unless overridden
+     */
+    default ConfigFeature.SettingLevel getSettingLevel()
+        {
+        return ConfigFeature.SettingLevel.ANY;
+        }
+
 }
+//___EOF___

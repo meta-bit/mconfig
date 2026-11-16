@@ -6,7 +6,7 @@ This example shows the minimal setup for loading a configuration and reading a f
 ```java
 try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp").build())
     {
-    Configuration cfg = factory.getConfiguration("network");
+    Configuration cfg = factory.getConfig("network");
 
     String host = cfg.getString("server/host");
     int port = cfg.getInteger("server/port");

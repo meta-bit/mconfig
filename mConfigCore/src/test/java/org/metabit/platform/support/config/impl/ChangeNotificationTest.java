@@ -86,3 +86,4 @@ public class ChangeNotificationTest
         assertFalse(latch.await(1, TimeUnit.SECONDS), "Notification should NOT be received after unsubscribe");
         }
 }
+//___EOF___

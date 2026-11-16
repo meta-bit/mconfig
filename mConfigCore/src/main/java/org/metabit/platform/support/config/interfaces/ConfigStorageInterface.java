@@ -28,12 +28,10 @@ import java.net.URI;
  * <p>
  * Created by jw on 2019-12-28.
  * <p>
- * see old ConfigStorageAdapter (not ConfigStore)
- * rename to ConfigSource, ConfigRepository or something?
- * <p>
  * There's two things:
  * - the general storage adapter, which provides technical means to access a configuration storage (e.g. files, network). interface = this.
- * - the specific store, which is referring to an instance within. This is referred to by a ConfigStoreHandle. The type is local to the ConfigStore instance.
+ * - the specific place within that storage, described by a {@link ConfigLocation}; the storage-specific part is its
+ *   storage instance handle ({@link ConfigLocation#getStorageInstanceHandle()}). The handle type is local to the storage implementation.
  *
  * 
  * @version $Id: $Id
@@ -70,7 +68,7 @@ public interface ConfigStorageInterface extends Cloneable
     /*
      * initialize a storage instance for use.
      *
-     * @return true if successful and the config source is usable, false if there was a problem and it should not be used.
+     * @return true if successful and the storage is usable, false if there was a problem and it should not be used.
      */
     /**
      * <p>test.</p>
@@ -95,13 +93,46 @@ public interface ConfigStorageInterface extends Cloneable
     boolean init(ConfigFactoryInstanceContext ctx);
 
     /**
-     * post-initialization step: finalize configuration using the ConfigFactory instance.
-     * This allows the storage to perform self-configuration using any available configurations.
+     * Second-phase initialization hook called after the full {@link org.metabit.platform.support.config.ConfigFactory}
+     * and all scopes/layers are assembled.
      *
-     * @param factory the fully functional ConfigFactory instance
+     * <p>This is the recommended place for remote or secret-manager storages to perform
+     * self-configuration, establish network connections, authenticate, and start
+     * watchers or pollers.</p>
+     *
+     * <p>The {@link BootstrapConfigContext} intentionally limits access to
+     * {@link BootstrapConfigContext#getRestrictedConfig(String, java.util.EnumSet)} to prevent
+     * circular references: use a scope set containing only low-precedence local scopes
+     * (e.g. {@code PRODUCT}, {@code HOST}, {@code USER}, {@code APPLICATION}).</p>
+     *
+     * @param bootstrapCtx restricted context for reading bootstrap configuration safely
      */
-    default void postInit(final org.metabit.platform.support.config.ConfigFactory factory)
+    default void postInit(final BootstrapConfigContext bootstrapCtx)
         {
+        }
+
+    /**
+     * whether an instance of this storage, created by the application and passed in with
+     * {@link org.metabit.platform.support.config.ConfigFactoryBuilder#addSource(org.metabit.platform.support.config.ConfigLocation)},
+     * is to be initialized by the factory.
+     *
+     * <p>If true, the factory calls {@link #init(ConfigFactoryInstanceContext)} and {@link #postInit(BootstrapConfigContext)}
+     * on that instance, as it does for discovered storages, and {@link #exit()} when it is closed.
+     * {@link #test(ConfigFactorySettings, ConfigLoggingInterface)} is not consulted: adding the source is an explicit choice.
+     * Only storages whose {@code init()} does not register search-list entries of its own should return true;
+     * otherwise those entries would be added a second time.</p>
+     *
+     * <p>Instances found by discovery are initialized regardless of this setting.</p>
+     *
+     * @return true if an instance added with a source is to be initialized by the factory. Default: false.
+     * @since 0.8.16
+     * @deprecated stopgap for 0.8.x. In 0.9 storage types and storage instances become separate SPI types,
+     * and the factory owns the lifecycle of every instance (MLIB-155); this method is then removed.
+     */
+    @Deprecated(since = "0.8.16", forRemoval = true)
+    default boolean isInitializedWhenAddedAsSource()
+        {
+        return false;
         }
 
     /**
@@ -131,7 +162,7 @@ public interface ConfigStorageInterface extends Cloneable
 
     /*
     When building a LayeredConfiguration, we need to collect all possible layers.
-    A single ConfigSource may add several such layers.
+    A single ConfigLocation may add several such layers.
     Returning temporary hierarchical maps just to combine them (plus ordering logic) is overhead without additional use.
     Instead, we allow the ConfigStorage to write its respective findings to the LayeredConfiguration
      */

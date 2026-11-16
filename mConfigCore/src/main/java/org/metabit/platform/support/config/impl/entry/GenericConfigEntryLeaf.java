@@ -53,7 +53,11 @@ public class GenericConfigEntryLeaf extends AbstractConfigEntry implements Secre
     public String getValueAsString() throws ConfigCheckedException { return ConfigTypeConverter.toString(value); }
 
     @Override
-    public Boolean getValueAsBoolean() throws ConfigCheckedException { return ConfigTypeConverter.toBoolean(value); }
+    public Boolean getValueAsBoolean() throws ConfigCheckedException
+        {
+        try { return ConfigTypeConverter.toBoolean(value); }
+        catch (IllegalArgumentException e) { throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.CONVERSION_FAILURE); }
+        }
 
     @Override
     public Integer getValueAsInteger() throws ConfigCheckedException
@@ -153,9 +157,10 @@ public class GenericConfigEntryLeaf extends AbstractConfigEntry implements Secre
         {
         return "GenericConfigEntryLeaf{" +
                 "key='" + key + '\'' +
-                ", value='" + (isSecret() ? "[REDACTED]" : ConfigTypeConverter.toString(value)) + '\'' +
+                ", value='" + (isSecret() ? SecretRedaction.REDACTED : ConfigTypeConverter.toString(value)) + '\'' +
                 ", scope=" + getScope() +
                 ", type=" + type +
                 '}';
         }
 }
+//___EOF___

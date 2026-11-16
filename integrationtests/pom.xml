@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.17</version>
     </parent>
 
     <!-- intentionally a different package branch, so the tests come from "outside" -->
@@ -19,12 +19,14 @@
     <modules>
         <module>integrationtestsBase</module>
         <module>integrationtestBaseShaded</module>
+        <module>integrationtestAssembly</module>
         <module>integrationtestJackson</module>
         <module>integrationtestValkeyRedis</module>
         <module>integrationtestSecretsJCE</module>
         <module>integrationtestSecretsBC</module>
         <module>integrationtestTOML</module>
         <module>integrationtestTools</module>
+        <module>integrationtestKubernetes</module>
     </modules>
 
     <properties>

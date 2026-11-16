@@ -10,16 +10,32 @@ The tool is available as a "fat JAR" in the `mConfigTools` module. You can run i
 java -jar mConfigTools-*.jar [OPTIONS] [COMMAND] [COMMAND_OPTIONS]
 ```
 
+It is also distributed as a standalone executable in OS packages such as .deb.
+
 ## 4.1.2 Subcommands
 
 - `list`: List all available configurations for the given company and application.
 - `show`: Print the effective configuration (all keys and values).
 - `get`: Show detailed information for a specific key (value, type, source URI, scope, and description).
 - `search-paths`: List all directories and storage locations where mConfig looks for files.
-- `propose-schema`: Generate a draft `ConfigSchema` JSON from an existing configuration.
-- `validate`: Validate a configuration against its schema.
 - `set`: Set or update a configuration entry. Supports `key=value` pairs or `-K/--key` with `-V/--value`. Requires a target `--scope` unless implied by schema.
 - `monitor`: Monitor a configuration for real-time changes. Keeps running until interrupted.
+
+### Experimental commands
+
+These commands are not complete yet. They are hidden from `mconfig --help` and refused unless
+`-X` / `--experimental` is given, before or after the command name (`mconfig -X validate …`).
+Do not rely on their output in automation yet.
+
+- `validate`: Validate a configuration against its schema. Checks the effective values only,
+  not the values in each layer.
+- `propose-schema`: Generate a draft `ConfigSchema` JSON from an existing configuration.
+  Currently disabled; being rewritten for 0.9.2.
+- `kubernetes-rbac`: Print a Role and RoleBinding for the ServiceAccount of a pod that reads its
+  configuration through the Kubernetes sources. **The output is a broad template:** it grants read
+  on all ConfigMaps and Secrets in the namespace. Restrict it with `resourceNames` to the
+  resources you configured before applying it. A generator limited to the configured resources is
+  planned for 0.9.3.
 
 ### 4.1.2.1 `set` command options:
 - `-V, --value=<value>`: The value to set. Shorthand `-V` is intentionally used for value (not for version).

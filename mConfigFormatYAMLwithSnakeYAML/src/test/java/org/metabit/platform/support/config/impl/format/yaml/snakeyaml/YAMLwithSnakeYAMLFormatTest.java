@@ -81,6 +81,26 @@ public class YAMLwithSnakeYAMLFormatTest
         assertEquals("true", layer.getEntry("bool").getValueAsString());
         }
 
+    /** the YAML 1.1 resolver tags yes/no/on/off as bool; Boolean.valueOf() used to read "yes" and "on" as false. */
+    @Test
+    public void yaml11BooleanLiteralsKeepTheirMeaning() throws Exception
+        {
+        YAMLwithSnakeYAMLFormat format = new YAMLwithSnakeYAMLFormat();
+        format.testComponent(new org.metabit.platform.support.config.impl.ConfigFactorySettings(), new ConsoleLogging("YAMLFormatTest"));
+        String yaml = "a: yes\nb: On\nc: NO\nd: off\ne: True\nf: 'yes'\n";
+        ConfigStorageInterface mockStorage = Mockito.mock(ConfigStorageInterface.class);
+        ConfigLocation location = new ConfigLocationImpl(ConfigScope.SESSION, mockStorage, format, null);
+
+        ConfigLayerInterface layer = format.readStream(new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8)), location);
+
+        assertEquals(Boolean.TRUE, layer.getEntry("a").getValueAsBoolean());
+        assertEquals(Boolean.TRUE, layer.getEntry("b").getValueAsBoolean());
+        assertEquals(Boolean.FALSE, layer.getEntry("c").getValueAsBoolean());
+        assertEquals(Boolean.FALSE, layer.getEntry("d").getValueAsBoolean());
+        assertEquals(Boolean.TRUE, layer.getEntry("e").getValueAsBoolean());
+        assertEquals("yes", layer.getEntry("f").getValueAsString(), "quoted: a string");
+        }
+
     @Test
     public void testGetFilenameExtensions()
         {

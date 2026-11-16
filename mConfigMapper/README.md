@@ -42,6 +42,17 @@ While it is fully functional for basic use cases, its API and functionality are 
    A more standardized service-based or plugin architecture for mapping is under investigation.
 4. **API Stability**: As we add support for mapping annotations (e.g., to handle field renaming or default values), the current `ConfigMapper` interface may evolve.
 
+### Boolean fields
+
+Since 0.8.17, a `Boolean` / `boolean` field is set from `true/false`, `yes/no`, `on/off` or `1/0`, in any case.
+Any other value, an empty one included, cannot be converted: the setter is **not called** and the field keeps the
+value it had, without an error or a log line (the mapper skips values it cannot set). Before, such values set the
+field to `false`.
+
+`ConfigFeature.LENIENT_BOOLEAN_CONVERSION` does **not** apply here: it acts in the `Configuration` getters
+(`getBoolean()`), and the mapper converts the entries itself. Mapping `"maybe"` therefore skips the field even with
+the feature set.
+
 Feedback and suggestions are welcome!
 
 ## Usage

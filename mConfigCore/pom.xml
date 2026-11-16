@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.17</version>
     </parent>
 
     <artifactId>mconfigcore</artifactId>
@@ -27,14 +27,7 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>5.2.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

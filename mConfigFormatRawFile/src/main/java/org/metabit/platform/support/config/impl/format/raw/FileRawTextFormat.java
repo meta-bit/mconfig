@@ -1,10 +1,13 @@
 package org.metabit.platform.support.config.impl.format.raw;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
+import org.metabit.platform.support.config.ConfigEvent;
 import org.metabit.platform.support.config.ConfigException;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
@@ -43,7 +46,7 @@ public boolean testComponent(ConfigFactorySettings configFactorySettings, Config
         }
     catch (Exception ex)
         {
-        logger.warn("default charset \"" + configFactorySettings.getString(ConfigFeature.DEFAULT_TEXTFILE_CHARSET) + "\" invalid, textfile disabled");
+        logger.warn("default charset \"" + LogSafe.text(configFactorySettings.getString(ConfigFeature.DEFAULT_TEXTFILE_CHARSET)) + "\" invalid, textfile disabled");
         return false;
         }
     return true;
@@ -57,6 +60,7 @@ public List<String> getFilenameExtensions()
 
 @Override
 public ConfigLayerInterface readFile(File file, ConfigLocation location)
+        throws ConfigParseException
     {
     FileRawConfigLayer instance = new FileRawConfigLayer(location, this, file.toPath());
     try
@@ -67,11 +71,20 @@ public ConfigLayerInterface readFile(File file, ConfigLocation location)
         }
     catch (IOException ex)
         {
-        throw new ConfigException(ex);
+        throw readFailure(getFormatID(), ex);
         }
     return instance;
     }
 
+    /** a raw file has no syntax; only reading can fail. Shared with {@link FileRawBinaryFormat}. */
+    static ConfigParseException readFailure(String formatId, IOException ex)
+        {
+        return ConfigParseException.builder(formatId, "could not read")
+                .parserCause(ex)
+                .event(ConfigEvent.Kind.FAILED_GENERIC, "RAW_READ_FAILED")
+                .remediation(ConfigEvent.Remediation.CHECK_PERMISSIONS, "Check that the content is readable.")
+                .build();
+        }
 
     /**
      * @param inputStream 
@@ -80,6 +93,7 @@ public ConfigLayerInterface readFile(File file, ConfigLocation location)
      */
     @Override
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation location)
+            throws ConfigParseException
         {
         FileRawConfigLayer instance = new FileRawConfigLayer(location, this, null);
         try
@@ -90,7 +104,7 @@ public ConfigLayerInterface readFile(File file, ConfigLocation location)
             }
         catch (IOException ex)
             {
-            throw new ConfigException(ex);
+            throw readFailure(getFormatID(), ex);
             }
         return instance;
         }

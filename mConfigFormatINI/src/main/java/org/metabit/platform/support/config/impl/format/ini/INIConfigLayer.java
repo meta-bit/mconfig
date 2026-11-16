@@ -128,22 +128,22 @@ public class INIConfigLayer implements ConfigLayerInterface
             }
         }
 
-    @Override
-    public ConfigEntry getEntry(String hierarchicalKey)
+    private String[] splitHierarchicalKey(String hierarchicalKey)
         {
-        String section;
-        String key;
         int index = hierarchicalKey.lastIndexOf('/');
         if (index >= 0)
             {
-            section = hierarchicalKey.substring(0, index);
-            key = hierarchicalKey.substring(index + 1);
+            return new String[]{hierarchicalKey.substring(0, index), hierarchicalKey.substring(index + 1)};
             }
-        else
-            {
-            section = "";
-            key = hierarchicalKey;
-            }
+        return new String[]{"", hierarchicalKey};
+        }
+
+    @Override
+    public ConfigEntry getEntry(String hierarchicalKey)
+        {
+        String[] parts = splitHierarchicalKey(hierarchicalKey);
+        String section = parts[0];
+        String key = parts[1];
 
         Map<String, String> sectionData = data.get(section);
         if (sectionData != null)
@@ -219,19 +219,10 @@ public class INIConfigLayer implements ConfigLayerInterface
             throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.NOT_WRITEABLE);
             }
         String hierarchicalKey = entryToWrite.getKey();
-        String section;
-        String key;
-        int index = hierarchicalKey.lastIndexOf('/');
-        if (index >= 0)
-            {
-            section = hierarchicalKey.substring(0, index);
-            key = hierarchicalKey.substring(index + 1);
-            }
-        else
-            {
-            section = "";
-            key = hierarchicalKey;
-            }
+        String[] parts = splitHierarchicalKey(hierarchicalKey);
+        String section = parts[0];
+        String key = parts[1];
+
         data.computeIfAbsent(section, k -> new LinkedHashMap<>()).put(key, entryToWrite.getValueAsString());
 
         if (writeCommentsFlag && entryToWrite.getComment() != null)

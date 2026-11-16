@@ -2,6 +2,7 @@ package org.metabit.platform.support.config.schema.impl.ext;
 
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
+import org.metabit.platform.support.config.schema.NullConfigEntrySpecification;
 
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
@@ -155,7 +156,8 @@ public class ConfigSchemaImpl implements ConfigSchema
     @Override
     public ConfigEntrySpecification getSpecification(String fullKey)
         {
-        return lut.get(fullKey);
+        ConfigSchemaEntry entry = lut.get(fullKey);
+        return (entry != null) ? entry : NullConfigEntrySpecification.INSTANCE;
         }
 
 
@@ -166,9 +168,7 @@ public class ConfigSchemaImpl implements ConfigSchema
         ConfigSchemaEntry matchingSchemeEntry = lut.get(fullKey);
         if (matchingSchemeEntry != null)
             {
-            boolean res = matchingSchemeEntry.validateEntry(entry);
-            // System.out.println("[DEBUG_LOG] ConfigSchemaImpl.checkConfigEntryValidity: " + fullKey + " -> " + res);
-            return res;
+            return matchingSchemeEntry.validateEntry(entry);
             }
         else // no matching Scheme entry found for this key
             {

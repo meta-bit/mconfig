@@ -20,12 +20,16 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import software.amazon.awssdk.services.secretsmanager.model.ResourceNotFoundException;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.BlobConfiguration;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
+import org.metabit.platform.support.config.impl.EventRecorder;
 import org.metabit.platform.support.config.impl.LayeredConfiguration;
 import org.metabit.platform.support.config.impl.entry.BasicSecretValue;
+import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.impl.secrets.SecretConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
@@ -62,6 +66,10 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
     @Override
     public boolean test(ConfigFactorySettings settings, ConfigLoggingInterface logger)
         {
+        if (settings.getBoolean(ConfigFeature.TEST_MODE) && !settings.getBoolean(AwsFeatures.BYPASS_TEST))
+            {
+            return false;
+            }
         return true;
         }
 
@@ -74,10 +82,11 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
         }
 
     @Override
-    public void postInit(ConfigFactory factory)
+    public void postInit(BootstrapConfigContext bootstrapCtx)
         {
+        // Scope is restricted to local sources to prevent circular reads against this (not yet initialized) storage.
         String bootstrapName = ctx.getSettings().getString(AwsFeatures.BOOTSTRAP_CONFIG_NAME);
-        Configuration cfg = factory.getConfig(bootstrapName);
+        Configuration cfg = bootstrapCtx.getRestrictedConfig(bootstrapName, EnumSet.of(ConfigScope.PRODUCT, ConfigScope.HOST, ConfigScope.USER, ConfigScope.APPLICATION));
         try
             {
             String region = (regionOverride != null) ? regionOverride : cfg.getString("region");
@@ -96,12 +105,10 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
             this.initialized = true;
             }
         catch (Exception e)
-        {
-            if (logger != null)
             {
-                logger.warn("AWS Secrets Manager client failed to start: " + e.getMessage());
+            EventRecorder.recordSourceUnavailable(ctx, null, "AWS_SECRETS_INIT_FAILED",
+                    "AWS Secrets Manager client failed to start: "+LogSafe.text(e.getMessage()));
             }
-        }
         }
 
     @Override
@@ -120,24 +127,27 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
                     .build();
             GetSecretValueResponse response = client.getSecretValue(request);
 
-            Map<String, String> data = null;
-            String secretString = response.secretString();
-            if (secretString != null)
-                {
-                if (secretString.trim().startsWith("{"))
-                    {
-                    data = parseJson(secretString);
-                    }
-                else
-                    {
-                    data = new HashMap<>();
-                    data.put("value", secretString);
-                    }
-                }
-            else if (response.secretBinary() != null)
+            Map<String, byte[]> data = null;
+            if (response.secretBinary() != null)
                 {
                 data = new HashMap<>();
-                data.put("value", Base64.getEncoder().encodeToString(response.secretBinary().asByteArray()));
+                data.put("value", response.secretBinary().asByteArray());
+                }
+            else
+                {
+                String secretString = response.secretString();
+                if (secretString != null)
+                    {
+                    if (secretString.trim().startsWith("{"))
+                        {
+                        data = parseJsonToBytes(secretString);
+                        }
+                    else
+                        {
+                        data = new HashMap<>();
+                        data.put("value", secretString.getBytes(StandardCharsets.UTF_8));
+                        }
+                    }
                 }
 
             if (data != null)
@@ -145,12 +155,17 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
                 layered.add(new AwsSecretsManagerConfigLayer(location, data), location);
                 }
             }
-        catch (Exception e)
+        catch (ResourceNotFoundException e)
             {
             if (logger != null)
                 {
-                logger.debug("AWS Secret '" + secretId + "' could not be read: " + e.getMessage());
+                logger.debug("AWS Secret '"+LogSafe.text(secretId)+"' does not exist");
                 }
+            }
+        catch (Exception e)
+            {
+            EventRecorder.recordSourceUnavailable(ctx, location, "AWS_SECRETS_READ_FAILED",
+                    "AWS Secret '"+LogSafe.text(secretId)+"' could not be read: "+LogSafe.text(e.getMessage()));
             }
         }
 
@@ -216,14 +231,28 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
             }
         }
 
+    /* a source built with AwsSecretsManagerConfigSource.builder() brings its own instance (own region) */
+    @Override
+    @SuppressWarnings("removal") // stopgap until MLIB-155
+    public boolean isInitializedWhenAddedAsSource()
+        {
+        return true;
+        }
+
     public void setRegionOverride(String regionOverride)
         {
         this.regionOverride = regionOverride;
         }
 
-    private Map<String, String> parseJson(String json)
+    // for tests
+    boolean isInitialized()
         {
-        Map<String, String> data = new HashMap<>();
+        return initialized;
+        }
+
+    private Map<String, byte[]> parseJsonToBytes(String json)
+        {
+        Map<String, byte[]> data = new HashMap<>();
         try
             {
             JsonStreamParser.parseJson(json, new JsonStreamParser.JsonStreamConsumer()
@@ -232,15 +261,15 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
 
                 @Override public void consumeObjectEntryStart(int line, int column, int level, String key) { currentKey = key; }
                 @Override public void consumeObjectEntryEnd(int line, int column, int level) { currentKey = null; }
-                @Override public void consumeString(int line, int column, int level, String string) { if (currentKey != null) data.put(currentKey, string); }
-                @Override public void consumeNumberInteger(int line, int column, int level, int i) { if (currentKey != null) data.put(currentKey, String.valueOf(i)); }
-                @Override public void consumeNumberLong(int line, int column, int level, long l) { if (currentKey != null) data.put(currentKey, String.valueOf(l)); }
-                @Override public void consumeNumberDouble(int line, int column, int level, double v) { if (currentKey != null) data.put(currentKey, String.valueOf(v)); }
-                @Override public void consumeTrue(int line, int column, int level) { if (currentKey != null) data.put(currentKey, "true"); }
-                @Override public void consumeFalse(int line, int column, int level) { if (currentKey != null) data.put(currentKey, "false"); }
+                @Override public void consumeString(int line, int column, int level, String string) { if (currentKey != null) data.put(currentKey, string.getBytes(StandardCharsets.UTF_8)); }
+                @Override public void consumeNumberInteger(int line, int column, int level, int i) { if (currentKey != null) data.put(currentKey, String.valueOf(i).getBytes(StandardCharsets.UTF_8)); }
+                @Override public void consumeNumberLong(int line, int column, int level, long l) { if (currentKey != null) data.put(currentKey, String.valueOf(l).getBytes(StandardCharsets.UTF_8)); }
+                @Override public void consumeNumberDouble(int line, int column, int level, double v) { if (currentKey != null) data.put(currentKey, String.valueOf(v).getBytes(StandardCharsets.UTF_8)); }
+                @Override public void consumeTrue(int line, int column, int level) { if (currentKey != null) data.put(currentKey, "true".getBytes(StandardCharsets.UTF_8)); }
+                @Override public void consumeFalse(int line, int column, int level) { if (currentKey != null) data.put(currentKey, "false".getBytes(StandardCharsets.UTF_8)); }
                 @Override public void consumeNull(int line, int column, int level) { if (currentKey != null) data.put(currentKey, null); }
-                @Override public void consumeNumberBigInteger(int line, int column, int level, java.math.BigInteger bigInteger) { if (currentKey != null) data.put(currentKey, bigInteger.toString()); }
-                @Override public void consumeNumberBigDecimal(int line, int column, int level, java.math.BigDecimal bigDecimal) { if (currentKey != null) data.put(currentKey, bigDecimal.toString()); }
+                @Override public void consumeNumberBigInteger(int line, int column, int level, java.math.BigInteger bigInteger) { if (currentKey != null) data.put(currentKey, bigInteger.toString().getBytes(StandardCharsets.UTF_8)); }
+                @Override public void consumeNumberBigDecimal(int line, int column, int level, java.math.BigDecimal bigDecimal) { if (currentKey != null) data.put(currentKey, bigDecimal.toString().getBytes(StandardCharsets.UTF_8)); }
                 @Override public void consumeObjectStart(int line, int column, int level) {}
                 @Override public void consumeObjectEnd(int line, int column, int level) {}
                 @Override public void consumeArrayStart(int line, int column, int level) {}
@@ -249,10 +278,10 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
             }
         catch (Exception e)
             {
-            // Fallback to raw string if parsing fails or is not a flat object
+            // Fallback to raw bytes if parsing fails or is not a flat object
             if (data.isEmpty())
                 {
-                data.put("value", json);
+                data.put("value", json.getBytes(StandardCharsets.UTF_8));
                 }
             }
         return data;
@@ -261,9 +290,9 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
     private static class AwsSecretsManagerConfigLayer implements ConfigLayerInterface
     {
         private final ConfigLocation      location;
-        private final Map<String, String> data;
+        private final Map<String, byte[]> data;
 
-        public AwsSecretsManagerConfigLayer(ConfigLocation location, Map<String, String> data)
+        public AwsSecretsManagerConfigLayer(ConfigLocation location, Map<String, byte[]> data)
             {
             this.location = location;
             this.data = data != null ? new HashMap<>(data) : Collections.emptyMap();
@@ -272,14 +301,27 @@ public final class AwsSecretsManagerConfigStorage implements ConfigStorageInterf
         @Override
         public ConfigEntry getEntry(String hierarchicalKey)
             {
-            String value = data.get(hierarchicalKey);
+            byte[] value = data.get(hierarchicalKey);
             if (value == null)
                 {
                 return null;
                 }
 
-            SecretValue secretValue = new BasicSecretValue(value.getBytes(StandardCharsets.UTF_8), SecretType.PLAIN_TEXT);
-            return new SecretConfigEntryLeaf(hierarchicalKey, secretValue, location);
+            SecretValue secretValue = new BasicSecretValue(value, SecretType.PLAIN_TEXT);
+            return new SecretConfigEntryLeaf(hierarchicalKey, secretValue, new ConfigEntryMetadata(getSource()));
+            }
+
+        @Override
+        public void erase()
+            {
+            for (byte[] buffer : data.values())
+                {
+                if (buffer != null)
+                    {
+                    java.util.Arrays.fill(buffer, (byte) 0);
+                    }
+                }
+            data.clear();
             }
 
         @Override

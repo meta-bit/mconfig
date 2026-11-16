@@ -18,3 +18,4 @@ public interface ConfigSchemaProvider
      */
     Map<String, ConfigSchema> discoverSchemas(ConfigFactoryInstanceContext ctx);
 }
+//___EOF___

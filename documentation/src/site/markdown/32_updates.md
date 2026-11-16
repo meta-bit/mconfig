@@ -50,10 +50,25 @@ when you don't need it anymore; this feature requires a bit of CPU time when act
 
 ## 3.2.2 Update settings
 
-To reduce overhead, mConfig limits the checks for new content to every x seconds.
-You can set this with the parameter XXXXXXXXXXXXTOBENAMED.
+To reduce overhead, mConfig limits periodic checks for new content to every *x* milliseconds.
+You can configure this with the feature [`ConfigFeature.UPDATE_CHECK_FREQUENCY_MS`](25_config_features.md) (defaults to 2000 ms).
 
-NOT IMPLEMENTED YET:
-If you set this parameter to 0, mConfig is instructed to perform checks on all
-its potential sources on each variable access. If you really need this amount
-of overhead... please give notice, explain the use case, and we'll get it done.
+Setting `UPDATE_CHECK_FREQUENCY_MS` to `0` disables the background check thread. Checks then run
+synchronously on every value access instead, which costs more per read; use it only when you need
+changes to be visible immediately.
+
+## 3.2.3 Known issues (0.8.17)
+
+Change detection has known defects, to be fixed in 0.8.18 (MLIB-129). They are not new; all earlier
+releases have them.
+
+- **Several instances watching one source.** A source reports a change once, to the first
+  `Configuration` that checks it. Where more than one `Configuration` instance watches the same
+  source, for example the same configuration opened with different schemas in one factory,
+  the others may not reload it and their subscribers may not be notified.
+  Avoid this by keeping one instance per configuration where you rely on updates.
+- **Kubernetes (Fabric8 storage): watch lost after an error.** If the Kubernetes API closes a watch
+  with an error and the client gives up reconnecting, changes to that ConfigMap or Secret are not
+  detected until a configuration that uses it is opened again. No event is recorded.
+- **Files created after subscribing.** Subscribers are attached to the layers present when they
+  subscribe; a configuration file created later does not notify them.

@@ -22,16 +22,21 @@ class JUnit5TestModeExample {
 
     @Test
     void testWithAutoCreatedPaths() throws ConfigCheckedException {
-        ConfigFactory configFactory = ConfigFactoryBuilder.create("myCompany", "myApp")
-            .setTestMode(true)
-            .setFeature(ConfigFeature.CREATE_MISSING_PATHS, true)
-            // Point a specific scope to our temp directory
-            .setTestConfigPaths(ConfigScope.USER, Collections.singletonList(tempDir.toString()))
-            .build();
+        // Note: setTestMode() and setTestConfigPaths() return void, so they cannot be
+        // chained. Only setFeature() returns the builder.
+        ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("myCompany", "myApp");
+        builder.setTestMode(true);
+        builder.setFeature(ConfigFeature.CREATE_MISSING_PATHS, true);
+        builder.setFeature(ConfigFeature.AUTOMATIC_CONFIG_CREATION, true);
+        // Point a specific scope to our temp directory
+        builder.setTestConfigPaths(ConfigScope.USER, Collections.singletonList(tempDir.toString()));
 
-        Configuration cfg = configFactory.getConfig("app-settings");
-        // This will create the file AND any missing parent directories inside tempDir
-        cfg.set("key", "value");
+        try (ConfigFactory configFactory = builder.build()) {
+            Configuration cfg = configFactory.getConfig("app-settings");
+            // This will create the file AND any missing parent directories inside tempDir
+            cfg.put("key", "value", ConfigScope.USER);
+            cfg.flush();
+        }
 
         // No manual cleanup required; @TempDir handles it.
     }

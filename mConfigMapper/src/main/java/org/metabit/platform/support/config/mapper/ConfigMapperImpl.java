@@ -2,7 +2,9 @@ package org.metabit.platform.support.config.mapper;
 
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
+import org.metabit.platform.support.config.impl.ConfigEventImpl;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
+import org.metabit.platform.support.config.impl.entry.SecretRedaction;
 import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigFormatInterface;
@@ -12,8 +14,11 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
@@ -337,27 +342,74 @@ public class ConfigMapperImpl implements ConfigMapper
             throw new ConfigException("Could not create a writeable layer for "+targetFile);
             }
 
-        // 3. Export data from configuration to the new layer
+        // 3. Export data from configuration to the new layer; secret values are never exported (MLIB-130)
+        List<String> omittedSecretKeys = new ArrayList<>();
         try
             {
-            ConfigCursor cursor = config.getConfigCursor();
-            copyCursorToLayer(cursor, targetLayer);
+            if (scopes == null || scopes.containsAll(EnumSet.allOf(ConfigScope.class)))
+                {
+                ConfigCursor cursor = config.getConfigCursor();
+                copyCursorToLayer(cursor, targetLayer, omittedSecretKeys);
+                }
+            else
+                {
+                // the cursor does not honour scopes (yet); take the value each key has within the given scopes
+                copyScopedEntriesToLayer(config, scopes, targetLayer, omittedSecretKeys);
+                }
             targetLayer.flush();
             }
         catch (ConfigCheckedException e)
             {
             throw new ConfigException("Failed to write configuration to "+targetFile+": "+e.getMessage());
             }
+        if (!omittedSecretKeys.isEmpty())
+            { reportOmittedSecrets(config, targetFile, omittedSecretKeys); }
+        }
+
+    /* the keys stay visible, only the values are withheld; keys and location keep the data findable */
+    private static void reportOmittedSecrets(Configuration config, Path targetFile, List<String> omittedSecretKeys)
+        {
+        ConfigEventList events = config.getEvents();
+        if (events == null)
+            { return; }
+        events.add(ConfigEventImpl.builder()
+                .severity(ConfigEvent.Severity.WARNING)
+                .domain(ConfigEvent.Domain.WRITE)
+                .kind(ConfigEvent.Kind.BLOCKED_POLICY)
+                .detailCode("EXPORT_SECRETS_OMITTED")
+                .message("secret entries not written to "+targetFile+": "+String.join(", ", omittedSecretKeys))
+                .configName(config.getConfigName())
+                .remediation(ConfigEvent.Remediation.NONE)
+                .remediationMessage("Secret values are never exported. Provide them through their original source.")
+                .build());
+        }
+
+    /* for each key present in the given scopes, the entry that wins within these scopes */
+    private static void copyScopedEntriesToLayer(Configuration config, EnumSet<ConfigScope> scopes, ConfigLayerInterface layer, List<String> omittedSecretKeys)
+            throws ConfigCheckedException
+        {
+        List<String> keys = new ArrayList<>(config.getAllConfigurationKeysFlattened(scopes));
+        Collections.sort(keys);
+        for (String key : keys)
+            {
+            ConfigEntry entry = config.getConfigEntryFromFullKey(key, scopes);
+            if (entry == null)
+                { continue; }
+            if (SecretRedaction.isConfidential(entry))
+                { omittedSecretKeys.add(key); }
+            else
+                { layer.writeEntry(new RelativeConfigEntryWrapper(entry, key)); }
+            }
         }
 
     /* recursive implemementation */
-    private void copyCursorToLayer(ConfigCursor cursor, ConfigLayerInterface layer)
+    private void copyCursorToLayer(ConfigCursor cursor, ConfigLayerInterface layer, List<String> omittedSecretKeys)
             throws ConfigCheckedException
         {
-        copyCursorToLayerRecursive(cursor, layer, "");
+        copyCursorToLayerRecursive(cursor, layer, "", omittedSecretKeys);
         }
 
-    private void copyCursorToLayerRecursive(ConfigCursor cursor, ConfigLayerInterface layer, String pathPrefix)
+    private void copyCursorToLayerRecursive(ConfigCursor cursor, ConfigLayerInterface layer, String pathPrefix, List<String> omittedSecretKeys)
             throws ConfigCheckedException
         {
         if (cursor.enter())
@@ -367,7 +419,11 @@ public class ConfigMapperImpl implements ConfigMapper
                 if (cursor.isOnLeaf())
                     {
                     ConfigEntry entry = cursor.getCurrentElement();
-                    if (entry != null)
+                    if (SecretRedaction.isConfidential(entry))
+                        {
+                        omittedSecretKeys.add(pathPrefix+entry.getKey());
+                        }
+                    else if (entry != null)
                         {
                         if (pathPrefix.isEmpty())
                             {
@@ -384,7 +440,7 @@ public class ConfigMapperImpl implements ConfigMapper
                 else if (cursor.isOnMap())
                     {
                     String newPrefix = pathPrefix+cursor.getCurrentElement().getKey()+"/";
-                    copyCursorToLayerRecursive(cursor, layer, newPrefix);
+                    copyCursorToLayerRecursive(cursor, layer, newPrefix, omittedSecretKeys);
                     }
                 }
             cursor.leave();
@@ -514,6 +570,10 @@ public class ConfigMapperImpl implements ConfigMapper
         public org.metabit.platform.support.config.interfaces.ConfigEntrySpecification getSpecification()
                 throws ConfigCheckedException
             { return delegate.getSpecification(); }
+
+        @Override
+        public boolean isSecret()
+            { return delegate.isSecret(); }
 
         @Override
         public void putString(String value)

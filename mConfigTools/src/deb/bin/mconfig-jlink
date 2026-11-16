@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/lib/mconfig/runtime/bin/java -jar /usr/share/mconfig/mConfigTools.jar "$@"

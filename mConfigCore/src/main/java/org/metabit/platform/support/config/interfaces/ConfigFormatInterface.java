@@ -33,3 +33,4 @@ public interface ConfigFormatInterface
   */
  default void initialize(ConfigFactoryInstanceContext ctx) {}
 }
+//___EOF___

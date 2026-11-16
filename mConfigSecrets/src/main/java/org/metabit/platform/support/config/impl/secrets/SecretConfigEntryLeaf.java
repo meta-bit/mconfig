@@ -46,14 +46,19 @@ public class SecretConfigEntryLeaf extends AbstractConfigEntry implements Secret
     // -----
 
     // constructor
+    public SecretConfigEntryLeaf(String key, SecretValue secretValue, ConfigEntryMetadata meta)
+        {
+        super(key, meta);
+        this.secretValue = secretValue;
+        }
+
+    /**
+     * @deprecated use {@link #SecretConfigEntryLeaf(String, SecretValue, ConfigEntryMetadata)}
+     */
+    @Deprecated
     public SecretConfigEntryLeaf(String key, SecretValue secretValue, ConfigLocation location)
         {
-        super(key, new ConfigEntryMetadata(null)); // @TODO better metadata handling for secrets
-        if (location instanceof ConfigSource)
-            {
-            this.meta.setSource((ConfigSource) location);
-            }
-        this.secretValue = secretValue;
+        this(key, secretValue, new ConfigEntryMetadata(location instanceof ConfigSource ? (ConfigSource) location : null));
         }
 
     /**
@@ -182,6 +187,6 @@ public class SecretConfigEntryLeaf extends AbstractConfigEntry implements Secret
     @Override
     public String toString()
         {
-        return "SecretConfigEntryLeaf{key='"+key+"', type="+secretValue.getType()+", value=[REDACTED]}";
+        return "SecretConfigEntryLeaf{key='"+key+"', type="+secretValue.getType()+", value="+SecretRedaction.REDACTED+"}";
         }
 }

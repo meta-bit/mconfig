@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.17</version>
     </parent>
 
     <artifactId>mconfigformatjsonwithjackson</artifactId>
@@ -14,7 +14,6 @@
     <description>JSON (and JSON5) support for mConfig, using the Jackson library</description>
 
     <properties>
-        <jackson.version>3.1.1</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -46,14 +45,7 @@
         <!-- test -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>5.2.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

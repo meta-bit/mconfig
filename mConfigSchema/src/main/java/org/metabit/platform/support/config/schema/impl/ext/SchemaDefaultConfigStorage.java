@@ -50,7 +50,7 @@ public class SchemaDefaultConfigStorage implements ConfigStorageInterface
     /**
      * {@inheritDoc}
      *
-     * test whether initializing a config source for use would work.
+     * test whether initializing this storage for use would work.
      */
     @Override
     public boolean test(ConfigFactorySettings settings, ConfigLoggingInterface logger)
@@ -59,7 +59,7 @@ public class SchemaDefaultConfigStorage implements ConfigStorageInterface
     /**
      * {@inheritDoc}
      *
-     * initialize the config source. It may *write* its own additions to the ctx.
+     * initialize the storage. It may *write* its own additions to the ctx.
      * So we need to explicitly pass a reference.
      */
     @Override
@@ -82,8 +82,8 @@ public class SchemaDefaultConfigStorage implements ConfigStorageInterface
     public ConfigStorageInterface clone()
             throws CloneNotSupportedException
         {
-        super.clone();
-        return null;
+        // holds per-factory state; a shallow copy would share it silently.
+        throw new CloneNotSupportedException("SchemaDefaultConfigStorage is not cloneable");
         }
 
     /**

@@ -7,7 +7,7 @@
   "@type": "SoftwareSourceCode",
   "name": "mConfigTools",
   "alternateName": "mconfig CLI",
-  "description": "Command-line interface for mConfig. Provides tools for auditing configuration (get -v), real-time monitoring, schema generation (propose-scheme), and DevOps pipeline integration.",
+  "description": "The mconfig command: see where every configuration value of an application comes from. Reads, sets and validates configuration across files, environment variables, the Windows registry and Kubernetes ConfigMaps, shows which of mConfig's ten scopes supplies each value (get -v), and watches changes live (monitor). Exports JSON, YAML, TOML or CSV for scripts and CI pipelines; secrets show as [REDACTED] unless explicitly revealed.",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "Java",
@@ -19,7 +19,7 @@
     "name": "mConfig",
     "url": "https://github.com/meta-bit/mconfig"
   },
-  "keywords": "cli, devops, configuration-audit, monitoring, schema-generation, picocli"
+  "keywords": "cli, devops, configuration, configuration-audit, monitoring, validation, environment-variables, kubernetes, windows-registry, json, yaml, toml, secrets, picocli"
 }
 </script>
 -->
@@ -30,12 +30,12 @@ Configuration doesn't need to be a "black box."
 Use the mconfig tool to audit, troubleshoot, and automate your environment instantly.
 
 1. The "Why is it doing that?" Audit
-   Ever wonder which of your 9 ConfigScopes is actually providing the value you get in the end?
+   Ever wonder which of your 10 ConfigScopes is actually providing the value you get in the end?
    Stop guessing and see the "Effective Value" along with its precise origin.
 
 ```bash
 # Get the effective value, scope (USER, HOST, etc.), and source URI
-mconfig mycompany:myapp:database:port get -v
+mconfig mycompany:myapp:database get port -v
 ```
 
 2. The "Live-Tail" Monitor
@@ -54,17 +54,19 @@ mconfig mycompany:myapp:settings monitor --dump -v
 
 ```bash
 # Scan existing configs and propose a type-safe JSON schema
-mconfig mycompany:myapp:legacy-app propose-scheme > schema.json
+mconfig -X mycompany:myapp:legacy-app propose-schema > schema.json
 ```
 Move from "loose strings" to Type-Safe Validation in seconds.
 
+> **Not available yet:** `propose-schema` is experimental and currently disabled; it is being
+> rewritten for 0.9.2. See [Experimental commands](../documentation/src/site/markdown/41_mconfig_tool.md#experimental-commands).
+
 4. The DevOps Pipeline Bridge
    Automate your infrastructure by extracting values in machine-readable format for jq, Python, or Bash scripts.
-   bash
 
 ```bash
-# Export the entire HOST scope as a JSON object
-mconfig mycompany:myapp:network show --scope HOST -o JSON | jq ' .timeout'
+# Export the effective configuration as a JSON object
+mconfig mycompany:myapp:network show -f JSON | jq '.timeout'
 ```
 
 ## Shortcuts
@@ -84,6 +86,18 @@ mconfig mycompany:myapp:config set database/port=5432 --scope user
 mconfig mycompany:myapp:config show -f YAML
 mconfig mycompany:myapp:config show -f TOML
 ```
+
+## Secrets
+
+Values of secret entries (schema `"SECRET": true`, or from a secrets source such as Vault) are
+shown as `[REDACTED]` in every command and output format; key, scope and source stay visible.
+`set` does not echo a secret value either. To see one value in plain text, ask for it explicitly:
+
+```bash
+mconfig mycompany:myapp:database get password --reveal
+```
+
+See [Where secret values may appear](../documentation/src/site/markdown/26_secrets_concept.md#where-secret-values-may-appear).
 
 ## Scope filtering and file format hints
 

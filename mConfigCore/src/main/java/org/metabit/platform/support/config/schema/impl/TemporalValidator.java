@@ -34,7 +34,6 @@ public class TemporalValidator
         {
         try
             {
-            // System.out.println("[DEBUG_LOG] TemporalValidator.validate: type=" + type + ", entry=" + entry.getKey() + ", value=" + entry.getValueAsString());
             switch (type)
                 {
                 case DATE:
@@ -179,3 +178,4 @@ public class TemporalValidator
         return t1.toString().compareTo(t2.toString()) < 0;
         }
 }
+//___EOF___

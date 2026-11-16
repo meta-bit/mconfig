@@ -36,9 +36,11 @@ public class ConfigEntryFactory
             }
         ConfigEntryMetadata meta = new ConfigEntryMetadata(source);
         ConfigEntrySpecification spec = scheme.getSpecification(fullKey);
+        if (spec == null) // schema implementations predating the never-null contract
+            { spec = org.metabit.platform.support.config.schema.NullConfigEntrySpecification.INSTANCE; }
         meta.setSpecification(spec);
 
-        if (spec != null && !(spec instanceof org.metabit.platform.support.config.schema.NullConfigEntrySpecification))
+        if (!(spec instanceof org.metabit.platform.support.config.schema.NullConfigEntrySpecification))
             {
             type = spec.getType();
             }
@@ -54,22 +56,21 @@ public class ConfigEntryFactory
                 }
             else
                 {
-                byte[] secretBytes;
-                if (value instanceof byte[])
-                    {
-                    secretBytes = (byte[]) value;
-                    }
-                else
-                    {
-                    secretBytes = String.valueOf(value).getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                    }
-
                 SecretType secretType = SecretType.PLAIN_TEXT;
                 if (type == ConfigEntryType.BYTES)
                     {
                     secretType = SecretType.SYMMETRIC_KEY; // Or some other binary secret type
                     }
-                sv = new BasicSecretValue(secretBytes, secretType);
+                if (value instanceof byte[])
+                    {
+                    sv = new BasicSecretValue((byte[]) value, secretType); // copied; the caller's array stays untouched
+                    }
+                else
+                    {
+                    byte[] tmpBytes = String.valueOf(value).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                    sv = new BasicSecretValue(tmpBytes, secretType);
+                    java.util.Arrays.fill(tmpBytes, (byte) 0); // the constructor copied it
+                    }
                 }
 
             // Try to find a component that can create secret entries
@@ -78,7 +79,7 @@ public class ConfigEntryFactory
                 {
                 if (component instanceof SecretEntryFactory)
                     {
-                    return ((SecretEntryFactory) component).createSecretEntry(fullKey, sv, source);
+                    return ((SecretEntryFactory) component).createSecretEntry(fullKey, sv, meta);
                     }
                 }
 
@@ -89,3 +90,4 @@ public class ConfigEntryFactory
         return new GenericConfigEntryLeaf(fullKey, value, type, meta);
         }
 }
+//___EOF___

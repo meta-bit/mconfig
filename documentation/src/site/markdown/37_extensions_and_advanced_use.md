@@ -28,7 +28,8 @@ public class MyModuleFeatures {
 By registering the feature in the `ConfigFeatureRegistry`, you enable the library to:
 1. Validate values set via string names: `builder.setFeature("MY_MODULE_SETTING", "custom_val")`.
 2. Access the feature without a direct dependency on the module's feature class.
-3. Support "self-configuration" via `mconfig.properties`.
+3. Support "self-configuration" via the component's `.config/<company>/<application>/mconfig.properties`
+   (module features are level `ANY` unless the module overrides `getSettingLevel()`).
 4. Provide case-insensitive lookups (ignoring underscores and case).
 
 For example, a user of your module could configure it without importing `MyModuleFeatures`:
@@ -40,7 +41,7 @@ ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "App")
 
 ### 3.7.1.2 Writing Custom Extensions
 
-For details on implementing custom `ConfigStorageInterface` or `ConfigFormatInterface`, please refer to the developer documentation in `devdocs/library_development.md`.
+For details on implementing custom `ConfigStorageInterface` or `ConfigFormatInterface`, please refer to the developer documentation in project `devdocs/library_development.md` (not included in public docs).
 
 For common utility adapters (Properties, Overrides, Remapping), see [3.9 Utilities and Adapters](39_utilities_and_adapters.md).
 

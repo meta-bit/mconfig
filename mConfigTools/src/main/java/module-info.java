@@ -2,6 +2,7 @@ module mConfigTools.main
     {
     requires java.base;
     requires metabit.mconfig.core;
+    requires metabit.mconfig.schema;
     requires metabit.mconfig.modules.jar;
     requires metabit.mconfig.modules.filesystem;
     requires metabit.mconfig.modules.envvar;

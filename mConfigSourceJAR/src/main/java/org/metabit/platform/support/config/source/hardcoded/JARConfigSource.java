@@ -4,7 +4,9 @@ import org.metabit.platform.support.config.ConfigLocation;
 import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigException;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.*;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 
@@ -100,7 +102,7 @@ public class JARConfigSource implements ConfigStorageInterface
             }
 
         // reason: if it weren't, one could override software defaults by simply placing a config file in the right place.
-        logger.info("JAR config source refuses running outside of a JAR (protocol: " + protocol + ").");
+        logger.info("JAR config source refuses running outside of a JAR (protocol: " + LogSafe.text(protocol) + ").");
         return false;
         }
 
@@ -162,7 +164,7 @@ public class JARConfigSource implements ConfigStorageInterface
 
         for (int i = 0; i < searchPaths.length; i++)
             {
-            logger.debug("JAR search path " + (i + 1) + ": " + searchPaths[i]);
+            logger.debug("JAR search path " + (i + 1) + ": " + LogSafe.text(searchPaths[i]));
             }
 
 
@@ -187,8 +189,8 @@ public class JARConfigSource implements ConfigStorageInterface
     @Override
     public ConfigStorageInterface clone() throws CloneNotSupportedException
         {
-        super.clone();
-        return null;
+        // holds per-factory state; a shallow copy would share it silently.
+        throw new CloneNotSupportedException("JARConfigSource is not cloneable");
         }
 
     @Override
@@ -229,7 +231,7 @@ public class JARConfigSource implements ConfigStorageInterface
             }
         catch (Exception e)
             {
-            logger.warn("Failed to scan resources at " + resourcePath + ": " + e.getMessage());
+            logger.warn("Failed to scan resources at " + LogSafe.text(resourcePath) + ": " + LogSafe.text(e.getMessage()));
             }
         }
 
@@ -414,7 +416,7 @@ public class JARConfigSource implements ConfigStorageInterface
                 URL url = cl.getResource(path + combinedConfigName);
                 if (url == null)
                     {
-                    logger.debug("config \"" + combinedConfigName + "\" not found within JAR at " + path);
+                    logger.debug("config \"" + LogSafe.text(combinedConfigName) + "\" not found within JAR at " + LogSafe.text(path));
                     continue;
                     }
                 try
@@ -422,11 +424,11 @@ public class JARConfigSource implements ConfigStorageInterface
                     URLConnection conn = url.openConnection();
                     if (conn instanceof JarURLConnection)
                         {
-                        logger.trace("attempting to read config from JAR: " + url.toURI());
+                        logger.trace("attempting to read config from JAR: " + LogSafe.text(url.toURI()));
                         }
                     else
                         {
-                        logger.trace("config BLOB found via protocol " + url.getProtocol() + ": " + url.toURI());
+                        logger.trace("config BLOB found via protocol " + LogSafe.text(url.getProtocol()) + ": " + LogSafe.text(url.toURI()));
                         }
                     // we allow reading from any URL protocol that classloader found
                     blobConfig.addURLstream(url, location);
@@ -459,7 +461,7 @@ public class JARConfigSource implements ConfigStorageInterface
             List<String> extensions = fileFormat.getFilenameExtensions();
             for (final String extension : extensions)
                 {
-                ConfigLayerInterface cfg = attemptToReadConfigOrReturnNull(cl, location, fileFormat, sanitizedConfigName+extension);
+                ConfigLayerInterface cfg = attemptToReadConfigOrReturnNull(cl, location, fileFormat, sanitizedConfigName+extension, cfgCollector);
                 if (cfg != null)
                     cfgCollector.add(cfg, location);
                 }
@@ -467,11 +469,11 @@ public class JARConfigSource implements ConfigStorageInterface
         return;
         }
 
-    private ConfigLayerInterface attemptToReadConfigOrReturnNull(ClassLoader cl, final ConfigLocation location, ConfigFileFormatInterface fileFormat, final String combinedConfigName) // final String locationString, final String fileName, final ConfigLocationImpl location, ConfigFileFormatInterface fileformat)
+    private ConfigLayerInterface attemptToReadConfigOrReturnNull(ClassLoader cl, final ConfigLocation location, ConfigFileFormatInterface fileFormat, final String combinedConfigName, LayeredConfigurationInterface cfgCollector)
         {
         for (String path : searchPaths)
             {
-            ConfigLayerInterface cli = getConfigLayerInterfaceInner(cl, location, fileFormat, path + combinedConfigName);
+            ConfigLayerInterface cli = getConfigLayerInterfaceInner(cl, location, fileFormat, path + combinedConfigName, cfgCollector);
             if (cli != null)
                 {
                 return cli;
@@ -480,16 +482,16 @@ public class JARConfigSource implements ConfigStorageInterface
         return null;
         }
 
-    private ConfigLayerInterface getConfigLayerInterfaceInner(ClassLoader cl, ConfigLocation location, ConfigFileFormatInterface fileFormat, String pathname)
+    private ConfigLayerInterface getConfigLayerInterfaceInner(ClassLoader cl, ConfigLocation location, ConfigFileFormatInterface fileFormat, String pathname, LayeredConfigurationInterface cfgCollector)
         {
         //@TODO change to a list of patterns?
         URL url = cl.getResource(pathname);
         // ClassLoader.getResource searches in
         if (logger.isDebugEnabled())
-            logger.debug(String.format("trying to read config from JAR resources: /%s at %s", pathname, location.toLocationString()));
+            logger.debug(String.format("trying to read config from JAR resources: /%s at %s", LogSafe.text(pathname), LogSafe.text(location.toLocationString())));
         if (url == null)
             {
-            logger.debug("config \""+pathname+"\" not found within JAR");
+            logger.debug("config \""+LogSafe.text(pathname)+"\" not found within JAR");
             return null;
             }
         try
@@ -497,14 +499,23 @@ public class JARConfigSource implements ConfigStorageInterface
             URLConnection conn = url.openConnection();
             if (conn instanceof JarURLConnection)
                 {
-                logger.trace("attempting to read config from JAR: "+url.toURI());
+                logger.trace("attempting to read config from JAR: "+LogSafe.text(url.toURI()));
                 }
             else
                 {
-                logger.trace("config found via protocol "+url.getProtocol()+": "+url.toURI());
+                logger.trace("config found via protocol "+LogSafe.text(url.getProtocol())+": "+LogSafe.text(url.toURI()));
                 }
             // writeable is false for streams. We don't plan to write JARs from within.
-            return fileFormat.readStream(conn.getInputStream(), location);
+            try (InputStream in = conn.getInputStream())
+                {
+                return fileFormat.readStream(in, location);
+                }
+            }
+        catch (ConfigParseException ex)
+            {
+            // bundled resources are no secret store; the schema decides whether the parser's text may be shown
+            ParseProblemReporter.report(ex, location, cfgCollector, false);
+            return null;
             }
         catch (IOException|URISyntaxException ex)
             {

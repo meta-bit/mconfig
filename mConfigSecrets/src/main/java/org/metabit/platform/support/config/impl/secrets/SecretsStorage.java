@@ -113,7 +113,7 @@ public class SecretsStorage implements ConfigStorageInterface
         ConfigSecretsProviderInterface provider = ctx.getConfigSecretsProviders().get(providerID);
         if (provider != null)
             {
-            layeredCfg.add(new SecretsConfigLayer(provider, scope), new ConfigLocationImpl(scope, this, null, null));
+            layeredCfg.add(new SecretsConfigLayer(provider, scope, ctx), new ConfigLocationImpl(scope, this, null, null));
             }
         }
 

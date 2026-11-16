@@ -37,6 +37,12 @@ public interface Advapi32
     int REG_DWORD = 4;
     int REG_MULTI_SZ = 7;
     int REG_QWORD = 11;
+    
+    /**
+     * Maximum size of a registry value (2,048 bytes).
+     * @see <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/windows-registry-advanced-users">Windows Registry Advanced Users</a>
+     */
+    int MAX_VALUE_SIZE = 2048;
 
     @u_int32_t
     int RegOpenKeyExA(

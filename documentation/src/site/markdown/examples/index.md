@@ -27,7 +27,7 @@ but the proper, recommended way is to go like this:
 ```java
     try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp").build())
         {
-        Configuration cfg = factory.getConfiguration("itsConfig"); 
+        Configuration cfg = factory.getConfig("itsConfig"); 
         // ... use cfg ...
         }
 ```

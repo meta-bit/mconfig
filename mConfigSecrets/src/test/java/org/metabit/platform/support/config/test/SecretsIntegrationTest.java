@@ -2,7 +2,10 @@ package org.metabit.platform.support.config.test;
 
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
+import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
+import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.impl.secrets.SecretConfigEntryLeaf;
 import org.metabit.platform.support.config.impl.secrets.SecretsConfigLayer;
 import org.metabit.platform.support.config.impl.secrets.SecretsStorage;
@@ -115,9 +118,36 @@ class SecretsIntegrationTest
         assertEquals("data-for-my-api-key", new String(provider.getSecret("secret.data", null).getValue()));
         }
 
+    /* getEntry() runs on every lookup that reaches the layer: a failing provider must not flood the log */
+    @Test
+    void failingProviderIsReportedOnceUntilItAnswersAgain()
+        {
+        MockSecretsProvider provider = new MockSecretsProvider();
+        provider.failing = true;
+        ConfigFactorySettings settings = new ConfigFactorySettings();
+        ConfigFactoryInstanceContext ctx = Mockito.mock(ConfigFactoryInstanceContext.class);
+        ConfigLoggingInterface logger = Mockito.mock(ConfigLoggingInterface.class);
+        Mockito.when(ctx.getLogger()).thenReturn(logger);
+        Mockito.when(ctx.getSettings()).thenReturn(settings);
+        SecretsConfigLayer layer = new SecretsConfigLayer(provider, ConfigScope.APPLICATION, ctx);
+
+        for (int i = 0; i < 5; i++)
+            {
+            assertNull(layer.getEntry("db/password"));
+            }
+        Mockito.verify(logger, Mockito.times(1)).warn(Mockito.anyString());
+
+        provider.failing = false;
+        assertNull(layer.getEntry("db/password")); // answered: absent
+        provider.failing = true;
+        assertNull(layer.getEntry("db/password"));
+        Mockito.verify(logger, Mockito.times(2)).warn(Mockito.anyString());
+        }
+
     public static class MockSecretsProvider implements ConfigSecretsProviderInterface
     {
         private Map<String, SecretValue> secrets = new HashMap<>();
+        volatile boolean failing = false;
 
         public void addSecret(String path, String value, SecretType type)
             {
@@ -134,7 +164,11 @@ class SecretsIntegrationTest
         public void init(Map<String, Object> config, Configuration contextConfig) { }
 
         @Override
-        public SecretValue getSecret(String path, Map<String, Object> opts) { return secrets.get(path); }
+        public SecretValue getSecret(String path, Map<String, Object> opts)
+            {
+            if (failing) throw new IllegalStateException("provider unavailable");
+            return secrets.get(path);
+            }
 
         @Override
         public List<String> listSecrets(String prefix) { return new ArrayList<>(secrets.keySet()); }

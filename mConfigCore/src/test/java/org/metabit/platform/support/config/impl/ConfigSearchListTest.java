@@ -121,3 +121,4 @@ class ConfigSearchListTest
         assertEquals(ConfigScope.PRODUCT, entries.get(4).getScope());
         }
     }
+//___EOF___

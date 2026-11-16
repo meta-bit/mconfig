@@ -77,3 +77,4 @@ public class ConfigFeatureBase implements ConfigFeatureInterface
         return name;
     }
 }
+//___EOF___

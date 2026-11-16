@@ -121,6 +121,12 @@ public interface ConfigEvent
         SKIPPED_UNREADABLE,
         SKIPPED_PERMISSION_DENIED,
         FORMAT_AMBIGUOUS,
+        /**
+         * a source could not be read (unreachable, access refused, failed to start).
+         * Lower-precedence sources may then supply the value instead.
+         * @since 0.8.16
+         */
+        SOURCE_UNAVAILABLE,
 
         // PARSE
         FAILED_GENERIC,
@@ -171,3 +177,4 @@ public interface ConfigEvent
         REPORT_BUG
     }
 }
+//___EOF___

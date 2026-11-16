@@ -2,6 +2,7 @@ package org.metabit.platform.support.config.impl.secrets;
 
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.*;
+import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.SecretEntryFactory;
 import org.metabit.platform.support.config.interfaces.ConfigFactoryComponent;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
@@ -27,6 +28,13 @@ public class SecretsFactoryComponent implements ConfigFactoryComponent, SecretEn
     }
 
     @Override
+    public ConfigEntry createSecretEntry(String key, SecretValue value, ConfigEntryMetadata meta)
+    {
+        return new SecretConfigEntryLeaf(key, value, meta);
+    }
+
+    @Override
+    @Deprecated
     public ConfigEntry createSecretEntry(String key, SecretValue value, ConfigSource source)
     {
         return new SecretConfigEntryLeaf(key, value, source);
@@ -62,6 +70,7 @@ public class SecretsFactoryComponent implements ConfigFactoryComponent, SecretEn
                 Map<String, Object> config = (Map<String, Object>) entry.get("config");
                 String scopeName = (String) entry.get("scope");
                 ConfigScope scope = scopeName != null ? ConfigScope.valueOf(scopeName) : ConfigScope.APPLICATION;
+                PolicyLocationGuard.checkApplicationLocation(settings, scope, "secrets provider \""+providerID+"\"");
 
                 initProvider(ctx, factory, providerID, config, scope);
             }

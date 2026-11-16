@@ -60,6 +60,13 @@ public class ConfigUtil
     /**
      * extract a prefixed subset to a java.util.Properties object.
      * The prefix is removed from the result keys.
+     * <p>
+     * <b>Secrets are copied as plain text.</b> This is an in-process conversion requested by the
+     * application, e.g. to hand credentials to a legacy interface such as a database driver, so
+     * secret values are deliberately included. The resulting {@link java.util.Properties} cannot
+     * redact or erase them: do not log, store ({@code Properties.store()}) or otherwise export it,
+     * and drop it as soon as possible. Prefer {@code Configuration.getSecret()} where the target
+     * accepts a {@code char[]} or {@code byte[]}.
      *
      * @param cfg    the configuration to extract the subconfig from
      * @param prefix the string prefix in the flattened key names
@@ -88,6 +95,13 @@ public class ConfigUtil
 
     /**
      * "flattening" configurations to a Java.util Properties instance.
+     * <p>
+     * <b>Secrets are copied as plain text.</b> This is an in-process conversion requested by the
+     * application, e.g. to hand credentials to a legacy interface such as a database driver, so
+     * secret values are deliberately included. The resulting {@link java.util.Properties} cannot
+     * redact or erase them: do not log, store ({@code Properties.store()}) or otherwise export it,
+     * and drop it as soon as possible. Prefer {@code Configuration.getSecret()} where the target
+     * accepts a {@code char[]} or {@code byte[]}.
      *
      * @param cfg configuration to copy to a Properties instance.
      *            *must* have a ConfigSchema, otherwise we don't know which entries to look for.
@@ -153,7 +167,10 @@ public class ConfigUtil
      * (trimmed) for lookup in {@code source}. Other keys delegate directly.
      * Prefixes and keys trimmed aggressively. Uniform logic for all typed getters.
      * <p>
-     * Inherits {@code source} scheme for validation. getAllConfigurationKeys* project/transform matching keys.
+     * Values, entries and the schema are those of {@code source}; the view does not validate again.
+     * Key listings show the keys the way the view accepts them.
+     * <p>
+     * Read-only: every {@code put} throws {@link ConfigException} (NOT_WRITEABLE). To write, use {@code source}.
      * <p>
      * Example: remapped(appConfig, "super_db.", "db.";).getString("db.host") → appConfig.getString("super_db.host")
      *
@@ -173,8 +190,11 @@ public class ConfigUtil
      * <em>consider using put to the RUNTIME scope instead (not immutable)</em>
      * <p>
      * Overrides take precedence. Values are type-converted lazily on access. If {@code parent} has a
-     * {@link ConfigSchema}, overrides are validated against it (throws `IllegalArgumentException`
-     * on invalid access).
+     * {@link ConfigSchema}, overrides are checked against it on access. An override that cannot be
+     * converted to the requested type (CONVERSION_FAILURE) or does not match the schema
+     * (ARGUMENT_INVALID) throws {@link ConfigException}; the value is not part of the message.
+     * <p>
+     * Read-only: every {@code put} throws {@link ConfigException} (NOT_WRITEABLE).
      * <p>
      * Supports chaining, e.g., {@link #remapped(Configuration, String, String)} for prefixed overrides.
      * <p>
@@ -193,7 +213,10 @@ public class ConfigUtil
     /**
      * Adapts {@link Properties} to immutable {@link Configuration} view.
      * <p>
-     * Typed getters parse {@code props.getProperty(key.trim())} lazily; return null on parse error/overflow.
+     * Typed getters parse {@code props.getProperty(key.trim())} lazily: null if there is no such property,
+     * {@link ConfigException} (CONVERSION_FAILURE) if it cannot be converted.
+     * {@code getSecret()} wraps the property as a SecretValue; the first such access is logged (INFO, once per JVM),
+     * since the value is an unprotected String in the Properties.
      * No scheme, empty source locations.
      * getAllConfigurationKeysFlattened(scopes): props.stringPropertyNames() (scopes ignored).
      * <p>

@@ -2,6 +2,7 @@ package org.metabit.platform.support.config.impl.format.toml;
 
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.logging.NullLogging;
@@ -17,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TOMLFileFormatTest
@@ -67,8 +70,23 @@ class TOMLFileFormatTest
         InputStream is = new ByteArrayInputStream(toml.getBytes(StandardCharsets.UTF_8));
         ConfigLocation location = new TestConfigLocation();
 
-        ConfigLayerInterface layer = format.readStream(is, location);
-        assertNull(layer, "TOML parser should reject duplicate keys");
+        assertThrows(ConfigParseException.class, ()->format.readStream(is, location), "TOML parser should reject duplicate keys");
+        }
+
+    @Test
+    void parseErrorReportsPositionAndKeyButNotTheContent()
+        {
+        TOMLFileFormat format = new TOMLFileFormat();
+        format.testComponent(new ConfigFactorySettings(), NullLogging.getSingletonInstance());
+
+        // a broken value: the format logs nothing; position and key go into the exception, the content does not
+        String toml = "[db]\npassword = s3cr3t-VALUE\n";
+        ConfigParseException e = assertThrows(ConfigParseException.class,
+                ()->format.readStream(new ByteArrayInputStream(toml.getBytes(StandardCharsets.UTF_8)), new TestConfigLocation()));
+
+        assertFalse(e.getMessage().contains("s3cr3t"), e.getMessage());
+        assertEquals(2, e.getLine(), e.getMessage());
+        assertEquals("db/password", e.getKeyPath(), e.getMessage());
         }
 
     @Test
@@ -386,7 +404,14 @@ class TOMLFileFormatTest
         TOMLFileFormat format = new TOMLFileFormat();
         format.testComponent(new ConfigFactorySettings(), NullLogging.getSingletonInstance());
         InputStream is = new ByteArrayInputStream(toml.getBytes(StandardCharsets.UTF_8));
-        return format.readStream(is, new TestConfigLocation());
+        try
+            {
+            return format.readStream(is, new TestConfigLocation());
+            }
+        catch (ConfigParseException e)
+            {
+            return null; // rejected content
+            }
         }
 
     private void assertEntryType(ConfigLayerInterface layer, String key, org.metabit.platform.support.config.ConfigEntryType type)

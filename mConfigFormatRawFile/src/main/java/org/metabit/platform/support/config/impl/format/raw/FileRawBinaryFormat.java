@@ -3,6 +3,7 @@ package org.metabit.platform.support.config.impl.format.raw;
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.ConfigException;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
@@ -44,6 +45,7 @@ public class FileRawBinaryFormat implements ConfigFileFormatInterface
 
     @Override
     public ConfigLayerInterface readFile(File file, ConfigLocation location)
+            throws ConfigParseException
         {
         FileRawConfigLayer instance = new FileRawConfigLayer(location, this, file.toPath());
         try
@@ -53,13 +55,14 @@ public class FileRawBinaryFormat implements ConfigFileFormatInterface
             }
         catch (IOException ex)
             {
-            throw new ConfigException(ex);
+            throw FileRawTextFormat.readFailure(getFormatID(), ex);
             }
         return instance;
         }
 
     @Override
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation location)
+            throws ConfigParseException
         {
         FileRawConfigLayer instance = new FileRawConfigLayer(location, this, null);
         try
@@ -69,7 +72,7 @@ public class FileRawBinaryFormat implements ConfigFileFormatInterface
             }
         catch (IOException ex)
             {
-            throw new ConfigException(ex);
+            throw FileRawTextFormat.readFailure(getFormatID(), ex);
             }
         return instance;
         }

@@ -9,8 +9,10 @@ import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.schema.repository.ConfigSchemaRepository;
 import org.metabit.platform.support.config.schema.repository.DefaultConfigSchemaRepository;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * internal implementation class. Encapsulation of the context  data for a
@@ -23,6 +25,7 @@ public class ConfigFactoryInstanceContext
     private final ConfigFactorySettings                       settings;
     private       ConfigLoggingInterface                      logger;
     private       Map<String, ConfigStorageInterface>         configStorages;
+    private       Set<ConfigStorageInterface>                 addedSourceStorages = Collections.emptySet();
     private       Map<String, ConfigFormatInterface>          configFormats;
     private       Map<String, ConfigSecretsProviderInterface> configSecretsProviders;
     private final ConfigSearchList                            searchList;
@@ -106,6 +109,22 @@ public class ConfigFactoryInstanceContext
     public void setConfigStorages(Map<String, ConfigStorageInterface> configStorages)
         {
         this.configStorages = configStorages;
+        }
+
+    /**
+     * storage instances which came with sources added by the application, and were initialized by the factory.
+     * They are not part of {@link #getConfigStorages()}, but have to be closed with the factory.
+     *
+     * @return the storages; never null
+     */
+    public Set<ConfigStorageInterface> getAddedSourceStorages()
+        {
+        return addedSourceStorages;
+        }
+
+    public void setAddedSourceStorages(Set<ConfigStorageInterface> addedSourceStorages)
+        {
+        this.addedSourceStorages = (addedSourceStorages == null) ? Collections.emptySet() : addedSourceStorages;
         }
 
     /**
@@ -207,3 +226,4 @@ public class ConfigFactoryInstanceContext
 
 // formats
 }
+//___EOF___

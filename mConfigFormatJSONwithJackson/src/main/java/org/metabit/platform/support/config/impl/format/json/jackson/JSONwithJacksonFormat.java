@@ -1,27 +1,27 @@
 package org.metabit.platform.support.config.impl.format.json.jackson;
 
-import tools.jackson.core.JacksonException;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
-import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.ConfigEvent;
+import org.metabit.platform.support.config.ConfigFeature;
+import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
-import org.metabit.platform.support.config.impl.EventRecorder;
-import org.metabit.platform.support.config.impl.ConfigEventImpl;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.exc.JacksonIOException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * read and write JSON configuration files.
@@ -29,10 +29,10 @@ import java.util.Map;
  */
 public class JSONwithJacksonFormat implements ConfigFileFormatInterface
 {
-    protected ConfigLoggingInterface      logger;
-    protected ConfigFactorySettings       settings;
+    protected ConfigLoggingInterface       logger;
+    protected ConfigFactorySettings        settings;
     protected ConfigFactoryInstanceContext ctx;
-    protected ObjectMapper                mapper;
+    protected ObjectMapper                 mapper;
 
     @Override
     public String getFormatID()
@@ -51,7 +51,14 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
         {
         this.logger = configLoggingInterface;
         this.settings = configFactorySettings;
-        this.mapper = createObjectMapper();
+        try
+            {
+            this.mapper = createObjectMapper();
+            }
+        catch (Throwable t)
+            {
+            return false;
+            }
         return true;
         }
 
@@ -68,128 +75,107 @@ public class JSONwithJacksonFormat implements ConfigFileFormatInterface
 
     @Override
     public ConfigLayerInterface readFile(File file, ConfigLocation configLocation)
+            throws ConfigParseException
         {
         try
             {
-            JsonNode rootNode = mapper.readTree(file); // parse to tree
-            if (rootNode == null)
-                {
-                logger.warn("JSON parsing failed on file "+file.getAbsolutePath());
-                return null;
-                }
-            if (rootNode.isObject() || rootNode.isArray())
-                {
-                // JSON RFCs allow all token types at top level. does not make sense for configurations
-                return getJsonJacksonConfigLayer(configLocation, rootNode, file.toPath());
-                }
-            logger.warn("JSON file "+file.getAbsolutePath()+" having top-level type other than object or array");
-            // different constructors?
+            return toLayer(mapper.readTree(file), configLocation, file.toPath());
             }
         catch (JacksonException ex)
             {
-            // looks like this is not a valid JSON file!
-            String msgstring = MessageFormat.format("not a valid JSON file: {0}:[{1},{2}] because of {3}", file.getAbsolutePath(), ex.getLocation().getLineNr(), ex.getLocation().getColumnNr(), ex.getOriginalMessage());
-            logger.warn(msgstring);
-
-            // Emit structured event
-            Map<String, String> attrs = new HashMap<>();
-            if (ex.getLocation() != null)
-                {
-                attrs.put("line", String.valueOf(ex.getLocation().getLineNr()));
-                attrs.put("column", String.valueOf(ex.getLocation().getColumnNr()));
-                }
-            attrs.put("filePath", file.getAbsolutePath());
-            attrs.put("extension", ".json");
-            String message = "JSON parse failed; likely non-standard syntax (e.g., comments)";
-            ConfigEvent.Kind kind = ConfigEvent.Kind.FAILED_GENERIC;
-            ConfigEvent.Remediation remediation = ConfigEvent.Remediation.FIX_SYNTAX;
-            if (ex.getOriginalMessage() != null && ex.getOriginalMessage().contains("'/'"))
-                {
-                kind = ConfigEvent.Kind.UNSUPPORTED_SYNTAX;
-                remediation = ConfigEvent.Remediation.CHANGE_FORMAT;
-                }
-
-            ConfigEventImpl event = ConfigEventImpl.builder()
-                    .severity(ConfigEvent.Severity.WARNING)
-                    .domain(ConfigEvent.Domain.PARSE)
-                    .kind(kind)
-                    .detailCode(kind == ConfigEvent.Kind.UNSUPPORTED_SYNTAX ? "JSON_PARSE_UNSUPPORTED_SYNTAX" : "JSON_PARSE_FAILED")
-                    .message(message)
-                    .formatId(getFormatID())
-                    .location(configLocation)
-                    .scope(configLocation != null ? configLocation.getScope() : null)
-                    .attributes(attrs)
-                    .cause(ex)
-                    .remediation(remediation)
-                    .remediationMessage(remediation == ConfigEvent.Remediation.CHANGE_FORMAT ? "File may contain comments; consider using JSON5 or removing comments." : "Fix invalid JSON syntax.")
-                    .build();
-            if (ctx != null)
-                {
-                EventRecorder.record(event, ctx);
-                }
+            throw toParseException(ex);
             }
-        catch (Exception e)
+        catch (RuntimeException e)
             {
-            logger.error(e.getMessage(), e);
+            throw readFailure(e);
             }
-        return null;
         }
 
 
     @Override
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation configLocation)
+            throws ConfigParseException
         {
         try
             {
-            JsonNode rootNode = mapper.readTree(inputStream); // parse to tree
-            if (rootNode == null)
-                {
-                logger.warn("JSON parsing failed on input stream");
-                return null;
-                }
-            return getJsonJacksonConfigLayer(configLocation, rootNode, inputStream);
+            return toLayer(mapper.readTree(inputStream), configLocation, inputStream);
             }
         catch (JacksonException ex)
             {
-            logger.warn(ex.getMessage(), ex);
-
-            Map<String, String> attrs = new HashMap<>();
-            if (ex.getLocation() != null)
-                {
-                attrs.put("line", String.valueOf(ex.getLocation().getLineNr()));
-                attrs.put("column", String.valueOf(ex.getLocation().getColumnNr()));
-                }
-            String message = "JSON parse failed; likely non-standard syntax (e.g., comments)";
-            ConfigEvent.Kind kind = ConfigEvent.Kind.FAILED_GENERIC;
-            ConfigEvent.Remediation remediation = ConfigEvent.Remediation.FIX_SYNTAX;
-            if (ex.getOriginalMessage() != null && ex.getOriginalMessage().contains("'/'"))
-                {
-                kind = ConfigEvent.Kind.UNSUPPORTED_SYNTAX;
-                remediation = ConfigEvent.Remediation.CHANGE_FORMAT;
-                }
-
-            ConfigEventImpl event = ConfigEventImpl.builder()
-                    .severity(ConfigEvent.Severity.WARNING)
-                    .domain(ConfigEvent.Domain.PARSE)
-                    .kind(kind)
-                    .detailCode(kind == ConfigEvent.Kind.UNSUPPORTED_SYNTAX ? "JSON_PARSE_UNSUPPORTED_SYNTAX" : "JSON_PARSE_FAILED")
-                    .message(message)
-                    .formatId(getFormatID())
-                    .location(configLocation)
-                    .scope(configLocation != null ? configLocation.getScope() : null)
-                    .attributes(attrs)
-                    .cause(ex)
-                    .remediation(remediation)
-                    .remediationMessage(remediation == ConfigEvent.Remediation.CHANGE_FORMAT ? "File may contain comments; consider using JSON5 or removing comments." : "Fix invalid JSON syntax.")
-                    .build();
-            if (ctx != null)
-                {
-                EventRecorder.record(event, ctx);
-                }
+            throw toParseException(ex);
             }
-        catch (Exception e)
+        catch (RuntimeException e)
             {
-            logger.error(e.getMessage(), e);
+            throw readFailure(e);
+            }
+        }
+
+    /** empty content gives an empty layer; JSON allows any value at top level, a configuration needs object or array. */
+    private ConfigLayerInterface toLayer(JsonNode rootNode, ConfigLocation configLocation, Object storageInstanceHandle)
+            throws ConfigParseException
+        {
+        if (rootNode == null || rootNode.isMissingNode())
+            { rootNode = mapper.createObjectNode(); }
+        if (!rootNode.isObject() && !rootNode.isArray())
+            {
+            throw ConfigParseException.builder(getFormatID(), "top-level value is neither object nor array")
+                    .errorType(rootNode.getNodeType().name())
+                    .event(ConfigEvent.Kind.FAILED_GENERIC, "JSON_UNSUPPORTED_TOPLEVEL")
+                    .remediation(ConfigEvent.Remediation.FIX_SYNTAX, "Put the configuration into a JSON object.")
+                    .build();
+            }
+        return getJsonJacksonConfigLayer(configLocation, rootNode, storageInstanceHandle);
+        }
+
+    /** name of the syntax in reports and detail codes; subclasses for other Jackson formats override it. */
+    protected String syntaxName()
+        {
+        return "JSON";
+        }
+
+    /** a Jackson error, with position and key path; the parser's message goes in as parser detail only. */
+    protected ConfigParseException toParseException(JacksonException ex)
+        {
+        if (ex instanceof JacksonIOException)
+            { return readFailure(ex); }
+        // the parser's message is only inspected here, never passed on as text
+        boolean comment = "JSON".equals(syntaxName()) && (ex.getOriginalMessage() != null) && ex.getOriginalMessage().contains("'/'");
+        ConfigParseException.Builder builder = ConfigParseException.builder(getFormatID(), "not valid "+syntaxName())
+                .parserCause(ex)
+                .keyPath(keyPathAtError(ex))
+                .event(comment ? ConfigEvent.Kind.UNSUPPORTED_SYNTAX : ConfigEvent.Kind.FAILED_GENERIC,
+                        comment ? "JSON_PARSE_UNSUPPORTED_SYNTAX" : syntaxName()+"_PARSE_FAILED")
+                .remediation(comment ? ConfigEvent.Remediation.CHANGE_FORMAT : ConfigEvent.Remediation.FIX_SYNTAX,
+                        comment ? "File may contain comments; consider using JSON5 or removing comments." : "Fix invalid "+syntaxName()+" syntax.");
+        if (ex.getLocation() != null)
+            { builder.position(ex.getLocation().getLineNr(), ex.getLocation().getColumnNr()); }
+        return builder.build();
+        }
+
+    /** the content could not be read at all (I/O, or an unexpected failure). */
+    protected ConfigParseException readFailure(RuntimeException ex)
+        {
+        return ConfigParseException.builder(getFormatID(), "could not read")
+                .parserCause(ex)
+                .event(ConfigEvent.Kind.FAILED_GENERIC, syntaxName()+"_READ_FAILED")
+                .remediation(ConfigEvent.Remediation.CHECK_PERMISSIONS, "Check that the content is readable.")
+                .build();
+        }
+
+    /** the JSON pointer of the parser's position when the error occurred, e.g. "/db/password"; null if unknown. */
+    static String keyPathAtError(JacksonException ex)
+        {
+        Object processor = ex.processor();
+        if (processor instanceof JsonParser)
+            {
+            try
+                {
+                return ((JsonParser) processor).streamReadContext().pathAsPointer().toString();
+                }
+            catch (RuntimeException ignored)
+                {
+                // no usable parser state; position and type are still reported
+                }
             }
         return null;
         }

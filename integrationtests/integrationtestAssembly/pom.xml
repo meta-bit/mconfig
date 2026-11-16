@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.metabit.testing.platform.support.config.test</groupId>
+        <artifactId>integrationtests</artifactId>
+        <version>0.8.17</version>
+    </parent>
+    <artifactId>integrationtestassembly</artifactId>
+    <name>integrationtestAssembly</name>
+    <description>
+        MLIB-156: an application packaged as a single JAR with maven-assembly-plugin.
+        Two JARs are built from the same application: one with the predefined jar-with-dependencies descriptor,
+        which overwrites META-INF/services files, and one with a descriptor that merges them (metaInf-services handler).
+        The integration test starts both with "java -jar": the first must fail with a packaging report, the second must run.
+    </description>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <!-- the assemblies need the project's own JAR -->
+        <maven.jar.skip>false</maven.jar.skip>
+        <assembly.main.class>org.metabit.testing.platform.support.config.assembly.AssemblyMain</assembly.main.class>
+    </properties>
+
+    <dependencies>
+        <!-- several modules that each ship META-INF/services files for the same interfaces -->
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigcore</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigsourcejar</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigsourcefilesystem</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigformatjavaproperties</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigsecrets</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${assembly.main.class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <!-- what MLIB-156 reported: service files overwrite each other -->
+                    <execution>
+                        <id>unmerged</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                    <!-- the documented fix: same content, service files merged -->
+                    <execution>
+                        <id>merged</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/jar-with-dependencies-merged-services.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <systemPropertyVariables>
+                        <assembly.jar.unmerged>${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar</assembly.jar.unmerged>
+                        <assembly.jar.merged>${project.build.directory}/${project.build.finalName}-jar-with-dependencies-merged-services.jar</assembly.jar.merged>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

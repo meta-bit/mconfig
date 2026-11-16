@@ -1,10 +1,12 @@
 package org.metabit.platform.support.config.impl.format.toml.jackson;
 
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.dataformat.toml.TomlMapper;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.format.json.jackson.JSONJacksonConfigLayer;
 import org.metabit.platform.support.config.impl.format.json.jackson.JSONwithJacksonFormat;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
@@ -35,6 +37,12 @@ public class TOMLwithJacksonFormat extends JSONwithJacksonFormat
     protected ObjectMapper createObjectMapper()
         {
         return new TomlMapper();
+        }
+
+    @Override
+    protected String syntaxName()
+        {
+        return "TOML";
         }
 
     @Override
@@ -88,37 +96,38 @@ public class TOMLwithJacksonFormat extends JSONwithJacksonFormat
 
     @Override
     public ConfigLayerInterface readFile(java.io.File file, ConfigLocation configLocation)
+            throws ConfigParseException
         {
         try
             {
-            JsonNode rootNode = mapper.readTree(file);
-            if (rootNode == null)
-                {
-                logger.warn("TOML parsing failed on file "+file.getAbsolutePath());
-                return null;
-                }
-            return getTomlJacksonConfigLayer(configLocation, rootNode, file.toPath());
+            return getTomlJacksonConfigLayer(configLocation, mapper.readTree(file), file.toPath());
             }
-        catch (Exception e)
+        catch (JacksonException ex)
             {
-            logger.error(e.getMessage(), e);
+            throw toParseException(ex);
             }
-        return null;
+        catch (RuntimeException e)
+            {
+            throw readFailure(e);
+            }
         }
 
     @Override
     public ConfigLayerInterface readStream(java.io.InputStream inputStream, ConfigLocation configLocation)
+            throws ConfigParseException
         {
         try
             {
-            JsonNode rootNode = mapper.readTree(inputStream);
-            return getTomlJacksonConfigLayer(configLocation, rootNode, inputStream);
+            return getTomlJacksonConfigLayer(configLocation, mapper.readTree(inputStream), inputStream);
             }
-        catch (Exception e)
+        catch (JacksonException ex)
             {
-            logger.error(e.getMessage(), e);
+            throw toParseException(ex);
             }
-        return null;
+        catch (RuntimeException e)
+            {
+            throw readFailure(e);
+            }
         }
 
     @Override
@@ -144,8 +153,12 @@ public class TOMLwithJacksonFormat extends JSONwithJacksonFormat
             }
         }
 
+    /** TOML always has a table at top level; empty content gives an empty layer. */
     private ConfigLayerInterface getTomlJacksonConfigLayer(ConfigLocation configLocation, JsonNode rootNode, Object storageInstanceHandle)
         {
+        if (rootNode == null || rootNode.isMissingNode())
+            { rootNode = mapper.createObjectNode(); }
         return new TOMLJacksonConfigLayer(settings, logger, configLocation, this, rootNode, storageInstanceHandle);
         }
 }
+//___EOF___

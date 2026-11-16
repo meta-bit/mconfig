@@ -1,26 +1,43 @@
 # 3.3 Getting Information
 
-## 3.3.1 Locations
+## 3.3.1 Locations: Potential vs. Instantiated
 
-So, where is my specific configuration looking for its contents?
+mConfig makes a clear architectural distinction between *candidate / potential search locations* and *active / instantiated layers*:
 
-To see where a Configuration instance gets its contents from, you can use `getSourceLocations()` like this:
+### 3.3.1.1 Potential Search List (`getSearchList()`)
+Where is the overall `ConfigFactory` looking across all scopes and storage providers?
+`ConfigFactory.getSearchList()` returns the ordered list of all candidate `ConfigLocation` instances.
+
+Candidate directories remain in this search list even if they do not exist on disk at initialization time. If a user or process creates one of these directories or files later while the application runs, background change checkers detect it and automatically bind the new configuration.
+
 ```java
- System.out.println("config locations: ");
- for (ConfigLocation location : cfg.getSourceLocations())
-     System.out.println("\t" + location.getScope() + "\t" + location.getURI("entry", null));
+List<ConfigLocation> searchList = configFactory.getSearchList();
+System.out.println("Search list (candidate locations):");
+for (ConfigLocation location : searchList) {
+    System.out.println("\t" + location.getScope() + "\t" + location.getStorageName() + "\t" + location.getURI("configName", null));
+}
 ```
 
-And where is the overall mConfig factory instance looking, in general?
-There is `getSearchList()` from ConfigFactory.
-```Java
- System.out.println("searchList: ");
- for (ConfigLocation location : searchList)
-     System.out.println("\t" + location.getScope() + "\t" + location.getURI("entry", null));
+### 3.3.1.2 Active Source Locations (`getSourceLocations()`)
+To see which locations actually exist and contributed active data layers to a specific loaded `Configuration`:
+
+```java
+Configuration cfg = configFactory.getConfig("network");
+System.out.println("Active source locations:");
+for (ConfigLocation location : cfg.getSourceLocations()) {
+    System.out.println("\t" + location.getScope() + "\t" + location.getURI("network", null));
+}
 ```
 
-Depending on your use case, you'll want different parts of the ConfigLocation entries.
-Above is just a little text dump.
+### 3.3.1.3 Discovered Configurations (`listAvailableConfigurations()`)
+To scan candidate locations and list all configuration files that currently exist with their metadata:
+
+```java
+Set<ConfigDiscoveryInfo> discovered = configFactory.listAvailableConfigurations();
+for (ConfigDiscoveryInfo info : discovered) {
+    System.out.println(info.getConfigName() + " (" + info.getFormat() + ") in " + info.getScope());
+}
+```
 
 ## 3.3.2 Legacy support: BLOBs, and where to put files?
 
@@ -38,7 +55,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("myCompany", "myApplica
         .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES, List.of("text_file"))
         .build())
     {
-    Configuration cfg = factory.getConfiguration("myTextFile");
+    Configuration cfg = factory.getConfig("myTextFile");
     String content = cfg.getString("");
     }
 ```
@@ -51,7 +68,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("myCompany", "myApplica
         .setFeature(ConfigFeature.FILE_FORMAT_READING_PRIORITIES, List.of("binary_file"))
         .build())
     {
-    Configuration cfg = factory.getConfiguration("myBinaryFile");
+    Configuration cfg = factory.getConfig("myBinaryFile");
     byte[] content = cfg.getBytes("");
     }
 ```

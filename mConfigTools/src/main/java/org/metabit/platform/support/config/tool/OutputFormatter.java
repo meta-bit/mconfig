@@ -9,6 +9,7 @@ import org.metabit.platform.support.config.ConfigEvent;
 import org.metabit.platform.support.config.ConfigEventList;
 import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.Configuration;
+import org.metabit.platform.support.config.impl.entry.SecretRedaction;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -85,8 +86,22 @@ final class OutputFormatter
             }
         }
 
+    /**
+     * value of an entry for structured output (JSON, YAML, TOML, tree).
+     * Secret values are replaced by the redaction marker, as a string in every format (MLIB-130).
+     */
     static Object entryValue(ConfigEntry entry)
         {
+        return entryValue(entry, false);
+        }
+
+    /**
+     * @param reveal true only for an explicit, single-key request (get --reveal)
+     */
+    static Object entryValue(ConfigEntry entry, boolean reveal)
+        {
+        if (!reveal && SecretRedaction.isConfidential(entry))
+            { return SecretRedaction.REDACTED; }
         ConfigEntryType type = entry.getType();
         switch (type)
             {
@@ -122,6 +137,27 @@ final class OutputFormatter
             default:
                 return safeString(entry);
             }
+        }
+
+    /**
+     * value of an entry for line-oriented output (human, CSV, monitor, messages).
+     * Secret values are replaced by the redaction marker (MLIB-130).
+     */
+    static String displayString(ConfigEntry entry)
+        {
+        return displayString(entry, false);
+        }
+
+    /**
+     * @param reveal true only for an explicit, single-key request (get --reveal)
+     */
+    static String displayString(ConfigEntry entry, boolean reveal)
+        {
+        if (entry == null)
+            { return null; }
+        if (!reveal && SecretRedaction.isConfidential(entry))
+            { return SecretRedaction.REDACTED; }
+        return safeString(entry);
         }
 
     private static String safeString(ConfigEntry entry)

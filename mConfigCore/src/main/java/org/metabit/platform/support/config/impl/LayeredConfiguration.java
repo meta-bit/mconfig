@@ -33,12 +33,13 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
     final SourceChangeNotifier           changeNotifier;
     final SourceChangeChecker            changeChecker;
     final         ConfigFactory          configFactory; // parent, producing this
+    final         boolean                bootstrapLookup; // untracked snapshot for a module's bootstrap, see getRestrictedConfig()
     final         ConfigLoggingInterface logger; // logging
     private final                        ConfigFactoryInstanceContext ctx;
     private final DefaultLayer           defaultLayer; // permanent default
     private final                        ConfigEventList events;
     private final                        boolean descriptionOnCreateFlag;
-    private final                        boolean writeCommentsFlag;
+    private final                        boolean lenientBooleanFlag; // ConfigFeature.LENIENT_BOOLEAN_CONVERSION
     private       boolean                closed = false;
     private final Consumer<ConfigLocation> internalUpdateListener;
 
@@ -53,15 +54,33 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
     public LayeredConfiguration(String sanitizedConfigName, final ConfigSchema configSchema,
                                 ConfigFactoryInstanceContext ctx, ConfigFactory configFactory)
         {
+        this(sanitizedConfigName, configSchema, ctx, configFactory, true);
+        }
+
+    /**
+     * <p>Constructor for LayeredConfiguration.</p>
+     *
+     * @param sanitizedConfigName a {@link java.lang.String} object
+     * @param configSchema a {@link ConfigSchema} object
+     * @param ctx a {@link org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext} object
+     * @param configFactory a {@link org.metabit.platform.support.config.ConfigFactory} object
+     * @param trackChanges false for snapshot configurations nobody closes, such as bootstrap lookups:
+     *                     no change checker thread, no subscription to factory-wide location updates.
+     */
+    LayeredConfiguration(String sanitizedConfigName, final ConfigSchema configSchema,
+                         ConfigFactoryInstanceContext ctx, ConfigFactory configFactory, boolean trackChanges)
+        {
         this.logger = ctx.getLogger();
         // this.events = new ConfigEventList();
         this.exceptionOnNullFlag = ctx.getSettings().getBoolean(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY);
         this.descriptionOnCreateFlag = ctx.getSettings().getBoolean(ConfigFeature.DESCRIPTION_ON_CREATE);
-        this.writeCommentsFlag = ctx.getSettings().getBoolean(ConfigFeature.COMMENTS_WRITING);
+        this.lenientBooleanFlag = ctx.getSettings().getBoolean(ConfigFeature.LENIENT_BOOLEAN_CONVERSION);
+        // this.writeCommentsFlag = ctx.getSettings().getBoolean(ConfigFeature.COMMENTS_WRITING);
         this.configName = sanitizedConfigName;
         this.defaultLayer = new DefaultLayer(ctx);
         this.configFactory = configFactory;
-        
+        this.bootstrapLookup = !trackChanges; // only bootstrap lookups go without change tracking
+
         if (configSchema != null)
             {
             this.configSchema = configSchema;
@@ -79,11 +98,11 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         int dedupLimit = ctx.getSettings().getInteger(ConfigFeature.EVENTS_DEDUP_RECENT_LIMIT);
         this.events = new ConfigEventList(maxEvents, dedupLimit);
         this.changeNotifier = new SourceChangeNotifier(ctx);
-        this.changeChecker = new SourceChangeChecker(ctx, changeNotifier);
+        this.changeChecker = new SourceChangeChecker(ctx, changeNotifier, trackChanges);
         this.ctx = ctx;
 
         this.internalUpdateListener = this::handleInternalUpdate;
-        if (configFactory != null && ctx.getSourceChangeNotifier() != null)
+        if (trackChanges && configFactory != null && ctx.getSourceChangeNotifier() != null)
             {
             for (ConfigLocation location : configFactory.getSearchList())
                 {
@@ -145,6 +164,15 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         return;
         }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Returns the active {@link ConfigLocation} for each loaded configuration layer in this stack,
+     * in layer order (from lowest priority default/product layers to highest priority override layers).
+     *
+     * @see #getLayers()
+     * @see org.metabit.platform.support.config.ConfigFactory#getSearchList()
+     */
     @Override
     public List<ConfigLocation> getSourceLocations()
         {
@@ -157,7 +185,13 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         }
 
     /**
-     * @return a list of all current configuration layers.
+     * Returns a snapshot list of all active in-memory configuration layers backing this configuration stack.
+     * <p>
+     * Layers are ordered in resolution sequence according to their scope and insertion order.
+     *
+     * @return a list of all current {@link ConfigLayerInterface} instances in this configuration stack.
+     * @see #getSourceLocations()
+     * @see org.metabit.platform.support.config.ConfigFactory#getSearchList()
      */
     public List<ConfigLayerInterface> getLayers()
         {
@@ -228,9 +262,22 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
             {
             configFactory.notifyConfigurationClosed(configName);
             }
+        if (changeChecker != null)
+            {
+            changeChecker.exit();
+            }
         if (ctx.getSourceChangeNotifier() != null)
             {
             ctx.getSourceChangeNotifier().unsubscribeFromUpdates(internalUpdateListener);
+            }
+        
+        synchronized (configs)
+            {
+            for (ConfigLayerInterface layer : configs)
+                {
+                layer.erase();
+                }
+            configs.clear();
             }
         }
 
@@ -296,28 +343,53 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
      * @return a writable config entry, or null if not possible
      * @throws org.metabit.platform.support.config.ConfigCheckedException on errors worse than "not possible".
      */
-    @Deprecated
+    @Override
     public ConfigEntry getConfigEntryForWriting(ConfigScope scope, String fullKey)
             throws ConfigCheckedException
         {
-        // iterate through all config layers, starting with the most specific
-        for (ConfigLayerInterface configLayer : configs)
+        checkClosed();
+        synchronized(configs)
             {
-            if (scope != configLayer.getScope())
+            // Priority 1: Update existing entry in the scope (highest priority writeable layer first)
+            for (ConfigLayerInterface configLayer : configs)
                 {
-                continue;                                         // skip scopes outside of.. scope.
+                if (configLayer.getScope() != scope)
+                    { continue; }
+                if (!configLayer.isWriteable())
+                    { continue; }
+
+                ConfigEntry entry = configLayer.getEntry(fullKey);
+                if (entry != null)
+                    { return entry; }
                 }
 
-            if (!configLayer.isWriteable())
+            // Priority 2: Return first existing writeable layer in the scope (highest priority first)
+            for (ConfigLayerInterface configLayer : configs)
                 {
-                continue;                                         // skip read-only layers.
+                if (configLayer.getScope() != scope)
+                    { continue; }
+                if (!configLayer.isWriteable())
+                    { continue; }
+
+                return configLayer.getEntry(fullKey); // May return null, but this layer is writeable for this key
                 }
 
-            ConfigEntry entry = configLayer.getEntry(fullKey);
-
-            if (entry != null)
+            // Priority 3: Create a new configuration layer instance if none exists
+            try
                 {
-                return entry;
+                ConfigLayerInterface newLayer = tryToCreateConfigLayer(this.configName, scope, this.configSchema);
+                if (newLayer != null)
+                    {
+                    return newLayer.getEntry(fullKey);
+                    }
+                }
+            catch (ConfigCheckedException e)
+                {
+                if (e.getReason() == ConfigCheckedException.ConfigExceptionReason.NOT_WRITEABLE)
+                    {
+                    return null;
+                    }
+                throw e;
                 }
             }
 
@@ -339,6 +411,8 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         {
         checkClosed();
         ConfigEntrySpecification spec = configSchema.getSpecification(fullKey);
+        if (spec == null) // schema implementations predating the never-null contract
+            { spec = NullConfigEntrySpecification.INSTANCE; }
         if (scopes == null)
             { scopes = EnumSet.allOf(ConfigScope.class); }   // may be limited by feature settings in future.
 
@@ -361,7 +435,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
             // returns first entry found across config layers
             if (entry != null)
                 {
-                logger.info(entry.getKey()+" found in ["+entry.getScope()+"] at location "+configLayer.getSource().toLocationString());
+                logger.trace(entry.getKey()+" found in ["+entry.getScope()+"] at location "+configLayer.getSource().toLocationString());
                 if (!(spec instanceof NullConfigEntrySpecification))
                     { entry = new SpecifiedConfigEntryWrapper(entry, spec); }
 
@@ -374,6 +448,19 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
 
         // if provided, the defaults exist as a layer, so they'll be checked before the list ends.
         return null;    // no matching entry found, at all.
+        }
+
+    /**
+     * {@inheritDoc}
+     * With {@link ConfigFeature#LENIENT_BOOLEAN_CONVERSION}, as {@link Boolean#parseBoolean(String)} does.
+     */
+    @Override
+    public Boolean getBoolean(String fullKey) throws ConfigException
+        {
+        if (!lenientBooleanFlag)
+            { return super.getBoolean(fullKey); }
+        String value = getString(fullKey);
+        return (value == null) ? null : Boolean.parseBoolean(value);
         }
 
     /** {@inheritDoc} */
@@ -641,13 +728,13 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
             {
             try
                 {
-                final byte[] value;
                 if (entry.getType() == ConfigEntryType.BYTES)
-                    value = entry.getValueAsBytes();
-                else
-                    value = entry.getValueAsString().getBytes(StandardCharsets.UTF_8);
+                    return new BasicSecretValue(entry.getValueAsBytes(), SecretType.PLAIN_TEXT);
 
-                return new BasicSecretValue(value, SecretType.PLAIN_TEXT);
+                byte[] tmpBytes = entry.getValueAsString().getBytes(StandardCharsets.UTF_8);
+                SecretValue secretValue = new BasicSecretValue(tmpBytes, SecretType.PLAIN_TEXT);
+                java.util.Arrays.fill(tmpBytes, (byte) 0); // the constructor copied it
+                return secretValue;
                 }
             catch (ConfigCheckedException e)
                 {
@@ -745,11 +832,13 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
 
     /**
      * Retrieves all configuration keys from all configuration layers,
-     * along with their corresponding scheme entries if they exist.
+     * along with their corresponding schema entries.
      *
      * @param scopes the scopes to retrieve keys from.
      * @return a {@link Map} with flattened keys as keys and their {@link ConfigEntrySpecification} as values.
-     *         Values can be null if no matching scheme entry exists.
+     *         Values are never null: keys without a matching schema entry map to
+     *         {@link org.metabit.platform.support.config.schema.NullConfigEntrySpecification#INSTANCE}.
+     *         (Up to 0.8.14, such values could be null, or such keys could be missing.)
      */
     @Override
     public Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes)
@@ -761,8 +850,7 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         for (String key : allKeys)
             {
             ConfigEntrySpecification spec = configSchema.getSpecification(key);
-            if (!(spec instanceof NullConfigEntrySpecification))
-                { result.put(key, spec); }
+            result.put(key, (spec != null) ? spec : NullConfigEntrySpecification.INSTANCE);
             }
         return result;
         }
@@ -816,6 +904,12 @@ public class LayeredConfiguration extends AbstractConfiguration implements Layer
         {
         checkClosed();
         changeNotifier.unsubscribeFromUpdates(listener);
+        }
+
+    @Override
+    public boolean isBootstrapLookup()
+        {
+        return bootstrapLookup;
         }
 }
 

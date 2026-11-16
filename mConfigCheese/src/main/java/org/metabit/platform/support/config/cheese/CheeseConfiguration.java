@@ -452,15 +452,6 @@ public class CheeseConfiguration implements Configuration
         return wrapped.getAllConfigurationKeysWithSchemasFlattened(scopes);
         }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void limitScopes(EnumSet<ConfigScope> scopes)
-        {
-        wrapped.limitScopes(scopes);
-        }
-
     @Override
     public String getConfigName()
         {

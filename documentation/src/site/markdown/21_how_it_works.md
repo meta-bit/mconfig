@@ -6,24 +6,25 @@ which then builds a `ConfigFactory` with specific settings.
 
 ### Self-Configuration
 Before the ConfigFactory is fully operational, it may perform "self-configuration".
-If the `mConfigSourceJAR` module is active, the factory searches the classpath for:
-`.config/metabit/mConfig/mconfig.properties`
+During `build()`, the factory searches the classpath for the component file
+`.config/<company>/<application>/mconfig.properties` of the company and application it is built for.
 
 This feature is enabled by default. It can be disabled by setting the `ENABLE_SELF_CONFIGURATION` flag to `false` in the `ConfigFactoryBuilder`.
 
-Settings found in this file (or files, as it uses `ClassLoader.getResources()`) 
-are used to populate the internal `ConfigFactorySettings`.
-This allows the library to configure its own features 
-(like enabling environment variable processing via `ALLOW_MCONFIG_RUNTIME_SETTINGS`) 
-using its standard resource discovery layout.
+Settings found in this file are used to populate the internal `ConfigFactorySettings`, filling in
+features that the code has not set. Because the file is bound to company and application, every
+component using mConfig configures only its own factories. Security-relevant switches such as
+`ALLOW_MCONFIG_RUNTIME_SETTINGS` can only be set in code. The global file
+`.config/metabit/mConfig/mconfig.properties` is deprecated and will be removed before 0.9.0.
+See [Self-configuration per component](25_config_features.md#self-configuration-per-component).
 
 The ConfigFactory in turn produces individual Configuration objects.
 
 ### 2-Phase Bootstrapping (Post-Initialization)
-For advanced self-configuration, mConfig supports a 2-phase bootstrapping process. Once the `ConfigFactory` is fully initialized and the initial configuration stack is built, a `postInit(ConfigFactory)` hook is called on all registered `ConfigStorageInterface`, `ConfigSecretsProviderInterface`, `ConfigFactoryComponent`, and `ConfigLoggingInterface` modules.
+For advanced self-configuration, mConfig supports a 2-phase bootstrapping process. Once the `ConfigFactory` is fully initialized and the initial configuration stack is built, a `postInit` hook is called on all registered `ConfigStorageInterface`, `ConfigSecretsProviderInterface`, `ConfigFactoryComponent`, and `ConfigLoggingInterface` modules. Storages receive a `BootstrapConfigContext`; the other module types receive the `ConfigFactory`.
 
 The execution order for the `postInit` hook is deterministic:
-1.  **`ConfigStorageInterface`**: Storages can use the factory for their own connection settings.
+1.  **`ConfigStorageInterface`**: Storages read their own connection settings via `BootstrapConfigContext.getRestrictedConfig(name, scopes)`, limited to scopes they do not serve themselves.
 2.  **`ConfigSecretsProviderInterface`**: Secrets providers can fetch credentials from the now-ready storages.
 3.  **`ConfigFactoryComponent`**: Administrative components (e.g., schema exporters) perform their tasks.
 4.  **`ConfigLoggingInterface`**: The logger refines its configuration (e.g., remote endpoints) using the complete stack.
@@ -45,20 +46,28 @@ Resolution priority between different storage types (within the same scope) is d
 **Default Storage Priority (Highest to Lowest):**
 1. `RAM` (In-memory overrides)
 2. `secrets` (Encrypted/sensitive data)
-3. `files` (Local filesystem)
-4. `registry` (Windows Registry)
-5. `registryjni` (Windows Registry JNI)
-6. `zookeeper` (ZooKeeper module)
-7. `JAR` (Classpath resources/defaults)
+3. `vault` (HashiCorp Vault)
+4. `aws-secrets` (AWS Secrets Manager)
+5. `files` (Local filesystem)
+6. `registry` (Windows Registry)
+7. `registryjni` (Windows Registry JNI)
+8. `zookeeper` (ZooKeeper module)
+9. `JAR` (Classpath resources/defaults)
+
+Storages not in this list, such as `kubernetes` and `kubernetes-fabric8`, rank below all listed ones.
+The ConfigMap and Secret directories the Kubernetes modules mount into the `CLUSTER` scope are read
+through `files` and rank as such.
 
 Use `STORAGE_TYPE_PRIORITIES` to change this order within a scope.
 
 ### Filesystem search paths (FileConfigStorage)
 
-The lists below show the default search paths *as added to the search list*.
+The lists below show the default candidate search paths *as considered for the search list*.
 Earlier entries are preferred for **creation**; later entries override earlier ones
 within the same scope. `SUB_PATH` (if set) is appended to the application paths.
 `ADDITIONAL_*_DIRECTORIES` are prepended to their scope lists.
+
+> **Candidate Search List & Dynamic Discovery**: `getSearchList()` contains all candidate `ConfigLocation`s considered by active storage providers (e.g., standard OS directories). Candidate directories are retained in the search list even if they do not exist on disk at initialization time. When a missing directory or configuration file is created later while the application runs, background change checkers detect it and dynamically attach it to active configurations. Conversely, `configuration.getSourceLocations()` lists only the locations that currently exist and contributed active data layers.
 
 > **Optional Company Segment**: `<company>` omitted if `COMPANY_NAME` blank/null/whitespace (recommended but can be intentionally left blank for app-only paths). Examples below show both forms where applicable.
 
@@ -226,96 +235,51 @@ refresh automatically. → `ConfigFeature.UPDATE_CHECK_FREQUENCY_MS`
 
 mConfig uses these concepts for separation of concerns:
 
-* ConfigSource is something where configurations come from. it returns Configuration instances.
- 
-* ConfigStorage is a concept representing an access medium, e.g. Filesystem, OS registry, network config services. It provides the technical access.
+* **ConfigStorage** (`ConfigStorageInterface`) is an access medium: filesystem, classpath/JAR resources,
+  Windows registry, environment variables, network services such as ZooKeeper or Vault.
+  It provides the technical access. Examples: `FileConfigStorage`, `JARConfigSource`, `EnvVarConfigStorage`,
+  `WindowsRegistryConfigSource`, `VaultConfigStorage`, `SchemaDefaultConfigStorage`.
 
-* ConfigFormat is how the configuration is structured and formatted inside the access medium.
-  Files, specifically, come in a number of different formats; this handles the actual parsing.
+* **ConfigFormat** (`ConfigFormatInterface`) is how a configuration is encoded inside a blob-like storage:
+  Java properties, JSON, YAML, TOML, INI, and so on. Files, specifically, come in a number of different
+  formats; the format handles the actual parsing and writing.
+  The Windows registry is a storage, not a format; like environment variables and Vault, it converts
+  its own value types and needs no format.
 
-* ConfigLocation: Represents the specific path/handle (the "Directory" part).
+* **ConfigLocation**: a place where a configuration may be found: storage, storage-specific handle
+  (e.g. a directory), and scope. The `ConfigSearchList` of a factory is a list of these.
 
+* **ConfigSource**: a `ConfigLocation` that has been instantiated, so there is a layer to it.
 
-This is how it is supposed to be (and as of 0.6.x, isn't yet!)
+* **ConfigLayer**: the concrete data read from one location, mapped to hierarchical keys.
+  For blob-like storages (files, ZooKeeper BLOBs, JAR resources) a format produces the layer;
+  storages with structured data of their own (Windows registry, environment variables, Vault)
+  produce it themselves.
+
+**Module naming**: a module named `mConfigSource<Name>` (e.g. `mConfigSourceFilesystem`,
+`mConfigSourceVault`) provides a storage, despite "Source" in its name.
+
 ```mermaid
 erDiagram
     Configuration    }|--|| ConfigFactory : "comes from"
     ConfigFactory    ||--|| ConfigSearchList : has
-    Configuration    ||--|| ConfigSearchList : uses
-    ConfigSearchList ||--|{ ConfigSource : contains
-    ConfigSource     ||--|| ConfigLocation : "has a specific"
-    ConfigSource     ||--|| ConfigStorage : "reads from"
-    ConfigSource     ||--|| ConfigFormat : "uses a specific"
-    ConfigStorage    ||--|{ ConfigFormat : "compatible with"
-    
-    Configuration    ||--o| ConfigSchema : "may use"
-    ConfigSchema     ||--o{ ConfigSchemaEntry : contains 
-```
+    ConfigSearchList ||--|{ ConfigLocation : contains
+    ConfigLocation   }|--|| ConfigStorage : "accessed through"
+    Configuration    ||--|{ ConfigLayer : "stacks"
+    ConfigLayer      ||--|| ConfigSource : "read from"
+    ConfigSource     ||--|| ConfigLocation : "is an instantiated"
+    ConfigStorage    ||--o{ ConfigFormat : "may use"
 
+    Configuration    ||--o| ConfigSchema : "may use"
+    ConfigSchema     ||--o{ ConfigSchemaEntry : contains
+```
 
 **Configuration** : the API interface to access configurations; produces/keeps ConfigEntry instances,
 and provides simple access to the values.
-They use their respective ConfigFactory search list, which consists of hierarchical and scoped
-ConfigSource entries, to get ConfigEntry instances.
+A Configuration is built by going through the search list of its ConfigFactory; for each location,
+the storage adds the layers it finds, sorted by scope.
 
-*An Configuration object is a way to access configurations in an uniform way.*
-
-**ConfigSource** : this is ((supposed to be)) the combined ConfigStorage+ConfigFormat tuple,
-instantiated, for active use. It can produce Configuration instances, which link back to it.
-
-*A ConfigSource is where you can get a configurations from.*
-
-**ConfigStorage** : Filesystem, Windows registry, Environment, networked system etc.
-- this provides the (potentially OS-specific) access mechanisms to wherever configurations come from.
-
-*A ConfigStorage is where configurations are stored.*
-
-**ConfigFormat**  : Java-Properties, JSON, YAML, Windows registry, ...
-- this maps general keys to storage-specific addressing, and
-- performs format-specific conversions.
-
-*A ConfigFormat is a format configurations are stored in.*
-
-
-<blockquote>
- As of 0.6, there is a confusion between ConfigSource and ConfigStorage;
- also, the layer separation isn't clean yet.
-
- The ConfigSource would be the instance combination of several tuples;
- for example, using the FileConfigStorage, there would be a number of separate
- ConfigSource entries in the search list, each for a different directory.
- For the WindowsRegistryStorage, there's less of them (HKLM and so on);
- for the EnvironmentVariableStorage, there is probably just one.
-
- Whether ConfigSource will have different service-type instances is still open;
- the matching of Format and Storage is the tricky bit here.
-
- (( Should we present the available formats to the storages, ask them for compatibility?
-   Should we do it the other way around? The interface between the two may be very
-   specific. How to match them, and link them in a general way? ))
-
-Situation as of 0.6
-````mermaid
-flowchart LR
-    ConfigSearchList -->|contains several| ConfigLocationImpl
-    ConfigLocationImpl -->|adds properties to| ConfigSourceInterface
-    ConfigLocationImpl --> location
-    ConfigLocationImpl --> flags
-    ConfigSourceInterface --> FileConfigSource
-    ConfigSourceInterface --> SchemaDefaultConfigSource
-````
-</blockquote>
-
-Planned for 0.7
-
-```mermaid
-flowchart LR    
-    ConfigSearchList --> ConfigSource
-    ConfigSource  --> ConfigStorage
-    ConfigStorage -..-> ConfigFormat
-    ConfigStorage <--> ConfigLocation
-    Configuration --> ConfigLocation
-```
+*A Configuration object is a way to access configurations in a uniform way.*
 
 #### Anchor
 The ConfigFactoryBuilder gathers and combines all the settings.

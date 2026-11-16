@@ -105,4 +105,9 @@ public interface ConfigLayerInterface extends Comparable<ConfigLayerInterface>
     Iterator<String> tryToGetKeyIterator();
 
     // boolean hasChangedSincePreviousCheck();
+    /**
+     * securely wipe sensitive data from this layer.
+     */
+    default void erase() { }
 }
+//___EOF___

@@ -52,13 +52,63 @@ Each entry in a schema (within the `ENTRIES` list) can have the following proper
 | `DESCRIPTION`    | String  | Human-readable description or Resource Bundle key for localized description. (Optional)                                                       |
 | `DEFAULT`        | (any)   | The default value used if no other value is provided. (Optional)                                                                              |
 | `PATTERN`        | String  | A validation pattern (Regex, range specification, or enum list). (Optional)                                                                   |
-| `SECRET`         | Boolean | If `true`, the entry is treated as sensitive data (redacted in logs). (Optional, defaults to `false`)                                         |
+| `SECRET`         | Boolean | If `true`, the entry holds a cryptographic secret or credential: it is redacted in logs, kept out of the JVM String pool, and retrieved via `getSecret()`. (Optional, defaults to `false`) |
+| `SENSITIVE`      | Boolean | If `true`, the entry holds information that must not be disclosed, typically personal data under GDPR. **Defined but not yet enforced** — see below. (Optional, defaults to `false`) |
 | `HIDDEN`         | Boolean | If `true`, the entry is hidden from automatic documentation. (Optional, defaults to `false`)                                                  |
+| `FLAGS`          | Array   | Declarative markers for the entry: `MANDATORY`, `READ_ONLY`, `WRITE_ONLY`, `SECRET`, `SENSITIVE`. Not all are enforced yet — see below.        |
 | `ARITY`          | String  | The number of allowed occurrences (e.g., `1`, `0..1`, `1..*`). (Optional; see defaults below)                                                 |
-| `MANDATORY`      | Object  | (Optional) Block for future-proofing and strict requirements. See below.                                                                      |
+| `MANDATORY`      | Object  | (Optional) Block for future-proofing and strict requirements. Note this is the *block*, distinct from the `MANDATORY` entry in `FLAGS`. See below. |
 | `AFTER`          | String  | (Optional) For temporal types, value must be after this (ISO format or `now`).                                                                |
 | `BEFORE`         | String  | (Optional) For temporal types, value must be before this (ISO format or `now`).                                                               |
 | `REQUIRE_OFFSET` | Boolean | (Optional) For `DATETIME`, requires an offset (e.g., `+02:00` or `Z`).                                                                        |
+
+Property names are matched case-insensitively, so `"KEY"` and `"key"` are equivalent.
+
+#### Boolean values
+
+An entry of `TYPE` `BOOLEAN` accepts `true/false`, `yes/no`, `on/off` and `1/0`, in any case and with
+surrounding blanks; a `DEFAULT` of `"on"` is valid. Any other value, an empty one included, does not match the
+schema. Such a value is skipped when read: the next layer, or finally the `DEFAULT`, applies, so a typing error in
+one file does not switch a feature off. Writing such a value through `put()` is rejected. (Up to 0.8.16 the check
+accepted `true` and `false` only.)
+
+Without a schema, `getBoolean()` uses the first value found and throws `ConfigException` (`CONVERSION_FAILURE`) if
+it is not one of these literals. See [`LENIENT_BOOLEAN_CONVERSION`](25_config_features.md) for the plain Java
+behaviour.
+
+#### Confidentiality markers: `SECRET` and `SENSITIVE`
+
+These mark two different kinds of confidentiality, and most entries that are `SECRET` are also
+`SENSITIVE` — though rarely the reverse. In short: `SECRET` is for cryptographic secrets and
+passwords, `SENSITIVE` for information that must not leak into view, such as personal data.
+See [Secret and Sensitive](26_secrets_concept.md#secret-and-sensitive) for the full model,
+including which storage places will accept which kind of data.
+
+Both markers suppress disclosure of the *value* only. The storage location of a marked entry
+stays traceable through `getScope()`, `getLocation()` and `getURI()`, so protected data remains
+findable, correctable and erasable.
+
+#### Which markers are enforced today
+
+The `FLAGS` array is accepted and parsed, but the library does not yet act on every marker in it:
+
+| Marker       | Enforced? | Notes                                                                        |
+|:-------------|:----------|:------------------------------------------------------------------------------|
+| `MANDATORY`  | yes       | via `FLAGS`; drives default arity and presence validation                     |
+| `SECRET`     | yes       | **only via the `SECRET` property**, not via `FLAGS` (see the warning below)   |
+| `SENSITIVE`  | no        | recognised and stored; no redaction or export suppression yet                 |
+| `READ_ONLY`  | no        | recognised and stored; writes are not blocked yet                             |
+| `WRITE_ONLY` | no        | recognised and stored; reads are not blocked yet                              |
+
+> **Warning:** `"FLAGS": ["SECRET"]` does **not** currently mark an entry as secret. The flag is
+> stored but is not consulted by the secrets handling, which reads only the separate `SECRET`
+> property. Always write `"SECRET": true`. Using the flag alone means the value is *not*
+> protected — no redaction, no `SecretValue`, no wiping.
+
+Since 0.8.15, loading a schema logs a WARNING for each entry that uses a marker without effect:
+`SECRET` in `FLAGS` without `"SECRET": true` (the value is not protected), and `SENSITIVE`,
+`READ_ONLY` or `WRITE_ONLY` (not enforced yet). `SECRET` in `FLAGS` next to `"SECRET": true` is
+redundant and not reported. 0.9.0 will be stricter.
 
 ### 2.3.3.2 Arity (`ARITY`)
 
@@ -176,7 +226,7 @@ Schemas are automatically discovered from multiple locations:
 By default, schemas found in the filesystem take precedence over those found on the classpath. This allows administrators to override or harden configuration contracts without modifying the application binaries.
 
 This behavior can be controlled via `ConfigFeature`:
-*   `ALLOW_LOCAL_SCHEMA_OVERRIDE` (default `true`): Set to `false` to ignore filesystem schemas and lock the application to bundled contracts.
+*   `ALLOW_LOCAL_SCHEMA_OVERRIDE` (default `true`): Set to `false` to ignore filesystem schemas and lock the application to bundled contracts. Deprecated since 0.8.17: 0.9.0 replaces it with an allowlist of schema sources. It keeps working in 0.8.x; keep using it until then.
 *   `LOCAL_SCHEMA_DIRECTORY`: Can be used to specify a custom directory for schema discovery instead of the OS defaults.
 
 

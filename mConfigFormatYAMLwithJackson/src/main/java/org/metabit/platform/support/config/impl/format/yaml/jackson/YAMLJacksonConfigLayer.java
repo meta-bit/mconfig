@@ -241,7 +241,7 @@ public class YAMLJacksonConfigLayer implements ConfigLayerInterface
         switch (jsonNode.getNodeType())
             {
             case STRING:
-                return new GenericConfigEntryLeaf(leafKey, jsonNode.asText(), ConfigEntryType.STRING, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.asString(), ConfigEntryType.STRING, meta);
             case NUMBER:
                 if (jsonNode.isInt())
                     {

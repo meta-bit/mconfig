@@ -109,3 +109,4 @@ void detectCurrentPlatform()
     // setVersionFromVersionString(javaOSversion);
     }
 }
+//___EOF___

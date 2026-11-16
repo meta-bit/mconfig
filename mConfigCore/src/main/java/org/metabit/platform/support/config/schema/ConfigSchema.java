@@ -122,9 +122,14 @@ public interface ConfigSchema
 
     /**
      * get the specification for a given key.
+     * <p>
+     * Never returns null: for a key this schema does not define, the result is
+     * {@link NullConfigEntrySpecification#INSTANCE}, which accepts any value.
+     * To check whether a key is defined, use {@code getEntryKeys().contains(fullKey)}.
+     * (Up to 0.8.14, some implementations returned null for undefined keys.)
      *
      * @param fullKey the key to look up
-     * @return the specification, or null if none is defined in this schema.
+     * @return the specification; {@link NullConfigEntrySpecification#INSTANCE} if none is defined in this schema.
      */
     org.metabit.platform.support.config.interfaces.ConfigEntrySpecification getSpecification(String fullKey);
 
@@ -202,3 +207,4 @@ public interface ConfigSchema
 
 
 }
+//___EOF___

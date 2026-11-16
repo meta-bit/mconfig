@@ -1,7 +1,6 @@
 package org.metabit.platform.support.config.tool;
 
 import org.metabit.platform.support.config.ConfigFactory;
-import org.metabit.platform.support.config.ConfigFactoryBuilder;
 import org.metabit.platform.support.config.ConfigLocation;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -32,7 +31,7 @@ public class SearchPathsCommand implements Callable<Integer>
         try
             {
             ctx.validate(false, false);
-            try (ConfigFactory configFactory = ConfigFactoryBuilder.create(ctx.company, ctx.application).build())
+            try (ConfigFactory configFactory = ctx.createBuilder().build())
                 {
                 if (ctx.format == Main.OutputFormat.HUMAN)
                     {

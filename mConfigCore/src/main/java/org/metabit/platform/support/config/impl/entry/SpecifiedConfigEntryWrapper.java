@@ -67,8 +67,9 @@ public class SpecifiedConfigEntryWrapper implements ConfigEntry
         {
         if (isSecret())
             {
-            return delegate.getClass().getSimpleName() + "{key='" + getKey() + "', value='[REDACTED]', scope=" + getScope() + "}";
+            return delegate.getClass().getSimpleName() + "{key='" + getKey() + "', value='" + SecretRedaction.REDACTED + "', scope=" + getScope() + "}";
             }
         return delegate.toString();
         }
 }
+//___EOF___

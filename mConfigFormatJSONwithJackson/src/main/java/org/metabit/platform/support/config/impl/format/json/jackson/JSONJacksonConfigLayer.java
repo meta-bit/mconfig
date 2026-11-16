@@ -278,7 +278,7 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
                     {
                     try
                         {
-                        byte[] decoded = java.util.Base64.getDecoder().decode(jsonNode.asText());
+                        byte[] decoded = java.util.Base64.getDecoder().decode(jsonNode.asString());
                         return new GenericConfigEntryLeaf(leafKey, decoded, ConfigEntryType.BYTES, meta);
                         }
                     catch (IllegalArgumentException e)
@@ -286,7 +286,7 @@ public class JSONJacksonConfigLayer implements ConfigLayerInterface
                         // fall back to string if not valid base64
                         }
                     }
-                return new GenericConfigEntryLeaf(leafKey, jsonNode.asText(), ConfigEntryType.STRING, meta);
+                return new GenericConfigEntryLeaf(leafKey, jsonNode.asString(), ConfigEntryType.STRING, meta);
             case NUMBER:
                 if (jsonNode.isInt())
                     {

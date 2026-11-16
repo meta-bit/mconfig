@@ -32,8 +32,14 @@ public final class VaultFeatures
      */
     public static final ConfigFeatureInterface BOOTSTRAP_CONFIG_NAME = new ConfigFeatureBase("VAULT_BOOTSTRAP_CONFIG_NAME", ConfigFeature.ValueType.STRING, "vault");
 
+    /**
+     * If true, allows Vault to be active even in TEST_MODE.
+     */
+    public static final ConfigFeatureInterface BYPASS_TEST = new ConfigFeatureBase("VAULT_BYPASS_TEST", ConfigFeature.ValueType.BOOLEAN, false);
+
     static
     {
         ConfigFeatureRegistry.register(BOOTSTRAP_CONFIG_NAME);
+        ConfigFeatureRegistry.register(BYPASS_TEST);
     }
 }

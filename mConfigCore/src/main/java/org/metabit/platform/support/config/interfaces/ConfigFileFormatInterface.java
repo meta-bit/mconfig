@@ -2,15 +2,30 @@ package org.metabit.platform.support.config.interfaces;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 
 /**
- * <p>ConfigFileFormatInterface interface.</p>
+ * A format for blob-like content (files, JAR resources, ZooKeeper nodes, Kubernetes data entries).
+ * <p>
+ * <b>Contract between formats and storages (since 0.8.17).</b> A format is a helper of the storage that found the
+ * content: it knows the syntax, the storage knows the context (which configuration, its schema, whether the location
+ * is a secret store).
+ * <ul>
+ * <li>{@link #readFile} and {@link #readStream} return a layer, or throw {@link ConfigParseException}. They do not
+ *     return {@code null}; empty content gives an empty layer.</li>
+ * <li>Content that cannot be read as this format (syntax errors, unsupported top-level structure, unreadable
+ *     input) is reported by throwing {@link ConfigParseException} with what the parser knows: position, key path,
+ *     the parser's exception. The format does not log the problem and records no event itself.</li>
+ * <li>The storage catches the exception and hands it to
+ *     {@code org.metabit.platform.support.config.impl.ParseProblemReporter}, together with its context. The reporter
+ *     decides whether the parser's own text, which may quote content, can be shown, and writes the log line and the
+ *     PARSE event. The storage then continues without that layer.</li>
+ * </ul>
  *
- * 
  * @version $Id: $Id
  */
 public interface ConfigFileFormatInterface extends ConfigFormatInterface
@@ -27,18 +42,20 @@ public interface ConfigFileFormatInterface extends ConfigFormatInterface
      *
      * @param file a {@link java.io.File} object
      * @param location a {@link org.metabit.platform.support.config.ConfigLocation} object
-     * @return config layer, or null.
+     * @return config layer; never null
+     * @throws ConfigParseException if the content cannot be read as this format; see the interface description
      */
-    ConfigLayerInterface readFile(File file, final ConfigLocation location);
+    ConfigLayerInterface readFile(File file, final ConfigLocation location) throws ConfigParseException;
 
     /**
      * <p>readStream.</p>
      *
      * @param inputStream a {@link java.io.InputStream} object
      * @param location a {@link org.metabit.platform.support.config.ConfigLocation} object
-     * @return a {@link org.metabit.platform.support.config.interfaces.ConfigLayerInterface} object
+     * @return config layer; never null
+     * @throws ConfigParseException if the content cannot be read as this format; see the interface description
      */
-    ConfigLayerInterface readStream(InputStream inputStream, final ConfigLocation location);
+    ConfigLayerInterface readStream(InputStream inputStream, final ConfigLocation location) throws ConfigParseException;
     /**
      * <p>createFile.</p>
      *
@@ -56,3 +73,4 @@ public interface ConfigFileFormatInterface extends ConfigFormatInterface
      */
     void writeFile(ConfigLayerInterface layer) throws ConfigCheckedException;
 }
+//___EOF___

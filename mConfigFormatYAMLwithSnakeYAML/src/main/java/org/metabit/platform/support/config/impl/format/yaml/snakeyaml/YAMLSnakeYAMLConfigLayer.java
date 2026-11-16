@@ -1,5 +1,6 @@
 package org.metabit.platform.support.config.impl.format.yaml.snakeyaml;
 
+import org.metabit.platform.support.config.impl.entry.BooleanLiterals;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
@@ -357,7 +358,11 @@ public class YAMLSnakeYAMLConfigLayer implements ConfigLayerInterface
 
         if (Tag.BOOL.equals(tag))
             {
-            return new GenericConfigEntryLeaf(leafKey, Boolean.valueOf(scalar.getValue()), ConfigEntryType.BOOLEAN, meta);
+            // the YAML 1.1 resolver tags yes/no/on/off as bool, too; Boolean.valueOf() would read "yes" as false.
+            Boolean flag = BooleanLiterals.parse(scalar.getValue());
+            if (flag != null)
+                { return new GenericConfigEntryLeaf(leafKey, flag, ConfigEntryType.BOOLEAN, meta); }
+            return new GenericConfigEntryLeaf(leafKey, scalar.getValue(), ConfigEntryType.STRING, meta);
             }
         else if (Tag.INT.equals(tag) || Tag.FLOAT.equals(tag))
             {

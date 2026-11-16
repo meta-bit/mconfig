@@ -132,3 +132,4 @@ public class InternalLogger implements ConfigLoggingInterface
     @Override public boolean isDebugEnabled() { return logLevel >= 4; }
     @Override public boolean isTraceEnabled() { return logLevel >= 5; }
 }
+//___EOF___

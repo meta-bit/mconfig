@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class SourceChangeChecker implements Runnable
 {
     private final ConfigLoggingInterface     logger;
+    private final boolean                    enabled;
     private final ScheduledExecutorService   executor;
     private final SourceChangeNotifier       notifier;
     private       long                       nextCheck;
@@ -38,19 +39,26 @@ public class SourceChangeChecker implements Runnable
      */
     public SourceChangeChecker(ConfigFactoryInstanceContext ctx, SourceChangeNotifier changeNotifier)
         {
+        this(ctx, changeNotifier, true);
+        }
+
+    /**
+     * <p>Constructor for SourceChangeChecker.</p>
+     *
+     * @param ctx a {@link org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext} object
+     * @param changeNotifier a {@link org.metabit.platform.support.config.impl.SourceChangeNotifier} object
+     * @param enabled false for snapshot configurations which never check for changes:
+     *                no background thread is started, and {@link #considerCheck(long)} always returns false.
+     */
+    SourceChangeChecker(ConfigFactoryInstanceContext ctx, SourceChangeNotifier changeNotifier, boolean enabled)
+        {
         this.logger = ctx.getLogger();
         this.localConfigList = new ArrayList<>();
         this.entryChangeChecker = new EntryChangeChecker();
+        this.enabled = enabled;
         this.delta = ctx.getSettings().getInteger(ConfigFeature.UPDATE_CHECK_FREQUENCY_MS);
         if (delta < 0) // sanitize
             delta = 0;
-        // this.nextCheck = System.currentTimeMillis()+delta;
-        // we're using a threaded approach instead of sync calls.
-        this.executor = Executors.newSingleThreadScheduledExecutor(); // JDK1.5
-        if (delta > 0) // delta 0 means: off
-            { this.executor.scheduleAtFixedRate(this, delta, delta, TimeUnit.MILLISECONDS); } // JDK1.5
-        else
-            { logger.info("automatic update checks were turned off"); }
         this.notifier = changeNotifier;
         // scopes: convert UPDATE_CHECK_SCOPES to EnumSet.
         checkedScopes = EnumSet.noneOf(ConfigScope.class);
@@ -65,6 +73,22 @@ public class SourceChangeChecker implements Runnable
             // considered a severe error because the behaviour would be significantly different from what's intended
             throw new ConfigException(ConfigException.ConfigExceptionReason.CONFIG_FEATURE_VALUE_INVALID);
             }
+        // start the background thread last, once this instance is fully initialized.
+        if (enabled && delta > 0) // delta 0 means: no background thread
+            {
+            this.executor = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "mconfig-change-checker");
+                t.setDaemon(true);
+                return t;
+            });
+            this.executor.scheduleAtFixedRate(this, delta, delta, TimeUnit.MILLISECONDS);
+            }
+        else
+            {
+            this.executor = null;
+            if (enabled)
+                { logger.info("background update checks were turned off"); }
+            }
         return;
         }
 
@@ -74,7 +98,10 @@ public class SourceChangeChecker implements Runnable
      */
     public void exit()
         {
-        this.executor.shutdown(); // no new ones started
+        if (this.executor != null)
+            {
+            this.executor.shutdown(); // no new ones started
+            }
         //JDK17 this.taskHandle.cancel(false); // stop the existing one if it is running, but allow completiong
         return;
         }
@@ -167,6 +194,8 @@ public class SourceChangeChecker implements Runnable
     public boolean considerCheck(long now)
         {
 // using a thread instead in the future.
+        if (!enabled)
+            return false;
         if (now < nextCheck)
             return false;
         // else

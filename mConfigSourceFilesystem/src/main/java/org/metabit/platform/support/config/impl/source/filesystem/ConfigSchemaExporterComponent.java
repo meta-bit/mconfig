@@ -87,6 +87,12 @@ public final class ConfigSchemaExporterComponent implements ConfigFactoryCompone
 
     private void exportSchema(String name, ConfigSchema schema, Path exportDir, ConfigFactoryInstanceContext ctx)
         {
+        if (name == null || name.contains("..") || name.contains("/") || name.contains("\\"))
+            {
+            logger.warn("Skipping export of schema with invalid name: \""+name+"\"");
+            return;
+            }
+
         // For now, we only export native mConfig schemas as .mconfig-schema.json
         Path file = exportDir.resolve(name+".mconfig-schema.json");
 
@@ -119,7 +125,14 @@ public final class ConfigSchemaExporterComponent implements ConfigFactoryCompone
         {
         String customDir = ctx.getSettings().getString(ConfigFeature.LOCAL_SCHEMA_DIRECTORY);
         if (customDir != null)
-            { return Paths.get(customDir); }
+            {
+            Path p = Paths.get(customDir).normalize();
+            if (p.isAbsolute())
+                {
+                return p;
+                }
+            logger.warn("LOCAL_SCHEMA_DIRECTORY is not an absolute path: \""+customDir+"\". Falling back to default.");
+            }
         return getDefaultLocalSchemaDirectory();
         }
 
@@ -130,14 +143,26 @@ public final class ConfigSchemaExporterComponent implements ConfigFactoryCompone
 
         String company = normalizeSegment(ctx.getSettings().getString(ConfigFeature.COMPANY_NAME));
         String application = normalizeSegment(ctx.getSettings().getString(ConfigFeature.APPLICATION_NAME));
-        if (application == null)
+
+        if (application == null || isInvalidSegment(application))
             { return null; }
 
         if (company != null)
             {
+            if (isInvalidSegment(company))
+                { return null; }
             return exportRoot.resolve(company).resolve(application);
             }
         return exportRoot.resolve(application);
+        }
+
+    private boolean isInvalidSegment(String segment)
+        {
+        if (segment == null || segment.isEmpty() || segment.contains(".."))
+            { return true; }
+        // Allow alphanumerics, underscores, dots, and dashes.
+        // This naturally forbids / and \ which could be used for traversal.
+        return !segment.matches("^[a-zA-Z0-9_.-]+$");
         }
 
     private Path getDefaultLocalSchemaDirectory()
@@ -146,17 +171,25 @@ public final class ConfigSchemaExporterComponent implements ConfigFactoryCompone
         if (os == OperatingSystem.WINDOWS)
             {
             String appData = System.getenv("APPDATA");
-            if (appData != null)
+            if (appData != null && !appData.isEmpty())
                 {
-                return Paths.get(appData, "mconfig", "schemas");
+                Path p = Paths.get(appData).normalize();
+                if (p.isAbsolute())
+                    {
+                    return p.resolve("mconfig").resolve("schemas");
+                    }
                 }
             }
         else
             {
             String home = System.getProperty("user.home");
-            if (home != null)
+            if (home != null && !home.isEmpty())
                 {
-                return Paths.get(home, ".config", "mconfig", "schemas");
+                Path p = Paths.get(home).normalize();
+                if (p.isAbsolute())
+                    {
+                    return p.resolve(".config").resolve("mconfig").resolve("schemas");
+                    }
                 }
             }
         return null;

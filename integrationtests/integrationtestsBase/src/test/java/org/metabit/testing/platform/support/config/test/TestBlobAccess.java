@@ -73,6 +73,24 @@ public class TestBlobAccess
         return;
         }
 
+    @Test
+    void blobHonoursRequestedScopes()
+            throws ConfigCheckedException
+        {
+        try (ConfigFactory factory = ConfigFactoryBuilder.create(COMPANY_NAME, APPLICATION_NAME)
+                .setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of("HOST:"+tempDir1.toAbsolutePath().toString()))
+                .setFeature(ConfigFeature.TEST_MODE, true)
+                .build())
+            {
+            // the file sits in a HOST location; a USER-only request must neither read nor list it
+            Configuration userOnly = factory.getConfigSpecial(CONFIG_NAME+".bin", EnumSet.of(ConfigScope.USER), Map.of("type", "blob"));
+            assertTrue(userOnly.getSourceLocations().stream().noneMatch(loc -> loc.getScope() == ConfigScope.HOST));
+
+            Configuration hostOnly = factory.getConfigSpecial(CONFIG_NAME+".bin", EnumSet.of(ConfigScope.HOST), Map.of("type", "blob"));
+            assertArrayEquals(test_binary_content, hostOnly.getBytes(""));
+            }
+        }
+
     @Test void writeToExitingBLOB()
             throws ConfigCheckedException, IOException
         {

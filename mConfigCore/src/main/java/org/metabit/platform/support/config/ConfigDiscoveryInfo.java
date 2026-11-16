@@ -79,3 +79,4 @@ public final class ConfigDiscoveryInfo
                '}';
         }
 }
+//___EOF___

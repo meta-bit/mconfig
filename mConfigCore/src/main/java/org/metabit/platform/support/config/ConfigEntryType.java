@@ -99,3 +99,4 @@ public enum ConfigEntryType
 
 REG_LINK 	A null-terminated Unicode string that contains the target path of a symbolic link that was created by calling the RegCreateKeyEx function with REG_OPTION_CREATE_LINK.
  */
+//___EOF___

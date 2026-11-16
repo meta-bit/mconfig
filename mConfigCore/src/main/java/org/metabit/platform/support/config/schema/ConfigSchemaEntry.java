@@ -1,6 +1,7 @@
 package org.metabit.platform.support.config.schema;
 
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.entry.BooleanLiterals;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
@@ -106,7 +107,14 @@ public class ConfigSchemaEntry implements ConfigEntrySpecification
      */
     public boolean validateEntry(final ConfigEntry entry)
         {
-        if (type != entry.getType()) return false;
+        if (entry == null) return false;
+        if (type != entry.getType())
+            {
+            // Flat configuration sources (such as .properties or environment variables) produce
+            // STRING entries. Allow string-encoded entries to be coerced and validated against
+            // the schema's declared target type.
+            if (entry.getType() != ConfigEntryType.STRING) return false;
+            }
 
         // Arity validation for list types
         if (type == ConfigEntryType.MULTIPLE_STRINGS || type == ConfigEntryType.ENUM_SET)
@@ -135,7 +143,15 @@ public class ConfigSchemaEntry implements ConfigEntrySpecification
                     entry.getValueAsBigDecimal(); // Just check if it's a valid number
                     break;
                 case BOOLEAN:
-                    entry.getValueAsBoolean();
+                    if (entry.getType() == ConfigEntryType.STRING)
+                        {
+                        // Boolean.valueOf() maps any non-"true" string to false; require an actual boolean literal.
+                        if (!BooleanLiterals.isBoolean(entry.getValueAsString())) return false;
+                        }
+                    else
+                        {
+                        entry.getValueAsBoolean();
+                        }
                     break;
                 case ENUM_SET:
                     entry.getValueAsStringList();
@@ -153,7 +169,7 @@ public class ConfigSchemaEntry implements ConfigEntrySpecification
                     break;
                 }
             }
-        catch (ConfigCheckedException|NumberFormatException ex)
+        catch (ConfigCheckedException|IllegalArgumentException ex)
             {
             return false;
             }
@@ -161,22 +177,22 @@ public class ConfigSchemaEntry implements ConfigEntrySpecification
         if (type == ConfigEntryType.URI)
             {
             try { entry.getValueAsURI(); }
-            catch (ConfigCheckedException e) { return false; }
+            catch (ConfigCheckedException|IllegalArgumentException e) { return false; }
             }
         else if (type == ConfigEntryType.FILEPATH)
             {
             try { entry.getValueAsPath(); }
-            catch (ConfigCheckedException e) { return false; }
+            catch (ConfigCheckedException|IllegalArgumentException e) { return false; }
             }
         else if (type == ConfigEntryType.DATE)
             {
             try { entry.getValueAsLocalDate(); }
-            catch (ConfigCheckedException e) { return false; }
+            catch (ConfigCheckedException|DateTimeParseException e) { return false; }
             }
         else if (type == ConfigEntryType.TIME)
             {
             try { entry.getValueAsLocalTime(); }
-            catch (ConfigCheckedException e) { return false; }
+            catch (ConfigCheckedException|DateTimeParseException e) { return false; }
             }
         else if (type == ConfigEntryType.DATETIME)
             {
@@ -567,7 +583,6 @@ public class ConfigSchemaEntry implements ConfigEntrySpecification
         if (flags != null && !flags.isEmpty())
             {
             this.temporalValidationFlags = flags;
-            // System.out.println("[DEBUG_LOG] setTemporalValidationFlags for " + this.key + ": " + flags);
             this.temporalValidator = new TemporalValidator(this.type, flags);
             }
         }

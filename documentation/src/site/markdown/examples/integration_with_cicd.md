@@ -16,7 +16,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp")
         .setFeature(ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS, true)
         .build())
     {
-    Configuration cfg = factory.getConfiguration("network");
+    Configuration cfg = factory.getConfig("network");
     }
 ```
 

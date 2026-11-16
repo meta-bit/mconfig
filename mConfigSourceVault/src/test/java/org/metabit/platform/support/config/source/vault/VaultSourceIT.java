@@ -39,6 +39,7 @@ class VaultSourceIT
     void testVaultResolution()
         {
         ConfigFactory factory = ConfigFactoryBuilder.create("test", "app")
+                .setFeature(VaultFeatures.BYPASS_TEST, true)
                 .addSource(VaultConfigSource.builder()
                         .withAddress(vault.getHttpHostAddress())
                         .withToken("test-token")

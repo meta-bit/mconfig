@@ -53,7 +53,10 @@ public class ListItemConfigEntry extends AbstractConfigEntry
         {
         if (itemValue == null) return null;
         if (itemValue instanceof Boolean) return (Boolean) itemValue;
-        return Boolean.valueOf(getValueAsString());
+        Boolean result = BooleanLiterals.parse(getValueAsString());
+        if (result == null)
+            { throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.CONVERSION_FAILURE); }
+        return result;
         }
 
     @Override
@@ -182,3 +185,4 @@ public class ListItemConfigEntry extends AbstractConfigEntry
         throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.NOT_WRITEABLE);
         }
 }
+//___EOF___

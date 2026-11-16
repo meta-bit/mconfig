@@ -65,3 +65,4 @@ public class MockConfigFactory extends DefaultConfigFactory implements ConfigFac
     // @TODO here, add a function to add file test paths, with scopes.
 
 }
+//___EOF___

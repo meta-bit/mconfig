@@ -31,3 +31,4 @@ public class ConsoleLoggingDiscoveryTest
         assertInstanceOf(ConsoleLogging.class, consoleLogger);
         }
 }
+//___EOF___

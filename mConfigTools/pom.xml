@@ -6,17 +6,21 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.17</version>
     </parent>
 
     <artifactId>mconfigtools</artifactId>
     <name>mConfig :: Tool :: CLI</name>
+    <description>The mconfig command: see where every configuration value of an application comes from.
+        Reads, sets and validates configuration across files, environment variables, the Windows registry
+        and Kubernetes ConfigMaps, shows which of mConfig's ten scopes supplies each value, and watches
+        changes live. Exports JSON, YAML, TOML or CSV for scripts and CI pipelines; secrets show as
+        [REDACTED] unless explicitly revealed.</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson.version>3.1.1</jackson.version>
         <mconfig.completion.shell>bash</mconfig.completion.shell>
         <mconfig.completion.names>mconfig</mconfig.completion.names>
     </properties>
@@ -24,6 +28,11 @@
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigcore</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigschema</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -49,6 +58,11 @@
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigwinregistry</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.metabit.platform.support.config</groupId>
+            <artifactId>mconfigsourcekubernetesfabric8</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -206,6 +220,38 @@
                             </resources>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>filter-deb-control-native</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/deb/control-native</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/deb/control-native</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>filter-deb-control-jlink</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/deb/control-jlink</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/deb/control-jlink</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -317,6 +363,159 @@
                                 <buildArg>--initialize-at-build-time=org.slf4j.simple.SimpleLogger</buildArg>
                             </buildArgs>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.vafer</groupId>
+                        <artifactId>jdeb</artifactId>
+                        <version>1.11</version>
+                        <executions>
+                            <execution>
+                                <id>build-deb-native</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jdeb</goal>
+                                </goals>
+                                <configuration>
+                                    <controlDir>${project.build.directory}/deb/control-native</controlDir>
+                                    <deb>${project.build.directory}/mconfig-tools-native_${project.version}_amd64.deb</deb>
+                                    <dataSet>
+                                        <data>
+                                            <type>file</type>
+                                            <src>${project.build.directory}/mconfig</src>
+                                            <dst>/usr/bin/mconfig</dst>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <filemode>755</filemode>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <type>file</type>
+                                            <src>${project.build.directory}/completions/mconfig.${mconfig.completion.shell}</src>
+                                            <dst>/usr/share/bash-completion/completions/mconfig</dst>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <filemode>644</filemode>
+                                            </mapper>
+                                        </data>
+                                    </dataSet>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jlink</id>
+            <build>
+                <plugins>
+                    <!-- jlink refuses an existing output directory; remove it first, so the profile runs again without "clean".
+                         Declared before exec-maven-plugin: same phase, POM order. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.4.1</version>
+                        <executions>
+                            <execution>
+                                <id>remove-old-jlink-runtime</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>${project.build.directory}/runtime</directory>
+                                        </fileset>
+                                    </filesets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>create-jlink-runtime</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>${java.home}/bin/jlink</executable>
+                                    <arguments>
+                                        <argument>--add-modules</argument>
+                                        <!-- java.net.http: the bundled Fabric8 Kubernetes client (kubernetes-httpclient-jdk);
+                                             jdk.crypto.ec: TLS with EC keys/ECDHE (Kubernetes API, cloud endpoints) on JDK 11-21 -->
+                                        <argument>java.base,java.logging,java.naming,java.desktop,jdk.unsupported,java.management,java.net.http,jdk.crypto.ec</argument>
+                                        <argument>--strip-debug</argument>
+                                        <argument>--no-man-pages</argument>
+                                        <argument>--no-header-files</argument>
+                                        <argument>--output</argument>
+                                        <argument>${project.build.directory}/runtime</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.vafer</groupId>
+                        <artifactId>jdeb</artifactId>
+                        <version>1.11</version>
+                        <executions>
+                            <execution>
+                                <id>build-deb-jlink</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jdeb</goal>
+                                </goals>
+                                <configuration>
+                                    <controlDir>${project.build.directory}/deb/control-jlink</controlDir>
+                                    <deb>${project.build.directory}/mconfig-tools-jlink_${project.version}_amd64.deb</deb>
+                                    <dataSet>
+                                        <data>
+                                            <type>directory</type>
+                                            <src>${project.build.directory}/runtime</src>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>/usr/lib/mconfig/runtime</prefix>
+                                                <filemode>755</filemode>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <type>file</type>
+                                            <src>${project.build.directory}/${project.build.finalName}.jar</src>
+                                            <dst>/usr/share/mconfig/mConfigTools.jar</dst>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <filemode>644</filemode>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <type>file</type>
+                                            <src>${project.basedir}/src/deb/bin/mconfig-jlink</src>
+                                            <dst>/usr/bin/mconfig</dst>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <filemode>755</filemode>
+                                            </mapper>
+                                        </data>
+                                        <data>
+                                            <type>file</type>
+                                            <src>${project.build.directory}/completions/mconfig.${mconfig.completion.shell}</src>
+                                            <dst>/usr/share/bash-completion/completions/mconfig</dst>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <filemode>644</filemode>
+                                            </mapper>
+                                        </data>
+                                    </dataSet>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

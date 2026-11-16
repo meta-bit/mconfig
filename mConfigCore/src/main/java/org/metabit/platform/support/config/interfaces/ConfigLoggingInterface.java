@@ -226,3 +226,4 @@ boolean isDebugEnabled();
  */
 boolean isTraceEnabled();
 }
+//___EOF___

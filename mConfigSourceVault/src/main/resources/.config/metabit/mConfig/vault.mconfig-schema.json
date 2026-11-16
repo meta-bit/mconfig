@@ -2,9 +2,7 @@
   {
     "KEY": "address",
     "TYPE": "URI",
-    "DESCRIPTION": "The URL of the HashiCorp Vault server.",
-    "DEFAULT": "http://127.0.0.1:8200",
-    "FLAGS": ["MANDATORY"]
+    "DESCRIPTION": "The URL of the HashiCorp Vault server, e.g. https://vault.example.com:8200. No default: without an address the Vault storage stays inactive."
   },
   {
     "KEY": "engine",
@@ -22,8 +20,7 @@
   {
     "KEY": "auth.kubernetes.role",
     "TYPE": "STRING",
-    "DESCRIPTION": "The Vault role to use for Kubernetes authentication.",
-    "DEFAULT": "default"
+    "DESCRIPTION": "The Vault role to use for Kubernetes authentication. If not set, the application name is used."
   },
   {
     "KEY": "auth.kubernetes.mount",
@@ -32,9 +29,20 @@
     "DEFAULT": "kubernetes"
   },
   {
+    "KEY": "auth.kubernetes.tokenPath",
+    "TYPE": "STRING",
+    "DESCRIPTION": "Path of the ServiceAccount token file sent to Vault. Recommended: a projected token with a Vault audience. If not set: KUBERNETES_SA_TOKEN_PATH if set, else /var/run/secrets/kubernetes.io/serviceaccount/token."
+  },
+  {
+    "KEY": "auth.allowInsecureTransport",
+    "TYPE": "BOOLEAN",
+    "DESCRIPTION": "Allow Kubernetes login over plain http, and let VAULT_SSL_VERIFY disable TLS verification. For development and tests only.",
+    "DEFAULT": "false"
+  },
+  {
     "KEY": "token",
     "TYPE": "STRING",
-    "DESCRIPTION": "Static Vault token to use if Kubernetes auth is not available.",
+    "DESCRIPTION": "Static Vault token to use if Kubernetes auth is not available. If not set, the VAULT_TOKEN environment variable is used.",
     "SECRET": true
   },
   {

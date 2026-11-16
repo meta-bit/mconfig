@@ -13,8 +13,23 @@ public interface SecretEntryFactory
      * Create a secret configuration entry.
      * @param key the entry key
      * @param value the secret value
-     * @param source the config source
+     * @param meta the entry metadata
      * @return the created entry
      */
+    default ConfigEntry createSecretEntry(String key, SecretValue value, ConfigEntryMetadata meta)
+    {
+        return createSecretEntry(key, value, meta.getSource());
+    }
+
+    /**
+     * Create a secret configuration entry.
+     * @param key the entry key
+     * @param value the secret value
+     * @param source the config source
+     * @return the created entry
+     * @deprecated use {@link #createSecretEntry(String, SecretValue, ConfigEntryMetadata)}
+     */
+    @Deprecated
     ConfigEntry createSecretEntry(String key, SecretValue value, ConfigSource source);
 }
+//___EOF___

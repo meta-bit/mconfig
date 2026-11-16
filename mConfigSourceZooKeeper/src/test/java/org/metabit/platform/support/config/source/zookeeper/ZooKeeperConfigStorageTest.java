@@ -76,6 +76,7 @@ public class ZooKeeperConfigStorageTest
 
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test-app");
         builder.setTestMode(true);
+        builder.setFeature(ZooKeeperFeatures.BYPASS_TEST, true);
         builder.setFeature(ConfigFeature.EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND, false);
         builder.setTestConfigPaths(ConfigScope.USER, java.util.Collections.singletonList(userConfigDir.toString()));
         
@@ -108,6 +109,7 @@ public class ZooKeeperConfigStorageTest
 
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test-app");
         builder.setTestMode(true);
+        builder.setFeature(ZooKeeperFeatures.BYPASS_TEST, true);
         builder.setTestConfigPaths(ConfigScope.USER, java.util.Collections.singletonList(userConfigDir.toString()));
 
         try (ConfigFactory factory = builder.build())
@@ -124,6 +126,7 @@ public class ZooKeeperConfigStorageTest
         // No bootstrap config, set via builder features
         ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("metabit", "test-app");
         builder.setTestMode(true);
+        builder.setFeature(ZooKeeperFeatures.BYPASS_TEST, true);
         builder.setFeature(ZooKeeperFeatures.CONNECT_STRING, zkServer.getConnectString());
         builder.setFeature(ZooKeeperFeatures.ROOT_PATH, "/mconfig-test");
         builder.setFeature(ZooKeeperFeatures.RETRY_BASE_SLEEP_MS, 500);

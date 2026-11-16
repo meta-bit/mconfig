@@ -27,7 +27,8 @@ class LinuxSearchPaths implements SearchPathInitializer
             }
         for (String path : xdgDirs.split(":"))
             {
-            storage.addPathToSearchList(searchList, path, ConfigScope.HOST, applicationName);
+            if (path == null || path.trim().isEmpty()) continue;
+            storage.addAbsolutePathToSearchList(searchList, path.trim(), ConfigScope.HOST, applicationName);
             }
 
         /// In the field, one may also encounter `/etc/xdg/<config>.<extension>`.
@@ -41,7 +42,25 @@ class LinuxSearchPaths implements SearchPathInitializer
         String xdgUserConfig = System.getenv("XDG_CONFIG_HOME");
         if (xdgUserConfig != null && !xdgUserConfig.isEmpty())
             {
-            storage.addPathToSearchList(searchList, xdgUserConfig, ConfigScope.USER, companyName, applicationName, subDir);
+            // sanitize and validate path: ensure XDG_CONFIG_HOME is absolute and doesn't contain traversal
+            try
+                {
+                java.nio.file.Path xdgPath = java.nio.file.Paths.get(xdgUserConfig).normalize();
+                if (!xdgPath.isAbsolute())
+                    {
+                    storage.logInfo("XDG_CONFIG_HOME is not an absolute path, ignoring: " + xdgUserConfig);
+                    storage.addPathToSearchList(searchList, System.getProperty("user.home"), ConfigScope.USER, ".config", companyName, applicationName, subDir);
+                    }
+                else
+                    {
+                    storage.addPathToSearchList(searchList, xdgPath.toString(), ConfigScope.USER, companyName, applicationName, subDir);
+                    }
+                }
+            catch (java.nio.file.InvalidPathException e)
+                {
+                storage.logInfo("XDG_CONFIG_HOME contains an invalid path, ignoring: " + xdgUserConfig);
+                storage.addPathToSearchList(searchList, System.getProperty("user.home"), ConfigScope.USER, ".config", companyName, applicationName, subDir);
+                }
             }
         else
             {
@@ -61,7 +80,7 @@ class LinuxSearchPaths implements SearchPathInitializer
         storage.addPathToSearchList(searchList, "/usr/local/etc", ConfigScope.HOST, applicationName, subDir);
 
         // relative to the current working directory the application was started from.
-        storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);
 
         return;
         }

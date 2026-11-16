@@ -6,13 +6,28 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.17</version>
     </parent>
 
     <artifactId>mconfigsourcezookeeper</artifactId>
     <name>mConfig :: Source :: ZooKeeper</name>
     <description>mConfig module for Apache ZooKeeper configuration storage</description>
-    <properties><apache.curator.version>5.7.0</apache.curator.version></properties>
+    <!-- this module is Apache-2.0 (source headers, LICENSE file); overrides the core license inherited from the parent (MLIB-141, T17) -->
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <properties>
+        <apache.curator.version>5.9.0</apache.curator.version>
+        <!-- versions above Curator's defaults, for known CVEs; declared as direct dependencies
+             below so they win for consumers too (dependencyManagement does not propagate) -->
+        <zookeeper.version>3.9.7</zookeeper.version>
+        <netty.version>4.1.140.Final</netty.version>
+        <guava.version>33.8.0-jre</guava.version>
+    </properties>
 
 
     <dependencies>
@@ -32,6 +47,54 @@
             <version>${apache.curator.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>${zookeeper.version}</version>
+            <!-- same exclusions as Curator applies -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jmx</groupId>
+                    <artifactId>jmxri</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jdmk</groupId>
+                    <artifactId>jmxtools</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.jms</groupId>
+                    <artifactId>jms</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-epoll</artifactId>
+            <version>${netty.version}</version>
+            <classifier>linux-x86_64</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
@@ -39,7 +102,14 @@
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-test</artifactId>
-            <version>5.5.0</version>
+            <version>${apache.curator.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- above the snappy-java version the ZooKeeper test server brings (CVEs) -->
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.1.10.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -63,7 +133,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.36</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

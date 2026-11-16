@@ -117,10 +117,11 @@ public enum ConfigFeature implements ConfigFeatureInterface
     /**
      * numerical loglevel, provided to the logging module.
      * Most logging modules have their own filter logic, and will ignore this;
-     * but others, like StdErr-logging, use this.
-     * Suggested values: 0 is none, 1 logs severe errors, 2 warnings, and so on.
+     * but others, like the internal logger used with LOGGING_REDIRECT_TARGET, use this.
+     * Suggested values: 0 none, 1 errors, 2 warnings, 3 info, 4 debug, 5 trace
+     * (the mapping of the internal logger).
      * The actual meaning is mapped/determined by the respective logging module.
-     * default: 2
+     * default: 4
      */
     LOGLEVEL_NUMBER, // integer
 
@@ -187,6 +188,9 @@ public enum ConfigFeature implements ConfigFeatureInterface
     /**
      * when the list of prioritized storage types is exhausted,
      * continue with those storages not explicitly named on the list?
+     * If false, discovered storages not covered by STORAGE_TYPE_PRIORITIES are not used at all.
+     * An entry covers the storage ID itself and IDs it prefixes up to a "-" or "." ("RAM" covers "RAM-SESSION").
+     * Core's own storages ("defaults", "RAM-*") are always used. Sources added with addSource() are not affected.
      * default: true
      */
     STORAGE_TYPE_ALLOW_ALL_STORAGES,
@@ -254,7 +258,11 @@ public enum ConfigFeature implements ConfigFeatureInterface
     /**
      * If false, local filesystem schemas are ignored, locking the application to its bundled schema.
      * default: true
+     *
+     * @deprecated to be replaced in 0.9.0 by an allowlist of schema sources. It still works in 0.8.x;
+     * keep using it until the replacement is available.
      */
+    @Deprecated
     ALLOW_LOCAL_SCHEMA_OVERRIDE,
 
 
@@ -323,13 +331,18 @@ public enum ConfigFeature implements ConfigFeatureInterface
      * default will be returned.
      * default: true
      */
-    EXCEPTION_ON_MISSING_ENTRY,  // Boolean, default: false. instead of returning NULL, thrown an exception.
+    EXCEPTION_ON_MISSING_ENTRY,  // Boolean, default: true. instead of returning NULL, throw an exception.
     /**
      * if a missing entry is encountered and no exception is thrown (see EXCEPTION_ON_MISSING_ENTRY), this
      * flag tells us whether to return a null handle, or the hard-coded default fallback values.
      * true: use hard-coded defaults, false: return null
      * default: false
+     *
+     * @deprecated never evaluated; setting it has no effect. Schema {@code DEFAULT} values apply anyway: a missing
+     * entry with a schema default returns the default, one without a default throws (or returns null with
+     * {@link #EXCEPTION_ON_MISSING_ENTRY} set to false). To be removed in 0.9.0.
      */
+    @Deprecated
     DEFAULT_ON_MISSING_ENTRY,
     /**
      * When for a given configuration name/path no configuration can be found at all,
@@ -366,6 +379,59 @@ public enum ConfigFeature implements ConfigFeatureInterface
      */
     ENABLE_SELF_CONFIGURATION,
     /**
+     * allow the application to register POLICY-scope locations itself, outside test mode:
+     * {@code POLICY:} entries in {@link #ADDITIONAL_RUNTIME_DIRECTORIES} / {@link #ADDITIONAL_USER_DIRECTORIES},
+     * a {@code "scope": "POLICY"} secrets provider, or a POLICY source added with {@code ConfigFactoryBuilder.addSource()}.
+     * Without it, such registrations fail with a {@link ConfigException}: POLICY is meant for administrator-controlled
+     * locations, which mConfig derives from the operating system. Can only be set in code.
+     * default: false.
+     */
+    ALLOW_APPLICATION_POLICY_LOCATIONS,
+    /**
+     * start even though mConfig modules are on the classpath without their service registration.
+     * <p>
+     * mConfig finds its storages, formats and components via {@code META-INF/services} files. Packaging that
+     * unpacks dependency JARs into one JAR without merging these files (e.g. maven-assembly-plugin with the
+     * predefined {@code jar-with-dependencies} descriptor) keeps only one file per service; configuration
+     * sources, formats or components are then missing, and with them configuration values.
+     * {@code build()} detects this when core's own registrations are among the lost ones, and fails with a
+     * {@link ConfigException} (reason {@code JAVA_SERVICE_CONFIGURATION_ERROR}).
+     * With this feature set, it logs the same report as a WARNING and starts without the components concerned.
+     * The fix is in the packaging; see "Packaging as a single JAR" in the Getting Started documentation.
+     * default: false.
+     */
+    ALLOW_INCOMPLETE_SERVICE_REGISTRATION,
+
+    /**
+     * show the parser's own message for content that failed to parse, even where it may quote a secret value.
+     * <p>
+     * By default, a parse error is always reported with location, format, error type, line, column and key path;
+     * the parser's message is added unless the content may hold secrets: a secret store, a bootstrap configuration
+     * of a cloud module, or a schema with a {@code SECRET} entry at, above or below the error position (anywhere,
+     * if the parser cannot tell the position). Set this for development, to see every parser message.
+     * Can only be set in code.
+     * default: false.
+     * @since 0.8.17
+     */
+    LOG_PARSE_ERROR_DETAILS,
+    /**
+     * read Boolean values the way {@link Boolean#parseBoolean(String)} does: "true" in any case is true,
+     * every other value, including typing errors, is false.
+     * <p>
+     * By default, {@code Configuration.getBoolean()} accepts {@code true/false}, {@code yes/no},
+     * {@code on/off} and {@code 1/0}, in any case and with surrounding blanks; any other value, an empty one
+     * included, gives a {@link ConfigException} (reason {@code CONVERSION_FAILURE}).
+     * Set this for compatibility with files written for the plain Java behaviour, where e.g. "disabled" meant false.
+     * <p>
+     * Limitation: the feature acts in the {@code Configuration} getters. Code that converts a {@code ConfigEntry}
+     * itself ({@code getValueAsBoolean()}), and the ConfigMapper, always convert strictly.
+     * Schema validation of BOOLEAN entries is strict, too: an invalid value is skipped there and the next
+     * layer or the schema default applies.
+     * default: false.
+     * @since 0.8.17
+     */
+    LENIENT_BOOLEAN_CONVERSION,
+    /**
      * ID of the secrets provider to be used for secret configuration entries.
      */
     SECRETS_PROVIDER_ID,
@@ -399,7 +465,9 @@ public enum ConfigFeature implements ConfigFeatureInterface
     // features which are under review; may be removed or changed in future versions before 1.0
     /**
      * global setting to limit the scopes for update checks.
-     * default: everything except RUNTIME, because that scope is changed by your own code.
+     * default: all scopes, RUNTIME included. Changes to RUNTIME and SESSION are made in-process; the update check is
+     * how subscribers learn about them, e.g. one component reacting to an override set by another.
+     * Leaving RUNTIME out means no notifications for RUNTIME changes at all.
      */
     UPDATE_CHECK_SCOPES,
 
@@ -437,7 +505,8 @@ public enum ConfigFeature implements ConfigFeatureInterface
      */
     CURRENT_PLATFORM_OS,
     /**
-     * the hostname of the context the program runs in (hardware, container, ...)
+     * the hostname of the context the program runs in (hardware, container, ...).
+     * Detected automatically when first read; null if it cannot be determined. Never fails the factory start.
      */
     HOSTNAME,
     /**
@@ -615,6 +684,35 @@ public enum ConfigFeature implements ConfigFeatureInterface
         CREATE_MISSING_PATHS.valueType = ValueType.BOOLEAN;
         CREATE_MISSING_PATHS.defaultValue = Boolean.FALSE;
 
+        ALLOW_APPLICATION_POLICY_LOCATIONS.valueType = ValueType.BOOLEAN;
+        ALLOW_APPLICATION_POLICY_LOCATIONS.defaultValue = Boolean.FALSE;
+
+        ALLOW_INCOMPLETE_SERVICE_REGISTRATION.valueType = ValueType.BOOLEAN;
+        ALLOW_INCOMPLETE_SERVICE_REGISTRATION.defaultValue = Boolean.FALSE;
+
+        LOG_PARSE_ERROR_DETAILS.valueType = ValueType.BOOLEAN;
+        LOG_PARSE_ERROR_DETAILS.defaultValue = Boolean.FALSE;
+
+        LENIENT_BOOLEAN_CONVERSION.valueType = ValueType.BOOLEAN;
+        LENIENT_BOOLEAN_CONVERSION.defaultValue = Boolean.FALSE;
+
+        // security-relevant features: who may set them (see SettingLevel)
+        ALLOW_MCONFIG_RUNTIME_SETTINGS.settingLevel = SettingLevel.CODE_ONLY;     // the delegation itself
+        ENABLE_SELF_CONFIGURATION.settingLevel = SettingLevel.CODE_ONLY;          // would be circular
+        ALLOW_APPLICATION_POLICY_LOCATIONS.settingLevel = SettingLevel.CODE_ONLY;
+        ADDITIONAL_MODULE_PATHS.settingLevel = SettingLevel.CODE_ONLY;            // loads code
+        // each component is responsible for its own test mode; the main application can lock all down with forbidTestMode().
+        // Code wins over files, so a file cannot undo a lockdown set in code.
+        TEST_MODE.settingLevel = SettingLevel.COMPONENT;
+        TESTMODE_DIRECTORIES.settingLevel = SettingLevel.COMPONENT;
+        PERMIT_TEST_MODE.settingLevel = SettingLevel.COMPONENT;
+        // a component accepts its own packaging fault; not the global file, which would accept it for every component.
+        ALLOW_INCOMPLETE_SERVICE_REGISTRATION.settingLevel = SettingLevel.COMPONENT;
+        // an explicit decision by the developer; whether the component file may set it too is open for review.
+        LOG_PARSE_ERROR_DETAILS.settingLevel = SettingLevel.CODE_ONLY;
+        // how a component reads its own files; not the global file, which would change it for every component.
+        LENIENT_BOOLEAN_CONVERSION.settingLevel = SettingLevel.COMPONENT;
+
         for (ConfigFeature f : values())
             {
             ConfigFeatureRegistry.register(f);
@@ -625,6 +723,16 @@ public enum ConfigFeature implements ConfigFeatureInterface
     @SuppressWarnings("rawtypes")
     private Class     classType; // outside valueType; specific to SPECIAL_CLASS
     private Object    defaultValue; // if set, must be of correct type.
+    private SettingLevel settingLevel = SettingLevel.ANY;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SettingLevel getSettingLevel()
+    {
+        return settingLevel;
+    }
 
     /**
      * {@inheritDoc}
@@ -731,6 +839,46 @@ public enum ConfigFeature implements ConfigFeatureInterface
 
     public enum ValueType
         {BOOLEAN, STRING, STRINGLIST, NUMBER, SPECIAL_CLASS}
+
+    /**
+     * which channels may set a feature.
+     * <ul>
+     * <li>Code: {@code ConfigFactoryBuilder.setFeature()}; always allowed, and always wins over the file channels.</li>
+     * <li>Delegated: runtime settings ({@code MCONFIG_RUNTIME_*} environment variables and
+     *     {@code -Dmconfig.runtime.*} system properties). They only take effect after the application
+     *     enabled {@link #ALLOW_MCONFIG_RUNTIME_SETTINGS} in code, i.e. delegated explicitly.</li>
+     * <li>Component file: {@code .config/<company>/<application>/mconfig.properties} on the classpath.
+     *     It applies only to factories created for that company and application, so each component
+     *     configures only itself (see {@link #ENABLE_SELF_CONFIGURATION}).</li>
+     * <li>Global file (deprecated): {@code .config/metabit/mConfig/mconfig.properties}. It applies to every
+     *     factory in the process and cannot be attributed to a component; it will be removed before 0.9.0.</li>
+     * </ul>
+     * A channel that is not allowed to set a feature ignores the value and logs a warning.
+     */
+    public enum SettingLevel
+        {
+        /** only code may set the feature. */
+        CODE_ONLY,
+        /** code, runtime settings (delegated), or the component's own file; not the global file. */
+        COMPONENT,
+        /** any channel, including the deprecated global file. */
+        ANY;
+
+        /**
+         * @return true if runtime settings (delegated by the application) may set the feature.
+         */
+        public boolean allowsDelegated() { return this != CODE_ONLY; }
+
+        /**
+         * @return true if the component's own {@code mconfig.properties} may set the feature.
+         */
+        public boolean allowsComponentFile() { return this != CODE_ONLY; }
+
+        /**
+         * @return true if the deprecated global {@code mconfig.properties} may set the feature.
+         */
+        public boolean allowsGlobalFile() { return this == ANY; }
+        }
 
 }
 //___EOF___

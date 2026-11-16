@@ -1,79 +1,29 @@
 package org.metabit.platform.support.config.tool;
 
-import org.metabit.platform.support.config.*;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ParentCommand;
 
-import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.concurrent.Callable;
 
-@Command(name = "propose-schema", description = "Propose a config schema for an existing configuration.", mixinStandardHelpOptions = true)
+/**
+ * placeholder for the schema proposal command.
+ * <p>
+ * Disabled: the previous implementation printed secret values in plain text, used the
+ * effective value of any scope as DEFAULT, and emitted a shape mConfig does not load.
+ * It is being rewritten (MLIB-137, scheduled with the schema format work of MLIB-135).
+ * The command stays registered so that callers get a clear message, not "unknown command".
+ */
+@Command(name = "propose-schema", description = "Propose a config schema for an existing configuration (currently disabled).", mixinStandardHelpOptions = true)
 public class ProposeSchemaCommand implements Callable<Integer>
 {
-    @ParentCommand
-    private Main main;
-
-    @CommandLine.Parameters(index = "0", arity = "0..1", description = "Shortened syntax: [COMPANY:]APPLICATION[:CONFIGNAME]")
-    private String shortened;
-
-    @CommandLine.Mixin
-    public CommonOptions commonOptions = new CommonOptions();
+    @CommandLine.Unmatched
+    private String[] ignored; // accept the former arguments and options, so the message below is shown
 
     @Override
     public Integer call()
         {
-        if (shortened != null)
-            {
-            main.shortened = shortened;
-            }
-        Main.ConfigContext ctx = new Main.ConfigContext(main, commonOptions);
-        try
-            {
-            ctx.validate(true, false);
-            try (ConfigFactory configFactory = ConfigFactoryBuilder.create(ctx.company, ctx.application).build())
-                {
-                Configuration cfg = configFactory.getConfig(ctx.configName);
-                if (ctx.format == Main.OutputFormat.HUMAN)
-                    {
-                    System.out.println("// Proposed ConfigSchema for "+ctx.configName);
-                    System.out.println("{");
-                    System.out.println("  \"configurations\": {");
-                    System.out.println("    \""+ctx.configName+"\": {");
-                    System.out.println("      \"entries\": {");
-
-                    Iterator<String> it = cfg.getEntryKeyTreeIterator();
-                    while (it.hasNext())
-                        {
-                        String key = it.next();
-                        ConfigEntry entry = cfg.getConfigEntryFromFullKey(key, EnumSet.allOf(ConfigScope.class));
-                        String type = entry.getType().toString();
-
-                        System.out.println("        \""+key+"\": {");
-                        System.out.println("          \"type\": \""+type+"\",");
-                        System.out.println("          \"description\": \"TODO: description for "+key+"\",");
-                        System.out.println("          \"default\": \""+entry.getValueAsString()+"\"");
-                        System.out.println("        }"+(it.hasNext() ? "," : ""));
-                        }
-
-                    System.out.println("      }");
-                    System.out.println("    }");
-                    System.out.println("  }");
-                    System.out.println("}");
-                    }
-                else
-                    {
-                    // For JSON/CSV we could just output the entries list
-                    System.err.println("Only HUMAN (JSON-like) output supported for propose-scheme for now.");
-                    }
-                }
-            }
-        catch (Exception e)
-            {
-            System.err.println("Error: "+e.getMessage());
-            return 1;
-            }
-        return 0;
+        System.err.println("propose-schema is disabled in this version; it is being rewritten. No output was produced.");
+        return 1;
         }
 }
+//___EOF___

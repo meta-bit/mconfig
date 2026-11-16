@@ -12,3 +12,4 @@ public class SessionInMemoryLayerSource extends InMemoryLayerSource
         super(ConfigScope.SESSION);
         }
 }
+//___EOF___

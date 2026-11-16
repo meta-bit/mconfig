@@ -5,7 +5,7 @@
   "@type": "SoftwareApplication",
   "name": "mConfig",
   "alternateName": "metabit mConfig",
-  "description": "A 10-tier hierarchical configuration architecture and Java library. Resolves configuration through a strict Scope hierarchy from POLICY down to PRODUCT defaults, abstracting Sources (Filesystem, ZooKeeper, I2C) from Formats (JSON, YAML, TOML, INI).",
+  "description": "A 10-tier hierarchical configuration architecture and Java library. Resolves configuration through a strict Scope hierarchy from POLICY down to PRODUCT defaults, abstracting Storages (Filesystem, JAR, environment, Windows registry, Vault, AWS Secrets Manager, Kubernetes, ZooKeeper) from Formats (JSON, YAML, TOML, INI, Java Properties).",
   "applicationCategory": "DeveloperApplication",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
@@ -13,9 +13,9 @@
     "url": "https://www.java.com"
   },
   "operatingSystem": "Cross-platform",
-  "softwareVersion": "0.8.7",
+  "softwareVersion": "0.8.17",
   "url": "https://github.com/meta-bit/mconfig",
-  "keywords": "mConfig, configuration-hierarchy, java-config, policy-based-configuration, zookeeper, i2c-embedded, cross-language-config, type-safe, architecture",
+  "keywords": "mConfig, configuration-hierarchy, java-config, policy-based-configuration, zookeeper, i2c-embedded, cross-language-config, type-safe, architecture, configuration-hot-reload, kubernetes-configmap, environment-variables, config-schema, secret-redaction, windows-registry-group-policy, test-isolation",
   "author": {
     "@type": "Organization",
     "name": "metabit",
@@ -79,8 +79,8 @@
   ],
   "featureList": [
     "10-Tier Scope Hierarchy (Priority Order): POLICY, RUNTIME, SESSION, USER, APPLICATION, HOST, CLUSTER, CLOUD, ORGANIZATION, PRODUCT",
-    "Source Agnostic: Supports local files, JAR resources, Environment/CLI, Apache ZooKeeper, and I2C storage",
-    "Multi-Format Support: Native parsing for JSON, YAML, TOML, INI, and Java Properties",
+    "Storage Agnostic: Supports local files, JAR resources, environment variables, Windows registry, HashiCorp Vault, AWS Secrets Manager, Kubernetes ConfigMaps and Secrets, Apache ZooKeeper; embedded storages such as I2C are a design target, not shipped yet",
+    "Multi-Format Support: JSON, YAML, TOML, INI, and Java Properties",
     "Type-Safe Mapping: Direct binding to Java objects with pluggable validation",
     "Cross-Language Architecture: Specification-first design with current Java implementation",
     "Pluggable validation system",
@@ -106,7 +106,7 @@
       "@type": "SoftwareSourceCode",
       "name": "mConfigMapper",
       "description": "Experimental mapping between configurations and data models + POJO.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigMapper/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
@@ -117,13 +117,13 @@
       "@type": "SoftwareSourceCode",
       "name": "mConfigTools",
       "description": "Command line tool for configuration management.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigTools/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigTools/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigSourceEnvVar",
       "description": "Provides SESSION scope configuration via environment variables.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigSourceEnvVar/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigSourceEnvVar/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
@@ -134,12 +134,37 @@
       "@type": "SoftwareSourceCode",
       "name": "mConfigSourceJAR",
       "description": "Provides PRODUCT default scope configurations from Java JAR files.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigSourceJAR/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigSourceJAR/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigSourceZooKeeper",
-      "description": "Provides the CLUSTER scope implementation using Apache ZooKeeper for distributed networked configuration."
+      "description": "Provides the CLUSTER scope implementation using Apache ZooKeeper for distributed networked configuration.",
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigSourceZooKeeper/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceVault",
+      "description": "Provides CLOUD scope configuration via HashiCorp Vault (opt-in module, not in the Basic or Standard set).",
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigSourceVault/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceAwsSecretsManager",
+      "description": "Provides CLOUD scope configuration via AWS Secrets Manager (opt-in module).",
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigSourceAwsSecretsManager/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceKubernetes",
+      "description": "Provides CLUSTER scope configuration via Kubernetes ConfigMaps and Secrets, using the JDK HTTP client (opt-in module).",
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigSourceKubernetes/README.md"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigSourceKubernetesFabric8",
+      "description": "Kubernetes ConfigMaps and Secrets via the Fabric8 client (opt-in module, alternative to mConfigSourceKubernetes).",
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigSourceKubernetesFabric8/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
@@ -150,19 +175,19 @@
       "@type": "SoftwareSourceCode",
       "name": "mConfigWinRegistry",
       "description": "Provides POLICY, USER, and HOST scope configurations from Windows Registry using JNR-FFI.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigWinRegistry/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigWinRegistry/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigWinRegistryJNI",
       "description": "Provides native Windows Registry access using JNI for higher performance and smaller footprint.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigWinRegistryJNI/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigWinRegistryJNI/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigCheese",
       "description": "Convenience facade providing alternative API flavors for mConfig.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigCheese/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigCheese/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
@@ -177,7 +202,22 @@
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigFormatJSONwithJackson",
-      "description": "JSON format module for mConfig using Jackson library."
+      "description": "JSON and JSON5 format module for mConfig using the Jackson library."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatTOMLwithJackson",
+      "description": "TOML format module for mConfig using the Jackson library."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatYAMLwithSnakeYAML",
+      "description": "YAML format module for mConfig using SnakeYAML."
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "mConfigFormatJsonSchema",
+      "description": "Reads standard JSON Schema files as mConfig schemas (opt-in module)."
     },
     {
       "@type": "SoftwareSourceCode",
@@ -198,26 +238,33 @@
       "@type": "SoftwareSourceCode",
       "name": "mConfigBasicBinary",
       "description": "Batteries-included base distribution of mConfig. Shaded JAR.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigBasicBinary/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigBasicBinary/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigBasic",
       "description": "Standard set of mConfig modules for basic usage. POM aggregator.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigBasic/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigBasic/README.md"
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "mConfigStandard",
       "description": "Extended set of mConfig modules for advanced usage. POM aggregator.",
-      "url": "https://github.com/meta-bit/mconfig/blob/main/mConfigStandard/README.md"
+      "url": "https://github.com/meta-bit/mconfig/blob/master/mConfigStandard/README.md"
     }
   ]
  }
 </script>
 -->
-
 # mConfig
+status
+
+| Type       | Status                                                                                                                                                                                                              |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build (CI) | [![Build (github)](https://github.com/meta-bit/mconfig/actions/workflows/maven.yml/badge.svg)](https://github.com/meta-bit/mconfig/actions/workflows/maven.yml)                                                     |
+| Artifact   | [![Maven Central](https://img.shields.io/maven-central/v/org.metabit.platform.support.config/mconfig.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/org.metabit.platform.support.config/mconfig) |
+| Javadoc    | [![javadoc](https://javadoc.io/badge2/org.metabit.platform.support.config/mconfigcore/javadoc.svg)](https://javadoc.io/doc/org.metabit.platform.support.config/mconfigcore)                                         |
+<!-- dependabot, coverage etc. planned ->
 
 The "Hen-and-Egg" Problem Solved.
 
@@ -248,13 +295,15 @@ from embedded I2C storage to cloud-native orchestration.
 * Modular Drop-in Support:
   mConfig implements Modular Directory Discovery, automatically layering .d fragments into the configuration stack without manual setup.
 * Multi-Format Support: comes with format modules for TOML, YAML, JSON5, JSON, INI, and Java Properties.¹
-* Type-Safe Config Schemes: Define your schema once. Includes validation, range-checking, and centralized defaults.
+* Type-Safe Config Schemas: Define your schema once. Includes validation, range-checking, and centralized defaults.
+* Secrets: entries marked `"SECRET": true` in the schema, or coming from a secret store, are returned as `SecretValue`,
+  shown as `[REDACTED]` in logs and exports, and can be erased from memory after use.
 * Sensible Defaults, Total Control:
   Adheres to the "principle of least surprise" with its defaults.
   Every aspect is tunable via ConfigFeature flags for enterprise-level customization.
 * Dynamic Updates: do not buffer values locally. Changes are immediately reflected in mConfig objects,
   so you always have the latest configuration available. ("zero-code data binding")
-* Minimal Footprint: The core library is about 200kB (JAR size).
+* Minimal Footprint: The core library is about 230kB (JAR size).
   This is exceptionally small compared to frameworks like Spring Boot or Apache Commons, making it ideal for microservices, serverless functions, and environments where memory/disk space is critical.
 * CLI Tool: mConfig comes with a command-line tool for scripting, auditing, and troubleshooting.
 * Test Mode: for CI/CD and local development, test mode provides a clean environment separate from deployment paths.
@@ -263,13 +312,18 @@ from embedded I2C storage to cloud-native orchestration.
 so using these formats will increase your application's footprint.
 For TOML, INI, and Java Properties formats, mConfig provides native modules, which are smaller and preserve comments.
 
+**Java:** 11 or newer. The Jackson-based format modules (JSON, YAML, TOML via Jackson, JSON Schema) and everything
+that includes them, such as `mconfigstandard` and the CLI, need Java 17.
+
 ## usage
 
-Choose the entry point that fits your project architecture:
+Choose the entry point that fits your project architecture. `${mconfig.version}` is a placeholder:
+use the current release from Maven Central (badge above) or the [CHANGELOG](CHANGELOG.md).
 
 ### 1. Basic Set (`mConfigBasic`)
 
-Best for: Lightweight Java projects requiring standard filesystem support.
+Best for: Lightweight, file-based Java projects. Contains core, schema, secrets, the filesystem and
+JAR storages, the Java Properties format and the util adapters. Java 11.
 
 Maven:
 
@@ -293,6 +347,10 @@ implementation 'org.metabit.platform.support.config:mconfigbasic:${mconfig.versi
 
 Best for: Enterprise environments requiring signed artifacts or a single "fat" JAR.
 Fully compatible with the Java Module System (JPMS) since v0.7.26.
+If you build your own single JAR instead, merge the `META-INF/services` files (shade's
+`ServicesResourceTransformer`, Shadow's `mergeServiceFiles()`); otherwise storages go missing and
+`build()` refuses to start. See "Packaging as a single JAR" in
+[Getting Started](documentation/src/site/markdown/13_getting_started.md).
 
 Maven:
 
@@ -313,13 +371,16 @@ implementation 'org.metabit.platform.support.config:mconfigbasicbinary:${mconfig
 
 ### 3. Standard Mature Set (`mConfigStandard`)
 
-Best for: Modern cloud applications.
-Includes Environment Variables, Windows Registry, Slf4j, and full JSON/YAML support via Jackson.
+Best for: Modern cloud applications. Java 17.
+Everything in the Basic set, plus environment variables, the Windows registry, SLF4J logging,
+the POJO mapper, INI, and JSON/YAML/TOML via Jackson and YAML via SnakeYAML.
+
+Not in either set, added as separate dependencies when needed: HashiCorp Vault, AWS Secrets Manager,
+Kubernetes (two variants), Apache ZooKeeper, and the JSON Schema reader.
 
 Maven:
 
 ```xml
-
 <dependency>
     <groupId>org.metabit.platform.support.config</groupId>
     <artifactId>mconfigstandard</artifactId>
@@ -338,8 +399,10 @@ implementation 'org.metabit.platform.support.config:mconfigstandard:${mconfig.ve
 
 * [getting started - usage](documentation/src/site/markdown/13_getting_started.md)
 * the [documentation](documentation/src/site/markdown/index.md) - read from the start
-* [notes for code-generating tools](documentation/src/site/markdown/45_ai_guidance.md)
+* [AGENTS.md](AGENTS.md): the compact guide for AI agents and code generators (API routing map, rules, pitfalls);
+  [notes for code-generating tools](documentation/src/site/markdown/52_ai_guidance.md)
 * Jump to [design documentation](documentation/src/site/markdown/44_design_consolidated.md)
+* [CHANGELOG](CHANGELOG.md): behaviour changes per release, check before upgrading
 
 ## Why a CLI for a Java Library?
 
@@ -364,8 +427,8 @@ mconfig mycompany:myapp list
 # Show the full combined config contents
 mconfig mycompany:myapp:database show
 
-# Show the combined config contents as JSON
-mconfig mycompany:myapp:database show --format json
+# Show the combined config contents as JSON (secret values appear as [REDACTED])
+mconfig mycompany:myapp:database show --format JSON
 
 # set a value
 mconfig mycompany:myapp:database set port=3306 
@@ -377,10 +440,6 @@ mconfig mycompany:myapp:database set frequency=0.5s --create
 mconfig mycompany:myapp:network monitor --dump
 ```
 
-<!--
-# Generate schema from existing configs
-mconfig mycompany:myapp propose-scheme > network.scheme.json
--->
 **Pro Tip:** Install via `.deb` package: `mvn -pl mConfigTools package && sudo dpkg -i mConfigTools/target/*.deb`
 
 ## Starters 🚀
@@ -393,66 +452,49 @@ Zero-config boilerplates for Maven, Gradle, JPMS. Copy → Run → No errors!
 
 ## Snippets 🚀
 
-[![Snippets](https://img.shields.io/badge/Snippets-config-brightblue)](documentation/src/site/markdown/snippets.md)
+[![Snippets](https://img.shields.io/badge/Snippets-config-brightblue)](examples/snippets.md)
 
 Copy-paste fixes for everyday config problems: hardcodes, env vars, hot-reload, secrets, JPMS, tests.
 
-[snippets.md](documentation/src/site/markdown/snippets.md)
+- [examples/snippets.md](examples/snippets.md): code templates to copy. The Java templates are compiled against the current API on every build.
+- [Snippets Reference](documentation/src/site/markdown/snippets.md): exact API names, schema fields, settings and scopes to look up.
+- [Better Practice: Replace This With That](documentation/src/site/markdown/38_code_improvements.md): what to replace in existing code, with and without mConfig.
 
 ## Design Philosophy
 
-### Centralized Schemes, Not Call-Site Defaults
+### Centralized Schemas, Not Call-Site Defaults
 
-In mConfig, defaults are a first-class citizen of the Config Scheme.
+In mConfig, defaults are a first-class citizen of the Config Schema.
 Unlike java.util.Properties, where you provide a default at every get() call, mConfig lets you define the name, type, restrictions, and default value in one central schema.
 Result: Your business logic remains clean.
-`myStringValue = config.getString("db.timeout")`
-The library automatically handles type coercion, validation, and default fallbacks based on your predefined scheme.
+`myStringValue = config.getString("db/timeout")`
+The library automatically handles type coercion, validation, and default fallbacks based on your predefined schema.
+(The key separator is `/`; a dot is a literal part of the key.)
 
 ### Security by Design
 
-Preventing "Log Leaks": By having a dedicated Secret type, mConfig can automatically mask these values (e.g., ********) in debug logs or administrative UIs, even if a developer accidentally calls
-toString() on the config object.
-Late Decryption: Keeping the value encrypted in memory until the exact moment it is needed (JIT Decryption) reduces the window of opportunity for "heap dump" attacks.
-
-#### Security & Secret Management
-
 Configuration files often contain the "keys to the kingdom."
-mConfig doesn't just read data; it protects it.
+mConfig doesn't just read data; it protects it from accidental disclosure.
 
-##### Dedicated "Secret" Entry Types
-
-Unlike standard libraries that treat passwords as plain strings,
-mConfig introduces a first-class Secret type.
-
-* Automatic Masking:
-  Secrets are protected from accidental exposure in logs, traces, and "ghost" file dumps.
-* Schema-Enforced Security:
-  Security is defined at the Scheme level. If a key is marked as a Secret,
-  mConfig ensures it is handled with elevated safety protocols throughout its lifecycle.
-
-##### JCE & BouncyCastle Integration
-
-For environments requiring high-grade encryption, mConfig integrates
-with the Java Cryptography Extension (JCE).
-
-##### security feature roadmap
-
-as of version 0.8, the following features are planned for the next major release:
-
-* keeping secrets encrypted in memory until they are needed:
-* Plug-and-Play Providers: Easily use BouncyCastle for FIPS-compliant or Post-Quantum cryptographic algorithms.
-* Hardware Security: Support for hardware-backed keys and certificate-based configuration decryption.
-* Standardized Formats: Natively handle PEM, PKCS#12, and other cryptographic containers as configuration sources.
+* Secrets are marked, not typed: there is no separate entry type. An entry is a secret when its schema
+  says `"SECRET": true`, or when it comes from a secret store (Vault, AWS Secrets Manager, Kubernetes Secrets).
+* Retrieval as `SecretValue` via `config.getSecret("key")`, with `getValue()` / `getChars()` and `erase()`
+  to wipe the content from memory after use; never as a plain `String`.
+* Automatic redaction: secret values appear as `[REDACTED]` in logs, `toString()`, CLI output and exports.
+  A value is only given out in plain text on an explicit single-value request (`mconfig get <key> --reveal`).
+* Where it stays: a secret is kept intact in its own storage, but never copied into another context
+  (`ConfigMapper.saveTo()` leaves it out).
+* Safe diagnostics: when a configuration file cannot be parsed, mConfig reports where and why
+  (file, line, column, key), but leaves out the parser's quote of the content wherever that content
+  may be a secret: entries marked `SECRET`, secret stores such as Kubernetes Secrets, and the
+  credentials of the cloud modules. Text from outside is escaped in all log lines, so a
+  configuration file cannot forge log entries.
+* Scope of protection: accidental disclosure. mConfig does not protect secrets in process memory
+  (heap dumps, debuggers, code in the same process).
+* Late decryption, i.e. secrets as opaque handles that are resolved only at the moment of use, is the
+  planned secrets model. Status: not implemented yet; today a secret value is held decrypted in memory
+  once read. See [Secrets Concept](documentation/src/site/markdown/26_secrets_concept.md).
 
 # get started
 
 see the [documentation](documentation) module, and the examples!
-
-# status
-
-| Type       | Status                                                                                                                                                                                                              |
-|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Build (CI) | [![Build (github)](https://github.com/meta-bit/mconfig/actions/workflows/maven.yml/badge.svg)](https://github.com/meta-bit/mconfig/actions/workflows/maven.yml)                                                     |
-| Artifact   | [![Maven Central](https://img.shields.io/maven-central/v/org.metabit.platform.support.config/mconfig.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/org.metabit.platform.support.config/mconfig) |
-| Javadoc    | [![javadoc](https://javadoc.io/badge2/org.metabit.platform.support.config/mconfigcore/javadoc.svg)](https://javadoc.io/doc/org.metabit.platform.support.config/mconfigcore)                                         |

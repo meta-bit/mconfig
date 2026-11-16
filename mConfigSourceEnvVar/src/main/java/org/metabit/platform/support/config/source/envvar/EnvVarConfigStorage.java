@@ -9,23 +9,28 @@ import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 
+import org.metabit.platform.support.config.impl.logging.LogSafe;
+
+import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
  * Environment Variable Config Storage.
  * Reads configuration from environment variables.
- * Default naming scheme: &lt;APPLICATION_NAME&gt;_&lt;CONFIG_NAME&gt;_&lt;KEY&gt;
- * Keys are converted to lower case.
+ * Default naming scheme: &lt;APPLICATION_NAME&gt;_&lt;CONFIG_NAME&gt;_&lt;KEY&gt;, in UPPER CASE.
+ * Within the key, the separator '/' is written as '_', and a literal '_' as '__'.
+ * Enumerated keys are in lower case, since the variable name does not keep the case.
  */
 public class EnvVarConfigStorage implements ConfigStorageInterface
 {
     private       ConfigFactoryInstanceContext context;
-    private       ConfigLoggingInterface       logger;
     private final Map<String, String>          envOverride;
 
     public EnvVarConfigStorage()
@@ -75,7 +80,6 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
     public boolean init(ConfigFactoryInstanceContext ctx)
         {
         this.context = ctx;
-        this.logger = ctx.getLogger();
         return true;
         }
 
@@ -144,18 +148,102 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
 
     private static class EnvVarConfigLayer implements ConfigLayerInterface
     {
-        private final ConfigFactoryInstanceContext context;
+        /** Windows treats environment variable names as case-insensitive; everything else does not. */
+        private static final boolean CASE_INSENSITIVE_NAMES = (File.separatorChar == '\\');
+
         private final ConfigSource                 source;
         private final String                       prefix;
         private final Map<String, String>          envOverride;
+        private final ConfigLoggingInterface       logger;
+        // transition 0.8.17 -> 0.9: variables already warned about. Remove with warnAboutLegacyName().
+        private final Set<String>                  warnedLegacyNames = ConcurrentHashMap.newKeySet();
 
         public EnvVarConfigLayer(ConfigFactoryInstanceContext context, ConfigLocation location, String configName, Map<String, String> envOverride)
             {
-            this.context = context;
             this.envOverride = envOverride;
+            this.logger = context.getLogger();
             this.source = new ConfigLocationImpl(location, this, null, null);
             String appName = context.getSettings().getString(ConfigFeature.APPLICATION_NAME);
-            this.prefix = (appName+"_"+configName+"_").toUpperCase();
+            // the prefix is not escaped; naming rules for application and configuration names: MLIB-143
+            this.prefix = (appName+"_"+configName+"_").toUpperCase(Locale.ROOT);
+            }
+
+        /**
+         * Map a hierarchical key to the part of the variable name after the prefix:
+         * a literal '_' is doubled to '__', the separator '/' becomes '_', then UPPER CASE.
+         */
+        static String encodeKey(String hierarchicalKey)
+            {
+            return hierarchicalKey
+                    .replace("_", "__")
+                    .replace('/', '_')
+                    .toUpperCase(Locale.ROOT);
+            }
+
+        /**
+         * Reverse of {@link #encodeKey(String)}, read left to right: '__' is a literal '_',
+         * a single '_' is the separator '/'. Lower case, since the variable name does not keep the case.
+         * Three or more '_' in a row are ambiguous ("a_/b" and "a/_b" share a name); they decode as "a_/b".
+         */
+        static String decodeKey(String encodedKey)
+            {
+            StringBuilder sb = new StringBuilder(encodedKey.length());
+            int length = encodedKey.length();
+            for (int i = 0; i < length; i++)
+                {
+                char c = encodedKey.charAt(i);
+                if (c != '_')
+                    { sb.append(c); }
+                else if ((i+1 < length) && (encodedKey.charAt(i+1) == '_'))
+                    {
+                    sb.append('_');
+                    i++;
+                    }
+                else
+                    { sb.append('/'); }
+                }
+            return sb.toString().toLowerCase(Locale.ROOT);
+            }
+
+        private boolean hasPrefix(String envVarName)
+            {
+            return envVarName.regionMatches(CASE_INSENSITIVE_NAMES, 0, prefix, 0, prefix.length());
+            }
+
+        /**
+         * a variable belongs to this layer if {@link #getEntry(String)} finds it under that name: the lookup
+         * uses the UPPER CASE name, so where names are case-sensitive, a variable with lower-case letters is
+         * not one of ours (listing it would offer a key that then cannot be read).
+         */
+        private boolean isLayerVariable(String envVarName)
+            {
+            return hasPrefix(envVarName)
+                    && (CASE_INSENSITIVE_NAMES || envVarName.equals(envVarName.toUpperCase(Locale.ROOT)));
+            }
+
+        /**
+         * Until 0.8.16 a literal '_' in a key was not doubled, so the key "max_connections" was read from
+         * ..._MAX_CONNECTIONS, the variable of "max/connections". Such a variable is no longer used for
+         * the key with the underscore; say so once, instead of dropping the override silently.
+         * Transition aid: to be removed in 0.9.
+         */
+        private void warnAboutLegacyName(String hierarchicalKey, String currentName)
+            {
+            if ((logger == null) || (hierarchicalKey.indexOf('_') < 0))
+                { return; }
+            String legacyName = (prefix+hierarchicalKey)
+                    .replace("__", "_ESC_")
+                    .replace("/", "_")
+                    .replace("_ESC_", "__")
+                    .toUpperCase(Locale.ROOT);
+            if (legacyName.equals(currentName) || (getEnv(legacyName) == null))
+                { return; }
+            if (warnedLegacyNames.add(legacyName))
+                {
+                logger.warn("environment variable "+LogSafe.text(legacyName)+" is not used for the key \""
+                        +LogSafe.text(hierarchicalKey)+"\": since 0.8.17 an underscore in a key is written doubled. "
+                        +"Rename the variable to "+LogSafe.text(currentName));
+                }
             }
 
         private Map<String, String> getEnv()
@@ -169,23 +257,20 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
             }
 
         /**
-         * @param hierarchicalKey key(s), with '/' as separator for key parts.
+         * @param hierarchicalKey key(s), with '/' as a separator for key parts.
          *                        '/' is mapped to '_', and existing '_' to '__'.
-         * @return
+         * @return the config entry, or null if not found.
          */
         @Override
         public ConfigEntry getEntry(String hierarchicalKey)
             {
-            String envVarName = (prefix + hierarchicalKey)
-                    .replace("__", "_ESC_") // escape existing double underscores
-                    .replace("/", "_")      // hierarchy slash converted to underscore
-                    .replace("_ESC_", "__") // restore as double underscore
-                    .toUpperCase();
+            String envVarName = prefix+encodeKey(hierarchicalKey);
             String value = getEnv(envVarName);
             if (value != null)
                 {
                 return ConfigEntryFactory.createEntry(hierarchicalKey, value, ConfigEntryType.STRING, null, source);
                 }
+            warnAboutLegacyName(hierarchicalKey, envVarName);
             return null;
             }
 
@@ -197,16 +282,15 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
 
         /**
          * check if this layer is empty.
-         * case-insensitive search.
+         * The prefix is matched the way the lookup finds variables: in UPPER CASE,
+         * ignoring case only where the operating system does (Windows).
          *
          * @return true if no environment variable keys match the prefix; false otherwise
          */
         @Override
         public boolean isEmpty()
             {
-            String searchPrefix = prefix;
-            return getEnv().keySet().stream()
-                    .noneMatch(k->k.regionMatches(true, 0, searchPrefix, 0, searchPrefix.length()));
+            return getEnv().keySet().stream().noneMatch(this::isLayerVariable);
             }
 
         @Override
@@ -230,6 +314,15 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
             }
 
         @Override
+        public void erase()
+            {
+            if (envOverride != null)
+                {
+                envOverride.clear();
+                }
+            }
+
+        @Override
         public ConfigSource getSource()
             {
             return source;
@@ -245,9 +338,10 @@ public class EnvVarConfigStorage implements ConfigStorageInterface
         public Iterator<String> tryToGetKeyIterator()
             {
             return getEnv().keySet().stream()
-                    .filter(k->k.startsWith(prefix))
-                    .map(k->k.substring(prefix.length()).toLowerCase().replace('_', '/'))
+                    .filter(this::isLayerVariable)
+                    .map(k->decodeKey(k.substring(prefix.length())))
                     .collect(Collectors.toList()).iterator();
             }
     }
 }
+//___EOF___

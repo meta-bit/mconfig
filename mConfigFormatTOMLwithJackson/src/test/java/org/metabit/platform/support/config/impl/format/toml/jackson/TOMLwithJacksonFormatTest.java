@@ -3,17 +3,16 @@ package org.metabit.platform.support.config.impl.format.toml.jackson;
 import org.junit.jupiter.api.Test;
 import org.metabit.platform.support.config.ConfigCheckedException;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.impl.logging.NullLogging;
-import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class TOMLwithJacksonFormatTest
@@ -45,7 +44,21 @@ class TOMLwithJacksonFormatTest
         InputStream is = new ByteArrayInputStream(toml.getBytes(StandardCharsets.UTF_8));
         ConfigLocation location = mock(ConfigLocation.class);
 
-        ConfigLayerInterface layer = format.readStream(is, location);
-        assertNull(layer, "TOML parsing should reject duplicate keys");
+        assertThrows(ConfigParseException.class, ()->format.readStream(is, location), "TOML parsing should reject duplicate keys");
+        }
+
+    @Test
+    void brokenValueReportsPositionButNotTheContent()
+        {
+        TOMLwithJacksonFormat format = new TOMLwithJacksonFormat();
+        format.testComponent(new ConfigFactorySettings(), NullLogging.getSingletonInstance());
+
+        String toml = "[db]\npassword = s3cr3t-VALUE\n";
+        InputStream is = new ByteArrayInputStream(toml.getBytes(StandardCharsets.UTF_8));
+
+        ConfigParseException e = assertThrows(ConfigParseException.class, ()->format.readStream(is, mock(ConfigLocation.class)));
+        assertFalse(e.getMessage().contains("s3cr3t"), e.getMessage());
+        assertEquals(2, e.getLine(), e.getMessage());
         }
 }
+//___EOF___

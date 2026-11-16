@@ -9,6 +9,10 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Parameters;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -26,7 +30,8 @@ import java.util.concurrent.Callable;
                 ValidateCommand.class,
                 SetCommand.class,
                 MonitorCommand.class,
-                CompletionCommand.class
+                CompletionCommand.class,
+                KubernetesRbacCommand.class
         })
 public class Main implements Callable<Integer>
 {
@@ -70,35 +75,63 @@ public class Main implements Callable<Integer>
 
         args = normalizeArgs(cmd, args);
 
-        // Hide experimental commands by default
-        CommandLine proposeSub = cmd.getSubcommands().get("propose-schema");
-        if (proposeSub != null) proposeSub.getCommandSpec().usageMessage().hidden(true);
-        CommandLine validateSub = cmd.getSubcommands().get("validate");
-        if (validateSub != null) validateSub.getCommandSpec().usageMessage().hidden(true);
-
-        // Parse just enough to see if experimental is set
-        CommandLine.ParseResult parseResult = cmd.parseArgs(args);
-        if (main.commonOptions.experimental)
+        if (!applyExperimentalGate(cmd, main, args))
             {
-            if (proposeSub != null) proposeSub.getCommandSpec().usageMessage().hidden(false);
-            if (validateSub != null) validateSub.getCommandSpec().usageMessage().hidden(false);
-            }
-        else
-            {
-            // If not experimental, check if user tried to call hidden commands
-            if (parseResult.hasSubcommand())
-                {
-                String subName = parseResult.subcommand().commandSpec().name();
-                if ("propose-schema".equals(subName) || "validate".equals(subName))
-                    {
-                    System.err.println("Command '" + subName + "' is experimental and requires --experimental (-X) flag.");
-                    System.exit(1);
-                    }
-                }
+            System.exit(1);
             }
 
         int exitCode = cmd.execute(args);
         System.exit(exitCode);
+        }
+
+    /**
+     * commands that are not complete yet: hidden from the help, and refused without --experimental.
+     * Remove a name in the same change that completes the command (MLIB-151).
+     */
+    static final Set<String> EXPERIMENTAL_COMMANDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            "validate",         // MLIB-151
+            "propose-schema",   // rewrite in 0.9.2, MLIB-137
+            "kubernetes-rbac"   // least-privilege generator in 0.9.3, MLIB-150
+    )));
+
+    /**
+     * hide the experimental commands unless --experimental is given, and refuse calling one without it.
+     *
+     * @param cmd  the command line for main
+     * @param main the Main instance bound to cmd
+     * @param args the (normalized) arguments
+     * @return false if an experimental command was called without --experimental; an error was printed.
+     */
+    static boolean applyExperimentalGate(CommandLine cmd, Main main, String[] args)
+        {
+        // parse just enough to see if experimental is set
+        CommandLine.ParseResult parseResult = cmd.parseArgs(args);
+        boolean experimental = main.commonOptions.experimental;
+        if (parseResult.hasSubcommand())
+            {
+            // -X after the subcommand: an option where the subcommand has CommonOptions, otherwise unmatched
+            CommandLine.ParseResult sub = parseResult.subcommand();
+            if ((sub.commandSpec().findOption("--experimental") != null && sub.hasMatchedOption("--experimental"))
+                    || sub.unmatched().contains("-X") || sub.unmatched().contains("--experimental"))
+                {
+                experimental = true;
+                }
+            }
+        for (String name : EXPERIMENTAL_COMMANDS)
+            {
+            CommandLine sub = cmd.getSubcommands().get(name);
+            if (sub != null) sub.getCommandSpec().usageMessage().hidden(!experimental);
+            }
+        if (!experimental && parseResult.hasSubcommand())
+            {
+            String subName = parseResult.subcommand().commandSpec().name();
+            if (EXPERIMENTAL_COMMANDS.contains(subName))
+                {
+                System.err.println("Command '" + subName + "' is experimental and requires --experimental (-X) flag.");
+                return false;
+                }
+            }
+        return true;
         }
 
     @Override
@@ -269,6 +302,8 @@ public class Main implements Callable<Integer>
             if (this.debug)
                 {
                 builder.setFeature(org.metabit.platform.support.config.ConfigFeature.LOGLEVEL_NUMBER, 5);
+                // only the internal logger reads LOGLEVEL_NUMBER; slf4j filters by its own backend's level
+                builder.setFeature(org.metabit.platform.support.config.ConfigFeature.LOGGING_REDIRECT_TARGET, "stderr");
                 }
 
             builder.setFeature(org.metabit.platform.support.config.ConfigFeature.COMMENTS_READING, true);

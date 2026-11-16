@@ -33,13 +33,12 @@ public class ValidateCommand implements Callable<Integer>
         try
             {
             ctx.validate(true, false);
-            try (ConfigFactory configFactory = ConfigFactoryBuilder.create(ctx.company, ctx.application).build())
+            try (ConfigFactory configFactory = ctx.createBuilder().build())
                 {
                 Configuration cfg = configFactory.getConfig(ctx.configName);
                 if (cfg.getConfigSchema().isNullSchema())
                     {
                     System.out.println("No config schema defined for '"+ctx.configName+"'. Validation is not possible.");
-                    System.out.println("Use 'propose-scheme' to generate a schema from current values.");
                     return 1;
                     }
                 int errors = 0;
@@ -57,11 +56,11 @@ public class ValidateCommand implements Callable<Integer>
                             {
                             if (!spec.validateEntry(entry))
                                 {
-                                System.err.println("Validation failed for key: "+key+" (Value: "+entry.getValueAsString()+")");
+                                System.err.println("Validation failed for key: "+key+" (Value: "+OutputFormatter.displayString(entry)+")");
                                 errors++;
                                 java.util.Map<String, Object> error = OutputFormatter.newLinkedMap();
                                 error.put("key", key);
-                                error.put("value", entry.getValueAsString());
+                                error.put("value", OutputFormatter.displayString(entry));
                                 error.put("message", "Value does not match specification");
                                 errorList.add(error);
                                 }

@@ -8,6 +8,7 @@ import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
 import org.metabit.platform.support.config.schema.ConfigSchemaFactory;
+import org.metabit.platform.support.config.schema.NullConfigEntrySpecification;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -208,7 +209,42 @@ public class SchemeTests
             assertTrue(keysWithSchemes.containsKey("testdata")); // From product/testconfig.properties
             assertNotNull(keysWithSchemes.get("key1"), "key1 should have a scheme entry");
             assertEquals("key1", keysWithSchemes.get("key1").getKey());
-            assertNull(keysWithSchemes.get("testdata"), "testdata should not have a scheme entry");
+            assertSame(NullConfigEntrySpecification.INSTANCE, keysWithSchemes.get("testdata"), "testdata should not have a schema entry");
+            }
+        }
+
+    // MLIB-138/MLIB-130: getSpecification() never returns null; undefined keys yield the Null Object
+    @Test
+    void undefinedKeyYieldsNullSpecification()
+        {
+        ConfigSchemaFactory sf = ConfigSchemaFactory.create();
+        ConfigSchema schema = sf.createSchema();
+        schema.addSchemaEntry(sf.createEntry("api/key", ConfigEntryType.STRING));
+
+        assertSame(NullConfigEntrySpecification.INSTANCE, schema.getSpecification("other/key"));
+        assertFalse(schema.getEntryKeys().contains("other/key"));
+        assertNotSame(NullConfigEntrySpecification.INSTANCE, schema.getSpecification("api/key"));
+        }
+
+    // MLIB-138/MLIB-130: writing and reading a key the schema does not define threw a NullPointerException
+    @Test
+    void writeAndReadUndefinedKeyWithSchema()
+            throws ConfigCheckedException
+        {
+        try (ConfigFactory factory = ConfigFactoryBuilder.create(COMPANY_NAME, APPLICATION_NAME)
+                .setFeature(ConfigFeature.TEST_MODE, true)
+                .build())
+            {
+            ConfigSchemaFactory sf = ConfigSchemaFactory.create();
+            ConfigSchema schema = sf.createSchema();
+            schema.addSchemaEntry(sf.createEntry("api/key", ConfigEntryType.STRING));
+            Configuration cfg = factory.getConfig("undefinedkeytest", schema);
+
+            cfg.put("other/key", "value", ConfigScope.SESSION);
+            ConfigEntry entry = cfg.getConfigEntryFromFullKey("other/key", EnumSet.allOf(ConfigScope.class));
+            assertNotNull(entry);
+            assertEquals("value", entry.getValueAsString());
+            assertFalse(entry.isSecret());
             }
         }
 

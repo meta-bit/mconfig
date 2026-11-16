@@ -87,3 +87,4 @@ class SecurityTest
         assertFalse(settings.getBoolean(ConfigFeature.TEST_MODE), "TEST_MODE should be false when PERMIT_TEST_MODE feature is explicitly set to false");
         }
 }
+//___EOF___

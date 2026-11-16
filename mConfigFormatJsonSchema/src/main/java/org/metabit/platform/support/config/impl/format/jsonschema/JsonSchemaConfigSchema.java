@@ -1,23 +1,26 @@
 package org.metabit.platform.support.config.impl.format.jsonschema;
 
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ObjectNode;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import com.networknt.schema.ValidationMessage;
-import org.metabit.platform.support.config.ConfigEntry.ConfigEntryFlags;
+import com.networknt.schema.Error;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.schema.ConfigSchemaEntry;
+import org.metabit.platform.support.config.schema.NullConfigEntrySpecification;
 import org.metabit.platform.support.config.source.core.DefaultLayer;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Implementation of ConfigSchema that wraps a standard JSON Schema (json-schema.org).
@@ -26,93 +29,20 @@ public class JsonSchemaConfigSchema implements ConfigSchema
 {
     private static final ObjectMapper mapper = new ObjectMapper();
     public static final String MCONFIG_SCHEMA_FILENAME_EXTENSION = ".mconfig-schema.json";
-    private final        JsonSchema                     jsonSchema;
+    private final        Schema                         jsonSchema;
     private final        Map<String, ConfigSchemaEntry> inferredEntries = new HashMap<>();
     private              String                         company;
     private              String                         application;
     private              String                         configName;
     private              String                         version;
 
-    private static final com.fasterxml.jackson.databind.ObjectMapper mapper2 = new com.fasterxml.jackson.databind.ObjectMapper();
     public JsonSchemaConfigSchema(String schemaJson)
         {
-        JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
-        this.jsonSchema = factory.getSchema(schemaJson);
+        this.jsonSchema = SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_7).getSchema(schemaJson);
         parseMetadata(schemaJson);
-        try
-            {
-            com.fasterxml.jackson.databind.JsonNode node2 = mapper2.readTree(schemaJson);
-            inferMConfigEntries2(node2, "");
-            }
-        catch (Exception e)
-            {
-            // fallback if mapper2 fails
-            }
-        }
-
-    private void inferMConfigEntries2(com.fasterxml.jackson.databind.JsonNode node, String prefix)
-        {
-        if (node == null || !node.isObject()) return;
-
-        if (node.has("properties"))
-            {
-            com.fasterxml.jackson.databind.JsonNode properties = node.get("properties");
-            Iterator<Map.Entry<String, com.fasterxml.jackson.databind.JsonNode>> it = properties.fields();
-            while (it.hasNext())
-                {
-                Map.Entry<String, com.fasterxml.jackson.databind.JsonNode> field = it.next();
-                String key = prefix.isEmpty() ? field.getKey() : prefix+"/"+field.getKey();
-                com.fasterxml.jackson.databind.JsonNode child = field.getValue();
-
-                if (child.has("properties"))
-                    {
-                    inferMConfigEntries2(child, key);
-                    }
-                else
-                    {
-                    ConfigSchemaEntry entry = mapNodeToEntry2(key, child);
-                    inferredEntries.put(key, entry);
-                    }
-                }
-            }
-        }
-
-    private ConfigSchemaEntry mapNodeToEntry2(String key, com.fasterxml.jackson.databind.JsonNode node)
-        {
-        ConfigEntryType type = inferType2(node);
-        ConfigSchemaEntry entry = new ConfigSchemaEntry(key, type);
-        if (node.has("default"))
-            {
-            try
-                {
-                entry.setDefault(node.get("default").asText());
-                }
-            catch (ConfigCheckedException ignored) { }
-            }
-
-        if (node.has("description"))
-            {
-            entry.setDescription(node.get("description").asText());
-            }
-        return entry;
-        }
-
-    private ConfigEntryType inferType2(com.fasterxml.jackson.databind.JsonNode node)
-        {
-        if (node.has("type"))
-            {
-            String typeStr = node.get("type").asText();
-            switch (typeStr)
-                {
-                case "boolean": return ConfigEntryType.BOOLEAN;
-                case "integer":
-                case "number": return ConfigEntryType.NUMBER;
-                case "array": return ConfigEntryType.MULTIPLE_STRINGS;
-                case "string":
-                default: return ConfigEntryType.STRING;
-                }
-            }
-        return ConfigEntryType.STRING;
+        // the validator above has accepted the JSON. A failure while inferring the entries propagates:
+        // swallowing it would drop all following entries silently, x-mconfig-secret ones included.
+        inferMConfigEntries(mapper.readTree(schemaJson), "");
         }
 
     private void parseMetadata(String schemaJson)
@@ -120,15 +50,15 @@ public class JsonSchemaConfigSchema implements ConfigSchema
         try
             {
             JsonNode node = mapper.readTree(schemaJson);
-            if (node.has("x-mconfig-company")) this.company = node.get("x-mconfig-company").asText();
-            if (node.has("x-mconfig-application")) this.application = node.get("x-mconfig-application").asText();
-            if (node.has("x-mconfig-config")) this.configName = node.get("x-mconfig-config").asText();
-            if (node.has("VERSION")) this.version = node.get("VERSION").asText();
-            else if (node.has("version")) this.version = node.get("version").asText();
+            if (node.has("x-mconfig-company")) this.company = node.get("x-mconfig-company").asString();
+            if (node.has("x-mconfig-application")) this.application = node.get("x-mconfig-application").asString();
+            if (node.has("x-mconfig-config")) this.configName = node.get("x-mconfig-config").asString();
+            if (node.has("VERSION")) this.version = node.get("VERSION").asString();
+            else if (node.has("version")) this.version = node.get("version").asString();
 
             if ((company == null || application == null) && node.has("$id"))
                 {
-                decomposeId(node.get("$id").asText());
+                decomposeId(node.get("$id").asString());
                 }
             }
         catch (Exception ignored) { }
@@ -191,10 +121,10 @@ public class JsonSchemaConfigSchema implements ConfigSchema
         ConfigEntryType type = inferType(node);
         ConfigSchemaEntry entry = new ConfigSchemaEntry(key, type);
 
-        if (node.has("description")) entry.setDescription(node.get("description").asText());
+        if (node.has("description")) entry.setDescription(node.get("description").asString());
         if (node.has("default"))
             {
-            try { entry.setDefault(node.get("default").asText()); } catch (Exception ignored) { }
+            try { entry.setDefault(node.get("default").asString()); } catch (Exception ignored) { }
             }
 
         // Metadata Extensions
@@ -202,19 +132,91 @@ public class JsonSchemaConfigSchema implements ConfigSchema
         if (node.has("x-mconfig-hidden")) entry.setHidden(node.get("x-mconfig-hidden").asBoolean());
         if (node.has("x-mconfig-write-scope"))
             {
-            try { entry.setWriteScope(ConfigScope.valueOf(node.get("x-mconfig-write-scope").asText().toUpperCase())); } catch (Exception ignored) { }
+            try { entry.setWriteScope(ConfigScope.valueOf(node.get("x-mconfig-write-scope").asString().toUpperCase())); } catch (Exception ignored) { }
             }
 
-        // Pattern/Constraints
-        if (node.has("pattern")) entry.setValidationPattern(node.get("pattern").asText());
+        // Pattern/Constraints. JSON Schema applies "pattern" to every string value, also one with a "format":
+        // a string with format "uri" must then be a URI *and* match the pattern (ConfigSchemaEntry checks the
+        // type first, then the pattern against the value's string form). Other JSON types ignore it.
+        if (node.has("pattern") && isStringTyped(node))
+            entry.validationPattern = compileJsonSchemaPattern(key, node.get("pattern").asString());
 
         return entry;
         }
 
+    /**
+     * JSON Schema "pattern" is an ECMA-262 regular expression with search semantics: it may match anywhere in the
+     * value unless anchored. ConfigSchemaEntry checks its pattern with matches(), i.e. against the whole value,
+     * so the pattern is wrapped accordingly. DOTALL applies to the wrapper only: inside the pattern, "." does not
+     * match a line break, as in JSON Schema (and in the read-path validator). It is set directly, not through
+     * setValidationPattern(), which would read keywords like "email" or "port" as named validators.
+     *
+     * @throws ConfigException if Java cannot compile the pattern; the schema must not load with the check missing.
+     */
+    static Pattern compileJsonSchemaPattern(String key, String pattern)
+        {
+        try
+            {
+            // compiled on its own first: wrapped, an invalid pattern such as "a)|(.*" would compile into one
+            // that matches everything, and the check would silently do nothing.
+            Pattern.compile(pattern);
+            return Pattern.compile("(?s:.*?)(?:"+pattern+")(?s:.*)");
+            }
+        catch (PatternSyntaxException e)
+            {
+            throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID,
+                    "JSON schema entry "+LogSafe.text(key)+": pattern is not a valid Java regular expression: "+LogSafe.text(pattern));
+            }
+        }
+
+    /**
+     * @return true if the JSON type of the node admits strings: no "type" (the default here), "string",
+     *         or a type list containing "string".
+     */
+    static boolean isStringTyped(JsonNode node)
+        {
+        if (!node.has("type"))
+            { return true; }
+        JsonNode type = node.get("type");
+        if (type.isArray())
+            {
+            for (JsonNode t : type)
+                {
+                if ("string".equalsIgnoreCase(t.asString()))
+                    { return true; }
+                }
+            return false;
+            }
+        return "string".equalsIgnoreCase(type.asString());
+        }
+
+    /**
+     * @return the JSON type to map: "string" if none is given. For a type list (asString() on it would throw, and
+     *         fail the whole schema): "string" if the list contains it, since values read from files arrive as text
+     *         and the read-path validator checks them as strings then (with "pattern"); otherwise the first type
+     *         other than "null", e.g. "integer" for ["integer", "null"].
+     */
+    static String primaryType(JsonNode node)
+        {
+        if (!node.has("type"))
+            { return "string"; }
+        JsonNode type = node.get("type");
+        if (!type.isArray())
+            { return type.asString(); }
+        if (isStringTyped(node))
+            { return "string"; }
+        for (JsonNode t : type)
+            {
+            if (!"null".equalsIgnoreCase(t.asString()))
+                { return t.asString(); }
+            }
+        return "string";
+        }
+
     private ConfigEntryType inferType(JsonNode node)
         {
-        String typeStr = node.has("type") ? node.get("type").asText() : "string";
-        String format = node.has("format") ? node.get("format").asText() : null;
+        String typeStr = primaryType(node);
+        String format = node.has("format") ? node.get("format").asString() : null;
 
         if ("boolean".equalsIgnoreCase(typeStr)) return ConfigEntryType.BOOLEAN;
         if ("integer".equalsIgnoreCase(typeStr) || "number".equalsIgnoreCase(typeStr)) return ConfigEntryType.NUMBER;
@@ -236,15 +238,15 @@ public class JsonSchemaConfigSchema implements ConfigSchema
         {
         try
             {
-            com.fasterxml.jackson.databind.node.ObjectNode root = mapper2.createObjectNode();
-            com.fasterxml.jackson.databind.node.ObjectNode current = root;
+            ObjectNode root = mapper.createObjectNode();
+            ObjectNode current = root;
             String[] parts = fullKey.split("/");
             for (int i = 0; i < parts.length-1; i++)
                 {
                 current = current.putObject(parts[i]);
                 }
-            current.set(parts[parts.length-1], convertToNode2(entry));
-            Set<ValidationMessage> errors = jsonSchema.validate(root);
+            current.set(parts[parts.length-1], convertToNode(entry));
+            List<Error> errors = jsonSchema.validate(root);
             return errors.isEmpty();
             }
         catch (Exception e)
@@ -253,20 +255,20 @@ public class JsonSchemaConfigSchema implements ConfigSchema
             }
         }
 
-    private com.fasterxml.jackson.databind.JsonNode convertToNode2(ConfigEntry entry)
+    private JsonNode convertToNode(ConfigEntry entry)
             throws Exception
         {
         switch (entry.getType())
             {
             case BOOLEAN:
-                return mapper2.valueToTree(entry.getValueAsBoolean());
+                return mapper.valueToTree(entry.getValueAsBoolean());
             case NUMBER:
-                return mapper2.valueToTree(entry.getValueAsBigDecimal());
+                return mapper.valueToTree(entry.getValueAsBigDecimal());
             case MULTIPLE_STRINGS:
             case ENUM_SET:
-                return mapper2.valueToTree(entry.getValueAsStringList());
+                return mapper.valueToTree(entry.getValueAsStringList());
             default:
-                return mapper2.valueToTree(entry.getValueAsString());
+                return mapper.valueToTree(entry.getValueAsString());
             }
         }
 
@@ -311,7 +313,8 @@ public class JsonSchemaConfigSchema implements ConfigSchema
     @Override
     public ConfigEntrySpecification getSpecification(String fullKey)
         {
-        return inferredEntries.get(fullKey);
+        ConfigEntrySpecification spec = inferredEntries.get(fullKey);
+        return (spec != null) ? spec : NullConfigEntrySpecification.INSTANCE;
         }
 
     @Override
@@ -321,7 +324,7 @@ public class JsonSchemaConfigSchema implements ConfigSchema
         // In the future, we could implement filtering here as well if we decompose it fully.
         try
             {
-            return mapper2.writeValueAsString(jsonSchema.getSchemaNode());
+            return mapper.writeValueAsString(jsonSchema.getSchemaNode());
             }
         catch (Exception e)
             {

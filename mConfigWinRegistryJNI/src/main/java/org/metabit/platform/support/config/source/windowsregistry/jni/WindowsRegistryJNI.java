@@ -1,5 +1,7 @@
 package org.metabit.platform.support.config.source.windowsregistry.jni;
 
+import org.metabit.platform.support.config.impl.logging.LogSafe;
+
 /**
  * Native interface for Windows Registry using JNI.
  */
@@ -26,6 +28,12 @@ public class WindowsRegistryJNI
     public static final int REG_DWORD = 4;
     public static final int REG_MULTI_SZ = 7;
     public static final int REG_QWORD = 11;
+    
+    /**
+     * Maximum size of a registry value (2,048 bytes).
+     * @see <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/windows-registry-advanced-users">Windows Registry Advanced Users</a>
+     */
+    public static final int MAX_VALUE_SIZE = 2048;
 
     static
         {
@@ -36,7 +44,7 @@ public class WindowsRegistryJNI
         catch (Exception e)
             {
             // Logging may not be available yet, so we use stderr as a fallback for this critical failure
-            System.err.println("CRITICAL: Failed to load mConfigWinRegistryJNI native library: " + e.getMessage());
+            System.err.println("CRITICAL: Failed to load mConfigWinRegistryJNI native library: " + LogSafe.text(e.getMessage()));
             }
         }
 

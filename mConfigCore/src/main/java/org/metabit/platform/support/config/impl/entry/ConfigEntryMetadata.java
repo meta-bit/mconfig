@@ -65,11 +65,12 @@ public ConfigSource getSource() { return source; }
 /**
  * <p>getScope.</p>
  *
- * @return a {@link org.metabit.platform.support.config.ConfigScope} object
+ * @return the scope of the source; null for an entry that was not read from a source
+ *         (e.g. an override given in code).
  */
 public ConfigScope getScope()
     {
-    return this.source.getScope();
+    return (this.source != null) ? this.source.getScope() : null;
     }
 
 /**
@@ -116,3 +117,4 @@ public ConfigEntrySpecification getSpecification()
 // default value
 // description
 }
+//___EOF___

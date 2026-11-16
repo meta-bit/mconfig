@@ -64,3 +64,4 @@ class ConfigCursorWriteTest
         assertTrue(cfg.getString("key1") == null || cfg.getString("key1").isEmpty());
     }
 }
+//___EOF___

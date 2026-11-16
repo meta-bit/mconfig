@@ -57,3 +57,4 @@ class ConfigurationLifecycleTest
         assertFalse(config1_new.isClosed());
     }
 }
+//___EOF___

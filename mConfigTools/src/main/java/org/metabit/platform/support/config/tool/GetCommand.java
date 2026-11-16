@@ -1,6 +1,7 @@
 package org.metabit.platform.support.config.tool;
 
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.entry.SecretRedaction;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -26,6 +27,9 @@ public class GetCommand implements Callable<Integer>
 
     @CommandLine.Option(names = {"-S", "--scope"}, description = "Scopes to search (comma-separated)", split = ",")
     private ConfigScope[] scopes;
+
+    @CommandLine.Option(names = {"--reveal"}, description = "Show the value of a secret entry in plain text. Secret values are redacted otherwise.")
+    private boolean reveal;
 
     @Override
     public Integer call()
@@ -57,10 +61,15 @@ public class GetCommand implements Callable<Integer>
                     return 1;
                     }
 
+                boolean secret = SecretRedaction.isConfidential(entry);
                 if (ctx.format == Main.OutputFormat.HUMAN)
                     {
                     System.out.println("Key:         "+ctx.key);
-                    System.out.println("Value:       "+entry.getValueAsString());
+                    System.out.println("Value:       "+OutputFormatter.displayString(entry, reveal));
+                    if (secret)
+                        {
+                        System.out.println("Secret:      yes"+(reveal ? " (revealed)" : ", value not shown; use --reveal to show it"));
+                        }
                     System.out.println("Type:        "+entry.getType());
                     System.out.println("Scope:       "+entry.getScope());
                     System.out.println("Source:      "+entry.getLocation());
@@ -98,7 +107,8 @@ public class GetCommand implements Callable<Integer>
                             System.out.println("Description: "+desc);
                             if (spec.getDefaultEntry() != null)
                                 {
-                                System.out.println("Default:     "+spec.getDefaultEntry().getValueAsString());
+                                boolean hideDefault = (secret || spec.isSecret()) && !reveal;
+                                System.out.println("Default:     "+(hideDefault ? SecretRedaction.REDACTED : spec.getDefaultEntry().getValueAsString()));
                                 }
                             }
                         }
@@ -116,13 +126,15 @@ public class GetCommand implements Callable<Integer>
                 else if (ctx.format == Main.OutputFormat.CSV)
                     {
                     System.out.println("Key,Value,Type,Scope,URI");
-                    System.out.printf("%s,%s,%s,%s,%s%n", ctx.key, entry.getValueAsString(), entry.getType(), entry.getScope(), entry.getLocation());
+                    System.out.printf("%s,%s,%s,%s,%s%n", ctx.key, OutputFormatter.displayString(entry, reveal), entry.getType(), entry.getScope(), entry.getLocation());
                     }
                 else if (ctx.format == Main.OutputFormat.JSON)
                     {
                     java.util.Map<String, Object> data = OutputFormatter.newLinkedMap();
                     data.put("key", ctx.key);
-                    data.put("value", OutputFormatter.entryValue(entry));
+                    data.put("value", OutputFormatter.entryValue(entry, reveal));
+                    if (secret)
+                        { data.put("secret", true); }
                     data.put("type", entry.getType().toString());
                     data.put("scope", entry.getScope().toString());
                     data.put("uri", entry.getLocation().toString());
@@ -132,7 +144,9 @@ public class GetCommand implements Callable<Integer>
                     {
                     java.util.Map<String, Object> data = OutputFormatter.newLinkedMap();
                     data.put("key", ctx.key);
-                    data.put("value", OutputFormatter.entryValue(entry));
+                    data.put("value", OutputFormatter.entryValue(entry, reveal));
+                    if (secret)
+                        { data.put("secret", true); }
                     data.put("type", entry.getType().toString());
                     data.put("scope", entry.getScope().toString());
                     data.put("uri", entry.getLocation().toString());

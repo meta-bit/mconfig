@@ -193,7 +193,8 @@ public interface ConfigFactoryBuilder
     /**
      * add a secrets provider.
      *
-     * @param providerID ID of the secrets provider (e.g. "hashicorp-vault")
+     * @param providerID ID of the secrets provider (e.g. "my-kms"). mConfig ships no provider;
+     *                   Vault and AWS Secrets Manager are storage modules, not providers.
      * @param config Map with provider-specific configuration
      * @param scope Scope at which the secrets should be integrated (optional, default APPLICATION)
      * @return the resulting ConfigFactoryBuilder

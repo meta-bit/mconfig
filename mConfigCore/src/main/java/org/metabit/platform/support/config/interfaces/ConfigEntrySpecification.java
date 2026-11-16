@@ -161,3 +161,4 @@ public interface ConfigEntrySpecification
         return null;
         }
 }
+//___EOF___

@@ -48,3 +48,4 @@ public final class ConfigFeatureRegistry
         return name.toUpperCase().replace("_", "");
     }
 }
+//___EOF___

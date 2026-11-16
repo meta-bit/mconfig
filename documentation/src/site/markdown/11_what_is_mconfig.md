@@ -7,7 +7,7 @@ mConfig is a (Java) library for configuration access.
 It allows to access configuration data without prior knowledge.
 
 * compliant with OS/platform rules
-* from many sources (files, network, hardware, registries, environment, …)
+* from many sources (files, Vault, AWS, Kubernetes, hardware, registries, environment, …)
 * in many formats (.properties, JSON, YAML, …)
 
 It consists of several modules, so it can be kept small and adapted to the specific use case.

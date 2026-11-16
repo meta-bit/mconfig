@@ -147,3 +147,4 @@ public final class ConfigEventImpl implements ConfigEvent
             }
     }
 }
+//___EOF___

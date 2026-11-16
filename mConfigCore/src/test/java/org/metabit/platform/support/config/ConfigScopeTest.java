@@ -35,3 +35,4 @@ class ConfigScopeTest
         assertTrue(ConfigScope.SESSION.compareTo(ConfigScope.RUNTIME) < 0);
         }
 }
+//___EOF___

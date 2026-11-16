@@ -30,3 +30,4 @@ public class MapConfigEntry extends AbstractConfigEntry
     @Override public void putString(String value) throws ConfigCheckedException { throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.INVALID_USE); }
     @Override public void putValue(Object value, ConfigEntryType valueType) throws ConfigCheckedException { throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.INVALID_USE); }
 }
+//___EOF___

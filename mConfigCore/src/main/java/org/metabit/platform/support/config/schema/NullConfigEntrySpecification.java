@@ -73,3 +73,4 @@ public final class NullConfigEntrySpecification implements ConfigEntrySpecificat
     public boolean isHidden()
         { return false; }
 }
+//___EOF___

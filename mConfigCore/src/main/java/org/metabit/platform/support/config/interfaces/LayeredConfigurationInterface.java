@@ -1,7 +1,10 @@
 package org.metabit.platform.support.config.interfaces;
 
 
+import org.metabit.platform.support.config.ConfigCheckedException;
+import org.metabit.platform.support.config.ConfigEntry;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigScope;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import java.util.List;
@@ -25,8 +28,6 @@ public interface LayeredConfigurationInterface extends BasicConfiguration
      */
     void add(ConfigLayerInterface singleConfig, ConfigLocation location);
 
-//    ConfigEntry getConfigEntryForWriting(ConfigScope scope, String fullKey)     throws ConfigCheckedException;
-
     /** {@inheritDoc} */
     List<ConfigLocation> getSourceLocations();
 
@@ -35,4 +36,18 @@ public interface LayeredConfigurationInterface extends BasicConfiguration
      * @return the context
      */
     ConfigFactoryInstanceContext getContext();
+
+    /**
+     * the schema of this configuration.
+     * @return the schema; a null schema if there is none
+     */
+    ConfigSchema getConfigSchema();
+
+    /**
+     * whether this is a bootstrap lookup of a module (see {@code BootstrapConfigContext.getRestrictedConfig()}).
+     * Bootstrap configurations of the cloud modules typically hold credentials without declaring them in a schema.
+     * @return true for a bootstrap lookup
+     */
+    boolean isBootstrapLookup();
 }
+//___EOF___

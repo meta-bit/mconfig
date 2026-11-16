@@ -11,9 +11,19 @@ public class BasicSecretValue implements SecretValue
     private final byte[] value;
     private final SecretType type;
 
+    /**
+     * creates a secret value from a copy of the given bytes.
+     * <p>
+     * The array is copied, so {@link #erase()} wipes only this instance's copy and never
+     * the caller's array (which may be a stored configuration value). A caller handing
+     * over a temporary array is responsible for wiping it.
+     *
+     * @param value the secret bytes; copied, may be null
+     * @param type  the type of secret
+     */
     public BasicSecretValue(byte[] value, SecretType type)
         {
-        this.value = value;
+        this.value = (value == null) ? null : value.clone();
         this.type = type;
         }
 
@@ -23,20 +33,6 @@ public class BasicSecretValue implements SecretValue
         return value;
         }
 
-    @Override
-    public char[] getChars()
-        {
-        if (value == null)
-            {
-            return null;
-            }
-        char[] chars = new char[value.length];
-        for (int i = 0; i < value.length; i++)
-            {
-            chars[i] = (char) value[i];
-            }
-        return chars;
-        }
 
     @Override
     public SecretType getType()
@@ -59,3 +55,4 @@ public class BasicSecretValue implements SecretValue
             }
         }
 }
+//___EOF___

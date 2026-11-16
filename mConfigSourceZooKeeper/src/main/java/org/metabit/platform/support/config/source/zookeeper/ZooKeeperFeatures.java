@@ -57,6 +57,11 @@ public final class ZooKeeperFeatures
      */
     public static final ConfigFeatureInterface BOOTSTRAP_CONFIG_NAME = new ConfigFeatureBase("ZOOKEEPER_BOOTSTRAP_CONFIG_NAME", ConfigFeature.ValueType.STRING, "zookeeper");
 
+    /**
+     * If true, allows ZooKeeper to be active even in TEST_MODE.
+     */
+    public static final ConfigFeatureInterface BYPASS_TEST = new ConfigFeatureBase("ZOOKEEPER_BYPASS_TEST", ConfigFeature.ValueType.BOOLEAN, false);
+
     static
     {
         ConfigFeatureRegistry.register(CONNECT_STRING);
@@ -65,5 +70,6 @@ public final class ZooKeeperFeatures
         ConfigFeatureRegistry.register(RETRY_BASE_SLEEP_MS);
         ConfigFeatureRegistry.register(RETRY_MAX_RETRIES);
         ConfigFeatureRegistry.register(BOOTSTRAP_CONFIG_NAME);
+        ConfigFeatureRegistry.register(BYPASS_TEST);
     }
 }

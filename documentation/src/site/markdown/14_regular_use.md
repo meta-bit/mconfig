@@ -22,7 +22,7 @@ Some environments may use no company name by convention, but developing multi-pl
 
 
 ConfigSchema defaults are always part of the PRODUCT scope default layer. If you want schemas
-to *replace* existing defaults rather than merge them, use `SCHEME_RESETS_DEFAULTS`.
+to *replace* existing defaults rather than merge them, use `SCHEMA_RESETS_DEFAULTS`.
 
 **Note:** JAR defaults are active when running from a JAR, but during development
 the JAR source still reads resources from the classpath, so the same paths work in IDE runs.
@@ -41,7 +41,7 @@ Config Schemas (`*.mconfig-schema.json`) are automatically discovered from multi
 
 - **Development Time:** Both `src/main/resources/.config/` and `src/test/resources/.config/` are searched on the classpath.
 - **Precedence:** By default, schemas found in the **filesystem** take precedence over those found on the **classpath**. Within the same location, the one found last takes precedence.
-- **Hardening:** Use `ConfigFeature.ALLOW_LOCAL_SCHEMA_OVERRIDE = false` to ignore filesystem schemas and ensure the application only uses its bundled contract.
+- **Hardening:** Use `ConfigFeature.ALLOW_LOCAL_SCHEMA_OVERRIDE = false` to ignore filesystem schemas and ensure the application only uses its bundled contract. The feature is deprecated since 0.8.17 and replaced in 0.9.0 by an allowlist of schema sources; it keeps working until then.
 - **Production vs Test:** Unlike configuration data, schemas are not bypassed in `TEST_MODE`. Production schemas are always loaded to ensure the configuration contract is maintained.
 
 Recommended: Place in the main resources only.
@@ -97,7 +97,7 @@ you would place the corresponding schema file in
 
 ### 1.4.3.3 Explicit setting
 
-If, for reasons whatsoever, you want to provide the configuration schema yourself,
+If, for reasons whatsoever, you want to provide the configuration schema via API,
 prepare the JSON string according to the format.
 Convert it to a ConfigSchema
 `ConfigSchema testSchema = ConfigSchema.statics.fromJSON(yourConfigSchemaString);`

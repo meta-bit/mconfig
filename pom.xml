@@ -20,11 +20,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Skip site generation by default; the documentation module overrides this. -->
         <maven.site.skip>true</maven.site.skip>
+        <!-- one slf4j version for the whole build (TD5) -->
+        <slf4j.version>2.0.20</slf4j.version>
+        <!-- one Jackson 3 version for the whole build, aligned through the BOM below -->
+        <jackson.version>3.2.4</jackson.version>
     </properties>
 
     <groupId>org.metabit.platform.support.config</groupId>
     <artifactId>mconfig</artifactId>
-    <version>0.8.13</version>
+    <version>0.8.17</version>
     <packaging>pom</packaging>
     <name>mConfig</name>
     <description>
@@ -68,6 +72,8 @@
         <module>mConfigSourceZooKeeper</module>
         <module>mConfigSourceVault</module>
         <module>mConfigSourceAwsSecretsManager</module>
+        <module>mConfigSourceKubernetes</module>
+        <module>mConfigSourceKubernetesFabric8</module>
         <module>integrationtests</module>
         <module>mConfigUtil</module>
         <module>mConfigTools</module>
@@ -238,6 +244,23 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>tools.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>5.11.4</version>
@@ -246,19 +269,13 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>5.2.0</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-inline</artifactId>
-                <version>5.2.0</version>
+                <version>5.14.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>5.2.0</version>
+                <version>5.14.2</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -349,6 +366,8 @@
                                 <excludeArtifact>integrationtestsecretsbc</excludeArtifact>
                                 <excludeArtifact>integrationtesttoml</excludeArtifact>
                                 <excludeArtifact>integrationtesttools</excludeArtifact>
+                                <excludeArtifact>integrationtestassembly</excludeArtifact>
+                                <excludeArtifact>integrationtestkubernetes</excludeArtifact>
                                 <!-- no .deb to maven central -->
                                 <excludeArtifact>.*\.deb</excludeArtifact>
                             </excludeArtifacts>

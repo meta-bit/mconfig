@@ -4,6 +4,7 @@ import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.*;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.source.core.InMemoryLayer;
@@ -258,6 +259,14 @@ public class WindowsRegistryJNISource implements ConfigStorageInterface
                 }
             
             String key = regValue.name;
+            if (regValue.data != null && regValue.data.length > WindowsRegistryJNI.MAX_VALUE_SIZE)
+                {
+                logger.warn("Registry value '%s' exceeds the recommended limit of %d bytes. " +
+                            "Microsoft recommends storing values larger than this as files. " +
+                            "See: https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/windows-registry-advanced-users " +
+                            "mConfigFormatRawFile module provides blobs and large text file types.",
+                            LogSafe.text(key), WindowsRegistryJNI.MAX_VALUE_SIZE);
+                }
             Object value = winRegistryFormat.convertRegistryValue(regValue.type, regValue.data);
             ConfigEntryType configType = winRegistryFormat.mapRegistryTypeToConfigType(regValue.type);
             
@@ -307,6 +316,14 @@ public class WindowsRegistryJNISource implements ConfigStorageInterface
                 }
             
             String key = prefix + "/" + regValue.name;
+            if (regValue.data != null && regValue.data.length > WindowsRegistryJNI.MAX_VALUE_SIZE)
+                {
+                logger.warn("Registry value '%s' (with prefix '%s') exceeds the recommended limit of %d bytes. " +
+                            "Microsoft recommends storing values larger than this as files. " +
+                            "See: https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/windows-registry-advanced-users " +
+                            "mConfigFormatRawFile module provides blobs and large text file types.",
+                        LogSafe.text(regValue.name), LogSafe.text(prefix), WindowsRegistryJNI.MAX_VALUE_SIZE);
+                }
             Object value = winRegistryFormat.convertRegistryValue(regValue.type, regValue.data);
             ConfigEntryType configType = winRegistryFormat.mapRegistryTypeToConfigType(regValue.type);
             

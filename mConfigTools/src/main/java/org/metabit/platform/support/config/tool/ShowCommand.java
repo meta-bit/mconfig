@@ -63,7 +63,7 @@ public class ShowCommand implements Callable<Integer>
                         {
                         String key = it.next();
                         ConfigEntry entry = cfg.getConfigEntryFromFullKey(key, EnumSet.allOf(ConfigScope.class));
-                        System.out.printf("%s,%s,%s,%s%n", key, entry.getValueAsString(), entry.getScope(), entry.getLocation());
+                        System.out.printf("%s,%s,%s,%s%n", key, OutputFormatter.displayString(entry), entry.getScope(), entry.getLocation());
                         }
                     }
                 else if (ctx.format == Main.OutputFormat.JSON || ctx.format == Main.OutputFormat.YAML || ctx.format == Main.OutputFormat.TOML)

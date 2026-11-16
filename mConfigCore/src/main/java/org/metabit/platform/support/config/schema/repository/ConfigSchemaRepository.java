@@ -30,3 +30,4 @@ public interface ConfigSchemaRepository
      */
     Set<String> getRegisteredNames();
 }
+//___EOF___

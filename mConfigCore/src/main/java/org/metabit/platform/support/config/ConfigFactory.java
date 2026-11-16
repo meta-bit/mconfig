@@ -27,9 +27,17 @@ public interface ConfigFactory extends AutoCloseable, ConfigFactoryInternal
 
 
     /**
-     * list all available configurations discovered by this factory, with metadata.
+     * Scans all candidate search locations (as returned by {@link #getSearchList()}) and discovers
+     * configuration files and sources that currently exist across all registered storage backends.
+     * <p>
+     * Unlike {@link #getSearchList()} which provides the static candidate search path including
+     * non-existent directories, this method actively inspects storage targets and returns metadata
+     * (name, format, scope, location) for configurations that are present and available to be loaded.
      *
-     * @return a set of configuration discovery info.
+     * @return a set of {@link ConfigDiscoveryInfo} representing all currently available configurations.
+     * @see #getSearchList()
+     * @see #getConfig(String)
+     * @see Configuration#getSourceLocations()
      */
     java.util.Set<ConfigDiscoveryInfo> listAvailableConfigurations();
 
@@ -51,8 +59,18 @@ public interface ConfigFactory extends AutoCloseable, ConfigFactoryInternal
 
     /**
      * info: where will this ConfigFactory search for configurations, and in which order?
+     * <p>
+     * Returns the ordered list of all candidate {@link ConfigLocation}s across active storage modules.
+     * Candidate directories are included even if they do not exist at initialization time; storages
+     * that watch their locations (such as the filesystem storage) pick up lazily created files at runtime.
+     * <p>
+     * To inspect only the locations that actually exist and contributed active data layers to a loaded
+     * configuration instance, see {@link Configuration#getSourceLocations()}. To discover configuration
+     * files that currently exist across these candidate locations, see {@link #listAvailableConfigurations()}.
      *
-     * @return an ordered list of ConfigSearchListEntry
+     * @return an ordered list of candidate {@link ConfigLocation} entries.
+     * @see Configuration#getSourceLocations()
+     * @see #listAvailableConfigurations()
      */
     List<ConfigLocation> getSearchList();
 

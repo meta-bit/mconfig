@@ -37,14 +37,19 @@ public interface Configuration extends BasicConfiguration
     /**
      * get a Boolean entry from a config.
      * Formats for which no matching type is defined will be subject to interpretation and conversion,
-     * matching typical string values to the range of the output type.
+     * matching typical string values to the range of the output type:
+     * {@code true/false}, {@code yes/no}, {@code on/off} and {@code 1/0}, in any case, with surrounding blanks.
+     * Any other value, an empty one included, is not convertible (since 0.8.17; before, as
+     * {@link Boolean#parseBoolean(String)}: anything but "true" was false). That behaviour is available through
+     * {@link ConfigFeature#LENIENT_BOOLEAN_CONVERSION}.
      * <br/>
-     * see java.lang.Boolean.parseBoolean for details.
+     * If a schema declares the entry BOOLEAN, a value that is not convertible is skipped: the next layer, or the
+     * schema default, applies. Without a schema, the first value found is used, and the exception is thrown.
      *
      * @param fullKey full key to the entry; if tree structure, including full path.
-     * @return String value. If there was format specific escaping, it has been un-escaped.
+     * @return Boolean value
      * @throws org.metabit.platform.support.config.ConfigException if neither a configuration, nor a default for this could be read;
-     *                         or, if the type was not matching and not convertible either.
+     *                         or, if the type was not matching and not convertible either (reason CONVERSION_FAILURE).
      *                         In some cases, you may want to check the exception whether it reports a constructed/composite type.
      *                         If that happens, your key is not fully describing the entry yet.
      */
@@ -453,8 +458,8 @@ public interface Configuration extends BasicConfiguration
 
     /**
      * get notified when the configuration changes.
-     * Note: The scopes for which notifications are sent exclude RUNTIME by default.
-     * You can set the scope filter globally with the parameter UPDATE_CHECK_SCOPES
+     * Note: notifications cover all scopes by default, RUNTIME included; changes are picked up by the periodic
+     * update check (UPDATE_CHECK_FREQUENCY_MS). You can set the scope filter globally with UPDATE_CHECK_SCOPES.
      *
      * @param listener the listener to be executed upon an update.
      */
@@ -489,8 +494,16 @@ public interface Configuration extends BasicConfiguration
     ConfigCursor getConfigCursor();
 
     /**
-     * get the list of all source locations the layers refer to.
-     * @return a list of ConfigLocation entries
+     * Returns the list of active {@link ConfigLocation}s that currently exist and contributed
+     * active data layers to this specific configuration instance.
+     * <p>
+     * Unlike {@link ConfigFactory#getSearchList()} (which lists all candidate search paths across the
+     * factory, including directories that do not yet exist), this method returns only the instantiated
+     * source locations from which configuration data was actually loaded for this handle.
+     *
+     * @return a list of active {@link ConfigLocation} entries contributing to this configuration.
+     * @see ConfigFactory#getSearchList()
+     * @see ConfigFactory#listAvailableConfigurations()
      */
     List<ConfigLocation> getSourceLocations();
 
@@ -507,22 +520,16 @@ public interface Configuration extends BasicConfiguration
 
     /**
      * Retrieves all configuration keys from all configuration layers,
-     * along with their corresponding scheme entries if they exist.
+     * along with their corresponding schema entries.
      *
      * @param scopes the scopes to retrieve keys from.
      * @return a {@link Map} with flattened keys as keys and their {@link ConfigEntrySpecification} as values.
-     *         Values can be null if no matching scheme entry exists.
+     *         Values are never null: keys without a matching schema entry map to
+     *         {@link org.metabit.platform.support.config.schema.NullConfigEntrySpecification#INSTANCE}.
+     *         (Up to 0.8.14, such values could be null, or such keys could be missing.)
      */
     Map<String, ConfigEntrySpecification> getAllConfigurationKeysWithSchemasFlattened(EnumSet<ConfigScope> scopes);
 
-    /**
-     * Limit the scopes from which this configuration reads values on subsequent get operations (typed gets, getSecret).
-     * Does not affect puts, getConfigCursor, getAllConfigurationKeysFlattened (which take explicit scopes), etc.
-     * Default before calling: all scopes.
-     *
-     * @param scopes the allowed scopes. Non-null.
-     * @throws IllegalArgumentException if scopes is null.
-     */
-    void limitScopes(EnumSet<ConfigScope> scopes);
-
 }
+
+//___EOF___

@@ -11,7 +11,6 @@ theme:
 
 markdown_extensions:
   - tables
-  - fenced_code
   - toc:
       permalink: true
   - admonition
@@ -19,15 +18,23 @@ markdown_extensions:
   - attr_list
   - def_list
 #  - pymdownx.details
-#  - pymdownx.superfences:
-#      custom_fences:
-#        - name: mermaid
-#          class: mermaid
-#          format: !!python/name:pymdownx.superfences.fence_code_custom.simple
+# superfences replaces fenced_code; ```mermaid blocks become <div class="mermaid">,
+# drawn in the browser by the script under extra_javascript.
+# Needs the package pymdown-extensions next to mkdocs (pipx inject mkdocs pymdown-extensions).
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
 #  - pymdownx.highlight
 
 plugins:
   - search
+
+# the readthedocs theme does not load Mermaid by itself (material would)
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
+  - js/mermaid-init.js
 
 nav:
   - Home: index.md
@@ -38,29 +45,32 @@ nav:
       - 1.4 Regular Use: 14_regular_use.md
       - 1.5 Test Mode: 15_test_mode.md
   - Part 2 Core Concepts:
+      - 2.0 Scopes: 20_scopes.md
       - 2.1 How it Works: 21_how_it_works.md
       - 2.2 Priorities and Hierarchies: 22_priorities_and_hierarchies.md
-      - 2.3 Configuration Schemes: 23_configuration_schemas.md
+      - 2.3 Configuration Schemas: 23_configuration_schemas.md
       - 2.4 Comment Handling: 24_comment_handling.md
       - 2.5 Config Features: 25_config_features.md
+      - 2.6 Secrets Concept: 26_secrets_concept.md
   - Part 3 Advanced Topics:
       - 3.1 Writing Configurations: 31_writing_configurations.md
       - 3.2 Updates: 32_updates.md
       - 3.3 Getting Information: 33_getting_information.md
       - 3.4 Definitions and Valid Values: 34_definitions_and_valid_values.md
-      - 3.5 Handling Secrets: 35_handling_secrets.md
-      - 3.6 Windows Registry Access: 36_windows_registry.md
-      - 3.7 Extensions and Advanced Use: 37_extensions_and_advanced_use.md
-      - 3.8 Code Improvements: 38_code_improvements.md
-  - Part 4 Reference & Project:
+      - 3.5 Config Events: 45_events.md
+      - 3.6 Handling Secrets: 35_handling_secrets.md
+      - 3.7 Windows Registry Access: 36_windows_registry.md
+      - 3.8 Extensions and Advanced Use: 37_extensions_and_advanced_use.md
+      - 3.9 Utilities and Adapters: 39_utilities_and_adapters.md
+      - "3.10 Better Practice: Replace This With That": 38_code_improvements.md
+      - 3.11 Experimental POJO Mapping: https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md
+  - Part 4 Reference:
       - 4.1 mConfig Tool: 41_mconfig_tool.md
       - 4.2 Logging: 42_logging.md
       - 4.3 FAQ: 43_faq.md
       - 4.4 Design Consolidated: 44_design_consolidated.md
-      - 4.5 AI Guidance: 45_ai_guidance.md
-      - 4.6 Versions: 46_versions.md
-      - 4.7 Contributing: 47_contributing.md
-      - 4.8 Legal: 48_legal.md
+      - 4.5 Versions: 46_versions.md
+      - 4.6 Snippets Reference: snippets.md
   - Examples:
       - Overview: examples/index.md
       - Simple Configuration Loading: examples/simple_configuration_loading.md
@@ -72,6 +82,10 @@ nav:
       - Configuration Views: examples/configuration_views.md
       - ZooKeeper: examples/zookeeper.md
       - Handling Crypto Keys and Certificates: examples/handling_crypto_keys_and_certificates.md
-      - Schemes: examples/schemes.md
-  - Appendix:
-      - 4.9 Links: 49_links.md
+      - Schemas: examples/schemas.md
+      - Extension Features: examples/extension_features.md
+  - Part 5 Project:
+      - 5.1 Contributing: 50_contributing.md
+      - 5.2 Legal: 51_legal.md
+      - 5.3 AI Guidance: 52_ai_guidance.md
+      - 5.4 Links: 53_links.md

@@ -22,6 +22,8 @@ import java.util.Map;
 final class TomlParser
 {
     private final TomlCharStream stream;
+    private       List<String>   tablePath = new ArrayList<>(); // current table, for reporting the position of an error
+    private       List<String>   entryKey;                      // key of the entry being parsed; null between entries
 
     TomlParser(String content)
         {
@@ -71,12 +73,15 @@ final class TomlParser
 
             if (stream.peek() == '[')
                 {
+                entryKey = null;
                 currentTable = parseTableHeader(root, leadingComments);
                 firstKeyFound = true;
                 continue;
                 }
 
+            entryKey = null;
             List<String> keyPath = parseKeyPath();
+            entryKey = keyPath;
             stream.skipWhitespace();
             stream.expect('=');
             stream.skipWhitespace();
@@ -91,9 +96,23 @@ final class TomlParser
 
             firstKeyFound = true;
             assignValue(currentTable, keyPath, value, leadingComments, inlineComment);
+            entryKey = null;
             }
 
         return root;
+        }
+
+    /**
+     * the key at the parser's position, for reporting an error: table path plus the key of the entry being parsed.
+     *
+     * @return mConfig key path ("a/b/c"), or null before the first table or key
+     */
+    String currentKeyPath()
+        {
+        List<String> path = new ArrayList<>(tablePath);
+        if (entryKey != null)
+            { path.addAll(entryKey); }
+        return path.isEmpty() ? null : String.join("/", path);
         }
 
     private List<String> mergeComments(List<String> existing, List<String> additional)
@@ -120,6 +139,7 @@ final class TomlParser
 
         stream.skipWhitespace();
         List<String> keyPath = parseKeyPath();
+        tablePath = new ArrayList<>(keyPath);
         stream.skipWhitespace();
 
         if (arrayTable)
@@ -385,6 +405,19 @@ final class TomlParser
         return parseLiteralString();
         }
 
+    private void skipMultilineStringHeader()
+        {
+        if (stream.peek() == '\n')
+            {
+            stream.next();
+            }
+        if (stream.peek() == '\r' && stream.peek(1) == '\n')
+            {
+            stream.next();
+            stream.next();
+            }
+        }
+
     private String parseBasicString()
             throws TomlParseException
         {
@@ -394,15 +427,7 @@ final class TomlParser
             {
             stream.next();
             stream.next();
-            if (stream.peek() == '\n')
-                {
-                stream.next();
-                }
-            if (stream.peek() == '\r' && stream.peek(1) == '\n')
-                {
-                stream.next();
-                stream.next();
-                }
+            skipMultilineStringHeader();
             StringBuilder sb = new StringBuilder();
             while (!stream.eof())
                 {
@@ -549,15 +574,7 @@ final class TomlParser
             {
             stream.next();
             stream.next();
-            if (stream.peek() == '\n')
-                {
-                stream.next();
-                }
-            if (stream.peek() == '\r' && stream.peek(1) == '\n')
-                {
-                stream.next();
-                stream.next();
-                }
+            skipMultilineStringHeader();
             StringBuilder sb = new StringBuilder();
             while (!stream.eof())
                 {

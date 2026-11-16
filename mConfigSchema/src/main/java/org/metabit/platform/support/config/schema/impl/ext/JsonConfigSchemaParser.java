@@ -145,6 +145,22 @@ public class JsonConfigSchemaParser
             // logger: the Schema was not good.
             throw new ConfigCheckedException(ex);
             }
+        // a schema without entries is never intended; it is what a wrong shape parses to (M5).
+        // Loading it silently would leave every entry without schema, including SECRET protection.
+        if (resultmap.isEmpty())
+            {
+            throw new ConfigSchemaException("the schema contains no entries. Expected a JSON array of entry objects, each with its own KEY: "
+                    +"[ { \"KEY\": \"server/port\", \"TYPE\": \"NUMBER\" } ]. An object keyed by configuration key is not a schema.", 0, 0);
+            }
+        for (Map.Entry<String, ConfigSchema> schema : resultmap.entrySet())
+            {
+            if (schema.getValue().getEntryKeys().isEmpty())
+                {
+                String name = schema.getKey().isEmpty() ? "the schema" : "schema '"+schema.getKey()+"'";
+                throw new ConfigSchemaException(name+" contains no entries. Expected a JSON array of entry objects, each with its own KEY, "
+                        +"or { \"NAME\": ..., \"ENTRIES\": [ ... ] }. An object keyed by configuration key is not a schema.", 0, 0);
+                }
+            }
         return resultmap;
         }
 
@@ -236,7 +252,7 @@ public class JsonConfigSchemaParser
             Map<String, Object> norm = new HashMap<>();
             // When adding new features to the scheme format, ensure they are added to this set
             // and handled in the logic below. Keys in MANDATORY block are checked against knownMandatoryKeys.
-            // See devdoc/config_schemes_internals.md for more details.
+            // See devdocs/config_schemas_internals.md for more details.
             Set<String> knownKeys = new HashSet<>(Arrays.asList("KEY", "TYPE", "DESCRIPTION", "DEFAULT", "PATTERN", "SECRET", "SCOPES", "FLAGS", "MANDATORY", "HIDDEN", "MINARITY", "MAXARITY", "ARITY", "EXISTS", "IS_DIRECTORY", "IS_FILE", "CAN_WRITE", "AFTER", "BEFORE", "REQUIRE_OFFSET", "WRITE_SCOPE"));
             data.forEach((k, v) -> norm.put(k.toUpperCase(), v));
 
@@ -287,8 +303,8 @@ public class JsonConfigSchemaParser
                     entry.description = String.valueOf(desc);
                     }
                 }
-            if (norm.containsKey("DEFAULT")) entry.defaultValue = (String) norm.get("DEFAULT");
-            
+            if (norm.containsKey("DEFAULT")) entry.defaultValue = normalizeDefaultValue(norm.get("DEFAULT"));
+
             if (norm.containsKey("PATTERN"))
                 {
                 entry.setValidationPattern((String) norm.get("PATTERN"));
@@ -386,6 +402,37 @@ public class JsonConfigSchemaParser
                 }
             }
 
+        /**
+         * normalize a DEFAULT value from JSON into the String form ConfigSchemaEntry stores.
+         * <p>
+         * JSON permits the value to be a string, a number, a boolean, or an array; schema
+         * authors write all of these. ConfigSchemaEntry.defaultValue is a String, and is
+         * converted to the declared TYPE on read, so every scalar is simply stringified.
+         * Arrays become a comma-separated list, which is the form ConfigTypeConverter
+         * .toStringList() expects for MULTIPLE_STRINGS entries.
+         *
+         * @param value the raw parsed JSON value, or null
+         * @return the String form to store, or null
+         */
+        private static String normalizeDefaultValue(Object value)
+            {
+            if (value == null)
+                {
+                return null;
+                }
+            if (value instanceof List)
+                {
+                StringBuilder sb = new StringBuilder();
+                for (Object element : (List<?>) value)
+                    {
+                    if (sb.length() > 0) sb.append(',');
+                    sb.append(String.valueOf(element));
+                    }
+                return sb.toString();
+                }
+            return String.valueOf(value);
+            }
+
         private static int parseArityPart(String part)
             {
             part = part.trim();
@@ -413,7 +460,7 @@ public class JsonConfigSchemaParser
      * block). Future changes should ensure that any nested objects or arrays correctly 
      * push their parent state onto the respective stacks and pop it back during 
      * the end-of-structure consumption to maintain data integrity and linkage. 
-     * See {@code devdoc/config_schemes_internals.md} for more details.</p>
+     * See {@code devdocs/config_schemas_internals.md} for more details.</p>
      */
     private static class MultiFormatConfigSchemaParser extends org.metabit.library.format.json.DummyJsonStreamConsumer
     {
@@ -529,6 +576,7 @@ public class JsonConfigSchemaParser
                         {
                         ConfigSchemaEntry entry = new ConfigSchemaEntry();
                         ConfigSchemaSetter.applyData(entry, (Map<String, Object>) entryObj);
+                        warnAboutUnenforcedFlags(entry);
                         schema.addSchemaEntry(entry);
                         }
                     }
@@ -551,7 +599,7 @@ public class JsonConfigSchemaParser
          * 
          * <p>If the entry contains unknown features within a {@code MANDATORY} block, 
          * a {@link ConfigException} with {@link ConfigException.ConfigExceptionReason#UNKNOWN_MANDATORY_FEATURE} 
-         * is thrown to ensure future-proofing. See {@code devdoc/config_schemes_internals.md} 
+         * is thrown to ensure future-proofing. See {@code devdocs/config_schemas_internals.md} 
          * for the mechanism details.</p>
          * 
          * @param data the map of parsed JSON properties for the entry
@@ -559,7 +607,6 @@ public class JsonConfigSchemaParser
          */
         private void processEntry(Map<String, Object> data, String parentName)
             {
-            // System.out.println("[DEBUG_LOG] processEntry map: " + data);
             ConfigSchemaEntry entry = new ConfigSchemaEntry();
             ConfigSchemaSetter.applyData(entry, data);
             
@@ -567,6 +614,7 @@ public class JsonConfigSchemaParser
                 {
                 throw new ConfigException(ConfigException.ConfigExceptionReason.UNKNOWN_MANDATORY_FEATURE, "Unknown mandatory feature for entry '" + entry.getKey() + "'");
                 }
+            warnAboutUnenforcedFlags(entry);
 
             ParsingScope parentScope = scopeStack.peek();
             if (parentScope == ParsingScope.ENTRY_LIST)
@@ -580,6 +628,41 @@ public class JsonConfigSchemaParser
                 if (name == null) name = "";
                 ConfigSchema schema = resultStorage.computeIfAbsent(name, k -> new ConfigSchemaImpl());
                 schema.addSchemaEntry(entry);
+                }
+            }
+
+        /**
+         * warn about FLAGS values that are parsed and retained, but not acted upon yet.
+         * <p>
+         * Of the flags, only MANDATORY is enforced. The SECRET flag is the dangerous case:
+         * secret handling reads the separate {@code "SECRET": true} property, so an entry
+         * marked with the flag alone stays unprotected. A SECRET flag next to
+         * {@code "SECRET": true} is merely redundant and not reported.
+         * <p>
+         * Stopgap for 0.8.x (MLIB-146, M4); 0.9.0 is stricter.
+         *
+         * @param entry the parsed entry
+         */
+        private void warnAboutUnenforcedFlags(ConfigSchemaEntry entry)
+            {
+            if (logger == null)
+                return;
+            EnumSet<ConfigEntry.ConfigEntryFlags> flags = entry.getFlags();
+            if (flags.contains(ConfigEntry.ConfigEntryFlags.SECRET) && !entry.isSecret())
+                {
+                logger.warn("schema entry '" + entry.getKey() + "': FLAGS contains SECRET, which has no effect - the value is NOT protected. Use \"SECRET\": true instead.");
+                }
+            List<String> unenforced = new ArrayList<>();
+            for (ConfigEntry.ConfigEntryFlags flag : flags)
+                {
+                if (flag == ConfigEntry.ConfigEntryFlags.READ_ONLY || flag == ConfigEntry.ConfigEntryFlags.WRITE_ONLY || flag == ConfigEntry.ConfigEntryFlags.SENSITIVE)
+                    {
+                    unenforced.add(flag.name());
+                    }
+                }
+            if (!unenforced.isEmpty())
+                {
+                logger.warn("schema entry '" + entry.getKey() + "': FLAGS " + unenforced + " are not enforced yet and have no effect.");
                 }
             }
 

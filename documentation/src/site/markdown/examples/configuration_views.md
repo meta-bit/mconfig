@@ -8,7 +8,7 @@ and `Properties` adaptation. They support chaining and inherit schema validation
 Overlay in-memory overrides on a parent `Configuration`:
 
 ```java
-Configuration parent = factory.getConfiguration("app");
+Configuration parent = factory.getConfig("app");
 Map<String, Object> overrides = Map.of(
     "db.host", "localhost",
     "db.port", 5432

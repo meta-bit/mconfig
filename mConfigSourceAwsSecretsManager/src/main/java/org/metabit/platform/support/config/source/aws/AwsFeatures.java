@@ -32,8 +32,14 @@ public final class AwsFeatures
      */
     public static final ConfigFeatureInterface BOOTSTRAP_CONFIG_NAME = new ConfigFeatureBase("AWS_BOOTSTRAP_CONFIG_NAME", ConfigFeature.ValueType.STRING, "aws");
 
+    /**
+     * If true, allows AWS Secrets Manager to be active even in TEST_MODE.
+     */
+    public static final ConfigFeatureInterface BYPASS_TEST = new ConfigFeatureBase("AWS_BYPASS_TEST", ConfigFeature.ValueType.BOOLEAN, false);
+
     static
     {
         ConfigFeatureRegistry.register(BOOTSTRAP_CONFIG_NAME);
+        ConfigFeatureRegistry.register(BYPASS_TEST);
     }
 }

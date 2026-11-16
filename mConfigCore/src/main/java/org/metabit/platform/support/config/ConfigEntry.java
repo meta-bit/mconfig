@@ -82,17 +82,14 @@ public interface ConfigEntry
     byte[]          getValueAsBytes()       throws ConfigCheckedException;
     /**
      * <p>getValueAsChars.</p>
+     * The value's bytes are decoded as UTF-8; malformed sequences become U+FFFD.
      *
      * @return an array of {@link char} objects
      * @throws org.metabit.platform.support.config.ConfigCheckedException if any.
      */
     default char[]  getValueAsChars()       throws ConfigCheckedException
         {
-        byte[] bytes = getValueAsBytes();
-        if (bytes == null) return null;
-        char[] chars = new char[bytes.length];
-        for (int i = 0; i < bytes.length; i++) chars[i] = (char) bytes[i];
-        return chars;
+        return org.metabit.platform.support.config.impl.util.ConfigIOUtil.utf8ToChars(getValueAsBytes());
         }
     /**
      * <p>getValueAsStringList.</p>
@@ -265,29 +262,71 @@ public interface ConfigEntry
             throws ConfigCheckedException;
 
 
+    /**
+     * declarative markers on a configuration entry.
+     * <p>
+     * Not every flag is acted upon yet; the state of each is noted below. A flag that is
+     * not yet enforced is still parsed and retained, so schemas may declare it today,
+     * but it has no effect on behaviour.
+     *
+     * @see org.metabit.platform.support.config.interfaces.ConfigEntrySpecification
+     */
     enum ConfigEntryFlags
     {
-        /*
-         * this entry must be present; if missing, entire config is considered invalid
+        /**
+         * this entry must be present; if missing, the entire config is considered invalid.
+         * <p>
+         * Enforced. Also determines the default arity of the entry.
          */
         MANDATORY,
-        /*
-         * can't write to
+        /**
+         * can't write to.
+         * <p>
+         * Distinct from the writability of a storage location: this marks a single entry as
+         * non-writable even where its layer would accept writes.
+         * <p>
+         * Not enforced yet.
          */
         READ_ONLY,
-        /*
+        /**
          * can't read from.
-         * use case e.g. write via mConfig, read from elsewhere
+         * use case e.g. write via mConfig, read from elsewhere.
+         * <p>
+         * Not enforced yet.
          */
         WRITE_ONLY,
-        /*
-         * security relevance.
-         * private keys, symmetric keys, API keys, license IDs.
+        /**
+         * security relevance: cryptographic secrets and credentials.
+         * private keys, symmetric keys, API keys, passwords, license IDs.
+         * <p>
+         * A secret entry is represented differently - it is kept out of the JVM String pool
+         * where possible, redacted in logs, retrieved through
+         * {@link org.metabit.platform.support.config.Configuration#getSecret(String)}, and
+         * wiped on erase. Secrecy may also originate from the configuration source itself
+         * (Vault, AWS Secrets Manager, Kubernetes), with no schema involved.
+         * <p>
+         * Most SECRET entries are also {@link #SENSITIVE}, though rarely the reverse.
+         * <p>
+         * <b>Not enforced through this flag.</b> Secret handling is currently driven solely by
+         * the schema property {@code "SECRET": true} and by {@code ConfigEntry.isSecret()}.
+         * Declaring the flag alone leaves the value unprotected.
          */
         SECRET,
-        /*
-         * privacy relevance.
-         * GDPR compliance, personal information
+        /**
+         * privacy relevance: information that must not become visible where it does not belong.
+         * GDPR compliance, personal information.
+         * <p>
+         * Unlike {@link #SECRET}, this does not change how the value is represented - the
+         * application reads it with the ordinary typed getters. It restricts where the value
+         * may be disclosed: logs, exports, diagnostic output, generated documentation, and
+         * which storage places are considered acceptable for it.
+         * <p>
+         * What is restricted is the disclosure of the <em>value</em>. The storage location
+         * stays traceable: {@link ConfigEntry#getScope()}, {@link ConfigEntry#getLocation()}
+         * and {@link ConfigEntry#getURI()} keep working, so the data remains findable,
+         * correctable and erasable by whoever it belongs to.
+         * <p>
+         * Not enforced yet.
          */
         SENSITIVE
 

@@ -15,6 +15,7 @@
  */
 package org.metabit.platform.support.config.source.vault;
 
+import com.bettercloud.vault.EnvironmentLoader;
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
@@ -24,8 +25,11 @@ import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.BlobConfiguration;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
+import org.metabit.platform.support.config.impl.EventRecorder;
 import org.metabit.platform.support.config.impl.LayeredConfiguration;
 import org.metabit.platform.support.config.impl.entry.BasicSecretValue;
+import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.impl.secrets.SecretConfigEntryLeaf;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
@@ -33,6 +37,7 @@ import org.metabit.platform.support.config.schema.ConfigSchema;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -41,18 +46,33 @@ import java.util.*;
  */
 public final class VaultConfigStorage implements ConfigStorageInterface
 {
-    public static final int HTTP_OK = 200;
-    private VaultConfig vaultConfig;
+    public static final int HTTP_OK        = 200;
+    static final int        HTTP_FORBIDDEN = 403;
+    static final int        HTTP_NOT_FOUND = 404;
+    static final String DEFAULT_SA_TOKEN_PATH            = "/var/run/secrets/kubernetes.io/serviceaccount/token";
+    static final String DEFAULT_KUBERNETES_MOUNT         = "kubernetes";
+    static final String KUBERNETES_SA_TOKEN_PATH_FEATURE = "KUBERNETES_SA_TOKEN_PATH";
+    // login and the swap of client and config are guarded by authLock; reads use the current client without locking.
+    // Change checks run on another thread than the application's reads, so both may hit an expired token at once.
+    private final    Object                 authLock = new Object();
+    private volatile VaultConfig            vaultConfig;
+    private volatile Vault                  vault;
+    private EnvironmentLoader      environmentLoader;
+    private boolean                allowInsecureTransport = false;
     private ConfigLoggingInterface         logger;
     private ConfigFactoryInstanceContext   ctx;
-    private Vault                          vault;
     private String                 enginePath;
     private int                    kvVersion;
     private long                   lastCheck    = 0;
     private long                   pollInterval;
-    private boolean                initialized  = false;
+    private volatile boolean       initialized  = false;
     private String                 addressOverride;
     private String                 tokenOverride;
+    // Kubernetes login settings, kept for the re-login; resolved once in postInit()
+    private Path                   kubernetesTokenPath;
+    private String                 kubernetesRole;
+    private String                 kubernetesMount;
+    private boolean                kubernetesAuth = false;
 
     @Override
     public String getStorageName()
@@ -69,6 +89,10 @@ public final class VaultConfigStorage implements ConfigStorageInterface
     @Override
     public boolean test(ConfigFactorySettings settings, ConfigLoggingInterface logger)
         {
+        if (settings.getBoolean(ConfigFeature.TEST_MODE) && !settings.getBoolean(VaultFeatures.BYPASS_TEST))
+            {
+            return false;
+            }
         return true;
         }
 
@@ -81,77 +105,300 @@ public final class VaultConfigStorage implements ConfigStorageInterface
         }
 
     @Override
-    public void postInit(ConfigFactory factory)
+    public void postInit(BootstrapConfigContext bootstrapCtx)
         {
-        // Self-configuration from lower-precedence parts of mConfig
+        // Self-configuration from lower-precedence parts of mConfig.
+        // Scope is restricted to local sources to prevent circular reads against this (not yet initialized) storage.
         String bootstrapName = ctx.getSettings().getString(VaultFeatures.BOOTSTRAP_CONFIG_NAME);
-        Configuration cfg = factory.getConfig(bootstrapName);
+        Configuration cfg = bootstrapCtx.getRestrictedConfig(bootstrapName, EnumSet.of(ConfigScope.PRODUCT, ConfigScope.HOST, ConfigScope.USER, ConfigScope.APPLICATION));
+        String address = null;
         try
             {
-            String address = (addressOverride != null) ? addressOverride : cfg.getString("address");
-            
+            // The module stays inactive unless a Vault address was configured explicitly.
+            // There is no default address: credentials must only go to an endpoint the operator chose.
+            address = (addressOverride != null) ? addressOverride : optString(cfg, "address");
+            if (address == null || address.trim().isEmpty())
+                {
+                if (logger != null)
+                    {
+                    logger.info("Vault storage inactive: no address configured (key 'address' in the '"+LogSafe.text(bootstrapName)+"' configuration).");
+                    }
+                return;
+                }
+            this.allowInsecureTransport = Boolean.TRUE.equals(optBoolean(cfg, "auth.allowInsecureTransport"));
+            this.environmentLoader = new AllowlistEnvironmentLoader(allowInsecureTransport);
+
             this.enginePath = cfg.getString("engine");
             this.kvVersion = cfg.getInteger("kvVersion");
             this.pollInterval = cfg.getLong("pollInterval");
 
-            this.vaultConfig = new VaultConfig()
-                    .address(address)
-                    .build();
+            this.kubernetesTokenPath = Paths.get(resolveTokenPath(cfg));
+            this.kubernetesRole = optString(cfg, "auth.kubernetes.role");
+            if (kubernetesRole == null || kubernetesRole.trim().isEmpty())
+                {
+                kubernetesRole = ctx.getSettings().getString(ConfigFeature.APPLICATION_NAME);
+                }
+            this.kubernetesMount = optString(cfg, "auth.kubernetes.mount");
+            if (kubernetesMount == null || kubernetesMount.trim().isEmpty())
+                {
+                kubernetesMount = DEFAULT_KUBERNETES_MOUNT;
+                }
 
-            this.vault = new Vault(vaultConfig);
-            authenticate(cfg);
+            synchronized (authLock)
+                {
+                setClient(newVaultConfig(address.trim(), null));
+                authenticate(cfg);
+                }
             this.initialized = true;
+            }
+        catch (Exception e)
+            {
+            EventRecorder.recordSourceUnavailable(ctx, null, "VAULT_INIT_FAILED",
+                    "Vault storage failed to initialize ("+LogSafe.text(address)+"): "+LogSafe.text(e.getMessage()));
+            }
+        }
+
+    /**
+     * an explicitly configured token (builder {@code withToken}, or {@code token} in the bootstrap configuration)
+     * is used as given; the Kubernetes login is only the automatic choice when no token is configured.
+     */
+    private void authenticate(Configuration cfg) throws VaultException
+        {
+        // 1. Explicit token
+        // Security note (low):
+        // The token should ideally be a secret, not an immutable String.
+        // But the Vault Java client (bettercloud.vault.VaultConfig) only accepts a plain String for .token().
+        // Even if we retrieved a SecretValue, we would have to call .asString() for passing.
+        // So getString() is used here to avoid unnecessary wrapping.
+        String token = (tokenOverride != null) ? tokenOverride : optString(cfg, "token");
+        if (token != null)
+            {
+            if (!isSecureTransport(vaultConfig.getAddress()) && logger != null)
+                {
+                logger.warn("Vault: the configured token is sent over an unencrypted connection to "+LogSafe.text(vaultConfig.getAddress()));
+                }
+            setClient(newVaultConfig(vaultConfig.getAddress(), token));
+            return;
+            }
+
+        // 2. Kubernetes Auth (auto-detected by the ServiceAccount token file)
+        // Without either, the driver falls back to the VAULT_TOKEN environment variable (see AllowlistEnvironmentLoader).
+        if (Files.isRegularFile(kubernetesTokenPath))
+            {
+            if (!isSecureTransport(vaultConfig.getAddress()) && !allowInsecureTransport)
+                {
+                if (logger != null)
+                    {
+                    logger.info("Vault: Kubernetes login skipped, the address is not https ("+LogSafe.text(vaultConfig.getAddress())+"). "
+                            +"Expected when using a local Vault Agent; otherwise set auth.allowInsecureTransport=true (development only).");
+                    }
+                }
+            else
+                {
+                this.kubernetesAuth = true; // even if this first login fails, a later read retries it
+                loginByKubernetes();
+                }
+            }
+        }
+
+    /**
+     * logs in with the pod's ServiceAccount token. Caller holds {@code authLock}.
+     * The token file is read fresh at every login: projected tokens are rotated by the kubelet.
+     *
+     * @return true if the login succeeded
+     */
+    private boolean loginByKubernetes()
+        {
+        byte[] tokenBytes = null;
+        try
+            {
+            tokenBytes = Files.readAllBytes(kubernetesTokenPath);
+            String jwt = new String(tokenBytes, StandardCharsets.UTF_8).trim();
+            // log in without the previous client token; it may be the one that expired
+            Vault loginClient = new Vault(newVaultConfig(vaultConfig.getAddress(), null));
+            AuthResponse response = loginClient.auth().loginByJwt(kubernetesMount, kubernetesRole, jwt);
+            setClient(newVaultConfig(vaultConfig.getAddress(), response.getAuthClientToken()));
+            if (logger != null)
+                {
+                logger.info("Authenticated to Vault via Kubernetes (mount: "+LogSafe.text(kubernetesMount)+", role: "+LogSafe.text(kubernetesRole)+")");
+                }
+            return true;
             }
         catch (Exception e)
             {
             if (logger != null)
                 {
-                logger.warn("Failed to initialize Vault storage: " + e.getMessage());
+                logger.warn("Vault: Kubernetes login failed (mount: "+LogSafe.text(kubernetesMount)+", role: "+LogSafe.text(kubernetesRole)+"): "+LogSafe.text(e.getMessage()));
+                }
+            return false;
+            }
+        finally
+            {
+            if (tokenBytes != null)
+                {
+                java.util.Arrays.fill(tokenBytes, (byte) 0);
                 }
             }
         }
 
-    private void authenticate(Configuration cfg) throws VaultException
+    /**
+     * whether the client's token is still accepted ({@code auth/token/lookup-self}, allowed by Vault's default policy).
+     * A refused read with a valid token is a policy decision, and a new login would only create another token.
+     * If the lookup itself fails (expired token, or no answer), the caller tries a fresh login.
+     */
+    private boolean isTokenValid(Vault client)
         {
-        // 1. Kubernetes Auth (Auto-detect)
-        String saTokenPath = "/var/run/secrets/kubernetes.io/serviceaccount/token";
-        if (Files.exists(Paths.get(saTokenPath)))
+        try
             {
-            try
+            client.auth().lookupSelf();
+            return true;
+            }
+        catch (Exception e)
+            {
+            return false;
+            }
+        }
+
+    /**
+     * one fresh Kubernetes login after a read was refused with the given client.
+     * If another thread has replaced the client meanwhile, its login is used instead of a second one.
+     *
+     * @param refusedClient the client whose read was refused
+     * @return true if a client from a newer login is available
+     */
+    private boolean reLogin(Vault refusedClient)
+        {
+        synchronized (authLock)
+            {
+            if (vault != refusedClient)
                 {
-                String token = new String(Files.readAllBytes(Paths.get(saTokenPath)), StandardCharsets.UTF_8);
-                String role = cfg.getString("auth.kubernetes.role");
-                String mount = cfg.getString("auth.kubernetes.mount");
-                
-                // Note: bettercloud vault-java-driver 5.1.0's loginByKubernetes(role, jwt) 
-                // uses the default "kubernetes" mount path. If a custom mount is needed,
-                // it would require manual implementation via logical().write("auth/" + mount + "/login", ...).
-                AuthResponse response = vault.auth().loginByKubernetes(role, token);
-                this.vaultConfig = new VaultConfig().address(vaultConfig.getAddress()).token(response.getAuthClientToken()).build();
-                this.vault = new Vault(vaultConfig);
-                if (logger != null)
-                    {
-                    logger.info("Authenticated to Vault via Kubernetes (role: " + role + ")");
-                    }
-                return;
+                return true;
                 }
-            catch (Exception e)
+            return loginByKubernetes();
+            }
+        }
+
+    /* caller holds authLock (or is in postInit, before any read) */
+    private void setClient(VaultConfig config)
+        {
+        Vault client = new Vault(config);
+        this.vaultConfig = config;
+        this.vault = client;
+        }
+
+    /**
+     * token path: {@code auth.kubernetes.tokenPath}, else an explicitly set {@code KUBERNETES_SA_TOKEN_PATH}
+     * (shared with the Kubernetes modules), else the standard ServiceAccount token path.
+     */
+    private String resolveTokenPath(Configuration cfg)
+        {
+        String path = optString(cfg, "auth.kubernetes.tokenPath");
+        if (path != null && !path.trim().isEmpty())
+            {
+            return path.trim();
+            }
+        ConfigFeatureInterface k8sTokenPath = ConfigFeatureRegistry.get(KUBERNETES_SA_TOKEN_PATH_FEATURE);
+        ConfigFactorySettings settings = ctx.getSettings();
+        if (k8sTokenPath != null && settings.isSet(k8sTokenPath))
+            {
+            String fromFeature = settings.getString(k8sTokenPath);
+            if (fromFeature != null && !fromFeature.trim().isEmpty())
                 {
-                if (logger != null)
-                    {
-                    logger.debug("Kubernetes auth failed: " + e.getMessage());
-                    }
+                return fromFeature.trim();
                 }
             }
+        return DEFAULT_SA_TOKEN_PATH;
+        }
 
-        // 2. Token Fallback
-        String token = (tokenOverride != null) ? tokenOverride : cfg.getString("token");
+    private VaultConfig newVaultConfig(String address, String token) throws VaultException
+        {
+        VaultConfig config = new VaultConfig().environmentLoader(environmentLoader).address(address);
+        // the driver inserts "data/" after the mount for KV v2 reads, and unwraps the v2 response
+        config.engineVersion(kvVersion >= 2 ? 2 : 1);
+        if (enginePath != null && !enginePath.isEmpty())
+            {
+            config.prefixPath(enginePath);
+            }
         if (token != null)
             {
-            this.vaultConfig = new VaultConfig().address(vaultConfig.getAddress()).token(token).build();
-            this.vault = new Vault(vaultConfig);
+            config.token(token);
+            }
+        return config.build();
+        }
+
+    static boolean isSecureTransport(String address)
+        {
+        return address != null && address.trim().toLowerCase(Locale.ROOT).startsWith("https://");
+        }
+
+    private static String optString(Configuration cfg, String key)
+        {
+        try
+            {
+            return cfg.getString(key);
+            }
+        catch (ConfigException e) // missing entry, with EXCEPTION_ON_MISSING_ENTRY
+            {
+            return null;
             }
         }
+
+    private static Boolean optBoolean(Configuration cfg, String key)
+        {
+        try
+            {
+            return cfg.getBoolean(key);
+            }
+        catch (ConfigException e) // missing entry, with EXCEPTION_ON_MISSING_ENTRY
+            {
+            return null;
+            }
+        }
+
+    /**
+     * controls which environment variables the Vault driver may read on its own.
+     * <p>
+     * The driver consults the environment in {@code VaultConfig.build()} and {@code SslConfig.build()}.
+     * Allowed: {@code VAULT_TOKEN} (environment only; the driver's fallback to the file {@code ~/.vault-token} is not used),
+     * {@code VAULT_SSL_CERT}, {@code VAULT_OPEN_TIMEOUT}, {@code VAULT_READ_TIMEOUT}.
+     * {@code VAULT_SSL_VERIFY} only with {@code auth.allowInsecureTransport}, since {@code false} disables TLS verification.
+     * {@code VAULT_ADDR} is not taken from here: the address is configured through mConfig.
+     */
+    static final class AllowlistEnvironmentLoader extends EnvironmentLoader
+    {
+        private final boolean allowInsecureTransport;
+
+        AllowlistEnvironmentLoader(boolean allowInsecureTransport)
+            {
+            this.allowInsecureTransport = allowInsecureTransport;
+            }
+
+        @Override
+        public String loadVariable(String name)
+            {
+            if (!isAllowed(name, allowInsecureTransport))
+                {
+                return null;
+                }
+            return System.getenv(name);
+            }
+
+        static boolean isAllowed(String name, boolean allowInsecureTransport)
+            {
+            switch (name)
+                {
+                case "VAULT_TOKEN":
+                case "VAULT_SSL_CERT":
+                case "VAULT_OPEN_TIMEOUT":
+                case "VAULT_READ_TIMEOUT":
+                    return true;
+                case "VAULT_SSL_VERIFY":
+                    return allowInsecureTransport;
+                default:
+                    return false;
+                }
+            }
+    }
 
     @Override
     public void updateConfigurationLayers(String name, ConfigLocation location, LayeredConfigurationInterface layered)
@@ -160,25 +407,86 @@ public final class VaultConfigStorage implements ConfigStorageInterface
             {
             return;
             }
+        Object handle = location.getStorageInstanceHandle();
+        if (!(handle instanceof String))
+            {
+            EventRecorder.recordSourceUnavailable(ctx, location, "VAULT_READ_FAILED",
+                    "Vault location without a secret path: '"+LogSafe.text(location.toLocationString())+"'");
+            return;
+            }
+        // KV v2: the driver inserts "data/" after the mount path (see newVaultConfig)
+        String fullPath = enginePath+"/"+handle;
+        boolean deniedByPolicy = false;
         try
             {
-            String path = (String) location.getStorageInstanceHandle();
-            String fullPath = (kvVersion >= 2) ? enginePath + "/data/" + path : enginePath + "/" + path;
-            LogicalResponse response = vault.logical().read(fullPath);
+            Vault client = this.vault;
+            LogicalResponse response = client.logical().read(fullPath);
+            int status = response.getRestResponse().getStatus();
+            if (status == HTTP_FORBIDDEN && kubernetesAuth)
+                {
+                if (isTokenValid(client))
+                    {
+                    // the token works; the policy does not allow this path. A login would not change that.
+                    deniedByPolicy = true;
+                    }
+                else if (reLogin(client))
+                    {
+                    // token expired or revoked: one fresh login, one retry
+                    response = this.vault.logical().read(fullPath);
+                    status = response.getRestResponse().getStatus();
+                    }
+                }
 
-            if (response.getRestResponse().getStatus() == HTTP_OK)
+            if (status == HTTP_OK)
                 {
                 Map<String, String> data = response.getData();
-                layered.add(new VaultConfigLayer(location, data), location);
+                Map<String, byte[]> byteData = new HashMap<>();
+                for (Map.Entry<String, String> entry : data.entrySet())
+                    {
+                    if (entry.getValue() != null)
+                        {
+                        byteData.put(entry.getKey(), entry.getValue().getBytes(StandardCharsets.UTF_8));
+                        }
+                    }
+                layered.add(new VaultConfigLayer(location, byteData), location);
+                }
+            else if (status == HTTP_NOT_FOUND)
+                {
+                if (logger != null)
+                    {
+                    logger.debug("Vault: nothing stored at '"+LogSafe.text(location.toLocationString())+"'");
+                    }
+                }
+            else if (status == HTTP_FORBIDDEN)
+                {
+                String reason = deniedByPolicy ? "; the token is valid, so the policy does not allow this path"
+                        : kubernetesAuth ? ", also after a fresh Kubernetes login"
+                        : ". The token may have expired; a static token cannot be renewed by mConfig";
+                EventRecorder.recordSourceUnavailable(ctx, location, "VAULT_ACCESS_DENIED",
+                        "Vault refused access to '"+LogSafe.text(fullPath)+"' (HTTP 403)"+reason);
+                }
+            else
+                {
+                EventRecorder.recordSourceUnavailable(ctx, location, "VAULT_READ_FAILED",
+                        "Vault read of '"+LogSafe.text(fullPath)+"' failed (HTTP "+status+")");
                 }
             }
         catch (Exception e)
             {
-            if (logger != null)
-                {
-                logger.debug("Could not read from Vault path '" + location.toLocationString() + "': " + e.getMessage());
-                }
+            // Vault is a secret store: a failure while handling a response may quote its content.
+            // Report error type and HTTP status only, as for Kubernetes Secrets.
+            EventRecorder.recordSourceUnavailable(ctx, location, "VAULT_READ_FAILED",
+                    "Vault read of '"+LogSafe.text(fullPath)+"' failed: "+describeReadFailure(e));
             }
+        }
+
+    /** error type and, if the client knows it, the HTTP status; never the exception's message. */
+    static String describeReadFailure(Exception e)
+        {
+        String description = e.getClass().getSimpleName();
+        if (e instanceof VaultException && ((VaultException) e).getHttpStatusCode() > 0)
+            { description += " (HTTP "+((VaultException) e).getHttpStatusCode()+")"; }
+        return description;
         }
 
     @Override
@@ -240,6 +548,14 @@ public final class VaultConfigStorage implements ConfigStorageInterface
         {
         }
 
+    /* a source built with VaultConfigSource.builder() brings its own instance (own address, token) */
+    @Override
+    @SuppressWarnings("removal") // stopgap until MLIB-155
+    public boolean isInitializedWhenAddedAsSource()
+        {
+        return true;
+        }
+
     public void setAddressOverride(String addressOverride)
         {
         this.addressOverride = addressOverride;
@@ -250,12 +566,24 @@ public final class VaultConfigStorage implements ConfigStorageInterface
         this.tokenOverride = tokenOverride;
         }
 
+    // for tests
+    boolean isInitialized()
+        {
+        return initialized;
+        }
+
+    // for tests
+    String getClientToken()
+        {
+        return (vaultConfig == null) ? null : vaultConfig.getToken();
+        }
+
     private static class VaultConfigLayer implements ConfigLayerInterface
     {
         private final ConfigLocation                location;
-        private final Map<String, String>           data;
+        private final Map<String, byte[]>           data;
 
-        public VaultConfigLayer(ConfigLocation location, Map<String, String> data)
+        public VaultConfigLayer(ConfigLocation location, Map<String, byte[]> data)
             {
             this.location = location;
             this.data = data != null ? new HashMap<>(data) : Collections.emptyMap();
@@ -264,14 +592,27 @@ public final class VaultConfigStorage implements ConfigStorageInterface
         @Override
         public ConfigEntry getEntry(String hierarchicalKey)
             {
-            String value = data.get(hierarchicalKey);
+            byte[] value = data.get(hierarchicalKey);
             if (value == null)
                 {
                 return null;
                 }
 
-            SecretValue secretValue = new BasicSecretValue(value.getBytes(StandardCharsets.UTF_8), SecretType.PLAIN_TEXT);
-            return new SecretConfigEntryLeaf(hierarchicalKey, secretValue, location);
+            SecretValue secretValue = new BasicSecretValue(value, SecretType.PLAIN_TEXT);
+            return new SecretConfigEntryLeaf(hierarchicalKey, secretValue, new ConfigEntryMetadata(getSource()));
+            }
+
+        @Override
+        public void erase()
+            {
+            for (byte[] buffer : data.values())
+                {
+                if (buffer != null)
+                    {
+                    java.util.Arrays.fill(buffer, (byte) 0);
+                    }
+                }
+            data.clear();
             }
 
         @Override
@@ -327,3 +668,4 @@ public final class VaultConfigStorage implements ConfigStorageInterface
             }
     }
 }
+//___EOF___

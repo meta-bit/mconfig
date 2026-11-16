@@ -56,19 +56,7 @@ final class TomlWriter
                     }
                 writeHeaderComments(subTable);
                 out.append('[').append(path).append(']');
-                if (subTable.getHeaderInlineComment() != null)
-                    {
-                    String inline = subTable.getHeaderInlineComment();
-                    if (!inline.startsWith("#"))
-                        {
-                        out.append(" #");
-                        }
-                    else
-                        {
-                        out.append(" ");
-                        }
-                    out.append(inline);
-                    }
+                writeInlineComment(subTable.getHeaderInlineComment());
                 out.append('\n');
                 writeTable(subTable, path);
                 }
@@ -84,19 +72,7 @@ final class TomlWriter
                         }
                     writeHeaderComments(item);
                     out.append("[[").append(path).append("]]");
-                    if (item.getHeaderInlineComment() != null)
-                        {
-                        String inline = item.getHeaderInlineComment();
-                        if (!inline.startsWith("#"))
-                            {
-                            out.append(" #");
-                            }
-                        else
-                            {
-                            out.append(" ");
-                            }
-                        out.append(inline);
-                        }
+                    writeInlineComment(item.getHeaderInlineComment());
                     out.append('\n');
                     writeTable(item, path);
                     }
@@ -109,37 +85,12 @@ final class TomlWriter
         {
         if (currentTable != null)
             {
-            List<String> leadingComments = currentTable.getLeadingComments(key);
-            if (leadingComments != null)
-                {
-                for (String comment : leadingComments)
-                    {
-                    if (comment != null && !comment.startsWith("#"))
-                        {
-                        out.append("# ").append(comment).append('\n');
-                        }
-                    else
-                        {
-                        out.append(comment == null ? "" : comment).append('\n');
-                        }
-                    }
-                }
+            writeComments(currentTable.getLeadingComments(key), "");
             }
         out.append(formatKey(key)).append(" = ").append(formatValue(value));
         if (currentTable != null)
             {
-            String inlineComment = currentTable.getInlineComment(key);
-            if (inlineComment != null)
-                {
-                if (!inlineComment.startsWith("#"))
-                    {
-                    out.append(" # ").append(inlineComment);
-                    }
-                else
-                    {
-                    out.append(" ").append(inlineComment);
-                    }
-                }
+            writeInlineComment(currentTable.getInlineComment(key));
             }
         out.append('\n');
         }
@@ -351,15 +302,29 @@ final class TomlWriter
         return prefix + "." + key;
         }
 
-    private void writeHeaderComments(TomlTable table)
+    private void writeInlineComment(String inlineComment)
         {
-        List<String> comments = table.getHeaderComments();
-        if (comments == null)
+        if (inlineComment != null)
             {
-            return;
+            if (!inlineComment.startsWith("#"))
+                {
+                out.append(" #");
+                if (!inlineComment.startsWith(" ")) out.append(" ");
+                out.append(inlineComment);
+                }
+            else
+                {
+                out.append(" ").append(inlineComment);
+                }
             }
+        }
+
+    private void writeComments(List<String> comments, String indent)
+        {
+        if (comments == null) return;
         for (String comment : comments)
             {
+            out.append(indent);
             if (comment != null && !comment.startsWith("#"))
                 {
                 out.append("# ").append(comment).append('\n');
@@ -369,5 +334,10 @@ final class TomlWriter
                 out.append(comment == null ? "" : comment).append('\n');
                 }
             }
+        }
+
+    private void writeHeaderComments(TomlTable table)
+        {
+        writeComments(table.getHeaderComments(), "");
         }
 }

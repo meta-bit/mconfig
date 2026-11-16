@@ -3,7 +3,9 @@ package org.metabit.platform.support.config.source.core;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.ConfigFactoryInstanceContext;
 import org.metabit.platform.support.config.impl.ConfigLocationImpl;
+import org.metabit.platform.support.config.impl.entry.SecretConfigEntry;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
+import org.metabit.platform.support.config.interfaces.SecretValue;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,15 +14,12 @@ import java.util.Map;
 /**
  * <p>DefaultLayer class.</p>
  *
- * 
  * @version $Id: $Id
  */
 public class DefaultLayer implements ConfigLayerInterface
 {
-    private final Boolean flag1;
-    private final Boolean                 flag2;
-    private final ConfigLocationImpl      source;
-    private final Map<String,ConfigEntry> map;
+    private final ConfigLocationImpl       source;
+    private final Map<String, ConfigEntry> map;
 
     /**
      * <p>Constructor for DefaultLayer.</p>
@@ -30,8 +29,6 @@ public class DefaultLayer implements ConfigLayerInterface
     public DefaultLayer(ConfigFactoryInstanceContext ctx)
         {
         map = new HashMap<>();
-        flag1 = ctx.getSettings().getBoolean(ConfigFeature.DEFAULT_ON_MISSING_ENTRY);
-        flag2 = ctx.getSettings().getBoolean(ConfigFeature.EXCEPTION_ON_MISSING_ENTRY);
         source = new ConfigLocationImpl(getScope(), new DefaultLayerStorage(), null, null); // no storage, no format
         }
 
@@ -56,16 +53,34 @@ public class DefaultLayer implements ConfigLayerInterface
     @Override
     public void writeEntry(ConfigEntry entryToWrite)
             throws ConfigCheckedException
-        {  throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.NOT_WRITEABLE); }
+        { throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.NOT_WRITEABLE); }
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * not writeable, so no cache flush here.
      */
     @Override
     public int flush()
         { return 0; }
+
+    /** {@inheritDoc} */
+    @Override
+    public void erase()
+        {
+        for (ConfigEntry entry : map.values())
+            {
+            if (entry instanceof SecretConfigEntry)
+                {
+                SecretValue secretValue = ((SecretConfigEntry) entry).getSecretValue();
+                if (secretValue != null)
+                    {
+                    secretValue.erase();
+                    }
+                }
+            }
+        map.clear();
+        }
 
     /** {@inheritDoc} */
     @Override
@@ -77,7 +92,7 @@ public class DefaultLayer implements ConfigLayerInterface
     /** {@inheritDoc} */
     @Override
     public int compareTo(ConfigLayerInterface o)
-        { return this.getScope().ordinal() - o.getScope().ordinal(); }
+        { return this.getScope().ordinal()-o.getScope().ordinal(); }
 
     /** {@inheritDoc} */
     @Override
@@ -99,10 +114,10 @@ public class DefaultLayer implements ConfigLayerInterface
     /**
      * <p>putEntry.</p>
      *
-     * @param fullKey a {@link java.lang.String} object
+     * @param fullKey       a {@link java.lang.String} object
      * @param preparedEntry a {@link org.metabit.platform.support.config.ConfigEntry} object
      */
-    public void putEntry(final String fullKey, final ConfigEntry preparedEntry) {  map.put(fullKey,preparedEntry); }
+    public void putEntry(final String fullKey, final ConfigEntry preparedEntry) { map.put(fullKey, preparedEntry); }
 
     /**
      * <p>clear.</p>
@@ -110,3 +125,4 @@ public class DefaultLayer implements ConfigLayerInterface
     public void clear()
         { map.clear(); }
 }
+//___EOF___

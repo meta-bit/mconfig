@@ -52,3 +52,4 @@ public class TypePreservationTest
         assertEquals(new BigDecimal("123.456"), bigDecEntry.getValueAsBigDecimal());
         }
 }
+//___EOF___

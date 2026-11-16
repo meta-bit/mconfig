@@ -107,3 +107,4 @@ public class ConsoleLogging implements ConfigLoggingInterface
     @Override public boolean isDebugEnabled() { return currentLevel.value <= Level.DEBUG.value; }
     @Override public boolean isTraceEnabled() { return currentLevel.value <= Level.TRACE.value; }
 }
+//___EOF___

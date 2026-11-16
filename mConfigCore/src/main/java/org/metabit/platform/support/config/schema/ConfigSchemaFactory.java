@@ -75,3 +75,4 @@ public interface ConfigSchemaFactory
     default void fillEntryFromCondensedForm(ConfigSchemaEntry entry, String condensedForm) throws org.metabit.platform.support.config.ConfigCheckedException
         { throw new UnsupportedOperationException(); }
 }
+//___EOF___

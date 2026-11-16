@@ -57,3 +57,4 @@ boolean initialize(ConfigFactoryInstanceContext ctx);
     void appendSearchEntry(ConfigLocation location, ConfigScope scope);
     void notifyConfigurationClosed(String sanitizedConfigName);
 }
+//___EOF___

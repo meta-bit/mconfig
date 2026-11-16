@@ -17,6 +17,7 @@ public class FilesystemConfigSchemaProvider implements ConfigSchemaProvider
 {
 
     @Override
+    @SuppressWarnings("deprecation") // ALLOW_LOCAL_SCHEMA_OVERRIDE is honoured until its replacement in 0.9.0
     public Map<String, ConfigSchema> discoverSchemas(ConfigFactoryInstanceContext ctx)
         {
         if (!ctx.getSettings().getBoolean(ConfigFeature.ALLOW_LOCAL_SCHEMA_OVERRIDE))

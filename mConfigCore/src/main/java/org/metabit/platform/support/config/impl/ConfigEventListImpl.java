@@ -147,3 +147,4 @@ public class ConfigEventListImpl implements List<ConfigEvent>
     @Override
     public synchronized List<ConfigEvent> subList(int fromIndex, int toIndex) { return new ArrayList<>(list).subList(fromIndex, toIndex); }
 }
+//___EOF___

@@ -119,3 +119,4 @@ public enum OperatingSystem
 }
 // @TODO AIX value
 // see u-boot include/image.h for reference values to align with
+//___EOF___

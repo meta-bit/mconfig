@@ -79,3 +79,4 @@ public class ConfigEventImplTest
         assertNotEquals(e1, e3);
         }
 }
+//___EOF___

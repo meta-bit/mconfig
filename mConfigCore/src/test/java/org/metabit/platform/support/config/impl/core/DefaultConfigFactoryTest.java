@@ -31,3 +31,4 @@ class DefaultConfigFactoryTest
         searchList.forEach(printConsumer);
         }
 }
+//___EOF___

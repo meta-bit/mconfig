@@ -12,7 +12,7 @@ subject to the following Redistribution & Integrity Grant:
 
 2. Design Integrity Restriction (The "No-Forks" Clause)
    To prevent architectural fragmentation and ensure the consistency of 
-   the9-tier ConfigScope hierarchy (from PRODUCT to POLICY), the ConfigScheme
+   the 10-tier ConfigScope hierarchy (from PRODUCT to POLICY), the ConfigScheme
    validation logic, and the OS-native path resolution standards 
    during this development phase:
 

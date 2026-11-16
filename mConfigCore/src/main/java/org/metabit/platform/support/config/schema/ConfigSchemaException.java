@@ -4,12 +4,19 @@ import org.metabit.platform.support.config.ConfigCheckedException;
 
 public class ConfigSchemaException extends ConfigCheckedException
 {
-    private final int line;
-    private final int column;
+    private final String detail;
+    private final int    line;
+    private final int    column;
 
+    /**
+     * @param message what is wrong with the schema
+     * @param line    line of the problem; line and column 0 if it concerns the schema as a whole
+     * @param column  column of the problem
+     */
     public ConfigSchemaException(String message, int line, int column)
         {
         super(ConfigExceptionReason.INPUT_INVALID);
+        this.detail = message;
         this.line = line;
         this.column = column;
         }
@@ -17,6 +24,7 @@ public class ConfigSchemaException extends ConfigCheckedException
     public ConfigSchemaException(String message, Throwable cause, int line, int column)
         {
         super(ConfigExceptionReason.INPUT_INVALID);
+        this.detail = message;
         this.line = line;
         this.column = column;
         initCause(cause);
@@ -35,6 +43,10 @@ public class ConfigSchemaException extends ConfigCheckedException
     @Override
     public String getMessage()
         {
-        return super.getMessage()+" at line "+line+", column "+column;
+        String text = (detail == null) ? super.getMessage() : super.getMessage()+": "+detail;
+        if (line <= 0 && column <= 0)
+            { return text; }
+        return text+" at line "+line+", column "+column;
         }
 }
+//___EOF___

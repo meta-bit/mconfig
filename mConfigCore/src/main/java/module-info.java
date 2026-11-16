@@ -40,3 +40,4 @@ module metabit.mconfig.core
     provides ConfigStorageInterface with DefaultLayerStorage, RuntimeInMemoryLayerSource, SessionInMemoryLayerSource;
 
     }
+//___EOF___

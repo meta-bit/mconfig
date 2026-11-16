@@ -5,6 +5,7 @@ import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.LayeredConfigurationInterface;
 import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.NullConfigSchema;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -95,6 +96,18 @@ public class BlobConfiguration implements LayeredConfigurationInterface
     public boolean isClosed()
         {
         return closed;
+        }
+
+    @Override
+    public ConfigSchema getConfigSchema()
+        {
+        return NullConfigSchema.INSTANCE; // BLOBs are not parsed into entries
+        }
+
+    @Override
+    public boolean isBootstrapLookup()
+        {
+        return false;
         }
 
     @Override
@@ -220,9 +233,11 @@ so, for blobs, we need a corresponding getConfig() thing which calls correspondi
         }
 
     /**
-     * get the list of all source locations the layers refer to.
+     * {@inheritDoc}
+     * <p>
+     * Returns the list of active {@link ConfigLocation}s from which BLOB configurations were loaded.
      *
-     * @return a list of ConfigLocation entries
+     * @see org.metabit.platform.support.config.ConfigFactory#getSearchList()
      */
     @Override
     public List<ConfigLocation> getSourceLocations()

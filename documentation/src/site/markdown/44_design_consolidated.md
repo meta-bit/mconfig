@@ -60,27 +60,35 @@ mConfig supports "self-configuration" to allow the library to configure
 its own behavior using the same discovery mechanisms it provides to applications.
 
 ### 4.4.2.2.1 Library Self-Configuration (ConfigFactorySettings)
-When the `mConfigSourceJAR` module is present, mConfig automatically searches
-for a properties file named `mconfig.properties` in the following classpath location:
-`.config/metabit/mConfig/mconfig.properties`
+During `ConfigFactoryBuilder.build()`, mConfig core (`SelfConfigurator`) reads the component file
+`.config/<company>/<application>/mconfig.properties` (without a company: `.config/<application>/mconfig.properties`)
+for the company and application the factory is built for.
 
-This file is used to populate `ConfigFactorySettings` during the 
-`ConfigFactory` initialization. It supports setting any `ConfigFeature`.
-(Thus, handle with care; it is as powerful as its code counterparts.)
-
-*   **Discovery**: It uses `ClassLoader.getResources()` to find 
-*all* occurrences of this file in the classpath,
-allowing settings to be provided from multiple JARs or resource paths.
+*   **Per component**: an application often contains several components that use mConfig, each with its own
+factory. The file is bound to company and application, so each component configures only itself and does not
+change the behaviour of the others.
+*   **Precedence**: code (`setFeature()`) > runtime settings (if delegated) > component file > deprecated global file.
+A file only fills in features that are not set yet.
+*   **Setting levels**: features marked `CODE_ONLY` (e.g. `ALLOW_MCONFIG_RUNTIME_SETTINGS`,
+`ALLOW_APPLICATION_POLICY_LOCATIONS`) are refused; `COMPONENT` features (`TEST_MODE`, `TESTMODE_DIRECTORIES`,
+`PERMIT_TEST_MODE`) are allowed. File-set test mode is logged as a WARNING with the file's location.
+*   **Timing**: before the test-mode gates and before storage discovery, so `forbidTestMode()` and
+`PERMIT_TEST_MODE` cover file-set test mode, and storage settings take effect.
 *   **Format**: Standard Java `.properties` format only.
-Keys (ignoring case) are matched against `ConfigFeature` constants.
-*   **Disabling**: This feature is enabled by default for convenience, but can be disabled via `ConfigFeature.ENABLE_SELF_CONFIGURATION = false` for environments with strict classpath security requirements.
+Keys (ignoring case) are matched against registered feature names.
+*   **Disabling**: enabled by default; disable with `ConfigFeature.ENABLE_SELF_CONFIGURATION = false` in code.
+*   **Deprecated global file**: `.config/metabit/mConfig/mconfig.properties` applies to every factory in the process
+and cannot be attributed to a component. Still read in 0.8.x with a WARNING, ordinary (`ANY`) features only;
+removed before 0.9.0.
+
+See [Config Features](25_config_features.md#self-configuration-per-component).
 
 ### 4.4.2.2.2 Networked Source Self-Configuration
 Networked sources (like ZooKeeper) can also retrieve their own connection settings (connect string, root path, etc.) from previously loaded layers (e.g., JAR defaults or local filesystem overrides).
 
 **Resolution Order during Startup:**
-1.  **Core Discovery**: Modules (Storages, Formats) and `ConfigFactoryComponent`s are identified.
-2.  **Library Self-Configuration**: `SelfConfigurationComponent` (from `mConfigSourceJAR`) is initialized, populating `ConfigFactorySettings` from `mconfig.properties`.
+1.  **Library Self-Configuration**: runtime settings, then the component's `mconfig.properties` (see 4.4.2.2.1) populate `ConfigFactorySettings`; then the test-mode gates are evaluated.
+2.  **Core Discovery**: Modules (Storages, Formats) and `ConfigFactoryComponent`s are identified.
 3.  **Local Source Initialization**: `JARConfigSource` and `FileConfigStorage` are initialized based on `STORAGE_TYPE_PRIORITIES`.
 4.  **Networked Source Initialization**:
     - `ZooKeeperConfigStorage.init()` is called.
@@ -112,13 +120,23 @@ A prioritized list of `ConfigLocation` entries defining where the library should
 - **ConfigSource**: An instantiated `ConfigLocation` that is associated with a specific `ConfigLayer`. It confirms the configuration exists and is readable.
 
 ### ConfigStorage
-Provides low-level access to data (e.g., `FileConfigStorage`, `WindowsRegistryConfigStorage`, `EnvVarConfigStorage`).
+Provides low-level access to data (e.g., `FileConfigStorage`, `WindowsRegistryConfigSource`, `EnvVarConfigStorage`).
 
 ### ConfigFormat
-Parses and writes data in specific formats (e.g., `Properties`, `JSON`, `YAML`, `TOML`, `JSON5`, `INI`). It is responsible for instantiating `ConfigLayer` objects.
+Parses and writes data in specific formats (e.g., `Properties`, `JSON`, `YAML`, `TOML`, `JSON5`, `INI`).
+For storages that hold configurations as blobs (files, JAR resources, ZooKeeper nodes), the format
+reads the blob and creates the `ConfigLayer`.
+
+A format is a helper of the storage that found the content: the format knows the syntax, the storage
+the context (configuration, schema, whether the location is a secret store). Since 0.8.17 a format
+returns a layer or throws `ConfigParseException`; it does not log parse problems itself. The storage
+catches the exception and hands it to core's `ParseProblemReporter`, which decides whether the
+parser's own text may be shown (see [Logging: parse errors](42_logging.md#parse-errors)).
 
 ### ConfigLayer
-A concrete instance of configuration data from a `ConfigLocation`. It maps hierarchical keys (e.g., `database/host`) to `ConfigEntry` objects.
+The concrete data read from one `ConfigLocation`, mapped to hierarchical keys (e.g., `database/host`) and
+`ConfigEntry` objects. For blob-like storages (files, ZooKeeper BLOBs, JAR resources) a format produces it;
+storages with structured data of their own (Windows registry, environment variables, Vault) produce it themselves.
 
 ### ConfigEntry
 A leaf node in the configuration tree, containing the value and metadata (like the source location).
@@ -134,7 +152,11 @@ A leaf node in the configuration tree, containing the value and metadata (like t
 
 ### ADDITIONAL_DIRECTORIES
 - `ADDITIONAL_RUNTIME_DIRECTORIES` and `ADDITIONAL_USER_DIRECTORIES` allow adding custom search paths at runtime.
-- Support the `SCOPENAME ":" PATH` format, allowing paths to be assigned to any scope (not just their default scope).
+- Support the `SCOPENAME ":" PATH` format, allowing paths to be assigned to another scope than their default scope.
+  **Exception: POLICY.** In productive mode a `POLICY:` entry fails with a `ConfigException` unless the application
+  set `ALLOW_APPLICATION_POLICY_LOCATIONS` in code. The same guard applies to a secrets provider with scope POLICY
+  and to POLICY sources added with `ConfigFactoryBuilder.addSource()`. Storages' own, OS-derived POLICY locations are
+  not affected. See [Config Features](25_config_features.md#policy-locations-registered-by-the-application).
 - Prepended to the search list of their respective scope, ensuring they take precedence over default locations.
 
 ### SERVICE-mode (Auto-refresh & Monitoring)
@@ -152,6 +174,14 @@ ConfigFactoryBuilder.create("metabit", "APP")
     .build();
 ```
 Disabling self-configuration ensures that the `ConfigFactory` starts with only the settings explicitly provided in code, preventing "configuration injection" via the classpath.
+
+Independently of this switch:
+- a component file applies only to its own company and application, and code always wins over it;
+- no file can set `CODE_ONLY` features (e.g. `ALLOW_MCONFIG_RUNTIME_SETTINGS`, `ALLOW_APPLICATION_POLICY_LOCATIONS`);
+- the deprecated global file cannot set `COMPONENT` features (`TEST_MODE`, `TESTMODE_DIRECTORIES`, `PERMIT_TEST_MODE`);
+- refused entries are ignored with a WARNING; file-set test mode is logged as a WARNING with the file's location.
+
+See [Who may set a feature](25_config_features.md#who-may-set-a-feature).
 
 ## 4.4.5 Reading and Writing
 
@@ -302,7 +332,7 @@ When implementing a new `ConfigStorage`:
 
 1.  **Module Creation**: Create `mConfigSource<Name>` module with `ConfigStorageInterface` impl.
 2.  **init(ctx)**: Populate `ctx.getSearchList()` with `ConfigLocationImpl` for scopes/formats/paths.
-3.  **Read Layers**: In `tryToReadConfigurationLayers`, load/parse entries into `LayeredConfiguration`.
+3.  **Read Layers**: In `updateConfigurationLayers`, load/parse entries into `LayeredConfiguration`.
 4.  **Classpath Order**: Auto-discovered; control via `ConfigFeature.STORAGE_TYPE_PRIORITIES`.
 5.  **Testing**: Add unit/integration tests; verify with full `mvn clean test`.
 

@@ -18,8 +18,8 @@ These, in turn, can be overridden by user-based settings, session-specific envir
 |:---------|:-----------------|:--------------------------------------------------------|:-------------------------------------|
 | 10       | **PRODUCT**      | Defaults shipped with the software.                     | ConfigSchema defaults, JAR resources |
 | 9        | **ORGANIZATION** | Company-level defaults and licensing.                   | Registry, network services           |
-| 8        | **CLOUD**        | Cloud-based configurations, shared across clusters.     | Cloud providers, network services    |
-| 7        | **CLUSTER**      | Cluster-wide settings.                                  | ZooKeeper, network services          |
+| 8        | **CLOUD**        | Cloud-based configurations, shared across clusters.     | HashiCorp Vault, AWS Secrets Manager, network services |
+| 7        | **CLUSTER**      | Cluster-wide settings.                                  | Apache ZooKeeper, Kubernetes ConfigMaps and Secrets, network services |
 | 6        | **HOST**         | System-wide settings for one host.                      | `/etc/`, `%ProgramData%`, Registry   |
 | 5        | **APPLICATION**  | Installation-specific settings (portable/side-by-side). | Filesystem near the binary           |
 | 4        | **USER**         | Per-user overrides and preferences.                     | `~/.config/`, `%AppData%`, Registry  |

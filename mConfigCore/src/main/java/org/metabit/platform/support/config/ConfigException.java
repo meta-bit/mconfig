@@ -175,3 +175,4 @@ public class ConfigException extends RuntimeException
         UNKNOWN_MANDATORY_FEATURE
     }
 }
+//___EOF___

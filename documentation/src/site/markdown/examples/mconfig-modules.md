@@ -5,7 +5,7 @@ mConfig is a modular library with which you can pick and choose the components y
 ## Choosing Your Modules
 
 - **Start simple**: Use `mConfigBasic` for most applications
-- **Need more formats?**: Use `mConfigStandard` to get JSON, YAML, and JSON5 support
+- **Need more formats?**: Use `mConfigStandard` to get JSON, YAML, TOML, and INI support
 - **Custom setup**: Include only the specific modules you need
 - **Reduce if needed**: start with `mConfigCore` and add only what you need
 

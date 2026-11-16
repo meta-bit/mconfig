@@ -1,8 +1,10 @@
 package org.metabit.platform.support.config.tool;
 
+import org.metabit.platform.support.config.impl.entry.BooleanLiterals;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.LayeredConfiguration;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryFactory;
+import org.metabit.platform.support.config.impl.entry.SecretRedaction;
 import org.metabit.platform.support.config.interfaces.ConfigEntrySpecification;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.schema.ConfigSchema;
@@ -168,13 +170,12 @@ public class SetCommand implements Callable<Integer>
 
             try (ConfigFactory configFactory = builder.build())
                 {
-                Configuration cfg = configFactory.getConfig(ctx.configName);
-                if (!(cfg instanceof LayeredConfiguration))
+                Configuration lcfg = configFactory.getConfig(ctx.configName);
+                if (!lcfg.isWriteable())
                     {
-                    System.err.println("Error: Configuration is not a LayeredConfiguration, cannot perform writes.");
+                    System.err.println("Error: Configuration is not writeable.");
                     return 1;
                     }
-                LayeredConfiguration lcfg = (LayeredConfiguration) cfg;
 
                 if (ctx.verbose)
                     {
@@ -187,6 +188,10 @@ public class SetCommand implements Callable<Integer>
 
                 ConfigSchema schema = lcfg.getConfigSchema();
                 ConfigEntrySpecification spec = (schema != null) ? schema.getSpecification(ctx.key) : null;
+                // the value was supplied by the caller, but stdout reaches logs and terminals: never echo secrets (MLIB-130)
+                boolean secret = ((spec != null) && spec.isSecret())
+                        || SecretRedaction.isConfidential(lcfg.getConfigEntryFromFullKey(ctx.key, java.util.EnumSet.allOf(ConfigScope.class)));
+                String shownValue = secret ? SecretRedaction.REDACTED : value;
 
                 // Determine scope
                 ConfigScope targetScope = scope;
@@ -221,7 +226,7 @@ public class SetCommand implements Callable<Integer>
                     {
                     if (!spec.validateEntry(entryToValidate))
                         {
-                        System.err.println("Validation failed: Value '"+value+"' does not match specification for key '"+ctx.key+"'");
+                        System.err.println("Validation failed: Value '"+shownValue+"' does not match specification for key '"+ctx.key+"'");
                         if (spec.getValueLimitations() != null)
                             {
                             System.err.println("Limitations: "+spec.getValueLimitations());
@@ -233,7 +238,7 @@ public class SetCommand implements Callable<Integer>
                 // 2. Display dry run or hierarchy if verbose
                 if (dryRun || ctx.verbose)
                     {
-                    showInformation(lcfg, ctx.key, convertedValue, targetType, targetScope, dryRun, ctx.verbose);
+                    showInformation(lcfg, ctx.key, secret ? SecretRedaction.REDACTED : convertedValue, targetType, targetScope, dryRun, ctx.verbose);
                     }
 
                 // 3. Perform
@@ -303,7 +308,7 @@ public class SetCommand implements Callable<Integer>
                             {
                             System.out.println("Flushed "+flushed+" changes.");
                             }
-                        System.out.println("Successfully set '"+ctx.key+"' to '"+value+"' in "+targetScope+" scope.");
+                        System.out.println("Successfully set '"+ctx.key+"' to '"+shownValue+"' in "+targetScope+" scope.");
                         }
                     catch (Exception e)
                         {
@@ -353,7 +358,12 @@ public class SetCommand implements Callable<Integer>
                     throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.CONVERSION_FAILURE);
                     }
             case BOOLEAN:
-                return Boolean.valueOf(value);
+                {
+                Boolean flag = BooleanLiterals.parse(value);
+                if (flag == null)
+                    { throw new ConfigCheckedException(ConfigCheckedException.ConfigExceptionReason.CONVERSION_FAILURE); }
+                return flag;
+                }
             case BYTES:
                 // We cannot use ConfigIOUtil.hexDecode because it is not exported.
                 // We will implement a simple hex decoder here if needed, or just use string bytes.
@@ -366,7 +376,7 @@ public class SetCommand implements Callable<Integer>
             }
         }
 
-    private void showInformation(LayeredConfiguration lcfg, String key, Object value, ConfigEntryType type, ConfigScope scope, boolean dryRun, boolean verbose)
+    private void showInformation(Configuration lcfg, String key, Object value, ConfigEntryType type, ConfigScope scope, boolean dryRun, boolean verbose)
         {
         if (dryRun)
             {
@@ -410,7 +420,7 @@ public class SetCommand implements Callable<Integer>
             }
         }
 
-    private void reportError(Exception e, LayeredConfiguration lcfg, ConfigScope scope)
+    private void reportError(Exception e, Configuration lcfg, ConfigScope scope)
         {
         System.err.println("Failed to set configuration entry.");
         if (e instanceof ConfigException && e.getCause() instanceof ConfigCheckedException)

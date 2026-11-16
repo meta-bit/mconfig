@@ -5,6 +5,7 @@ import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.*;
 import org.metabit.platform.support.config.impl.entry.ConfigEntryMetadata;
 import org.metabit.platform.support.config.impl.entry.GenericConfigEntryLeaf;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.config.source.core.InMemoryLayer;
@@ -246,12 +247,8 @@ public class WindowsRegistryConfigSource implements ConfigStorageInterface
             }
         }
 
-    private ConfigLayerInterface readKeyToLayer(int hKey, ConfigLocation location)
+    private void readValuesIntoLayer(int hKey, String prefix, InMemoryLayer layer, ConfigEntryMetadata meta)
         {
-        InMemoryLayer layer = new InMemoryLayer(ctx, location, location.getScope());
-        ConfigEntryMetadata meta = new ConfigEntryMetadata((ConfigSource) location);
-
-        // Enumerate values
         int index = 0;
         byte[] valueNameBuffer = new byte[16384];
         jnr.ffi.byref.IntByReference valueNameLen = new jnr.ffi.byref.IntByReference();
@@ -272,7 +269,26 @@ public class WindowsRegistryConfigSource implements ConfigStorageInterface
             
             if (res == Advapi32.ERROR_SUCCESS)
                 {
-                String key = new String(valueNameBuffer, 0, valueNameLen.intValue(), StandardCharsets.UTF_8);
+                String name = new String(valueNameBuffer, 0, valueNameLen.intValue(), StandardCharsets.UTF_8);
+                if (dataLen.intValue() > Advapi32.MAX_VALUE_SIZE)
+                    {
+                    if (prefix == null || prefix.isEmpty())
+                        {
+                        logger.warn("Registry value '%s' exceeds the recommended limit of %d bytes. " +
+                                    "Microsoft recommends storing values larger than this as files. " +
+                                    "See: https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/windows-registry-advanced-users " +
+                                    "mConfigFormatRawFile module provides blobs and large text file types.",
+                                    LogSafe.text(name), Advapi32.MAX_VALUE_SIZE);
+                        }
+                    else
+                        {
+                        logger.warn("Registry value '%s' (with prefix '%s') exceeds the recommended limit of %d bytes. " +
+                                    "Microsoft recommends storing values larger than this as files. " +
+                                    "See: https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/windows-registry-advanced-users",
+                                    LogSafe.text(name), LogSafe.text(prefix), Advapi32.MAX_VALUE_SIZE);
+                        }
+                    }
+                String key = (prefix == null || prefix.isEmpty()) ? name : prefix + "/" + name;
                 byte[] actualData = new byte[dataLen.intValue()];
                 System.arraycopy(dataBuffer, 0, actualData, 0, dataLen.intValue());
                 
@@ -284,9 +300,18 @@ public class WindowsRegistryConfigSource implements ConfigStorageInterface
                 }
             index++;
             }
+        }
+
+    private ConfigLayerInterface readKeyToLayer(int hKey, ConfigLocation location)
+        {
+        InMemoryLayer layer = new InMemoryLayer(ctx, location, location.getScope());
+        ConfigEntryMetadata meta = new ConfigEntryMetadata((ConfigSource) location);
+
+        // Enumerate values
+        readValuesIntoLayer(hKey, null, layer, meta);
 
         // Recursively enumerate subkeys
-        index = 0;
+        int index = 0;
         byte[] subKeyBuffer = new byte[256];
         jnr.ffi.byref.IntByReference subKeyLen = new jnr.ffi.byref.IntByReference();
         while (true)
@@ -326,41 +351,10 @@ public class WindowsRegistryConfigSource implements ConfigStorageInterface
     private void readSubKeyToLayer(int hKey, String prefix, InMemoryLayer layer, ConfigEntryMetadata meta)
         {
         // Enumerate values in subkey
-        int index = 0;
-        byte[] valueNameBuffer = new byte[16384];
-        jnr.ffi.byref.IntByReference valueNameLen = new jnr.ffi.byref.IntByReference();
-        jnr.ffi.byref.IntByReference type = new jnr.ffi.byref.IntByReference();
-        byte[] dataBuffer = new byte[65536];
-        jnr.ffi.byref.IntByReference dataLen = new jnr.ffi.byref.IntByReference();
-
-        while (true)
-            {
-            valueNameLen = new jnr.ffi.byref.IntByReference(valueNameBuffer.length);
-            dataLen = new jnr.ffi.byref.IntByReference(dataBuffer.length);
-            int res = Advapi32.INSTANCE.RegEnumValueA(hKey, index, valueNameBuffer, valueNameLen, null, type, dataBuffer, dataLen);
-            
-            if (res == Advapi32.ERROR_NO_MORE_ITEMS)
-                {
-                break;
-                }
-            
-            if (res == Advapi32.ERROR_SUCCESS)
-                {
-                String key = prefix + "/" + new String(valueNameBuffer, 0, valueNameLen.intValue(), StandardCharsets.UTF_8);
-                byte[] actualData = new byte[dataLen.intValue()];
-                System.arraycopy(dataBuffer, 0, actualData, 0, dataLen.intValue());
-                
-                Object value = winRegistryFormat.convertRegistryValue(type.intValue(), actualData);
-                ConfigEntryType configType = winRegistryFormat.mapRegistryTypeToConfigType(type.intValue());
-                
-                GenericConfigEntryLeaf entry = new GenericConfigEntryLeaf(key, value, configType, meta);
-                layer.putEntry(key, entry);
-                }
-            index++;
-            }
+        readValuesIntoLayer(hKey, prefix, layer, meta);
 
         // Recursively enumerate sub-subkeys
-        index = 0;
+        int index = 0;
         byte[] subKeyBuffer = new byte[256];
         jnr.ffi.byref.IntByReference subKeyLen = new jnr.ffi.byref.IntByReference();
         while (true)
@@ -486,29 +480,3 @@ public class WindowsRegistryConfigSource implements ConfigStorageInterface
         }
 }
 
-/*
-tricky how to implement.
-the commandline execution like https://stackoverflow.com/questions/69493490/how-to-read-integer-value-from-windows-registry-using-java
-i've done before, and might use again.
-
-
-    com.sun.deploy.association.utility.WinRegistryWrapper
-needs the deploy.jar from JDK, and it is string-only.
-https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
-
-external code, one file only:
-    https://github.com/apache/npanday/tree/trunk/components/dotnet-registry/src/main/java/npanday/registry
-but according to https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
-not stable anymore. read that page anyhow
-
-
-External dependencies: we try to do without.
-Otherwise, see
-    https://github.com/java-native-access/jna/blob/master/contrib/platform/src/com/sun/jna/platform/win32/Advapi32Util.java
-    com.sun.jna.platform.win32.Advapi32Util
-    https://code.dblock.org/2010/03/23/jna-accessing-windows-registry-from-java.html
-
-Hm. Dynamic code, checking whether advapi is present, falling back to commandline otherwise?
-
-
- */

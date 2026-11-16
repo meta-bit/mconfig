@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.17</version>
     </parent>
 
     <artifactId>mconfigbasic</artifactId>
@@ -16,6 +16,8 @@
     <description>Standard set of mConfig modules for basic usage. POM aggregator.</description>
 
     <properties>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.source.skip>true</maven.source.skip>
     </properties>
 
     <dependencies>

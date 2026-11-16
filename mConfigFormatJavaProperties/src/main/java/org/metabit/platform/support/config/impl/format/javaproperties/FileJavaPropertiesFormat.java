@@ -1,7 +1,9 @@
 package org.metabit.platform.support.config.impl.format.javaproperties;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
+import org.metabit.platform.support.config.ConfigEvent;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
@@ -39,21 +41,16 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
 
     @Override
     public ConfigLayerInterface readFile(File file, ConfigLocation location)
+            throws ConfigParseException
         {
         JavaPropertiesConfigLayer instance = new JavaPropertiesConfigLayer(settings, location, this, file.toPath());
-        try
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), java.nio.charset.StandardCharsets.UTF_8)))
             {
-            instance.load(new BufferedReader(new InputStreamReader(new FileInputStream(file), java.nio.charset.StandardCharsets.UTF_8)));
+            instance.load(reader);
             }
-        catch (FileNotFoundException ex)
+        catch (IOException|RuntimeException ex)
             {
-            logger.error("previously existing Java properties file denied its existence when reading"); //
-            return null;
-            }
-        catch (IOException ex)
-            {
-            logger.warn("IOException when reading Java Properties");
-            return null;
+            throw readFailure(ex);
             }
         return instance;
         }
@@ -65,23 +62,30 @@ public class FileJavaPropertiesFormat implements ConfigFileFormatInterface
      */
     @Override
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation location)
+            throws ConfigParseException
         {
         JavaPropertiesConfigLayer instance = new JavaPropertiesConfigLayer(settings, location, this, null);
         try
             {
             instance.load(new BufferedReader(new InputStreamReader(inputStream, java.nio.charset.StandardCharsets.UTF_8)));
             }
-        catch (FileNotFoundException ex)
+        catch (IOException|RuntimeException ex)
             {
-            logger.error("previously existing Java properties file denied its existence when reading"); //
-            return null;
-            }
-        catch (IOException ex)
-            {
-            logger.warn("IOException when reading Java Properties");
-            return null;
+            throw readFailure(ex);
             }
         return instance;
+        }
+
+    /** Java properties accept almost any content; reading fails on I/O or a malformed escape (e.g. "\\u" sequence). */
+    private ConfigParseException readFailure(Exception ex)
+        {
+        boolean io = ex instanceof IOException;
+        return ConfigParseException.builder(getFormatID(), io ? "could not read" : "not valid Java properties")
+                .parserCause(ex)
+                .event(ConfigEvent.Kind.FAILED_GENERIC, io ? "PROPERTIES_READ_FAILED" : "PROPERTIES_PARSE_FAILED")
+                .remediation(io ? ConfigEvent.Remediation.CHECK_PERMISSIONS : ConfigEvent.Remediation.FIX_SYNTAX,
+                        io ? "Check that the content is readable." : "Fix invalid escape sequences.")
+                .build();
         }
 
     /**

@@ -42,6 +42,60 @@ Provides an immutable view that overlays a `Map<String, Object>` on top of an ex
 ### `RemappedConfiguration`
 Remaps keys matching a `newPrefix` to an `oldPrefix` for lookup in an underlying `source` configuration. This is useful for maintaining backward compatibility or redirecting configuration branches.
 
+### What the adapters are, and what they are not
+
+The adapters help with transition and adoption. They are views for reading, not a second facade;
+for anything beyond that, use the mConfig `Configuration` itself.
+
+- **Read-only.** Every `put(...)` throws `ConfigException` with reason `NOT_WRITEABLE`, with or
+  without a scope; `isWriteable()` is `false`. (Up to 0.8.16, `RemappedConfiguration` wrote through
+  for some `put` variants.)
+- **No cursor**, and the schema cannot be set on a view: `getConfigCursor()` and `setConfigSchema()`
+  throw `UnsupportedOperationException`.
+- **`RemappedConfiguration` and `OverridingConfiguration` show their source as it is.** Values,
+  entries, the schema, `getSourceLocations()`, `isClosed()` and update subscriptions are those of
+  the configuration behind the view. A secret is handed on as a `SecretValue`. An entry reports
+  the key, scope and location it has in the source; the schema of a remapped view knows the keys
+  under the old prefix.
+- **Overrides are checked when read.** An override that cannot be converted to the requested type
+  throws `ConfigException` (`CONVERSION_FAILURE`); one that does not match the schema of the parent
+  throws `ConfigException` (`ARGUMENT_INVALID`). The value is not put into the message. An entry
+  from the overrides has no scope and no location (`null`): it was not read from anywhere.
+- **`PropertiesConfiguration` behaves like the `Properties` behind it.** A key that is not there
+  gives `null`, no exception. A value that cannot be converted to the requested type throws
+  `ConfigException` (`CONVERSION_FAILURE`), as parsing the string in plain Java would (up to 0.8.16:
+  `null`). `getSecret()` returns the property as a `SecretValue` (up to 0.8.16: always `null`);
+  in the `Properties` it stays a plain, unprotected String, so the first such access is logged at
+  INFO level, once per JVM, through the JDK's `System.Logger` named `mConfig`. Read secrets through
+  mConfig itself. No schema, no locations, no update notifications.
+
+## Scope-Restricted Reads
+
+All three adapter classes implement the full `Configuration` interface, including the
+scope-aware read methods. Scope restriction is **per-call** — there is no per-instance
+scope state — so the same adapter instance can safely serve call sites that need
+different scope views.
+
+To read a value only from specific scopes, use `getConfigEntryFromFullKey(key, scopes)`:
+
+```java
+EnumSet<ConfigScope> localScopes = EnumSet.of(ConfigScope.PRODUCT, ConfigScope.HOST);
+
+// Works identically on any adapter
+Configuration remapped  = ConfigUtil.remapped(base, "old.prefix", "new.prefix");
+Configuration overrided = ConfigUtil.withOverrides(base, overrideMap);
+Configuration props     = ConfigUtil.fromProperties(legacyProps);
+
+ConfigEntry entry = remapped.getConfigEntryFromFullKey("my.key", localScopes);
+String value = (entry != null) ? entry.getValueAsString() : null;
+```
+
+To enumerate all keys visible in specific scopes:
+
+```java
+Set<String> keys = config.getAllConfigurationKeysFlattened(localScopes);
+```
+
 ## `ConfigUtil` Entry Point
 
 The `ConfigUtil` class provides convenient factory methods for the adapters above, along with other helper functions:

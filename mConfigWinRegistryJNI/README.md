@@ -80,6 +80,19 @@ To ensure seamless operation and allow for user overrides (e.g., providing a sig
 
 ## Security and Signing Responsibility
 
+### Secrets and Memory Safety
+
+The Windows Registry is **not** a secure store by design; its security is primarily controlled by Windows Access Control Lists (ACLs). However, mConfig provides **Memory Safety** for Registry data within the JVM:
+
+- **Schema-Driven Secrets**: If a Registry key is marked as a `SECRET` in the [mConfig Schema](../mConfigSchema), the library ensures that sensitive data is handled using byte arrays instead of immutable `String` objects wherever possible.
+- **Wiping**: When the configuration is closed, mConfig's `erase()` lifecycle clears any internal buffers holding Registry data to minimize the window of exposure in the JVM heap.
+- **Best Practice**: Use the Registry for general settings, and prefer dedicated secret managers for highly sensitive credentials.
+
+When accessing entries you know to be secrets,
+especially LSA Secrets (unter Registry path HKEY_LOCAL_MACHINE\Security\Policy\Secrets ),
+declare those keys as `SECRET` in the mConfig Schema, and use provided erase methods to clear sensitive data from memory
+right after use.
+
 ### Integrity
 The native code is minimal and focuses strictly on Registry read operations to minimize the attack surface.
 

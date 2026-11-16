@@ -30,6 +30,8 @@ It can tell you the general search paths (potential locations),
 as well as the actual locations of the files it found,
 and where the values in individual entries come from.
 
+Programmatically, mConfig allows you to trace the origin of each individual configuration value you get.
+If your interest focused on filesystem only, ConfigUtil.whereToPutMyFiles() may be what you are looking for.
 
 ## 4.3.2 Why is...
 
@@ -44,6 +46,46 @@ ConfigSchemas should not be hard to use. Try them, please.
 
 But if you insist on using the old way, 
 there is the mConfigCheese module - for those who like their code a bit pungent.
+
+### Coming from Spring: why are there no `${...}` placeholders, profiles or conditional values?
+
+Because mConfig answers the same needs by *where* a value is stored, not by rules inside the
+configuration. For every entry you can ask which scope and which location it came from
+(`getScope()`, `getLocation()`, or `mconfig get <key> -v`), and the answer is one place.
+Placeholders, profiles and conditions each break that: the value you read is then computed from
+several places, or depends on a switch set somewhere else.
+
+**No `${...}` placeholders.** A value is what its source says, character by character.
+
+* A value assembled from other keys has no single origin; "where does this come from?" has no
+  clear answer any more.
+* A reference to another key can pull a secret into a value that is not marked as one, and from
+  there into logs and exports.
+* A `$` in a password or a path needs no escaping.
+
+If two settings share a part, keep the part as its own entry and combine in code, or store the
+complete value at the place that differs.
+
+**No profiles.** There is no `application-prod.properties` and no switch that selects it. What
+differs between deployments is stored where the deployment is:
+
+| In Spring                            | In mConfig                                                                                                                       |
+|:-------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| defaults in `application.properties` | defaults in the JAR (`PRODUCT` scope), or `DEFAULT` in the schema                                                                |
+| `application-prod.properties`        | a file on the production host (`HOST` scope, e.g. below `/etc`), or values from the cluster or cloud source (`CLUSTER`, `CLOUD`) |
+| a developer's local overrides        | the user's own file (`USER` scope)                                                                                               |
+| overrides per container or start     | environment variables (`SESSION` scope)                                                                                          |
+| the `test` profile                   | [test mode](15_test_mode.md) with `src/test/resources/.config/`                                                                  |
+
+The JAR is the same everywhere and carries no production values. See
+[Priorities and Hierarchies](22_priorities_and_hierarchies.md) for the order in which the scopes apply.
+
+**No conditional values.** There is no "if the host is called `prod-*`" and no `@ConditionalOnProperty`
+for values. Which value applies follows from the fixed order of the scopes alone, so the same
+question gives the same answer, and the tool can show why.
+
+mConfig itself runs fine inside a Spring application; see "Spring Boot wiring" in the
+[snippets](https://github.com/meta-bit/mconfig/blob/master/examples/snippets.md#11-spring-boot-wiring).
 
 ## 4.3.3 How can I fix...
 
@@ -67,7 +109,7 @@ If it's not working yet:
 
 3. **Enable logging:** Add `mConfigLoggingSlf4j` dep + SLF4J config (see [No mConfig logging output](#no-mconfig-logging-output) below).
 
-4. **Use mConfigTool CLI:** `mconfig myCompany:myApplication get network.peer -v` (requires building mConfigTools; see [mConfigTools README](../../../../mConfigTools/README.md)).
+4. **Use mConfigTool CLI:** `mconfig myCompany:myApplication get network.peer -v` (requires building mConfigTools; see [mConfigTools README](https://github.com/meta-bit/mconfig/blob/master/mConfigTools/README.md)).
 
 5. **See detailed troubleshooting sections below.**
 
@@ -113,9 +155,9 @@ Add the required `requires` directives to your `module-info.java`.
 
 The list depends on the mConfig variant:
 
-* [mconfigbasic](../../../../mConfigBasic/README.md) (JPMS `requires` section)
-* [mconfigstandard](../../../../mConfigStandard/README.md) (JPMS `requires` section)
-* [mconfigbasicbinary](../../../../mConfigBasicBinary/README.md) (JPMS `requires` section)
+* [mconfigbasic](https://github.com/meta-bit/mconfig/blob/master/mConfigBasic/README.md) (JPMS `requires` section)
+* [mconfigstandard](https://github.com/meta-bit/mconfig/blob/master/mConfigStandard/README.md) (JPMS `requires` section)
+* [mconfigbasicbinary](https://github.com/meta-bit/mconfig/blob/master/mConfigBasicBinary/README.md) (JPMS `requires` section)
 
 See also [JPMS introduction](examples/java-modules.md).
 
@@ -128,12 +170,36 @@ See also [JPMS introduction](examples/java-modules.md).
 - No config files in standard locations (classpath `src/main/resources/.config/<company>/<app>/<configName>.properties` or filesystem equivalents).
 - File extension not matching available formats (e.g., `.yaml` without YAML format module).
 - Permissions issues on directories/files (check logs).
+- Application packed into a single JAR without merging `META-INF/services` files; see
+  [Faulty single-JAR packaging](#faulty-single-jar-packaging) below.
 
 **Fix steps:**
 1. Use `factory.listAvailableConfigurations()` to list discovered configs and their sources.
-2. Run [mConfigTool](../../../../mConfigTools/README.md) CLI for full diagnostics: paths searched, files found, entry origins.
+2. Run [mConfigTool](https://github.com/meta-bit/mconfig/blob/master/mConfigTools/README.md) CLI for full diagnostics: paths searched, files found, entry origins.
 3. Verify placements per [Getting Started](13_getting_started.md).
 4. Add missing format modules (e.g., `mConfigFormatYAMLwithJackson` for YAML).
+
+### Faulty single-JAR packaging
+
+**Symptoms:** the application works when started from the IDE or with `mvn exec`, but not as a single
+("fat") JAR. Either `build()` fails with
+```
+JAVA_SERVICE_CONFIGURATION_ERROR: mConfig did not find all of its components, likely due to faulty JAR packaging, ...
+```
+or values from bundled defaults or from files are missing (`NO_MATCHING_ENTRY`), without any warning.
+The log line `mConfig initialised, ... storages [...]` lacks storages you expect, e.g. `JAR` or `files`.
+
+**Cause:** the JAR was built by unpacking all dependency JARs into one, without merging their
+`META-INF/services` files, e.g. with the `jar-with-dependencies` descriptor of the Maven assembly plugin.
+Only one file per service interface survives; which one depends on dependency order.
+
+**Fix:** merge the service files when packaging; see
+[Packaging as a single JAR](13_getting_started.md#138-packaging-as-a-single-jar) for the Maven assembly,
+Maven shade and Gradle configurations. Then test the packaged JAR itself, not only the classes.
+
+This is not specific to mConfig: every library that uses `ServiceLoader` (e.g. SLF4J 2, Log4j 2, JDBC drivers,
+Jackson modules) is affected. mConfig detects it when its core registrations are among the lost ones and then
+fails `build()` with the message above; in other cases nothing reports it, for mConfig or for the other libraries.
 
 ### Tests not loading expected configurations
 
@@ -171,7 +237,15 @@ See [Logging](42_logging.md).
 
 **Fix:**
 1. Add `mConfigSourceEnvVar` dependency.
-2. Use naming schema: `<application>_<configName>_<key>` (lowercase, e.g., `myapp_network_peer`).
+2. Use naming schema: `<application>_<configName>_<key>`, **UPPER CASE**, e.g. `MYAPP_NETWORK_PEER`.
+   Within the key, `/` becomes `_` and a literal `_` becomes `__`.
+   This is the rule of the Elasticsearch (`ES_SETTING_...`) and Confluent Platform (Kafka) Docker images, too.
+   It is close to MicroProfile Config / Quarkus and Grafana: these also separate with `_`, but do not
+   double a literal `_`, so the names are the same only for keys without an underscore.
+   It is the reverse of the .NET and Airflow custom, though, where `__` separates the levels:
+   here `MYAPP_NETWORK_DB__HOST` is the key `db_host`, and `MYAPP_NETWORK_DB_HOST` is `db/host`.
+   Up to 0.8.16 the underscore was not doubled; a WARNING names a variable still in the old naming.
+   On Linux and macOS env var names are case-sensitive, so a lowercase name is not found.
 3. Scope: `SESSION` (overrides USER).
 4. Verify via `mConfigTool` or enable logging.
-See [mConfigSourceEnvVar README](../../../../mConfigSourceEnvVar/README.md).
+See [mConfigSourceEnvVar README](https://github.com/meta-bit/mconfig/blob/master/mConfigSourceEnvVar/README.md).

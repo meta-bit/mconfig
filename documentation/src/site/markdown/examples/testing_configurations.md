@@ -8,7 +8,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp")
         .setTestMode(true)
         .build())
     {
-    Configuration cfg = factory.getConfiguration("network");
+    Configuration cfg = factory.getConfig("network");
     // ... test using cfg ...
     }
 ```
@@ -34,7 +34,7 @@ class NetworkConfigTest {
                 .setTestMode(true)
                 .build())
             {
-            Configuration cfg = factory.getConfiguration("network");
+            Configuration cfg = factory.getConfig("network");
 
             assertEquals("127.0.0.1", cfg.getString("server/host"));
             assertEquals(8080, cfg.getInteger("server/port"));
@@ -52,7 +52,7 @@ try (ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "ourApp")
             List.of("USER:/tmp/mconfig-tests/user", "APPLICATION:/tmp/mconfig-tests/app"))
         .build())
     {
-    Configuration cfg = factory.getConfiguration("network");
+    Configuration cfg = factory.getConfig("network");
     // ...
     }
 ```

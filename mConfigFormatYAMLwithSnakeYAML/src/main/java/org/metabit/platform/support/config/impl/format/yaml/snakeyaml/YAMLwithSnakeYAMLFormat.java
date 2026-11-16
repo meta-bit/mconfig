@@ -1,8 +1,10 @@
 package org.metabit.platform.support.config.impl.format.yaml.snakeyaml;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
+import org.metabit.platform.support.config.ConfigEvent;
 import org.metabit.platform.support.config.ConfigFeature;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
@@ -12,6 +14,8 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.emitter.Emitter;
+import org.yaml.snakeyaml.error.Mark;
+import org.yaml.snakeyaml.error.MarkedYAMLException;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.resolver.Resolver;
@@ -56,55 +60,59 @@ public class YAMLwithSnakeYAMLFormat implements ConfigFileFormatInterface
 
     @Override
     public ConfigLayerInterface readFile(File file, ConfigLocation configLocation)
+            throws ConfigParseException
         {
         try (InputStream inputStream = new FileInputStream(file))
             {
             return readStream(inputStream, configLocation, file.toPath());
             }
-        catch (FileNotFoundException e)
-            {
-            logger.error("File not found: " + file.getAbsolutePath());
-            }
         catch (IOException e)
             {
-            logger.error("Error reading file " + file.getAbsolutePath() + ": " + e.getMessage(), e);
+            throw ConfigParseException.builder(getFormatID(), "could not read")
+                    .parserCause(e)
+                    .event(ConfigEvent.Kind.FAILED_GENERIC, "YAML_READ_FAILED")
+                    .remediation(ConfigEvent.Remediation.CHECK_PERMISSIONS, "Check that the content is readable.")
+                    .build();
             }
-        return null;
         }
 
     @Override
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation configLocation)
+            throws ConfigParseException
         {
         return readStream(inputStream, configLocation, inputStream);
         }
 
     private ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation configLocation, Object storageInstanceHandle)
+            throws ConfigParseException
         {
         try
             {
             LoaderOptions loaderOptions = new LoaderOptions();
             loaderOptions.setProcessComments(true);
             Yaml yaml = new Yaml(new Constructor(loaderOptions), new Representer(new DumperOptions()), new DumperOptions(), loaderOptions);
-            
-            Object data;
-            Node node = yaml.compose(new InputStreamReader(inputStream));
-            data = node;
 
-            if (data == null)
+            Node node = yaml.compose(new InputStreamReader(inputStream));
+            if (node == null) // empty content
                 {
                 return new YAMLSnakeYAMLConfigLayer(settings, logger, configLocation, this, new LinkedHashMap<>(), storageInstanceHandle);
                 }
-            if (data instanceof Map || data instanceof List || data instanceof Node)
-                {
-                return new YAMLSnakeYAMLConfigLayer(settings, logger, configLocation, this, data, storageInstanceHandle);
-                }
-            logger.warn("YAML data having top-level type other than Map, List or Node");
+            return new YAMLSnakeYAMLConfigLayer(settings, logger, configLocation, this, node, storageInstanceHandle);
             }
-        catch (Exception e)
+        catch (RuntimeException e)
             {
-            logger.warn("Error parsing YAML: " + e.getMessage());
+            // SnakeYAML's message carries a snippet of the content; it goes in as parser detail only. No key path.
+            ConfigParseException.Builder builder = ConfigParseException.builder(getFormatID(), "not valid YAML")
+                    .parserCause(e)
+                    .event(ConfigEvent.Kind.FAILED_GENERIC, "YAML_PARSE_FAILED")
+                    .remediation(ConfigEvent.Remediation.FIX_SYNTAX, "Fix invalid YAML syntax.");
+            if (e instanceof MarkedYAMLException && ((MarkedYAMLException) e).getProblemMark() != null)
+                {
+                Mark mark = ((MarkedYAMLException) e).getProblemMark();
+                builder.position(mark.getLine()+1, mark.getColumn()+1); // SnakeYAML counts from 0
+                }
+            throw builder.build();
             }
-        return null;
         }
 
     @Override

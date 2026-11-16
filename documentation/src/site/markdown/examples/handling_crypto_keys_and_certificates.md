@@ -22,37 +22,48 @@ PEM can be stored as `STRING` or `BYTES` and parsed with BouncyCastle.
   ```gradle
   implementation 'org.bouncycastle:bcprov-jdk18on:1.78'
   ```
-- Mark schema entries as `SECRET`:
+- Mark schema entries with `"SECRET": true`. The schema file is an array of entry objects:
   ```json
-  {
-    "keys/rsa/private": {
-      "type": "BYTES", 
-      "flags": ["SECRET"],
-      "secretType": "PRIVATE_KEY"
+  [
+    {
+      "KEY": "keys/rsa/private",
+      "TYPE": "BYTES",
+      "SECRET": true
     },
-    "certs/server": {
-      "type": "BYTES",
-      "flags": ["SECRET"],
-      "secretType": "CERTIFICATE"
+    {
+      "KEY": "certs/server",
+      "TYPE": "BYTES",
+      "SECRET": true
     }
-  }
+  ]
   ```
+  `"FLAGS": ["SECRET"]` does not mark an entry as secret (see
+  [Handling Secrets](../35_handling_secrets.md)). The schema has no field for the kind of secret;
+  pass the `SecretType` when storing the value, as shown below.
 
 ## 2. Setup ConfigFactory
 
 ```java
-ConfigSchema schema = ConfigSchema.fromJSON(...) // load schema
-ConfigFactory factory = ConfigFactoryBuilder.create("mycompany", "myapp")
-  .setFeature(ConfigFeature.CONFIG_SCHEMA_LIST, Map.of("crypto", schema))
-  .build();
+String schemaJson = ...; // the JSON array shown above
+ConfigFactory factory = ConfigFactoryBuilder.create("mycompany", "myapp").build();
+factory.addConfigSchema("crypto", schemaJson); // throws ConfigCheckedException
 Configuration config = factory.getConfig("crypto");
 ```
 
+`ConfigSchema.fromJSON(String, ConfigFactoryInstanceContext)` needs the factory-internal context and is
+not meant for application code; `addConfigSchema()` parses the JSON in the factory's context.
+
 Instead of specifying the schema programmatically, you can also 
-place the schema file in the respective resource directory within the jar/classpath.
+place the schema file in the respective resource directory within the jar/classpath,
+as `.config/mycompany/myapp/crypto.mconfig-schema.json`
 (separate folders below "main" for production, below "test" for integration tests.)
 
 ## 3. Generate and Store RSA Keypair (JCE)
+
+> **Status (0.8.17):** writing a `SecretValue` with `config.put(key, SecretValue, scope)` is **not
+> available yet**; `Configuration` has no such method. How secrets are written is still being decided
+> (MLIB-152). The lines marked `NOT AVAILABLE YET` below show the intended use and do not compile.
+> Reading (`getSecret()`, sections 4 and 6) works today.
 
 ```java
 import java.security.*;
@@ -66,12 +77,12 @@ KeyPair kp = kpg.generateKeyPair();
 byte[] privDer = kp.getPrivate().getEncoded();
 byte[] pubDer = kp.getPublic().getEncoded();
 
-// Store as SecretValue (auto-typed if schema helps)
-config.put("keys/rsa/private", new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.USER);
+// Store as SecretValue (auto-typed if schema helps)  -- NOT AVAILABLE YET, see status note above
+// config.put("keys/rsa/private", new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.USER);
 config.put("keys/rsa/public", pubDer, ConfigScope.USER); // Public OK as non-secret
 
-// To HOST scope (elevated privs may be needed)
-config.put("keys/rsa/private", new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.HOST);
+// To HOST scope (elevated privs may be needed)  -- NOT AVAILABLE YET
+// config.put("keys/rsa/private", new BasicSecretValue(privDer, SecretType.PRIVATE_KEY), ConfigScope.HOST);
 ```
 
 ## 4. Read DER Private Key (JCE)
@@ -111,9 +122,9 @@ X509v3CertificateBuilder builder = new JcaX509v3CertificateBuilder(issuer, seria
 X509CertificateHolder holder = builder.build(signer);
 X509Certificate cert = new JcaX509CertificateConverter().setProvider("BC").getCertificate(holder);
 
-// Store DER
+// Store DER  -- NOT AVAILABLE YET, see the status note in section 3
 byte[] certDer = cert.getEncoded();
-config.put("certs/server", new BasicSecretValue(certDer, SecretType.CERTIFICATE), ConfigScope.USER);
+// config.put("certs/server", new BasicSecretValue(certDer, SecretType.CERTIFICATE), ConfigScope.USER);
 ```
 
 ## 6. Read X.509 Certificate (JCE)
@@ -148,8 +159,8 @@ try (StringWriter sw = new StringWriter(); JcaPEMWriter pemWriter = new JcaPEMWr
 ### Read PEM Private Key
 
 ```java
-String pemStr = (String) config.getValue("keys/rsa/private.pem"); // or SecretValue if marked
-try (PEMParser pemParser = new PEMParser(new StringReader(pemStr)))
+SecretValue pemSecret = config.getSecret("keys/rsa/private.pem"); // mark the entry "SECRET": true in the schema
+try (PEMParser pemParser = new PEMParser(new CharArrayReader(pemSecret.getChars())))
     {
     Object obj = pemParser.readObject();
     if (obj instanceof PEMKeyPair)
@@ -158,6 +169,10 @@ try (PEMParser pemParser = new PEMParser(new StringReader(pemStr)))
         JcaPEMKeyConverter conv = new JcaPEMKeyConverter().setProvider("BC");
         PrivateKey privKey = conv.getPrivateKey(pemPair.getPrivateKeyInfo());
         }
+    }
+finally
+    {
+    pemSecret.erase();
     }
 ```
 

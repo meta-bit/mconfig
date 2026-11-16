@@ -32,3 +32,4 @@ public class ConfigEventList
         this.clear();
         }
 }
+//___EOF___

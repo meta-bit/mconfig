@@ -36,7 +36,33 @@ class AndroidSearchPaths implements SearchPathInitializer
         // Standard Android doesn't give many useful system properties for paths without Context.
         // If we're running in a context where these are set (like some bridge or specialized runner):
         String androidDataDir = System.getenv("ANDROID_DATA"); // usually /data
-        String appInternalBase = (androidDataDir != null ? androidDataDir : "/data") + "/data/" + applicationName + "/files";
+        if (androidDataDir != null && !androidDataDir.isEmpty())
+            {
+            try
+                {
+                java.nio.file.Path androidPath = java.nio.file.Paths.get(androidDataDir).normalize();
+                if (!androidPath.isAbsolute())
+                    {
+                    storage.logInfo("ANDROID_DATA is not an absolute path, ignoring: " + androidDataDir);
+                    androidDataDir = "/data";
+                    }
+                else
+                    {
+                    androidDataDir = androidPath.toString();
+                    }
+                }
+            catch (java.nio.file.InvalidPathException e)
+                {
+                storage.logInfo("ANDROID_DATA contains an invalid path, ignoring: " + androidDataDir);
+                androidDataDir = "/data";
+                }
+            }
+        else
+            {
+            androidDataDir = "/data";
+            }
+
+        String appInternalBase = androidDataDir + "/data/" + applicationName + "/files";
 
         // APPLICATION scope: internal app files
         storage.addPathToSearchList(searchList, appInternalBase, ConfigScope.APPLICATION, ".config", subDir);
@@ -47,15 +73,30 @@ class AndroidSearchPaths implements SearchPathInitializer
 
         // 2. External Storage (Scoped) - /storage/emulated/0/Android/data/<package>/files/
         String externalStorage = System.getenv("EXTERNAL_STORAGE"); // usually /storage/emulated/0
-        if (externalStorage != null)
+        if (externalStorage != null && !externalStorage.isEmpty())
             {
-            String appExternalBase = externalStorage + "/Android/data/" + applicationName + "/files";
-            storage.addPathToSearchList(searchList, appExternalBase, ConfigScope.USER, ".config", subDir);
-            storage.addPathToSearchList(searchList, appExternalBase, ConfigScope.USER, subDir);
+            try
+                {
+                java.nio.file.Path extPath = java.nio.file.Paths.get(externalStorage).normalize();
+                if (extPath.isAbsolute())
+                    {
+                    String appExternalBase = extPath.toString() + "/Android/data/" + applicationName + "/files";
+                    storage.addPathToSearchList(searchList, appExternalBase, ConfigScope.USER, ".config", subDir);
+                    storage.addPathToSearchList(searchList, appExternalBase, ConfigScope.USER, subDir);
+                    }
+                else
+                    {
+                    storage.logInfo("EXTERNAL_STORAGE is not an absolute path, ignoring: " + externalStorage);
+                    }
+                }
+            catch (java.nio.file.InvalidPathException e)
+                {
+                storage.logInfo("EXTERNAL_STORAGE contains an invalid path, ignoring: " + externalStorage);
+                }
             }
 
         // 3. SESSION scope: cache directory
-        String appCacheBase = (androidDataDir != null ? androidDataDir : "/data") + "/data/" + applicationName + "/cache";
+        String appCacheBase = androidDataDir + "/data/" + applicationName + "/cache";
         storage.addPathToSearchList(searchList, appCacheBase, ConfigScope.SESSION, ".config", subDir);
 
         // 4. Fallback to Linux-style paths in case we're in a more open environment (like Termux)

@@ -1,11 +1,13 @@
 package org.metabit.platform.support.config.impl;
 
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.interfaces.BootstrapConfigContext;
 import org.metabit.platform.support.config.interfaces.ConfigFactoryComponent;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
 import org.metabit.platform.support.config.interfaces.ConfigSecretsProviderInterface;
 import org.metabit.platform.support.config.interfaces.ConfigStorageInterface;
 import org.metabit.platform.support.config.schema.ConfigSchema;
+import org.metabit.platform.support.config.schema.NullConfigSchema;
 import org.metabit.platform.support.config.schema.provider.ConfigSchemaProvider;
 import org.metabit.platform.support.osdetection.OperatingSystem;
 
@@ -17,12 +19,13 @@ import java.util.*;
  *
  * @version $Id: $Id
  */
-public class DefaultConfigFactory implements ConfigFactory
+public class DefaultConfigFactory implements ConfigFactory, BootstrapConfigContext
 {
     public     ConfigFactoryInstanceContext                ctx;
     private       ConfigEventList                             events; // can be re-initialized at init time.
     private       Boolean                                     throwExceptionOnEmptyConfigsFlag;
     private final Map<String, WeakReference<Configuration>>   instantiatedConfigs;
+    private final List<WeakReference<Configuration>>          uncachedConfigs; // getConfig() with a schema differing from the cached instance's
     private       ConfigLoggingInterface                      logger;
     private       Map<String, ConfigSecretsProviderInterface> activeSecretsProviders;
     private       boolean                                     closed;
@@ -35,6 +38,7 @@ public class DefaultConfigFactory implements ConfigFactory
         {
         this.events = new ConfigEventList(1000);
         this.instantiatedConfigs = new HashMap<>();
+        this.uncachedConfigs = new ArrayList<>();
         this.activeSecretsProviders = new HashMap<>();
         this.closed = false;
         }
@@ -94,7 +98,7 @@ public class DefaultConfigFactory implements ConfigFactory
         // Post-initialization, we will sort the search list to respect STORAGE_TYPE_PRIORITIES.
         Map<String, ConfigStorageInterface> discoveredStorages = ctx.getConfigStorages();
         List<String> priorityList = settings.getStrings(ConfigFeature.STORAGE_TYPE_PRIORITIES);
-        boolean allowAll = settings.getBoolean(ConfigFeature.STORAGE_TYPE_ALLOW_ALL_STORAGES);
+        // STORAGE_TYPE_ALLOW_ALL_STORAGES=false is applied by the builder: excluded storages never get here.
 
         // Initialize all discovered storages.
         // We sort them by priority so that bootstrap sources (like files/env) are initialized before networked ones (like zookeeper).
@@ -150,7 +154,9 @@ public class DefaultConfigFactory implements ConfigFactory
         if (ctx.getSettings().getBoolean(ConfigFeature.QUIET) == Boolean.FALSE)
             {
             logger = ctx.getLogger();
-            logger.info("mConfig initialised, using logger "+logger.getServiceModuleName());
+            logger.info("mConfig initialised, using logger "+logger.getServiceModuleName()
+                    +", storages "+new TreeSet<>(ctx.getConfigStorages().keySet())
+                    +", formats "+new TreeSet<>(ctx.getConfigFormats().keySet()));
             // debug-dump the settings here @DEBUG during development
             logger.debug("settings");
             ctx.getSettings().forEach((key, value)->
@@ -259,6 +265,12 @@ public class DefaultConfigFactory implements ConfigFactory
                 toClose.add(config);
             }
         });
+        uncachedConfigs.forEach(v -> {
+            Configuration config = v.get();
+            if (config != null) {
+                toClose.add(config);
+            }
+        });
 
         for (Configuration config : toClose)
             {
@@ -272,6 +284,7 @@ public class DefaultConfigFactory implements ConfigFactory
                 }
             }
         instantiatedConfigs.clear();
+        uncachedConfigs.clear();
 
         if (ctx.getSourceChangeNotifier() != null)
             {
@@ -280,7 +293,9 @@ public class DefaultConfigFactory implements ConfigFactory
 
         if (ctx != null && ctx.getConfigStorages() != null)
             {
-            for (ConfigStorageInterface storage : ctx.getConfigStorages().values())
+            List<ConfigStorageInterface> storages = new ArrayList<>(ctx.getConfigStorages().values());
+            storages.addAll(ctx.getAddedSourceStorages());
+            for (ConfigStorageInterface storage : storages)
                 {
                 try
                     {
@@ -303,7 +318,19 @@ public class DefaultConfigFactory implements ConfigFactory
     @Override
     public void notifyConfigurationClosed(String sanitizedConfigName)
         {
-        instantiatedConfigs.remove(sanitizedConfigName);
+        // an uncached instance of the same name may be the one closing; keep the cached one then.
+        WeakReference<Configuration> ref = instantiatedConfigs.get(sanitizedConfigName);
+        Configuration cached = (ref != null) ? ref.get() : null;
+        if (isGoneOrClosed(cached))
+            {
+            instantiatedConfigs.remove(sanitizedConfigName);
+            }
+        uncachedConfigs.removeIf(v -> isGoneOrClosed(v.get()));
+        }
+
+    private static boolean isGoneOrClosed(Configuration config)
+        {
+        return (config == null) || ((config instanceof LayeredConfiguration) && ((LayeredConfiguration) config).isClosed());
         }
 
     /** {@inheritDoc} */
@@ -344,12 +371,13 @@ public class DefaultConfigFactory implements ConfigFactory
         // 2. prepare
         BlobConfiguration blobConfig = new BlobConfiguration(sanitizedConfigName, ctx, this, scopes);
 
-        // 3. go through the search list. For each entry, check with the respective ConfigSource whether the combination SearchListEntry + configName yields results.
+        // 3. go through the search list. For each entry, check with the location's ConfigStorage whether the combination SearchListEntry + configName yields results.
         // this is for finding existing BLOBs.
         for (ConfigLocation searchLocation : ctx.getSearchList().getEntries())
             {
-//            if (!scopes.contains(location.getScope()))
-//                continue; // skip the scopes which we don't want
+            // filtered at collection, like getRestrictedConfig(): reads, writes and getSourceLocations() then agree.
+            if (!scopes.contains(searchLocation.getScope()))
+                continue; // skip the scopes which we don't want
             ConfigStorageInterface storage = searchLocation.getStorage();
             storage.updateBlobConfigurations(sanitizedConfigName, searchLocation, blobConfig);
             }
@@ -385,7 +413,16 @@ public class DefaultConfigFactory implements ConfigFactory
             Configuration config = ref.get();
             if (config != null)
                 {
-                return config;
+                // the cached instance only serves callers asking for the same schema. A different schema gets a
+                // separate, uncached instance; the shared one is never changed underneath its other users.
+                ConfigSchema wanted = (configSchema != null) ? configSchema : NullConfigSchema.INSTANCE;
+                if (config.getConfigSchema() == wanted)
+                    {
+                    return config;
+                    }
+                LayeredConfiguration separateCfg = loadConfiguration(sanitizedConfigName, configSchema);
+                uncachedConfigs.add(new WeakReference<>(separateCfg));
+                return separateCfg;
                 }
             else
                 {
@@ -393,8 +430,17 @@ public class DefaultConfigFactory implements ConfigFactory
                 }
             }
 
+        LayeredConfiguration layeredCfg = loadConfiguration(sanitizedConfigName, configSchema);
+        // 5. keep an instance in a map for future lookup, and for future cleanup!
+        instantiatedConfigs.put(sanitizedConfigName, new WeakReference<>(layeredCfg));
+        // 6. return it.
+        return layeredCfg;
+        }
+
+    private LayeredConfiguration loadConfiguration(String sanitizedConfigName, ConfigSchema configSchema)
+        {
         LayeredConfiguration layeredCfg = new LayeredConfiguration(sanitizedConfigName, configSchema, ctx, this); // which is a facade to the LayeredConfiguration.
-        // 3. go through the search list. For each entry, check with the respective ConfigSource whether the combination SearchListEntry + configName yields results.
+        // 3. go through the search list. For each entry, check with the location's ConfigStorage whether the combination SearchListEntry + configName yields results.
         List<ConfigLocation> searchList = ctx.getSearchList().getEntries();
 
         for (ConfigLocation location : searchList)
@@ -410,9 +456,6 @@ public class DefaultConfigFactory implements ConfigFactory
             if (layeredCfg.isEmpty())
                 throw new ConfigException(ConfigException.ConfigExceptionReason.NO_CONFIGURATION_FOUND);
             }
-        // 5. keep an instance in a map for future lookup, and for future cleanup!
-        instantiatedConfigs.put(sanitizedConfigName, new WeakReference<>(layeredCfg));
-        // 6. return it.
         return layeredCfg;
         }
 
@@ -437,12 +480,44 @@ public class DefaultConfigFactory implements ConfigFactory
         }
 
 
+    // --- BootstrapConfigContext implementation ---
+
+    /** {@inheritDoc} */
+    @Override
+    public Configuration getRestrictedConfig(final String configName, final EnumSet<ConfigScope> scopes)
+        {
+        if (configName == null)
+            { throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID); }
+        if (closed)
+            { throw new ConfigException("ConfigFactory was closed."); }
+        String sanitizedConfigName = ConfigNameSanitizer.sanitize(configName);
+        // a bootstrap snapshot: not tracked or closed by the factory, so it must not start change checking.
+        LayeredConfiguration layeredCfg = new LayeredConfiguration(sanitizedConfigName, null, ctx, this, false);
+        for (ConfigLocation location : ctx.getSearchList().getEntries())
+            {
+            if (!scopes.contains(location.getScope()))
+                continue;
+            ConfigStorageInterface storage = location.getStorage();
+            storage.updateConfigurationLayers(sanitizedConfigName, location, layeredCfg);
+            storage.provideAdditionalLayers(sanitizedConfigName, layeredCfg);
+            }
+        return layeredCfg;
+        }
+
+    /** {@inheritDoc} */
+    @Override
+    public ConfigLoggingInterface getLogger()
+        {
+        return this.logger;
+        }
+
     // Planned extensions here.
 
     /** {@inheritDoc} */
     @Override
     public void prependSearchEntry(ConfigLocation location, ConfigScope scope)
         {
+        PolicyLocationGuard.checkApplicationLocation(ctx.getSettings(), scope, "search entry "+location);
         this.ctx.getSearchList().insertAtScopeStart(location, scope);
         }
 
@@ -450,6 +525,7 @@ public class DefaultConfigFactory implements ConfigFactory
     @Override
     public void appendSearchEntry(ConfigLocation location, ConfigScope scope)
         {
+        PolicyLocationGuard.checkApplicationLocation(ctx.getSettings(), scope, "search entry "+location);
         this.ctx.getSearchList().insertAtScopeEnd(location, scope);
         }
 }

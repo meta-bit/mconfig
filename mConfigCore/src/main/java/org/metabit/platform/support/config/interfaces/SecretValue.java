@@ -5,20 +5,15 @@ import java.util.Map;
 public interface SecretValue
     {
     byte[] getValue();
+    /**
+     * returns the secret as characters, decoded from its bytes as UTF-8.
+     * Malformed sequences become U+FFFD. The caller owns the returned array and should wipe it after use.
+     *
+     * @return a new char array; null if the value is null
+     */
     default char[] getChars()
         {
-        // default implementation, ideally would be overridden for better security
-        byte[] value = getValue();
-        if (value == null)
-            {
-            return null;
-            }
-        char[] chars = new char[value.length]; // assuming 1:1 for now, or just placeholder
-        for (int i = 0; i < value.length; i++)
-            {
-            chars[i] = (char) value[i];
-            }
-        return chars;
+        return org.metabit.platform.support.config.impl.util.ConfigIOUtil.utf8ToChars(getValue());
         }
     SecretType getType();
     Map<String,String> getMetadata();
@@ -28,3 +23,4 @@ public interface SecretValue
      */
     default void erase() { }
     }
+//___EOF___

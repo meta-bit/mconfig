@@ -65,8 +65,8 @@ public class DefaultLayerStorage implements ConfigStorageInterface
     public ConfigStorageInterface clone()
             throws CloneNotSupportedException
         {
-        super.clone();
-        return null;
+        // holds per-factory state; a shallow copy would share it silently.
+        throw new CloneNotSupportedException("DefaultLayerStorage is not cloneable");
         }
 
     /** {@inheritDoc} */

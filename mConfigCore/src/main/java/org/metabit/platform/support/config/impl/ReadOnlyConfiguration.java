@@ -26,3 +26,4 @@ public abstract class ReadOnlyConfiguration extends AbstractConfiguration
         return 0;
         }
 }
+//___EOF___

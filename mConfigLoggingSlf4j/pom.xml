@@ -6,9 +6,8 @@
     <parent>
         <groupId>org.metabit.platform.support.config</groupId>
         <artifactId>mconfig</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.17</version>
     </parent>
-
     <groupId>org.metabit.platform.support.config.logging</groupId>
     <artifactId>mconfigloggingslf4j</artifactId>
     <name>mConfig :: Logging :: SLF4J</name>
@@ -22,13 +21,12 @@
         <dependency>
             <groupId>org.metabit.platform.support.config</groupId>
             <artifactId>mconfigcore</artifactId>
-            <version>0.8.13</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.12</version>
         </dependency>
     </dependencies>
 

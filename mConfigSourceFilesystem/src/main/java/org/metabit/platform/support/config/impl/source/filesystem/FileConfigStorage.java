@@ -2,6 +2,7 @@ package org.metabit.platform.support.config.impl.source.filesystem;
 
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.*;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
 import org.metabit.platform.support.osdetection.OperatingSystem;
@@ -118,7 +119,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                 ConfigFileFormatInterface fileformat = (ConfigFileFormatInterface) format;
                 logger.debug("file format found: "+fileformat.getFormatID());
                 this.fileFormats.add(fileformat);
-                formatMap.put(fileformat.getFormatID().toUpperCase(), fileformat); // ignore case for matching, using all caps internally.
+                formatMap.put(fileformat.getFormatID().toUpperCase(Locale.ROOT), fileformat); // ignore case for matching, using all caps internally.
                 }
             });
 
@@ -188,7 +189,7 @@ public class FileConfigStorage implements ConfigStorageInterface
         // look up the entries in the preferred order, and store them
         formatPreferenceList.forEach(formatName->
             {
-            ConfigFileFormatInterface entry = formatMap.get(formatName.toUpperCase());
+            ConfigFileFormatInterface entry = formatMap.get(formatName.toUpperCase(Locale.ROOT));
             if (entry != null)
                 { targetList.add(entry); }
             });
@@ -288,7 +289,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             for (final String extension : extensions)
                 {
                 String filename = sanitizedConfigName+extension;
-                ConfigLayerInterface cfg = attemptToReadConfigOrReturnNull(locationPath, filename, location, fileFormat);
+                ConfigLayerInterface cfg = attemptToReadConfigOrReturnNull(locationPath, filename, location, fileFormat, layeredCfg);
                 if (cfg != null)
                     {
                     // layeredCfg does not store the location, it checks the scope only; so we don't need to derive the actual ConfigLocation here.
@@ -317,7 +318,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             {
             if (!dotDDir.canRead())
                 {
-                logger.warn("unreadable .d directory found at "+dotDPath.toAbsolutePath());
+                logger.warn("unreadable .d directory found at "+LogSafe.text(dotDPath.toAbsolutePath()));
                 ConfigEventImpl event = ConfigEventImpl.builder()
                         .severity(ConfigEvent.Severity.WARNING)
                         .domain(ConfigEvent.Domain.DISCOVERY)
@@ -327,7 +328,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                         .location(location)
                         .scope(location.getScope())
                         .remediation(ConfigEvent.Remediation.CHECK_PERMISSIONS)
-                        .remediationMessage("Check read permissions for " + dotDPath.toAbsolutePath())
+                        .remediationMessage("Check read permissions for " + LogSafe.text(dotDPath.toAbsolutePath()))
                         .build();
                 // How to get context here?
                 // Actually FileConfigStorage.init(ctx) was called.
@@ -349,6 +350,26 @@ public class FileConfigStorage implements ConfigStorageInterface
                         {
                         continue;
                         }
+                    // never a legitimate configuration name; could forge log output (CWE-117)
+                    if (LogSafe.containsUnsafeCharacters(fragmentName))
+                        {
+                        logger.warn("skipped .d fragment with control characters in its name: \""+LogSafe.text(fragment.getAbsolutePath())+"\"");
+                        if (this.ctx != null)
+                            {
+                            EventRecorder.record(ConfigEventImpl.builder()
+                                    .severity(ConfigEvent.Severity.WARNING)
+                                    .domain(ConfigEvent.Domain.DISCOVERY)
+                                    .kind(ConfigEvent.Kind.SKIPPED_UNREADABLE)
+                                    .detailCode("FS_DISCOVERY_UNSAFE_NAME")
+                                    .message("fragment with control characters in its name skipped")
+                                    .location(location)
+                                    .scope(location.getScope())
+                                    .remediation(ConfigEvent.Remediation.NONE)
+                                    .remediationMessage("Rename the file " + LogSafe.text(fragment.getAbsolutePath()))
+                                    .build(), this.ctx);
+                            }
+                        continue;
+                        }
                     boolean foundFormat = false;
                     // For fragments, we also respect the format priorities if multiple extensions match, 
                     // but we need to check which format this specific file matches.
@@ -358,7 +379,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                             {
                             if (fragmentName.endsWith(extension))
                                 {
-                                ConfigLayerInterface cfg = attemptToReadConfigOrReturnNull(dotDPath, fragmentName, location, fileFormat);
+                                ConfigLayerInterface cfg = attemptToReadConfigOrReturnNull(dotDPath, fragmentName, location, fileFormat, layeredCfg);
                                 if (cfg != null)
                                     {
                                     layeredCfg.add(cfg, location);
@@ -436,7 +457,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                         }
                     }
 
-                ConfigLayerInterface cfg = attemptToCreateConfigOrReturnNull(locationPath, expectedFilename, location, fileformat);
+                ConfigLayerInterface cfg = attemptToCreateConfigOrReturnNull(locationPath, expectedFilename, location, fileformat, layeredCfg);
                 if (cfg != null)
                     {
                     // Re-set the source for the created layer to have a more precise location
@@ -449,7 +470,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                 }
             }
 
-        logger.debug("File storage could not create requested configuration \""+configName+"\"");
+        logger.debug("File storage could not create requested configuration \""+LogSafe.text(configName)+"\"");
         return null;
         }
 
@@ -487,12 +508,12 @@ public class FileConfigStorage implements ConfigStorageInterface
                     {
                     if (!file.toFile().isFile())
                         {
-                        logger.warn("BLOB at "+file+" is not a file");
+                        logger.warn("BLOB at "+LogSafe.text(file)+" is not a file");
                         continue;
                         }
                     if (!file.toFile().canRead())
                         {
-                        logger.warn("BLOB at "+file+" cannot be read");
+                        logger.warn("BLOB at "+LogSafe.text(file)+" cannot be read");
                         continue;
                         }
                     boolean writeable = file.toFile().canWrite();
@@ -585,7 +606,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             fileChangeWatcher.processFileChangeEvent((Path) storageInstanceHandle);
         }
 
-    private ConfigLayerInterface attemptToCreateConfigOrReturnNull(Path fileLocation, String fileName, ConfigLocation location, ConfigFileFormatInterface fileformat)
+    private ConfigLayerInterface attemptToCreateConfigOrReturnNull(Path fileLocation, String fileName, ConfigLocation location, ConfigFileFormatInterface fileformat, LayeredConfigurationInterface layeredCfg)
         {
         try
             {
@@ -594,8 +615,8 @@ public class FileConfigStorage implements ConfigStorageInterface
             File file = fileWithPath.toFile();
             if (file.exists())
                 {
-                logger.debug("Config file already exists at \""+fileWithPath+"\", returning existing content as layer");
-                return attemptToReadConfigOrReturnNull(fileLocation, fileName, location, fileformat);
+                logger.debug("Config file already exists at \""+LogSafe.text(fileWithPath)+"\", returning existing content as layer");
+                return attemptToReadConfigOrReturnNull(fileLocation, fileName, location, fileformat, layeredCfg);
                 }
             
             File parentDir = fileWithPath.getParent().toFile();
@@ -605,35 +626,35 @@ public class FileConfigStorage implements ConfigStorageInterface
                     {
                     if (!parentDir.mkdirs())
                         {
-                        logger.debug("could not create config file directory \""+parentDir.getAbsolutePath()+"\"");
+                        logger.debug("could not create config file directory \""+LogSafe.text(parentDir.getAbsolutePath())+"\"");
                         return null;
                         }
                     }
                 else
                     {
-                    logger.debug("config file directory \""+parentDir.getAbsolutePath()+"\" does not exist and createMissingPaths is false");
+                    logger.debug("config file directory \""+LogSafe.text(parentDir.getAbsolutePath())+"\" does not exist and createMissingPaths is false");
                     return null;
                     }
                 }
             else if (!parentDir.canWrite())
                 {
-                logger.debug("config file directory \""+parentDir.getAbsolutePath()+"\" not writeable");
+                logger.debug("config file directory \""+LogSafe.text(parentDir.getAbsolutePath())+"\" not writeable");
                 return null;
                 }
             // OK, all ready - now let's try to create a file, by file format.
-            logger.trace("attempting to create file "+file.getAbsolutePath().toString());
+            logger.trace("attempting to create file "+LogSafe.text(file.getAbsolutePath()));
             ConfigLayerInterface layerInstance = fileformat.createFile(fileWithPath, location);
             fileChangeWatcher.addFile(fileWithPath, location); // + layerInstance?
             return layerInstance;
             }
         catch (InvalidPathException ex)
             {
-            logger.debug("config file does not exist: \""+fileLocation+"\"::\""+fileName+"\""); //@TODO security check? both parts had been sanitized before.
+            logger.debug("invalid config file path: \""+LogSafe.text(fileLocation)+"\" + \""+LogSafe.text(fileName)+"\"");
             return null;
             }
         catch (SecurityException ex)
             {
-            logger.debug("we're forbidden from accessing config file: \""+fileLocation+"\"::\""+fileName+"\""); //@TODO security check? both parts had been sanitized before.
+            logger.debug("access to config file denied by the security manager: \""+LogSafe.text(fileLocation)+"\" + \""+LogSafe.text(fileName)+"\"");
             return null;
             }
         }
@@ -658,18 +679,23 @@ public class FileConfigStorage implements ConfigStorageInterface
                     String pathname = current;
 
                     Matcher m = regex.matcher(current);
-                    if (m.matches())
+                    if (m.matches() && !isDriveLetter(m.group(1)))
                         {
                         try
                             {
-                            scope = ConfigScope.valueOf(m.group(1).toUpperCase());
+                            scope = ConfigScope.valueOf(m.group(1).toUpperCase(Locale.ROOT));
                             pathname = m.group(2);
                             }
                         catch (IllegalArgumentException e)
                             {
-                            // ignore, treat as full path
+                            // a misspelt scope must not silently turn into a path in the default scope
+                            logger.warn(additionalUserDirectories.name()+" entry \""+LogSafe.text(current)+"\" skipped: unknown scope \""+LogSafe.text(m.group(1))
+                                    +"\". Valid: "+Arrays.toString(ConfigScope.values())+".");
+                            continue;
                             }
                         }
+                    // a POLICY: prefix in productive mode needs the code-only opt-in
+                    PolicyLocationGuard.checkApplicationLocation(settings, scope, additionalUserDirectories.name()+" entry \""+LogSafe.text(current)+"\"");
 
                     Path path = Paths.get(pathname);
                     if (!subpath.isEmpty())
@@ -678,7 +704,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                     }
                 catch (InvalidPathException ex)
                     {
-                    logger.warn("user-supplied search path invalid: \""+current+"\"");
+                    logger.warn("user-supplied search path invalid: \""+LogSafe.text(current)+"\"");
                     }
                 }
             }
@@ -703,7 +729,13 @@ public class FileConfigStorage implements ConfigStorageInterface
         }
 
 
-    private ConfigLayerInterface attemptToReadConfigOrReturnNull(final Path fileLocation, String fileName, final ConfigLocation location, ConfigFileFormatInterface fileformat)
+    /**
+     * read one file with the given format.
+     *
+     * @param layeredCfg the configuration the layer is read for; context for reporting a parse problem
+     * @return the layer, or null if the file is missing, unreadable or cannot be parsed (a parse problem is reported)
+     */
+    private ConfigLayerInterface attemptToReadConfigOrReturnNull(final Path fileLocation, String fileName, final ConfigLocation location, ConfigFileFormatInterface fileformat, LayeredConfigurationInterface layeredCfg)
         {
         try
             {
@@ -713,32 +745,37 @@ public class FileConfigStorage implements ConfigStorageInterface
             if (file.exists() == false)
                 {
                 // this is quite normal.
-                logger.trace("failed attempt to access file :\""+filePath.toAbsolutePath()+"\"");
+                logger.trace("failed attempt to access file :\""+LogSafe.text(filePath.toAbsolutePath())+"\"");
                 return null;
                 }
             if (file.isFile() == false)
                 {
-                logger.warn("strange behaviour: directory specified as config file:\""+filePath.toAbsolutePath()+"\"");
+                logger.warn("strange behaviour: directory specified as config file:\""+LogSafe.text(filePath.toAbsolutePath())+"\"");
                 return null;
                 }
             if (file.canRead() == false)
                 {
-                logger.warn("config file exists, but cannot be read :\""+filePath.toAbsolutePath()+"\"");
+                logger.warn("config file exists, but cannot be read :\""+LogSafe.text(filePath.toAbsolutePath())+"\"");
                 return null;
                 }
             // OK, all ready - now let's try to read the file. Which is another thing, depending on the file format.
-            logger.trace("attempting to read config file "+file.getAbsolutePath());
-            ConfigLayerInterface contentLayer = fileformat.readFile(file, location);
-            return contentLayer;
+            logger.trace("attempting to read config file "+LogSafe.text(file.getAbsolutePath()));
+            return fileformat.readFile(file, location);
+            }
+        catch (ConfigParseException ex)
+            {
+            // files are no secret store; the schema decides whether the parser's text may be shown
+            ParseProblemReporter.report(ex, location, layeredCfg, false);
+            return null;
             }
         catch (InvalidPathException ex)
             {
-            logger.debug("config file does not exist: \""+fileLocation+"\"::\""+fileName+"\""); //@TODO security check? both parts had been sanitized before.
+            logger.debug("invalid config file path: \""+LogSafe.text(fileLocation)+"\" + \""+LogSafe.text(fileName)+"\"");
             return null;
             }
         catch (SecurityException ex)
             {
-            logger.debug("we're forbidden from accessing config file: \""+fileLocation+"\"::\""+fileName+"\""); //@TODO security check? both parts had been sanitized before.
+            logger.debug("access to config file denied by the security manager: \""+LogSafe.text(fileLocation)+"\" + \""+LogSafe.text(fileName)+"\"");
             return null;
             }
         }
@@ -765,7 +802,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                         final ConfigScope scope = entry.getKey();
                         // always add these, even if they don't exist, as they are intentional test overrides.
                         additionalTestDirsList.add(searchPath);
-                        logger.error("[DEBUG_LOG] adding additional test dir to search list: " + searchPath + " scope: " + scope);
+                        logger.debug("adding additional test dir to search list: " + LogSafe.text(searchPath) + " scope: " + scope);
                         addDirectoryToSearchListIfAccessible(searchList, searchPath, scope, false);
                         successes++;
                         }
@@ -797,7 +834,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             if ((subDir != null) && (!subDir.isEmpty()))
                 companyNameRelative = companyNameRelative.resolve(subDir);
             Path applicationTestConfigs = mavenTestBaseDirPath.resolve(companyNameRelative);
-            logger.debug("checking TEST_MODE application directory \""+applicationTestConfigs+"\"");
+            logger.debug("checking TEST_MODE application directory \""+LogSafe.text(applicationTestConfigs)+"\"");
             addDirectoryToSearchListIfAccessible(searchList, applicationTestConfigs, ConfigScope.APPLICATION, true);
             successes++;
 
@@ -810,7 +847,7 @@ public class FileConfigStorage implements ConfigStorageInterface
                     subdirRelativePath = subdirRelativePath.resolve(subDir);
                 if (java.nio.file.Files.exists(subdirRelativePath))
                     {
-                    logger.debug("checking TEST_MODE scope "+scope.name()+" directory \""+subdirRelativePath+"\"");
+                    logger.debug("checking TEST_MODE scope "+scope.name()+" directory \""+LogSafe.text(subdirRelativePath)+"\"");
                     addDirectoryToSearchListIfAccessible(searchList, subdirRelativePath, scope, true);
                     successes++;
                     }
@@ -869,6 +906,12 @@ public class FileConfigStorage implements ConfigStorageInterface
 
 
 
+    /* "C:\path": a Windows drive letter, not a scope name. No scope name has a single letter. */
+    static boolean isDriveLetter(String prefix)
+        {
+        return prefix.length() == 1;
+        }
+
     private EnumMap<ConfigScope, List<String>> convertStringListToConfigScopeEnumMap(List<String> additionalDirsUnparsed)
         {
         final Pattern regex = Pattern.compile("(\\w+):(.+)", Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
@@ -885,19 +928,20 @@ public class FileConfigStorage implements ConfigStorageInterface
         for (String entry : additionalDirsUnparsed)
             {
             Matcher m = regex.matcher(entry);
-            if (m.matches())
+            if (m.matches() && !isDriveLetter(m.group(1)))
                 {
                 try
                     {
                     String scopename = m.group(1);
-                    ConfigScope scope = ConfigScope.valueOf(scopename.toUpperCase());
+                    ConfigScope scope = ConfigScope.valueOf(scopename.toUpperCase(Locale.ROOT));
                     String pathname = m.group(2);
                     additionalDirs.get(scope).add(pathname);
                     }
                 catch (IllegalArgumentException e)
                     {
-                    // if it's not a valid scope, we treat it as a path without scope
-                    additionalDirs.get(ConfigScope.RUNTIME).add(entry);
+                    // a misspelt scope must not silently turn into a path in another scope
+                    logger.warn("TESTMODE_DIRECTORIES entry \""+LogSafe.text(entry)+"\" skipped: unknown scope \""+LogSafe.text(m.group(1))
+                            +"\". Valid: "+Arrays.toString(ConfigScope.values())+".");
                     }
                 }
             else
@@ -932,6 +976,18 @@ public class FileConfigStorage implements ConfigStorageInterface
      * Safely adds a directory to the search list.
      * This implements the internal logic where the Storage itself is responsible
      * for validating its locations and creating the ConfigLocation instances.
+     * <p>
+     * <b>Design intent:</b> directories are registered even if they do not exist at
+     * initialisation time. Config directories are often created lazily (e.g. a user
+     * config dir that appears after first-run setup), and the search list is consulted
+     * at read time, not at registration time.  Do not change this behaviour: missing
+     * directories must remain registered so they are picked up once they materialise.
+     * Basic sanity checks (readable, not a regular file) are still applied when the
+     * path <em>does</em> exist.
+     * <p>
+     * A path containing control, line-separator or bidi-control characters is rejected: it is
+     * never a legitimate configuration directory, and could forge log output (CWE-117).
+     * All search locations of this storage pass through here.
      *
      * @param searchList the list to add to
      * @param path       the filesystem path
@@ -941,6 +997,12 @@ public class FileConfigStorage implements ConfigStorageInterface
      */
     public boolean addDirectoryToSearchListIfAccessible(ConfigSearchList searchList, final Path path, final ConfigScope scope, boolean atEnd)
         {
+        if (LogSafe.containsUnsafeCharacters(String.valueOf(path)))
+            {
+            if (logger != null)
+                { logger.warn("search location rejected, control characters in its path: \""+LogSafe.text(path)+"\""); }
+            return false;
+            }
         try
             {
             File tmp = path.toFile();
@@ -950,12 +1012,12 @@ public class FileConfigStorage implements ConfigStorageInterface
                 {
                 if (!tmp.isDirectory())
                     {
-                    logger.info("config path "+path+" is not a directory");
+                    logger.info("config path "+LogSafe.text(path)+" is not a directory");
                     return false;
                     }
                 if (!tmp.canRead())
                     {
-                    logger.info("config directory "+path+" is not readable");
+                    logger.info("config directory "+LogSafe.text(path)+" is not readable");
                     return false;
                     }
                 }
@@ -977,7 +1039,7 @@ public class FileConfigStorage implements ConfigStorageInterface
             }
         catch (UnsupportedOperationException|InvalidPathException ex)
             {
-            logger.warn("Exception during directory access check for "+path, ex);
+            logger.warn("Exception during directory access check for "+LogSafe.text(path), ex);
             return false;
             }
         }
@@ -1025,16 +1087,73 @@ public class FileConfigStorage implements ConfigStorageInterface
             {
             Path path = Paths.get(segments.get(0));
             for (int i = 1; i < segments.size(); i++)
-                path = path.resolve(segments.get(i));
+                {
+                // path traversal security check
+                String segment = segments.get(i);
+                if (segment.contains(".."))
+                    {
+                    throw new InvalidPathException(segment, "Path traversal detected in segment");
+                    }
+                // regular resolution
+                try
+                    {
+                    path = path.resolve(segment);
+                    }
+                catch (InvalidPathException e)
+                    {
+                    // On some systems (like Linux), resolving a path with backslashes in it
+                    // might be considered invalid if the OS doesn't support it as a separator.
+                    // If resolve fails and it looks like a Windows-style path, split on backslash.
+                    if (segment.contains("\\"))
+                        {
+                        for (String subSegment : segment.split("\\\\"))
+                            {
+                            if (!subSegment.isEmpty())
+                                path = path.resolve(subSegment);
+                            }
+                        }
+                    else
+                        {
+                        throw e;
+                        }
+                    }
+                }
             addDirectoryToSearchListIfAccessible(searchList, path, scope, true);
             }
         catch (InvalidPathException|NullPointerException e)
             {
             if (logger != null)
                 {
-                logger.warn("could not add default search location for scope " + scope + " due to invalid path: " + basePath, e);
+                logger.warn("could not add default search location for scope " + scope + " due to invalid path: " + LogSafe.text(basePath), e);
                 }
             }
+        }
+
+    /**
+     * Validates {@code rawPath} and, if it resolves to an absolute path, delegates to
+     * {@link #addPathToSearchList}.  Silently skips invalid or relative paths.
+     * <p>
+     * Use this for OS-managed environment variables and system properties that are
+     * always set correctly by the platform (e.g. {@code AppData}, {@code user.dir}).
+     * For user-configurable overrides (e.g. {@code XDG_CONFIG_HOME}) prefer explicit
+     * validation with a logged warning so the user can see that their setting was ignored.
+     *
+     * @param searchList the list to add to
+     * @param rawPath    the raw path string incoming from an env var or system property
+     * @param scope      the scope this path is to be in
+     * @param segments   additional sub-path segments
+     */
+    void addAbsolutePathToSearchList(ConfigSearchList searchList, String rawPath, ConfigScope scope, String... segments)
+        {
+        if (rawPath == null || rawPath.isEmpty())
+            { return; }
+        try
+            {
+            Path p = Paths.get(rawPath).normalize();
+            if (p.isAbsolute())
+                { addPathToSearchList(searchList, p.toString(), scope, segments); }
+            }
+        catch (InvalidPathException ignored) {}
         }
 
     void logInfo(String message)

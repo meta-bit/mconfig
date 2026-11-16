@@ -21,6 +21,11 @@ import java.nio.file.Paths;
  */
 class WindowsSearchPaths implements SearchPathInitializer
     {
+    protected String getEnv(String name)
+        {
+        return System.getenv(name);
+        }
+
     @Override
     public void initSearchPaths(ConfigSearchList searchList, String companyName, String applicationName, String subDir, FileConfigStorage storage)
         {
@@ -30,9 +35,9 @@ class WindowsSearchPaths implements SearchPathInitializer
         // @TODO we may want to have a flag to turn off this scope for windows?
         // SESSION scope. used for the current session instance of the software. this is also where most environment variables go.
         // relative to the current working directory the application was started from.
-        storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, ".config", applicationName, subDir);
         // legacy .ini etc. in the same directory as the application is installed in
-        storage.addPathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, System.getProperty("user.dir"), ConfigScope.SESSION, applicationName, subDir);
 
 
         // ---------------------------------------------------------------------
@@ -44,19 +49,35 @@ class WindowsSearchPaths implements SearchPathInitializer
         3. %LocalAppData% (User settings that shouldn't roam, like high-resolution UI caches).
         4. %UserProfile%/.config (Legacy/Unix-imitation fallback).
         */
-        String xdgConfig = System.getenv("XDG_CONFIG_HOME");
-        if (xdgConfig != null) // XDG_CONFIG_HOME overrides %AppData%.
+        String xdgConfig = getEnv("XDG_CONFIG_HOME");
+        if (xdgConfig != null && !xdgConfig.isEmpty()) // XDG_CONFIG_HOME overrides %AppData%.
             {
-            storage.addPathToSearchList(searchList, xdgConfig, ConfigScope.USER, applicationName, subDir);
+            // sanitize and validate path: ensure XDG_CONFIG_HOME is absolute and doesn't contain traversal
+            try
+                {
+                java.nio.file.Path xdgPath = java.nio.file.Paths.get(xdgConfig).normalize();
+                if (xdgPath.isAbsolute())
+                    {
+                    storage.addPathToSearchList(searchList, xdgPath.toString(), ConfigScope.USER, applicationName, subDir);
+                    }
+                else
+                    {
+                    storage.logInfo("XDG_CONFIG_HOME is not an absolute path, ignoring: " + xdgConfig);
+                    }
+                }
+            catch (java.nio.file.InvalidPathException e)
+                {
+                storage.logInfo("XDG_CONFIG_HOME contains an invalid path, ignoring: " + xdgConfig);
+                }
             }
         // application roaming path
-        storage.addPathToSearchList(searchList, System.getenv("AppData"), ConfigScope.USER, companyName, applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, getEnv("AppData"), ConfigScope.USER, companyName, applicationName, subDir);
         // "%LocalAppData%" -- this is not to be moved with the user (no roaming)
-        storage.addPathToSearchList(searchList, System.getenv("LocalAppData"), ConfigScope.USER, companyName, applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, getEnv("LocalAppData"), ConfigScope.USER, companyName, applicationName, subDir);
         // application userdata path
-        // "%UserProfile%" - really user-specific data, skipping the company name which users don't usally like
+        // "%UserProfile%" - really user-specific data, skipping the company name which users don't usually like
         // stores user config data not on toplevel in your User profile, but in a subdirectory called ".config"
-        storage.addPathToSearchList(searchList, System.getenv("UserProfile"), ConfigScope.USER, ".config", applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, getEnv("UserProfile"), ConfigScope.USER, ".config", applicationName, subDir);
 
         // ---------------------------------------------------------------------
         // APPLICATION scope. installation specific
@@ -86,13 +107,13 @@ class WindowsSearchPaths implements SearchPathInitializer
         // HOST scope. hardware/sandbox specific
 
         // 1st Priority: %ProgramData% (The gold standard for file-based machine config).
-        storage.addPathToSearchList(searchList, System.getenv("ProgramData"), ConfigScope.HOST, companyName, applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, getEnv("ProgramData"), ConfigScope.HOST, companyName, applicationName, subDir);
 
         // 2nd Priority: Windows Registry (HKLM\Software\...)
         // -- this is not a directory; separate mConfig modules for Windows Registry handle the access. No init here.
 
         // 3. %AllUsersProfile% - legacy at HOST scope, resolves to C:\ProgramData by default.
-        storage.addPathToSearchList(searchList, System.getenv("AllUsersProfile"), ConfigScope.HOST, companyName, applicationName, subDir);
+        storage.addAbsolutePathToSearchList(searchList, getEnv("AllUsersProfile"), ConfigScope.HOST, companyName, applicationName, subDir);
 
         // ---------------------------------------------------------------------
         // CLUSTER scope:

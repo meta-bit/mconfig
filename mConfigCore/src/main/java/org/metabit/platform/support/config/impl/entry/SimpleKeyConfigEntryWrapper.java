@@ -42,6 +42,8 @@ public class SimpleKeyConfigEntryWrapper implements ConfigEntry
     @Override public ConfigLocation getLocation() { return delegate.getLocation(); }
     @Override public java.net.URI getURI() { return delegate.getURI(); }
     @Override public org.metabit.platform.support.config.interfaces.ConfigEntrySpecification getSpecification() throws ConfigCheckedException { return delegate.getSpecification(); }
+    @Override public boolean isSecret() { return delegate.isSecret(); }
     @Override public void putString(String value) throws ConfigCheckedException { delegate.putString(value); }
     @Override public void putValue(Object value, ConfigEntryType valueType) throws ConfigCheckedException { delegate.putValue(value, valueType); }
 }
+//___EOF___

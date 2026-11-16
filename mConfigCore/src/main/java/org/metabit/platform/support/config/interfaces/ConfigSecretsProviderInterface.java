@@ -24,3 +24,4 @@ public interface ConfigSecretsProviderInterface
         {
         }
     }
+//___EOF___

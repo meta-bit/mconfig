@@ -1,5 +1,23 @@
 # mConfig Documentation
 
+<!--
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "mConfig Documentation",
+  "description": "Comprehensive documentation for mConfig, a modular Java library for unified, portable configuration management.",
+  "breadcrumb": "Home > Documentation",
+  "mainEntity": {
+    "@type": "SoftwareSourceCode",
+    "name": "mConfig",
+    "description": "A 10-tier hierarchical configuration architecture and Java library.",
+    "url": "https://github.com/meta-bit/mconfig"
+  }
+}
+</script>
+-->
+
 mConfig is a modular Java library for unified, portable configuration management. It abstracts OS-specific locations (e.g., `~/.config/`, `/etc/`, Windows Registry), multiple sources (files, env vars, JAR resources, ZooKeeper), and formats (JSON, YAML, TOML, Properties, etc.).
 The [mConfig Tool](41_mconfig_tool.md) is a powerful companion for exploring and managing these configurations from the command line.
 
@@ -19,7 +37,7 @@ graph LR
 
   classDef high fill:#ff9999
   class POLICY,RUNTIME high
-  ```
+```
 
 Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > registry > JAR.
 
@@ -41,6 +59,7 @@ Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > 
 - [2.3 Configuration Schemas](23_configuration_schemas.md)
 - [2.4 Comment Handling](24_comment_handling.md)
 - [2.5 Config Features](25_config_features.md)
+- [2.6 Secrets Concept](26_secrets_concept.md)
 
 ## Part 3: Advanced Topics
 - [3.1 Writing Configurations](31_writing_configurations.md)
@@ -52,17 +71,20 @@ Ties within scope: Later-added > earlier; storage prio: RAM > secrets > files > 
 - [3.7 Windows Registry Access](36_windows_registry.md)
 - [3.8 Extensions and Advanced Use](37_extensions_and_advanced_use.md)
 - [3.9 Utilities and Adapters](39_utilities_and_adapters.md)
-- [3.10 Code Improvements and Best Practices](38_code_improvements.md)
+- [3.10 Better Practice: Replace This With That](38_code_improvements.md)
 - [3.11 Experimental POJO Mapping](https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md)
 
-## Part 4: Reference & Project
+## Part 4: Reference
 - [4.1 mConfig Tool](41_mconfig_tool.md)
 - [4.2 Logging](42_logging.md)
 - [4.3 FAQ](43_faq.md)
 - [4.4 Design Consolidated](44_design_consolidated.md)
-- [4.5 AI Guidance (Notes for Code-Generating Tools)](45_ai_guidance.md)
-- [4.6 Versions](46_versions.md)
-- [4.7 Contributing](47_contributing.md)
-- [4.8 Legal](48_legal.md)
+- [4.5 Versions](46_versions.md)
+- [4.6 Snippets Reference](snippets.md) (code templates to copy: [examples/snippets.md](https://github.com/meta-bit/mconfig/blob/master/examples/snippets.md))
 - [Examples](examples/index.md)
-- [4.9 Links and References](49_links.md)
+
+## Part 5: Project
+- [5.1 Contributing](50_contributing.md)
+- [5.2 Legal](51_legal.md)
+- [5.3 AI Guidance (Notes for Code-Generating Tools)](52_ai_guidance.md)
+- [5.4 Links and References](53_links.md)

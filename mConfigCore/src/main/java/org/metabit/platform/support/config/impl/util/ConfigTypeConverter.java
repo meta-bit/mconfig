@@ -1,6 +1,7 @@
 package org.metabit.platform.support.config.impl.util;
 
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.entry.BooleanLiterals;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -27,11 +28,19 @@ public final class ConfigTypeConverter
         return String.valueOf(value);
         }
 
+    /**
+     * @param value a Boolean, or a value whose string form is one of the {@link BooleanLiterals}
+     * @return the Boolean; null for null
+     * @throws IllegalArgumentException if the value is no Boolean literal (the message does not quote the value)
+     */
     public static Boolean toBoolean(Object value)
         {
         if (value == null) return null;
         if (value instanceof Boolean) return (Boolean) value;
-        return Boolean.valueOf(toString(value));
+        Boolean result = BooleanLiterals.parse(toString(value));
+        if (result == null)
+            { throw new IllegalArgumentException("not a Boolean value; accepted are true/false, yes/no, on/off, 1/0"); }
+        return result;
         }
 
     public static Integer toInteger(Object value)
@@ -144,3 +153,4 @@ public final class ConfigTypeConverter
         return Duration.parse(toString(value));
         }
 }
+//___EOF___

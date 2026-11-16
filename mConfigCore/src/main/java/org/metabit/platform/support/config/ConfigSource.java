@@ -33,3 +33,4 @@ public interface ConfigSource extends ConfigLocation
      */
     boolean hasChangedSincePreviousCheck();
 }
+//___EOF___

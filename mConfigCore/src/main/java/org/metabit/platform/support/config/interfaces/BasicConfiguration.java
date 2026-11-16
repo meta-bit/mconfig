@@ -28,8 +28,18 @@ public interface BasicConfiguration extends AutoCloseable
      */
     ConfigEntry getConfigEntryFromFullKey(final String fullKey, EnumSet<ConfigScope> scopes);
 
-    // ConfigEntry getConfigEntryForWriting(final ConfigScope scope, final String fullKey);
-
+    /**
+     * get a config entry for writing.
+     *
+     * @param scope   scope to look in
+     * @param fullKey key of the entry
+     * @return a writable config entry, or null if not possible
+     * @throws org.metabit.platform.support.config.ConfigCheckedException on errors worse than "not possible".
+     */
+    default ConfigEntry getConfigEntryForWriting(final ConfigScope scope, final String fullKey) throws ConfigCheckedException
+    {
+        return null;
+    }
 
     /**
      * set the config schema to use and validate against.
@@ -81,3 +91,4 @@ public interface BasicConfiguration extends AutoCloseable
     Iterator<String> getEntryKeyTreeIterator();
     boolean isClosed();
 }
+//___EOF___

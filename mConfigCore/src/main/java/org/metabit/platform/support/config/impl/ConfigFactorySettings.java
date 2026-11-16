@@ -8,6 +8,7 @@
 package org.metabit.platform.support.config.impl;
 
 import org.metabit.platform.support.config.*;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 
 import java.nio.file.Path;
 import java.text.MessageFormat;
@@ -32,6 +33,13 @@ public class ConfigFactorySettings
     private final Map<ConfigFeatureInterface, Object> settings    = new HashMap<>();
     private final Map<String, Object>                 rawSettings = new HashMap<>();
     private final Map<Path, ConfigScope>              directories = new HashMap<>();
+    private final java.util.Set<String>               explicitlySet = new java.util.HashSet<>(); // feature names, upper case
+
+    // HOSTNAME is determined on first read, not at construction: the lookup may fail or wait for DNS.
+    // Kept apart from the settings map, so a read from another thread does not modify it.
+    private          HostNameResolver hostNameResolver = HostNameResolver.standard();
+    private volatile String           hostName;
+    private volatile boolean          hostNameDetermined;
 
     /**
      * <p>Constructor for ConfigFactorySettings.</p>
@@ -50,19 +58,40 @@ public class ConfigFactorySettings
             Object o = feature.getDefaultValue();
             if (o != null)
                 {
-                cfs.putInternal(feature, o);
+                cfs.putDefault(feature, o);
                 }
             }
+        }
+
+    private void putDefault(ConfigFeatureInterface feature, Object value)
+        {
+        settings.put(feature, value);
         }
 
     private void putInternal(ConfigFeatureInterface feature, Object value)
         {
         settings.put(feature, value);
+        explicitlySet.add(feature.name().toUpperCase(java.util.Locale.ROOT));
+        }
+
+    /**
+     * Check whether a feature was set explicitly (by code, runtime settings or self-configuration),
+     * as opposed to holding its default value.
+     *
+     * @param featureName the feature name, case-insensitive
+     * @return true if explicitly set
+     */
+    public boolean isExplicitlySet(final String featureName)
+        {
+        return explicitlySet.contains(featureName.toUpperCase(java.util.Locale.ROOT));
         }
 
     private Object get(ConfigFeatureInterface feature)
         {
-        return settings.get(feature);
+        Object value = settings.get(feature);
+        if (value == null && feature == ConfigFeature.HOSTNAME)
+            return determineHostName();
+        return value;
         }
 
     /**
@@ -72,9 +101,29 @@ public class ConfigFactorySettings
         {
         if (key instanceof ConfigFeatureInterface)
             {
-            return settings.get((ConfigFeatureInterface) key);
+            return get((ConfigFeatureInterface) key);
             }
         return null;
+        }
+
+    private String determineHostName()
+        {
+        if (!hostNameDetermined)
+            {
+            hostName = hostNameResolver.resolve(); // a concurrent first read may resolve twice; harmless
+            hostNameDetermined = true;
+            }
+        return hostName;
+        }
+
+    /**
+     * replace the host name determination; for tests.
+     */
+    void setHostNameResolver(final HostNameResolver resolver)
+        {
+        hostNameResolver = resolver;
+        hostNameDetermined = false;
+        hostName = null;
         }
 
     /**
@@ -247,7 +296,8 @@ public class ConfigFactorySettings
         {
         if (feature.getValueType() != ConfigFeature.ValueType.STRING)
             throw new IllegalArgumentException(MessageFormat.format(TYPE_MISMATCH_MSG, feature.name(), "String", feature.getValueType().name()));
-        if (value == null) throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID);
+        if (value == null)
+            throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID, feature.name()+" must not be null");
 
         if (feature instanceof ConfigFeature)
             {
@@ -256,11 +306,11 @@ public class ConfigFactorySettings
                 case COMPANY_NAME:
                 case APPLICATION_NAME:
                     if (!value.isEmpty() && (!validIdPattern.matcher(value).matches() || value.contains("..")))
-                        throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID);
+                        throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID, feature.name()+" is not a valid name: "+LogSafe.text(value));
                     break;
                 case SUB_PATH:
                     if (!value.isEmpty() && (!validPathPattern.matcher(value).matches() || value.contains("..")))
-                        throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID);
+                        throw new ConfigException(ConfigException.ConfigExceptionReason.ARGUMENT_INVALID, feature.name()+" is not a valid path: "+LogSafe.text(value));
                     break;
                 default:
                     break;
@@ -351,6 +401,7 @@ public class ConfigFactorySettings
         else
             {
             rawSettings.put(name, value);
+            explicitlySet.add(name.toUpperCase(java.util.Locale.ROOT));
             }
         }
 

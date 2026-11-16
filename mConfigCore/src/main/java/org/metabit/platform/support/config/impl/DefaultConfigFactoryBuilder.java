@@ -1,7 +1,9 @@
 package org.metabit.platform.support.config.impl;
 
+import org.metabit.platform.support.config.impl.entry.BooleanLiterals;
 import org.metabit.platform.support.config.*;
 import org.metabit.platform.support.config.impl.logging.InternalLogger;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.impl.logging.NullLogging;
 import org.metabit.platform.support.config.interfaces.*;
 import org.metabit.platform.support.config.schema.ConfigSchema;
@@ -74,7 +76,12 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
                 {
                 ConfigFeature currentFeature = featureLookup.get(key.toUpperCase());
                 if (currentFeature.isBooleanType())
-                    targetSettings.setBoolean(currentFeature, Boolean.valueOf(value));
+                    {
+                    Boolean flag = BooleanLiterals.parse(value);
+                    if (flag == null)
+                        throw new ConfigException("feature \""+currentFeature.name()+"\" takes a Boolean value: true/false, yes/no, on/off, 1/0");
+                    targetSettings.setBoolean(currentFeature, flag);
+                    }
                 else if (currentFeature.isStringType())
                     targetSettings.setString(currentFeature, value);
                 else if (currentFeature.isNumberType())
@@ -149,8 +156,10 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
 
             PlatformDetector platformDetector = new PlatformDetector();
             configFactorySettings.setObject(CURRENT_PLATFORM_OS, platformDetector.getOs());
-            configFactorySettings.setString(CURRENT_USER_ID, System.getProperty("user.name"));
-            configFactorySettings.setString(HOSTNAME, java.net.InetAddress.getLocalHost().getHostName());
+            String userName = System.getProperty("user.name");
+            if (userName != null) // may be missing in minimal environments; not worth failing the start
+                configFactorySettings.setString(CURRENT_USER_ID, userName);
+            // HOSTNAME is determined on first read (ConfigFactorySettings): the lookup may fail or wait for DNS
             }
         catch (Exception t)
             {
@@ -161,10 +170,11 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         }
 
     @Override
+    @SuppressWarnings("removal") // ConfigStorageInterface.isInitializedWhenAddedAsSource(), until MLIB-155
     public ConfigFactory build()
             throws ConfigException
         {
-        org.metabit.platform.support.config.impl.RuntimeConfigurator.applyRuntimeSettingsFromEnvVars(configFactorySettings);
+        List<String> refusedRuntimeSettings = org.metabit.platform.support.config.impl.RuntimeConfigurator.applyRuntimeSettingsFromEnvVars(configFactorySettings);
 
         classLoader = this.getClass().getClassLoader();
         if (configFactorySettings.getBoolean(USE_SYSTEM_CLASS_LOADER))
@@ -178,12 +188,20 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         String specificLogger = configFactorySettings.getString(LOGGING_TO_USE_IN_CONFIGLIB);
         ConfigLoggingInterface logger = findLoggerForConfigUse(classLoader, specificLogger, configFactorySettings);
         logger.trace("logging started");
+        for (String refused : refusedRuntimeSettings)
+            {
+            logger.warn("runtime setting "+refused+" ignored: only code may set this feature");
+            }
         ConfigFactoryInstanceContext ctx = new ConfigFactoryInstanceContext(configFactorySettings);
         ctx.setLogger(logger);
         ctx.setClassLoader(classLoader);
         ConfigFactory configFactory = findConfigFactory(classLoader, configFactorySettings, logger);
         if (configFactory == null)
             throw new ConfigException("basic module loading failed");
+
+        // self-configuration from mconfig.properties: after code and runtime settings (which win),
+        // and before the test-mode gates, so that forbidTestMode() and PERMIT_TEST_MODE also cover file-set test mode.
+        SelfConfigurator.apply(configFactorySettings, classLoader, logger);
 
         // enable or disable test mode based on settings. security relevant
         if (testModePermitted && configFactorySettings.getBoolean(PERMIT_TEST_MODE))
@@ -215,6 +233,10 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
             configFactorySettings.setBoolean(TEST_MODE, false);
             }
 
+        // mConfig modules present without service registration: broken packaging (MLIB-156). After self-configuration,
+        // so a component can accept it in its own mconfig.properties.
+        ServiceRegistrationCheck.check(classLoader, configFactorySettings, logger);
+
         // collect the providers
         Map<String, ConfigStorageInterface> configStorages;
         Map<String, ConfigFormatInterface> configFormats;
@@ -227,6 +249,17 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
             {
             for (String id : disabledModules)
                 { configStorages.remove(id); }
+            }
+        if (!configFactorySettings.getBoolean(STORAGE_TYPE_ALLOW_ALL_STORAGES))
+            {
+            List<String> priorities = configFactorySettings.getStrings(STORAGE_TYPE_PRIORITIES);
+            configStorages.keySet().removeIf(id ->
+                {
+                boolean excluded = !isStorageListed(id, priorities);
+                if (excluded)
+                    { logger.debug("storage "+id+" not in STORAGE_TYPE_PRIORITIES; excluded by STORAGE_TYPE_ALLOW_ALL_STORAGES=false"); }
+                return excluded;
+                });
             }
 
         configFormats = findConfigFormats(classLoader, configFactorySettings, logger);
@@ -246,16 +279,16 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         // guard clauses, with lengthy messages. Problems of this kind are rare and indicate misconfiguration.
         if (configStorages.isEmpty())
             {
-            logger.error("*** No config storages discovered. ***\\nHINTS: \\n- Enable DEBUG logging (`mConfigLoggingSlf4j` + <logger name=\\\"metabit.config\\\" level=\\\"DEBUG\\\"/>)\\n- Use factory.listAvailableConfigurations()\\n- Run `mconfig <company>:<app> list` CLI\\n- Verify paths/formats per [Getting Started](https://github.com/meta-bit/mconfig/blob/main/documentation/src/site/markdown/getting-started.md)\\n- See FAQ: [Config values always defaults/null]");
+            logger.error("*** No config storages discovered. ***\nHINTS: \n- Enable DEBUG logging (`mConfigLoggingSlf4j` + <logger name=\"metabit.config\" level=\"DEBUG\"/>)\n- Use factory.listAvailableConfigurations()\n- Run `mconfig <company>:<app> list` CLI\n- Verify paths/formats per [Getting Started](https://github.com/meta-bit/mconfig/blob/master/documentation/src/site/markdown/13_getting_started.md)\n- See FAQ: [Config values always defaults/null]");
             }
         if (configFormats.isEmpty())
             {
-            logger.error("*** No config formats discovered. ***\\nHINTS: Add format modules (e.g., `mConfigFormatYAMLwithJackson`) matching your file extensions (.yaml, .properties, etc.).");
+            logger.error("*** No config formats discovered. ***\nHINTS: Add format modules (e.g., `mConfigFormatJavaProperties`, `mConfigFormatYAMLwithJackson`) matching your file extensions (.properties, .yaml, etc.).");
             }
 
         if (configFactorySettings.getBoolean(TEST_MODE) && (testModeDirectories == null || testModeDirectories.isEmpty()) && !configFactorySettings.isSet(TESTMODE_DIRECTORIES))
             {
-            logger.warn("*** Test mode active but no test directories configured. ***\\nHINTS: \\n- Place files in `src/test/resources/.config/<company>/<app>/`\\n- Or `ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of(\\\"USER:src/test/configs\\\"));`\\n- See [Test Mode docs](https://github.com/meta-bit/mconfig/blob/main/documentation/src/site/markdown/test-mode.md)");
+            logger.warn("*** Test mode active but no test directories configured. ***\nHINTS: \n- Place files in `src/test/resources/.config/<company>/<app>/`\n- Or `ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of(\"USER:src/test/configs\"));`\n- See [Test Mode docs](https://github.com/meta-bit/mconfig/blob/master/documentation/src/site/markdown/15_test_mode.md)");
             }
 
         // provide full context to formats so they can emit events, etc.
@@ -302,9 +335,32 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         if (!configFactory.initialize(ctx))
             throw new ConfigException(ConfigException.ConfigExceptionReason.FACTORY_INIT_FAILED);
 
-        // register manual sources
+        // register manual sources. A storage instance created by the application (e.g. by a source builder)
+        // is initialized here if it asks for it; discovered instances were initialized by the factory.
+        // Its test() is asked first, as for discovered storages: in test mode, Vault and AWS refuse
+        // unless their BYPASS_TEST feature is set, so tests reach real endpoints only when intended.
+        Set<ConfigStorageInterface> discoveredStorages = Collections.newSetFromMap(new IdentityHashMap<>());
+        discoveredStorages.addAll(configStorages.values());
+        Set<ConfigStorageInterface> addedStorages = Collections.newSetFromMap(new IdentityHashMap<>());
         for (ConfigLocation source : manualSources)
             {
+            ConfigStorageInterface storage = source.getStorage();
+            if (storage != null && !discoveredStorages.contains(storage) && storage.isInitializedWhenAddedAsSource()
+                    && !addedStorages.contains(storage))
+                {
+                if (!storage.test(configFactorySettings, logger))
+                    {
+                    logger.info("added source "+source.toLocationString()+" not used: storage "+storage.getStorageID()
+                            +" is not active here (in test mode, set its BYPASS_TEST feature to use it)");
+                    continue;
+                    }
+                if (!storage.init(ctx))
+                    {
+                    logger.warn("added source "+source.toLocationString()+" not used: its storage "+storage.getStorageID()+" failed to initialize");
+                    continue;
+                    }
+                addedStorages.add(storage);
+                }
             configFactory.appendSearchEntry(source, source.getScope());
             }
 
@@ -318,14 +374,23 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         // Each of which may want to use/build upon functionality by the previous ones.
         // A component may have multiple roles, which would result in multiple post-init calls.
         // hence defensive programming: avoid duplicate initialization.
+        final BootstrapConfigContext bootstrapCtx = (BootstrapConfigContext) configFactory;
         Set<Object> postInitialized = new HashSet<>();
         for (ConfigStorageInterface storage : configStorages.values())
             {
             if (postInitialized.add(storage))
                 {
-                storage.postInit(configFactory);
+                storage.postInit(bootstrapCtx);
                 }
             }
+        for (ConfigStorageInterface storage : addedStorages)
+            {
+            if (postInitialized.add(storage))
+                {
+                storage.postInit(bootstrapCtx);
+                }
+            }
+        ctx.setAddedSourceStorages(addedStorages);
         for (ConfigSecretsProviderInterface secretsProvider : configSecretsProviders.values())
             {
             if (postInitialized.add(secretsProvider))
@@ -365,6 +430,13 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
             logger.postInit(configFactory);
             }
 
+        // the host name lookup is lazy; only debug logging makes it run at start
+        if (logger.isDebugEnabled())
+            {
+            logger.debug("host "+LogSafe.text(configFactorySettings.getString(HOSTNAME))
+                    +", user "+LogSafe.text(configFactorySettings.getString(CURRENT_USER_ID))
+                    +", OS "+configFactorySettings.get(CURRENT_PLATFORM_OS));
+            }
         return configFactory;
         }
 
@@ -438,6 +510,28 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
         return configFactory;
         }
 
+    /** core's own storages: schema defaults and the in-memory RUNTIME/SESSION layers. Never excluded. */
+    private static final List<String> ALWAYS_ALLOWED_STORAGES = Arrays.asList("defaults", "RAM");
+
+    /**
+     * whether a storage ID is covered by a STORAGE_TYPE_PRIORITIES list: an entry matches the ID itself, or a family of
+     * IDs it is the prefix of, separated by "-" or "." ("RAM" covers "RAM-SESSION", "secrets" covers "secrets.vault").
+     */
+    static boolean isStorageListed(String storageID, List<String> priorities)
+        {
+        for (List<String> list : Arrays.asList(ALWAYS_ALLOWED_STORAGES, priorities))
+            {
+            if (list == null)
+                { continue; }
+            for (String entry : list)
+                {
+                if (storageID.equals(entry) || storageID.startsWith(entry+"-") || storageID.startsWith(entry+"."))
+                    { return true; }
+                }
+            }
+        return false;
+        }
+
     private Map<String, ConfigStorageInterface> findConfigStorages(ClassLoader classLoader, ConfigFactorySettings settings, ConfigLoggingInterface logger)
             throws ConfigException
         {
@@ -458,7 +552,10 @@ public class DefaultConfigFactoryBuilder implements ConfigFactoryBuilder
                     }
                 logger.trace("found config storage with ID "+id);
                 if (current.test(configFactorySettings, logger) == true)
-                    { storages.put(id, current); }
+                    {
+                    logger.debug("config storage "+id+" accepted");
+                    storages.put(id, current);
+                    }
                 else
                     { logger.debug("config storage "+id+" refused to run with current settings"); }
                 }

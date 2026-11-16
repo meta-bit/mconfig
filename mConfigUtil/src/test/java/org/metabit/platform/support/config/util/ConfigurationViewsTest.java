@@ -67,7 +67,11 @@ public class ConfigurationViewsTest {
         assertEquals("hello", view.getString("str"));
         assertEquals(42, view.getInteger("int"));
         assertTrue(view.getBoolean("bool"));
-        assertNull(view.getInteger("invalid.int")); // graceful
+        // as parsing the string in plain Java would: an error, not null (since 0.8.17)
+        ConfigException thrown = assertThrows(ConfigException.class, () -> view.getInteger("invalid.int"));
+        assertEquals(ConfigException.ConfigExceptionReason.CONVERSION_FAILURE, thrown.getReason());
+        assertFalse(thrown.getMessage().contains("abc"));
+        assertNull(view.getInteger("missing")); // like Properties.getProperty(): no such key, null
         assertEquals(Arrays.asList("a", "b", "c"), view.getListOfStrings("list"));
 
         Set<String> keys = view.getAllConfigurationKeysFlattened(ConfigUtil.ALL_SCOPES);

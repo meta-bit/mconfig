@@ -1,8 +1,11 @@
 package org.metabit.platform.support.config.impl.format.ini;
 
 import org.metabit.platform.support.config.ConfigCheckedException;
+import org.metabit.platform.support.config.ConfigEvent;
 import org.metabit.platform.support.config.ConfigLocation;
+import org.metabit.platform.support.config.ConfigParseException;
 import org.metabit.platform.support.config.impl.ConfigFactorySettings;
+import org.metabit.platform.support.config.impl.logging.LogSafe;
 import org.metabit.platform.support.config.interfaces.ConfigFileFormatInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLayerInterface;
 import org.metabit.platform.support.config.interfaces.ConfigLoggingInterface;
@@ -43,6 +46,7 @@ public class INIFileFormat implements ConfigFileFormatInterface
 
     @Override
     public ConfigLayerInterface readFile(File file, ConfigLocation location)
+            throws ConfigParseException
         {
         INIConfigLayer instance = new INIConfigLayer(settings, location, this, file.toPath());
         try (BufferedReader reader = new BufferedReader(new FileReader(file)))
@@ -51,14 +55,14 @@ public class INIFileFormat implements ConfigFileFormatInterface
             }
         catch (IOException ex)
             {
-            logger.warn("IOException when reading INI file: " + file.getAbsolutePath());
-            return null;
+            throw readFailure(ex);
             }
         return instance;
         }
 
     @Override
     public ConfigLayerInterface readStream(InputStream inputStream, ConfigLocation location)
+            throws ConfigParseException
         {
         INIConfigLayer instance = new INIConfigLayer(settings, location, this, null);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream)))
@@ -67,10 +71,19 @@ public class INIFileFormat implements ConfigFileFormatInterface
             }
         catch (IOException ex)
             {
-            logger.warn("IOException when reading INI stream");
-            return null;
+            throw readFailure(ex);
             }
         return instance;
+        }
+
+    /** the INI parser skips lines it cannot read; only I/O fails. */
+    private ConfigParseException readFailure(IOException ex)
+        {
+        return ConfigParseException.builder(getFormatID(), "could not read")
+                .parserCause(ex)
+                .event(ConfigEvent.Kind.FAILED_GENERIC, "INI_READ_FAILED")
+                .remediation(ConfigEvent.Remediation.CHECK_PERMISSIONS, "Check that the content is readable.")
+                .build();
         }
 
     @Override
@@ -83,7 +96,7 @@ public class INIFileFormat implements ConfigFileFormatInterface
             }
         catch (IOException e)
             {
-            logger.error("config creation failed at filesystem level: " + fileWithPath, e);
+            logger.error("config creation failed at filesystem level: " + LogSafe.text(fileWithPath), e);
             return null;
             }
         }
