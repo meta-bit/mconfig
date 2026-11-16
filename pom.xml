@@ -283,23 +283,6 @@
 
     <profiles>
         <profile>
-            <id>github</id>
-            <distributionManagement>
-                <repository>
-                    <id>github</id>
-                    <name>GitHub Packages</name>
-                    <url>https://maven.pkg.github.com/meta-bit/mconfig</url>
-                </repository>
-                <snapshotRepository>
-                    <id>github</id>
-                    <name>GitHub Snapshots</name>
-                    <url>https://maven.pkg.github.com/meta-bit/mconfig</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
-
-
-        <profile>
             <id>release-maven-central</id>
             <activation>
                 <property>
@@ -387,77 +370,6 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- Java 8 compatibility profile -->
-        <!-- requires toolchain for JDK to be locally declared in ~/.m2/toolchains.xml or the settings.xml -->
-        <profile>
-            <id>jdk8</id>
-            <build>
-                <plugins>
-                    <!-- Pick the JDK 1.8 toolchain declared in settings.xml -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-toolchains-plugin</artifactId>
-                        <version>3.0.0</version>
-                        <executions>
-                            <execution>
-                                <phase>validate</phase>
-                                <goals>
-                                    <goal>toolchain</goal>
-                                </goals>
-                                <configuration>
-                                    <toolchains>
-                                        <jdk>
-                                            <version>1.8</version>
-                                        </jdk>
-                                    </toolchains>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- Compile with the selected JDK 8 (no bootclasspath, no rt.jar) -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.11.0</version>
-                        <configuration>
-                            <!-- When actually using a JDK 8 toolchain, use source/target -->
-                            <source>1.8</source>
-                            <target>1.8</target>
-                            <!-- Optional: fail fast if annotation processing depends on higher JDK APIs -->
-                            <fork>true</fork>
-                        </configuration>
-                    </plugin>
-
-                    <!-- Optional: fail the build if the JDK 8 toolchain isn’t available -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>3.4.1</version>
-                        <executions>
-                            <execution>
-                                <id>enforce-toolchain-availability</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <!-- This checks the running JDK; toolchains picks the compiler.
-                                             If you want to enforce running Maven with Java 8 as well, keep this.
-                                             Otherwise you can remove this rule. -->
-                                        <requireJavaVersion>
-                                            <version>[1.8,)</version>
-                                        </requireJavaVersion>
-                                    </rules>
-                                    <fail>true</fail>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

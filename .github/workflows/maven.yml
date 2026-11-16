@@ -1,5 +1,6 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# Builds and tests mConfig on every push to master.
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+# Releases are published on Maven Central only; nothing is uploaded to GitHub Packages (removed with 0.8.17).
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -13,6 +14,9 @@ on:
     branches: [ "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,50 +29,5 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          server-id: github
-          # serve ID must match the distribution ID in the POM/settings.xml
-          # This tells the action where to write the temporary settings.xml
-          # settings-path: ${{ github.workspace }}
-          settings-path: ~/.m2
-          # cache: 'maven'
       - name: Build and Verify
-        run: mvn -Pgithub --batch-mode clean verify
-
-  publish:
-    needs: build             # Only runs if the build passes
-    runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    environment: production   # This creates the "Manual Approval" button
-    permissions:
-      contents: read
-      packages: write        # Required to upload to GitHub Packages
-
-    steps:
-      - uses: actions/checkout@v5
-      - name: Set up JDK 17
-        uses: actions/setup-java@v5
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          # server-id has to match the repository ID in toplevel pom.xm
-          server-id: github
-
-      # debugging: check the effective settings
-#      - name: Verify Maven Settings
-#        run: mvn help:effective-settings
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Debug Settings File
-#        run: |
-#          echo "Checking default path:"
-#          ls -la ~/.m2/settings.xml && cat ~/.m2/settings.xml
-
-      - name: Publish to GitHub Packages
-        # clean to ensure the old artifacts are not present
-        # run: mvn --batch-mode deploy -DskipTests -s ${{ github.workspace }}/settings.xml
-        # -DskipTests because we already ran them in the 'build' job
-        run: mvn --batch-mode clean deploy -DskipTests -Pgithub -s ~/.m2/settings.xml
-        env:
-          GITHUB_TOKEN: ${{ secrets.MAVEN_PAT }}
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn --batch-mode clean verify
