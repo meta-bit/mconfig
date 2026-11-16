@@ -1,1965 +1,267 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>1.3 Getting Started - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1.3 Getting Started";
+        var mkdocs_page_input_path = "13_getting_started.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-        <link rel="canonical" href="https://meta-bit.github.io/mconfig/13_getting_started.html">
-      
-      
-        <link rel="prev" href="12_features_and_use_cases.html">
-      
-      
-        <link rel="next" href="14_regular_use.html">
-      
-      
-        
-      
-      
-      <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
-    
-    
-      
-        <title>1.3 Getting Started - mConfig Documentation</title>
-      
-    
-    
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<body class="wy-body-for-nav" role="document">
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#13-getting-started" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="mConfig Documentation" class="md-header__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            mConfig Documentation
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              1.3 Getting Started
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
 </div>
-      
-    
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+      </div>
 
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="mConfig Documentation" class="md-nav__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    mConfig Documentation
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">1.3 Getting Started</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#starters-recommended">Starters (Recommended)</a>
     </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 1 Introduction & Basics
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 1 Introduction & Basics
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="11_what_is_mconfig.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.1 What is mConfig?
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l3"><a class="reference internal" href="#snippets-quick-wins">Snippets (Quick Wins 🚀)</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="12_features_and_use_cases.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.2 Features and Use Cases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+        </ul>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.3 Getting Started
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="13_getting_started.html" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.3 Getting Started
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#131-include-the-library-in-your-project-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.1 Include the library in your project build
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.3.1 Include the library in your project build">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#starters-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Starters (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snippets-quick-wins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Snippets (Quick Wins 🚀)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#132-start-with-a-simple-use-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.2 Start with a simple use case
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#133-common-pitfalls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.3 Common Pitfalls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#134-resource-placement-the-config-folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.4 Resource Placement (the .config/ folder)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#135-search-list-and-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.5 Search List and Priority
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#136-navigating-lists-with-configcursor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.6 Navigating Lists with ConfigCursor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#137-module-system-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.7 Module System Considerations
-      
-    </span>
-  </a>
-  
-</li>
-      
+    <li class="toctree-l2"><a class="reference internal" href="#132-start-with-a-simple-use-case">1.3.2 Start with a simple use case</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#133-common-pitfalls">1.3.3 Common Pitfalls</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#134-resource-placement-the-config-folder">1.3.4 Resource Placement (the .config/ folder)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#135-search-list-and-priority">1.3.5 Search List and Priority</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#136-navigating-lists-with-configcursor">1.3.6 Navigating Lists with ConfigCursor</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#137-module-system-considerations">1.3.7 Module System Considerations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#138-packaging-as-a-single-jar">1.3.8 Packaging as a single JAR</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#merging-the-service-files">Merging the service files</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#what-mconfig-detects">What mConfig detects</a>
+    </li>
+        </ul>
+    </li>
     </ul>
-  
-</nav>
-      
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="20_scopes.html">2.0 Scopes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemas.html">2.3 Configuration Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="26_secrets_concept.html">2.6 Secrets Concept</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_events.html">3.5 Config Events</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.6 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.7 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.8 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="39_utilities_and_adapters.html">3.9 Utilities and Adapters</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.10 Better Practice: Replace This With That</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md">3.11 Experimental POJO Mapping</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemas.html">Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/extension_features.html">Extension Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 5 Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="50_contributing.html">5.1 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="51_legal.html">5.2 Legal</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="52_ai_guidance.html">5.3 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="53_links.html">5.4 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 1 Introduction & Basics</li>
+      <li class="breadcrumb-item active">1.3 Getting Started</li>
+    <li class="wy-breadcrumbs-aside">
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="14_regular_use.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.4 Regular Use
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="15_test_mode.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.5 Test Mode
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 2 Core Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 2 Core Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="21_how_it_works.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.1 How it Works
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="22_priorities_and_hierarchies.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.2 Priorities and Hierarchies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="23_configuration_schemes.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.3 Configuration Schemes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="24_comment_handling.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.4 Comment Handling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="25_config_features.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.5 Config Features
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 3 Advanced Topics
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 3 Advanced Topics
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="31_writing_configurations.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.1 Writing Configurations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="32_updates.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.2 Updates
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="33_getting_information.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.3 Getting Information
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="34_definitions_and_valid_values.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.4 Definitions and Valid Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="35_handling_secrets.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.5 Handling Secrets
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="36_windows_registry.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.6 Windows Registry Access
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="37_extensions_and_advanced_use.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.7 Extensions and Advanced Use
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="38_code_improvements.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.8 Code Improvements
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 4 Reference & Project
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 4 Reference & Project
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="41_mconfig_tool.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.1 mConfig Tool
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="42_logging.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.2 Logging
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="43_faq.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.3 FAQ
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="44_design_consolidated.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.4 Design Consolidated
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="45_ai_guidance.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.5 AI Guidance
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="46_versions.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.6 Versions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="47_contributing.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.7 Contributing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="48_legal.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.8 Legal
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/simple_configuration_loading.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Simple Configuration Loading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/advanced_configuration_handling.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Advanced Configuration Handling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/integration_with_cicd.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Integration with CI/CD
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/testing_configurations.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Testing Configurations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/mconfig-modules.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    mConfig Modules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/java-modules.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    JPMS (Java Modules)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/configuration_views.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configuration Views
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/zookeeper.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ZooKeeper
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/handling_crypto_keys_and_certificates.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Handling Crypto Keys and Certificates
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/schemes.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Schemes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Appendix
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Appendix
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="49_links.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.9 Links
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#131-include-the-library-in-your-project-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.1 Include the library in your project build
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.3.1 Include the library in your project build">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#starters-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Starters (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snippets-quick-wins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Snippets (Quick Wins 🚀)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#132-start-with-a-simple-use-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.2 Start with a simple use case
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#133-common-pitfalls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.3 Common Pitfalls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#134-resource-placement-the-config-folder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.4 Resource Placement (the .config/ folder)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#135-search-list-and-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.5 Search List and Priority
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#136-navigating-lists-with-configcursor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.6 Navigating Lists with ConfigCursor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#137-module-system-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.3.7 Module System Considerations
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
-<h1 id="13-getting-started">1.3 Getting Started</h1>
-<h2 id="131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build</h2>
+                <h1 id="13-getting-started">1.3 Getting Started<a class="headerlink" href="#13-getting-started" title="Permanent link">&para;</a></h1>
+<h2 id="131-include-the-library-in-your-project-build">1.3.1 Include the library in your project build<a class="headerlink" href="#131-include-the-library-in-your-project-build" title="Permanent link">&para;</a></h2>
 <p>For Java, start with adding the dependency to your project build:</p>
-<p>Maven:
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.metabit.platform.support.config<span class="nt">&lt;/groupId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mConfigStandard<span class="nt">&lt;/artifactId&gt;</span>
-<span class="w">    </span><span class="nt">&lt;version&gt;</span>${mconfig.version}<span class="nt">&lt;/version&gt;</span>
-<span class="w">    </span><span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div></p>
-<p>Gradle:
-<div class="highlight"><pre><span></span><code>implementation &#39;org.metabit.platform.support.config:mConfigStandard:${mconfig.version}&#39;
-</code></pre></div>
-(update version as needed)</p>
+<p>Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mconfigbasic&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+    &lt;type&gt;pom&lt;/type&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Gradle:</p>
+<pre><code class="language-gradle">implementation 'org.metabit.platform.support.config:mconfigbasic:${mconfig.version}'
+</code></pre>
+<p>(update version as needed)</p>
 <p>In case you are defining an <code>module-info.java</code> in your project, add this to the <code>requires</code>
-section:
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
-<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
-</code></pre></div></p>
-<h3 id="starters-recommended">Starters (Recommended)</h3>
-<p>For instant frustration-free setup, copy from <a href="../../../../examples/starters/README.md">examples/starters</a>:</p>
+section:</p>
+<pre><code class="language-java">    requires metabit.mconfig.core;
+    requires metabit.mconfig.util;
+</code></pre>
+<h3 id="starters-recommended">Starters (Recommended)<a class="headerlink" href="#starters-recommended" title="Permanent link">&para;</a></h3>
+<p>For instant frustration-free setup, copy from <a href="https://github.com/meta-bit/mconfig/blob/master/examples/starters/README.md">examples/starters</a>:</p>
 <ul>
-<li><a href="../../../../examples/starters/maven-minimal/README.md"><img alt="Maven" src="https://img.shields.io/badge/Maven-Minimal-blue" /></a> <code>mvn compile exec:java</code></li>
-<li><a href="../../../../examples/starters/gradle-kotlin/README.md"><img alt="Gradle" src="https://img.shields.io/badge/Gradle-Kotlin-green" /></a> <code>./gradlew run</code></li>
-<li><a href="../../../../examples/starters/jpms-maven/README.md"><img alt="JPMS" src="https://img.shields.io/badge/JPMS-Maven-orange" /></a> <code>mvn compile exec:java</code> (module-info included!)</li>
+<li><a href="https://github.com/meta-bit/mconfig/blob/master/examples/starters/maven-minimal/README.md"><img alt="Maven" src="https://img.shields.io/badge/Maven-Minimal-blue" /></a> <code>mvn compile exec:java</code></li>
+<li><a href="https://github.com/meta-bit/mconfig/blob/master/examples/starters/gradle-kotlin/README.md"><img alt="Gradle" src="https://img.shields.io/badge/Gradle-Kotlin-green" /></a> <code>./gradlew run</code></li>
+<li><a href="https://github.com/meta-bit/mconfig/blob/master/examples/starters/jpms-maven/README.md"><img alt="JPMS" src="https://img.shields.io/badge/JPMS-Maven-orange" /></a> <code>mvn compile exec:java</code> (module-info included!)</li>
 </ul>
 <p>See each README for details.</p>
-<h3 id="snippets-quick-wins">Snippets (Quick Wins 🚀)</h3>
-<p><a href="snippets.html"><img alt="Snippets" src="https://img.shields.io/badge/Snippets-quick-brightblue" /></a></p>
-<p>Copy-paste solutions for common config pains: hardcodes → env vars → secrets → tests.</p>
-<h2 id="132-start-with-a-simple-use-case">1.3.2 Start with a simple use case</h2>
-<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">quickConfig</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="s">&quot;myApplication&quot;</span><span class="p">,</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+<h3 id="snippets-quick-wins">Snippets (Quick Wins 🚀)<a class="headerlink" href="#snippets-quick-wins" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/meta-bit/mconfig/blob/master/examples/snippets.md"><img alt="Snippets" src="https://img.shields.io/badge/Snippets-quick-brightblue" /></a></p>
+<p>Copy-paste solutions for common config pains: hardcodes → env vars → secrets → tests:
+<a href="https://github.com/meta-bit/mconfig/blob/master/examples/snippets.md">examples/snippets.md</a>.
+Names, schema fields and settings to look up: <a href="snippets.html">Snippets Reference</a>.
+What to replace in existing code: <a href="38_code_improvements.html">Better Practice</a>.</p>
+<h2 id="132-start-with-a-simple-use-case">1.3.2 Start with a simple use case<a class="headerlink" href="#132-start-with-a-simple-use-case" title="Permanent link">&para;</a></h2>
+<pre><code class="language-java">    Configuration cfg = ConfigUtil.quickConfig(&quot;myCompany&quot;,&quot;myApplication&quot;,&quot;network&quot;);
 
-<span class="w">    </span><span class="n">String</span><span class="w">  </span><span class="n">peerName</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kt">int</span><span class="w">     </span><span class="n">portNumber</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kt">double</span><span class="w">  </span><span class="n">probability</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getDouble</span><span class="p">(</span><span class="s">&quot;probability&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="c1">//...</span>
-</code></pre></div>
+    String  peerName    = cfg.getString(&quot;peer&quot;);
+    int     portNumber  = cfg.getInteger(&quot;port&quot;);
+    double  probability = cfg.getDouble(&quot;probability&quot;);
+    //...
+</code></pre>
 <p>This will get you the requested values from the "network" configuration, 
 wherever in the standard directories or other places they are kept.</p>
 <p>If it's not working as expected, consult the <strong><a href="43_faq.html#quick-verification-checklist">Quick Verification Checklist</a></strong> in the FAQ.</p>
-<p>For more information on how to define the contract for your configurations (keys, types, defaults, and validation), see <strong><a href="23_configuration_schemes.html">Configuration Schemes</a></strong>.</p>
-<h2 id="133-common-pitfalls">1.3.3 Common Pitfalls</h2>
+<p>For more information on how to define the contract for your configurations (keys, types, defaults, and validation), see <strong><a href="23_configuration_schemas.html">Configuration Schemas</a></strong>.</p>
+<h2 id="133-common-pitfalls">1.3.3 Common Pitfalls<a class="headerlink" href="#133-common-pitfalls" title="Permanent link">&para;</a></h2>
 <p>For advice on avoiding typical mistakes and leveraging feature flags effectively, see <a href="38_code_improvements.html">Code Improvements and Best Practices</a>.</p>
-<h2 id="134-resource-placement-the-config-folder">1.3.4 Resource Placement (the .config/ folder)</h2>
-<p>To bundle configurations, schemes, or library settings with your application, 
+<h2 id="134-resource-placement-the-config-folder">1.3.4 Resource Placement (the .config/ folder)<a class="headerlink" href="#134-resource-placement-the-config-folder" title="Permanent link">&para;</a></h2>
+<p>To bundle configurations, schemas, or library settings with your application, 
 use the <code>.config/</code> resource folder in your classpath (e.g., <code>src/main/resources/.config/</code>).</p>
 <ul>
 <li><strong>Configurations</strong>: <code>.config/&lt;company&gt;/&lt;application&gt;/&lt;configName&gt;.&lt;ext&gt;</code></li>
-<li><strong>Schemes</strong>: <code>.config/&lt;company&gt;/&lt;application&gt;/&lt;configName&gt;.scheme.json</code></li>
-<li><strong>Library Self-Configuration</strong>: <code>.config/metabit/mConfig/mconfig.properties</code></li>
+<li><strong>Schemas</strong>: <code>.config/&lt;company&gt;/&lt;application&gt;/&lt;configName&gt;.mconfig-schema.json</code></li>
+<li><strong>Library Self-Configuration</strong>: <code>.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code>
+    (applies only to this application's factories; the old global <code>.config/metabit/mConfig/mconfig.properties</code>
+    is deprecated, see <a href="25_config_features.html#self-configuration-per-component">Self-configuration per component</a>)</li>
 </ul>
 <p>For testing, as a starting point, 
 you can create a <code>.config/myCompany/myApplication/network.properties</code> in subdirectories
@@ -1968,171 +270,223 @@ of your home directory, and see its contents turn up in your code.</p>
 and taking care of all these different locations is part of the library. Also, parsing different formats like JSON, YAML, and so on.
 And much more.</p>
 <p>The cleaner way, without shortcuts, goes like this:</p>
-<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfiguration</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
+<pre><code class="language-java">   try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;).build())
+        {
+        Configuration cfg = factory.getConfig(&quot;network&quot;);
 
-<span class="w">        </span><span class="n">String</span><span class="w">  </span><span class="n">peerName</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">int</span><span class="w">     </span><span class="n">portNumber</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="kt">double</span><span class="w">  </span><span class="n">probability</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getDouble</span><span class="p">(</span><span class="s">&quot;probability&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="c1">//...</span>
-<span class="w">        </span><span class="p">}</span>
-</code></pre></div>
+        String  peerName    = cfg.getString(&quot;peer&quot;);
+        int     portNumber  = cfg.getInteger(&quot;port&quot;);
+        double  probability = cfg.getDouble(&quot;probability&quot;);
+        //...
+        }
+</code></pre>
 <p>The try-with-resources in the top line instantiates the library with all defaults;
-the getConfiguration() line asks for a specific configuration, and then you
+the getConfig() line asks for a specific configuration, and then you
 can get config entries, typesafe.</p>
 <p>You can also list all available configuration names:</p>
-<div class="highlight"><pre><span></span><code><span class="w">   </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApplication&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">ConfigDiscoveryInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">listAvailableConfigurations</span><span class="p">();</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigDiscoveryInfo</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">info</span><span class="p">)</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Found: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">getConfigName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; in scope &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">getScope</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; URL: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">getUri</span><span class="p">());</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-</code></pre></div>
+<pre><code class="language-java">   try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApplication&quot;).build())
+        {
+        Set&lt;ConfigDiscoveryInfo&gt; info = factory.listAvailableConfigurations();
+        for (ConfigDiscoveryInfo c : info)
+            {
+            System.out.println(&quot;Found: &quot; + c.getConfigName() + &quot; in scope &quot; + c.getScope() + &quot; URL: &quot; + c.getUri());
+            }
+        }
+</code></pre>
 <p><strong>Caveat</strong>:
 When you use the values stored in your local variables, you miss out on receiving changes. 
 It is preferable to use the mConfig objects directly; they'll have the latest values.</p>
-<h2 id="135-search-list-and-priority">1.3.5 Search List and Priority</h2>
+<h2 id="135-search-list-and-priority">1.3.5 Search List and Priority<a class="headerlink" href="#135-search-list-and-priority" title="Permanent link">&para;</a></h2>
 <p>Everything should just work, by default. But in some environments, you may want to customize the search list,
 or the storage types priority, or the file format priority... </p>
 <p>You can add extra directories to the search list, or change the priority of the storage types.</p>
-<p>see <a href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a> for details.</p>
-<h2 id="136-navigating-lists-with-configcursor">1.3.6 Navigating Lists with ConfigCursor</h2>
+<p>See <strong><a href="20_scopes.html">2.0 Scopes</a></strong> for an overview of the hierarchy, and <strong><a href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a></strong> for more technical details on the search list.</p>
+<h2 id="136-navigating-lists-with-configcursor">1.3.6 Navigating Lists with ConfigCursor<a class="headerlink" href="#136-navigating-lists-with-configcursor" title="Permanent link">&para;</a></h2>
 <p>Configuration formats that support arrays (like YAML, JSON, or TOML)
 may have lists/sets where the entries are not named, have no key.</p>
 <p>So you can't access them by name. </p>
 <p>You can use the <code>ConfigCursor</code> to navigate through list items as individual nodes.</p>
 <p>(Actually, you can use the ConfigCursor for all the configuration; 
 it is just especially useful for navigating lists.)</p>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myCompany&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myApp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;myConfig&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ConfigCursor</span><span class="w"> </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getConfigCursor</span><span class="p">();</span>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApp&quot;).build())
+    {
+    Configuration cfg = factory.getConfig(&quot;myConfig&quot;);
+    ConfigCursor cursor = cfg.getConfigCursor();
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cursor</span><span class="p">.</span><span class="na">moveTo</span><span class="p">(</span><span class="s">&quot;servers&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cursor</span><span class="p">.</span><span class="na">isOnList</span><span class="p">())</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">        </span><span class="n">cursor</span><span class="p">.</span><span class="na">enter</span><span class="p">();</span><span class="w"> </span><span class="c1">// Move into the array</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">cursor</span><span class="p">.</span><span class="na">moveNext</span><span class="p">())</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// Now positioned on a list item.</span>
-<span class="w">            </span><span class="c1">// Items can be accessed as unnamed entries via virtual keys (indices).</span>
-<span class="w">            </span><span class="n">ConfigEntry</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cursor</span><span class="p">.</span><span class="na">getCurrentElement</span><span class="p">();</span>
-<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Server: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="na">getValueAsString</span><span class="p">());</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="n">cursor</span><span class="p">.</span><span class="na">leave</span><span class="p">();</span><span class="w"> </span><span class="c1">// Move back up to the &quot;servers&quot; node</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
-<h2 id="137-module-system-considerations">1.3.7 Module System Considerations</h2>
+    if (cursor.moveTo(&quot;servers&quot;) &amp;&amp; cursor.isOnList())
+        {
+        cursor.enter(); // Move into the array
+        while (cursor.moveNext())
+            {
+            // Now positioned on a list item.
+            // Items can be accessed as unnamed entries via virtual keys (indices).
+            ConfigEntry item = cursor.getCurrentElement();
+            System.out.println(&quot;Server: &quot; + item.getValueAsString());
+            }
+        cursor.leave(); // Move back up to the &quot;servers&quot; node
+        }
+    }
+</code></pre>
+<h2 id="137-module-system-considerations">1.3.7 Module System Considerations<a class="headerlink" href="#137-module-system-considerations" title="Permanent link">&para;</a></h2>
 <p>mConfig uses the Java Module System. The architecture is:</p>
 <ul>
-<li><code>mConfigBase</code>: Aggregator module that bundles some standard dependencies</li>
+<li><code>mconfigbasicbinary</code>: Shaded binary distribution (batteries-included)</li>
+<li><code>mconfigbasic</code>: Recommended POM aggregator for most projects</li>
+<li><code>mconfigstandard</code>: Extended POM aggregator for advanced usage</li>
 <li><code>metabit.mconfig.core</code>: Core functionality</li>
 <li><code>metabit.mconfig.util</code>: Utility functions</li>
 <li>Additional modules (e.g. Formats and configuration sources)</li>
 </ul>
 <p>When using Java modules, you must:
-1. Include <code>mConfigBase</code> as a Maven/Gradle dependency
+1. Include <code>mconfigbasicbinary</code> (or <code>mconfigbasic</code>) as a Maven/Gradle dependency
 2. Explicitly require the core modules in your <code>module-info.java</code>
 3. Require any additional modules you may need</p>
 <p>The internal modules are provided via services and do not have an API for your use,
 so you don't need to "require" them in your <code>module-info.java</code>.</p>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="12_features_and_use_cases.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: 1.2 Features and Use Cases">
-            <div class="md-footer__button md-icon">
+<h2 id="138-packaging-as-a-single-jar">1.3.8 Packaging as a single JAR<a class="headerlink" href="#138-packaging-as-a-single-jar" title="Permanent link">&para;</a></h2>
+<p>mConfig finds its storages, formats, loggers and components with Java's <code>ServiceLoader</code>. Each module
+registers them in files under <code>META-INF/services/</code>, named after the interface. Several mConfig modules
+register implementations of the same interface, so several JARs contain a file of the same name, e.g.
+<code>META-INF/services/org.metabit.platform.support.config.interfaces.ConfigStorageInterface</code> in
+<code>mconfigcore</code>, <code>mconfigsourcejar</code> and <code>mconfigsourcefilesystem</code>.</p>
+<p>This happens with every modular library that uses <code>ServiceLoader</code>, e.g. SLF4J 2 (its providers),
+Log4j 2, JDBC (drivers) and Jackson (modules). On a regular classpath, with one JAR per library, it
+causes no trouble. If you pack the application and its dependencies into <strong>one</strong> JAR, the files
+of the same name have to be <strong>merged</strong>. Packaging that just unpacks all JARs into one keeps one file
+per name and drops the others, depending on dependency order. The classes are all there, but
+<code>ServiceLoader</code> does not see them.</p>
+<p>For mConfig this means configuration sources, formats or components are missing: bundled defaults
+(PRODUCT scope) or files in the user's and host's directories are not read, and reading a value fails
+with <code>NO_MATCHING_ENTRY</code> or returns a schema default. Other libraries in the same JAR fail in their
+own ways, e.g. SLF4J falling back to no logging, or a JDBC driver not being found.</p>
+<h3 id="merging-the-service-files">Merging the service files<a class="headerlink" href="#merging-the-service-files" title="Permanent link">&para;</a></h3>
+<p><strong>Maven, assembly plugin.</strong> The predefined descriptor <code>jar-with-dependencies</code> does <strong>not</strong> merge service
+files. If you use the assembly plugin, you have to use your own descriptor with the <code>metaInf-services</code>
+handler, which merges them:</p>
+<p><code>src/assembly/jar-with-dependencies-merged-services.xml</code>:</p>
+<pre><code class="language-xml">&lt;assembly xmlns=&quot;http://maven.apache.org/ASSEMBLY/2.2.0&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd&quot;&gt;
+    &lt;id&gt;jar-with-dependencies-merged-services&lt;/id&gt;
+    &lt;formats&gt;
+        &lt;format&gt;jar&lt;/format&gt;
+    &lt;/formats&gt;
+    &lt;includeBaseDirectory&gt;false&lt;/includeBaseDirectory&gt;
+    &lt;containerDescriptorHandlers&gt;
+        &lt;containerDescriptorHandler&gt;
+            &lt;handlerName&gt;metaInf-services&lt;/handlerName&gt;
+        &lt;/containerDescriptorHandler&gt;
+    &lt;/containerDescriptorHandlers&gt;
+    &lt;dependencySets&gt;
+        &lt;dependencySet&gt;
+            &lt;outputDirectory&gt;/&lt;/outputDirectory&gt;
+            &lt;useProjectArtifact&gt;true&lt;/useProjectArtifact&gt;
+            &lt;unpack&gt;true&lt;/unpack&gt;
+            &lt;scope&gt;runtime&lt;/scope&gt;
+        &lt;/dependencySet&gt;
+    &lt;/dependencySets&gt;
+&lt;/assembly&gt;
+</code></pre>
+<p><code>pom.xml</code>, instead of <code>&lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;</code>:</p>
+<pre><code class="language-xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+    &lt;configuration&gt;
+        &lt;descriptors&gt;
+            &lt;descriptor&gt;src/assembly/jar-with-dependencies-merged-services.xml&lt;/descriptor&gt;
+        &lt;/descriptors&gt;
+        &lt;archive&gt;
+            &lt;manifest&gt;
+                &lt;mainClass&gt;com.example.Main&lt;/mainClass&gt;
+            &lt;/manifest&gt;
+        &lt;/archive&gt;
+    &lt;/configuration&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;phase&gt;package&lt;/phase&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;single&lt;/goal&gt;
+            &lt;/goals&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;
+</code></pre>
+<p>mConfig's build tests exactly this descriptor (<code>integrationtests/integrationtestAssembly</code>).</p>
+<p><strong>Maven, shade plugin.</strong> Add the <code>ServicesResourceTransformer</code>:</p>
+<pre><code class="language-xml">&lt;transformers&gt;
+    &lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.ServicesResourceTransformer&quot;/&gt;
+&lt;/transformers&gt;
+</code></pre>
+<p><strong>Gradle.</strong> With the Shadow plugin, call <code>mergeServiceFiles()</code> in the <code>shadowJar</code> task. A plain <code>jar</code> task
+that adds <code>zipTree(...)</code> of the runtime classpath does not merge; with <code>duplicatesStrategy = EXCLUDE</code> it
+silently keeps the first file.</p>
+<p><strong>Spring Boot.</strong> The executable JAR built by the Spring Boot plugins keeps the dependency JARs nested,
+so nothing needs merging.</p>
+<p><strong><code>mconfigbasicbinary</code></strong> is shaded with merged service files. If you add further mConfig modules (or other
+libraries) and then pack everything into one JAR, the same applies again.</p>
+<h3 id="what-mconfig-detects">What mConfig detects<a class="headerlink" href="#what-mconfig-detects" title="Permanent link">&para;</a></h3>
+<p>At <code>build()</code>, mConfig checks whether its core module's own registrations are present. If another module's
+file has replaced core's, <code>build()</code> fails with a <code>ConfigException</code> (reason <code>JAVA_SERVICE_CONFIGURATION_ERROR</code>):</p>
+<pre><code>mConfig did not find all of its components, likely due to faulty JAR packaging, which also affects
+other modular libraries. See &quot;Packaging as a single JAR&quot; in .../13_getting_started.md
+  META-INF/services/...ConfigStorageInterface lacks ...DefaultLayerStorage, ...; present: [jar:file:/.../app.jar!/META-INF/services/...]
+</code></pre>
+<p>It names each service file that lacks core's registrations, and where the file that survived comes from.</p>
+<p>The check is deliberately limited to what it can tell for certain, so it gives no false alarms. When core's
+file is the one that survived, the other modules' registrations are lost without the check noticing; the same
+holds for third-party modules. Which file survives depends on dependency order and can change with a version
+update. So fix the packaging, rather than relying on the check, and <strong>test the packaged artifact</strong>: an integration
+test that starts the single JAR and reads a value from your bundled defaults catches all of these cases, for
+other libraries as well.</p>
+<p>This is meant to reach developers while they set up or change the packaging, not end users: do not ship
+an artifact that fails it. If you need to start anyway, e.g. to examine a faulty artifact, set the feature
+<code>ALLOW_INCOMPLETE_SERVICE_REGISTRATION</code> (in code, or in your component's <code>mconfig.properties</code>). mConfig then logs
+the same report as a WARNING and starts without the components concerned.</p>
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                1.2 Features and Use Cases
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="14_regular_use.html" class="md-footer__link md-footer__link--next" aria-label="Next: 1.4 Regular Use">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                1.4 Regular Use
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="12_features_and_use_cases.html" class="btn btn-neutral float-left" title="1.2 Features and Use Cases"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="14_regular_use.html" class="btn btn-neutral float-right" title="1.4 Regular Use">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
   </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.footer"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <span><a href="12_features_and_use_cases.html" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
-      
+      <span><a href="14_regular_use.html" style="color: #fcfcfc">Next &raquo;</a></span>
     
-  </body>
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
 </html>

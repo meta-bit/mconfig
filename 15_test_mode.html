@@ -1,2094 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>1.5 Test Mode - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "1.5 Test Mode";
+        var mkdocs_page_input_path = "15_test_mode.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-        <link rel="canonical" href="https://meta-bit.github.io/mconfig/15_test_mode.html">
-      
-      
-        <link rel="prev" href="14_regular_use.html">
-      
-      
-        <link rel="next" href="21_how_it_works.html">
-      
-      
-        
-      
-      
-      <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
-    
-    
-      
-        <title>1.5 Test Mode - mConfig Documentation</title>
-      
-    
-    
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<body class="wy-body-for-nav" role="document">
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#15-test-mode" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="mConfig Documentation" class="md-header__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            mConfig Documentation
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              1.5 Test Mode
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
 </div>
-      
-    
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+      </div>
 
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="mConfig Documentation" class="md-nav__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    mConfig Documentation
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">1.5 Test Mode</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#goals">Goals</a>
     </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 1 Introduction & Basics
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 1 Introduction & Basics
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="11_what_is_mconfig.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.1 What is mConfig?
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l2"><a class="reference internal" href="#use">Use</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#activate-test-mode">Activate Test Mode</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#effects-of-test-mode">Effects of Test Mode</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="12_features_and_use_cases.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.2 Features and Use Cases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l4"><a class="reference internal" href="#paths-for-test-mode">Paths for Test Mode</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="13_getting_started.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.3 Getting Started
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+        </ul>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="14_regular_use.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.4 Regular Use
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l3"><a class="reference internal" href="#custom-test-directories">Custom test directories</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.5 Test Mode
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="15_test_mode.html" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.5 Test Mode
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Use
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#activate-test-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Activate Test Mode
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Activate Test Mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#effects-of-test-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Effects of Test Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#paths-for-test-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Paths for Test Mode
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Paths for Test Mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-mode-search-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test mode search paths
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-test-directories" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom test directories
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#set-your-own-paths-legacy-api-for-some-test-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Set your own paths (legacy API for some test environments)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Considerations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security Considerations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#151-global-static-gate-forbidtestmode-permittestmode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.5.1 Global Static Gate (forbidTestMode() / permitTestMode())
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#152-instance-dynamic-gate-permit_test_mode-feature" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.5.2 Instance Dynamic Gate (PERMIT_TEST_MODE Feature)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.5.2 Instance Dynamic Gate (PERMIT_TEST_MODE Feature)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#productive-by-default" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Productive by Default"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#test-mode-proofing-lockdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Test Mode Proofing" (Lockdown)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#activation-logic" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Activation Logic
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#153-self-configuration-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.5.3 Self-Configuration Security
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
+    <li class="toctree-l3"><a class="reference internal" href="#set-your-own-paths">Set your own paths</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#automated-test-directory-management">Automated Test Directory Management</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#example-implementation">Example Implementation:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#151-global-static-gate-forbidtestmode-permittestmode">1.5.1 Global Static Gate (forbidTestMode() / permitTestMode())</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#152-instance-dynamic-gate-permit_test_mode-feature">1.5.2 Instance Dynamic Gate (PERMIT_TEST_MODE Feature)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#productive-by-default">"Productive by Default"</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#test-mode-proofing-lockdown">"Test Mode Proofing" (Lockdown)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#activation-logic">Activation Logic</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#153-self-configuration-security">1.5.3 Self-Configuration Security</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#runtime-overrides">Runtime Overrides</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#core-overrides">Core Overrides</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#module-overrides-kubernetes">Module Overrides (Kubernetes)</a>
+    </li>
+        </ul>
+    </li>
     </ul>
-  
-</nav>
-      
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="20_scopes.html">2.0 Scopes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemas.html">2.3 Configuration Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="26_secrets_concept.html">2.6 Secrets Concept</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_events.html">3.5 Config Events</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.6 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.7 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.8 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="39_utilities_and_adapters.html">3.9 Utilities and Adapters</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.10 Better Practice: Replace This With That</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md">3.11 Experimental POJO Mapping</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemas.html">Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/extension_features.html">Extension Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 5 Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="50_contributing.html">5.1 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="51_legal.html">5.2 Legal</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="52_ai_guidance.html">5.3 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="53_links.html">5.4 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 1 Introduction & Basics</li>
+      <li class="breadcrumb-item active">1.5 Test Mode</li>
+    <li class="wy-breadcrumbs-aside">
     </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 2 Core Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 2 Core Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="21_how_it_works.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.1 How it Works
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="22_priorities_and_hierarchies.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.2 Priorities and Hierarchies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="23_configuration_schemes.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.3 Configuration Schemes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="24_comment_handling.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.4 Comment Handling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="25_config_features.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.5 Config Features
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 3 Advanced Topics
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 3 Advanced Topics
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="31_writing_configurations.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.1 Writing Configurations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="32_updates.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.2 Updates
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="33_getting_information.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.3 Getting Information
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="34_definitions_and_valid_values.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.4 Definitions and Valid Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="35_handling_secrets.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.5 Handling Secrets
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="36_windows_registry.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.6 Windows Registry Access
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="37_extensions_and_advanced_use.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.7 Extensions and Advanced Use
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="38_code_improvements.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.8 Code Improvements
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 4 Reference & Project
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 4 Reference & Project
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="41_mconfig_tool.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.1 mConfig Tool
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="42_logging.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.2 Logging
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="43_faq.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.3 FAQ
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="44_design_consolidated.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.4 Design Consolidated
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="45_ai_guidance.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.5 AI Guidance
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="46_versions.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.6 Versions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="47_contributing.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.7 Contributing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="48_legal.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.8 Legal
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/simple_configuration_loading.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Simple Configuration Loading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/advanced_configuration_handling.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Advanced Configuration Handling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/integration_with_cicd.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Integration with CI/CD
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/testing_configurations.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Testing Configurations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/mconfig-modules.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    mConfig Modules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/java-modules.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    JPMS (Java Modules)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/configuration_views.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configuration Views
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/zookeeper.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ZooKeeper
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/handling_crypto_keys_and_certificates.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Handling Crypto Keys and Certificates
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/schemes.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Schemes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Appendix
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Appendix
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="49_links.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.9 Links
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Use
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#activate-test-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Activate Test Mode
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Activate Test Mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#effects-of-test-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Effects of Test Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#paths-for-test-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Paths for Test Mode
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Paths for Test Mode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-mode-search-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test mode search paths
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-test-directories" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom test directories
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#set-your-own-paths-legacy-api-for-some-test-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Set your own paths (legacy API for some test environments)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Considerations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security Considerations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#151-global-static-gate-forbidtestmode-permittestmode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.5.1 Global Static Gate (forbidTestMode() / permitTestMode())
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#152-instance-dynamic-gate-permit_test_mode-feature" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.5.2 Instance Dynamic Gate (PERMIT_TEST_MODE Feature)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1.5.2 Instance Dynamic Gate (PERMIT_TEST_MODE Feature)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#productive-by-default" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Productive by Default"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#test-mode-proofing-lockdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Test Mode Proofing" (Lockdown)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#activation-logic" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Activation Logic
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#153-self-configuration-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.5.3 Self-Configuration Security
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
-<h1 id="15-test-mode">1.5 Test Mode</h1>
+                <h1 id="15-test-mode">1.5 Test Mode<a class="headerlink" href="#15-test-mode" title="Permanent link">&para;</a></h1>
 <p>mConfig has a test mode. This is to support software using mConfig
 in performing automated tests.</p>
 <p>Test mode supports:
@@ -2100,7 +239,7 @@ with the test environment – preferably with as little residue in the actual
 code as possible.</p>
 <p>One of the solution approaches is to supply the code with different configurations,
 depending on whether it is run in test mode, or regular runtime mode.</p>
-<h2 id="goals">Goals</h2>
+<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
 <p>We want to allow testing configurations without modifying the actual code.</p>
 <p>The simple, straightforward way would be to provide <code>ConfigFactoryBuilder</code> instances
 to your code, set up differently depending on whether testing or not. But that's
@@ -2112,16 +251,25 @@ you also specify.</p>
 <p>This way, your test code can set the test environment in a @BeforeAll/@BeforeEach
 function before the tests start, while tests and <strong>code stay free of test-specific
 modifications</strong> in regard to mConfig.</p>
-<h2 id="use">Use</h2>
-<h3 id="activate-test-mode">Activate Test Mode</h3>
-<p><code>ConfigFactoryBuilder.setTestMode(true);</code></p>
-<p>or with Environment Variables, e.g.
-<code>MCONFIG_RUNTIME_TEST_MODE=true</code></p>
-<p>(requirements for Environment Variables to have effect: 
-1. EnvVar source module present, 
-2. ALLOW_RUNTIME_FLAG set to true in the ConfigFactoryBuilder.
-)</p>
-<h4 id="effects-of-test-mode">Effects of Test Mode</h4>
+<h2 id="use">Use<a class="headerlink" href="#use" title="Permanent link">&para;</a></h2>
+<h3 id="activate-test-mode">Activate Test Mode<a class="headerlink" href="#activate-test-mode" title="Permanent link">&para;</a></h3>
+<pre><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;company&quot;, &quot;app&quot;);
+builder.setTestMode(true);
+</code></pre>
+<p>or from outside the program, without changing its code: environment variable
+<code>MCONFIG_RUNTIME_TEST_MODE=true</code>, or system property <code>-Dmconfig.runtime.test_mode=true</code>.
+This switches an unchanged binary into test mode, e.g. in a CI/CD pipeline.</p>
+<p>Requirements for this to have effect:
+1. the application set <code>ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS</code> to true in code
+   (it delegates the decision to whoever starts the process; it cannot be enabled from outside);
+2. test mode is permitted: <code>PERMIT_TEST_MODE</code> is not false, and <code>ConfigFactoryBuilder.forbidTestMode()</code> was not called.</p>
+<p>A component can also switch on its own test mode in its self-configuration file
+<code>.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code> (<code>TEST_MODE=true</code>), typically in <code>src/test/resources</code>.
+This is logged as a WARNING with the file's location, so a file accidentally shipped in <code>src/main/resources</code>
+is visible at once. It is subject to the same gates. The deprecated global file
+<code>.config/metabit/mConfig/mconfig.properties</code> cannot set test mode.
+See <a href="25_config_features.html#who-may-set-a-feature">Who may set a feature</a>.</p>
+<h4 id="effects-of-test-mode">Effects of Test Mode<a class="headerlink" href="#effects-of-test-mode" title="Permanent link">&para;</a></h4>
 <p>this will</p>
 <ul>
 <li>disable lookup in the regular file paths</li>
@@ -2132,25 +280,45 @@ modifications</strong> in regard to mConfig.</p>
 </ul>
 <p>This is based on the standard maven test run setup,
   where the tests are run from one level above the src directory.
-- disable lookup in default network environments, if network config sources are active
-- enable lookup in test network environments, if available/configured.
-- switch JAR lookup from regular resources folder to test resources.
+- disable lookup in default network environments, if network config sources are active. For example, <code>mConfigSourceKubernetes</code> will automatically disable its API client when <code>TEST_MODE</code> is active to prevent accidental cluster communication.
+- enable lookup in test network environments, if available/configured (e.g., using <code>BYPASS_TEST</code> and mock endpoints). </p>
+<p><strong>Testing Networked Modules:</strong>
+  Modules that rely on external services (Kubernetes, Vault, AWS) can be tested by providing mock endpoints via the <code>mConfig</code> hierarchy. Instead of hardcoded values, these modules use <code>BootstrapConfigContext</code> to resolve their own settings (like <code>API_ENDPOINT</code>) from the standard 10-tier hierarchy.</p>
+<p>The module reads its settings from the application's configuration named <code>kubernetes</code>. It is an
+  ordinary mConfig configuration of the application, resolved through the usual layers and storages within
+  the scopes the module reads: bundled defaults, host- or user-wide files, other storages, and values the
+  application stores there itself. It is <em>not</em> read from mConfig's internal <code>.config/metabit/mConfig/</code>
+  namespace. In tests, one convenient option is a test resource,
+  e.g. <code>src/test/resources/.config/&lt;company&gt;/&lt;application&gt;/kubernetes.properties</code>:</p>
+<p><code>properties
+  # Mock API server for tests
+  KUBERNETES_API_ENDPOINT=http://localhost:8080
+  # send the ServiceAccount token to the http mock server
+  KUBERNETES_ALLOW_INSECURE_TRANSPORT=true</code></p>
+<p>To let the module run in <code>TEST_MODE</code> at all, set the feature <code>KUBERNETES_BYPASS_TEST=true</code>, in code or in
+  the component's <code>src/test/resources/.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code>.</p>
+<p>Alternatively, use environment variables (see <a href="#runtime-overrides">Runtime Overrides</a> below).</p>
+<ul>
+<li>
+<p>switch JAR lookup from regular resources folder to test resources.
   Instead of <code>src/main/resources/config</code> from source,
   in test mode <code>src/test/resources/config</code> becomes the starting point
   for JAR-file resolution.</p>
-<ul>
-<li>NB: JARs rarely compile in test resources! The JAR aspect takes effect 
-  only if you are building test JARs in addition to the regular ones.</li>
+</li>
+<li>
+<p>NB: JARs rarely compile in test resources! The JAR aspect takes effect 
+  only if you are building test JARs in addition to the regular ones.</p>
+</li>
 </ul>
-<h4 id="paths-for-test-mode">Paths for Test Mode</h4>
+<h4 id="paths-for-test-mode">Paths for Test Mode<a class="headerlink" href="#paths-for-test-mode" title="Permanent link">&para;</a></h4>
 <p>Below the src/test/resources/config/ directory, we check for subdirectories with
 the scope names in all-caps, e.g. PRODUCT, APPLICATION, USER, to allow
 for placement of respective contents.</p>
 <p>In the other case, we go test/.config/<em>COMPANY</em>/<em>PRODUCTNAME</em>, to mirror such entries
 for production.</p>
 <p>So, activating test mode results in these directories searched for entries:</p>
-<h5 id="test-mode-search-paths">Test mode search paths</h5>
-<p>In test mode, standard OS paths are bypassed. Use explicit paths via <code>ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, List.of("USER:/tmp/test-user"))</code> <strong>or</strong> fallbacks like <code>src/test/resources/.config/&amp;lt;company&amp;gt;/&amp;lt;app&amp;gt;/</code> and <code>src/test/resources/config/{SCOPE}</code> (resources &gt; project configs).</p>
+<h5 id="test-mode-search-paths">Test mode search paths<a class="headerlink" href="#test-mode-search-paths" title="Permanent link">&para;</a></h5>
+<p>In test mode, standard OS paths are bypassed. Use explicit paths via <code>ConfigFactoryBuilder.setFeature(ConfigFeature.TESTMODE_DIRECTORIES, Collections.singletonList("USER:/tmp/test-user"))</code> <strong>or</strong> fallbacks like <code>src/test/resources/.config/&amp;lt;company&amp;gt;/&amp;lt;app&amp;gt;/</code> and <code>src/test/resources/config/{SCOPE}</code> (resources &gt; project configs).</p>
 <table>
 <thead>
 <tr>
@@ -2213,7 +381,7 @@ for production.</p>
 </tbody>
 </table>
 <p>NB: "COMPANY" and "APP" placeholders replaced by code values. Scope dirs verbatim UPPERCASE. Resources override project configs; scopes follow enum priority (higher scopes override lower).</p>
-<h3 id="custom-test-directories">Custom test directories</h3>
+<h3 id="custom-test-directories">Custom test directories<a class="headerlink" href="#custom-test-directories" title="Permanent link">&para;</a></h3>
 <p>You can provide a list of directories for <code>TESTMODE_DIRECTORIES</code> with their respective scope.</p>
 <p>Format: <code>SCOPENAME ":" PATH</code>
 e.g. <code>USER:/~developer/mylocaltest</code> or <code>APPLICATION:/tmp/generatedautomatedtestingdir</code>.</p>
@@ -2223,167 +391,235 @@ If the scope name is omitted or invalid, it defaults to <code>RUNTIME</code> sco
 In <code>TEST_MODE</code>, <code>ADDITIONAL_RUNTIME_DIRECTORIES</code> and <code>ADDITIONAL_USER_DIRECTORIES</code> 
 are intentionally ignored to prevent tests from accidentally interacting with real production data.
 Only <code>TESTMODE_DIRECTORIES</code> and the default test resource locations are used.</p>
-<h3 id="set-your-own-paths-legacy-api-for-some-test-environments">Set your own paths (legacy API for some test environments)</h3>
-<p>ConfigFactoryBuilder.setTestConfigPaths() allows you to set multiple paths for 
-each scope, to be used in test mode. Deprecated; use the custom test directories above.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@BeforeAll</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">setUpTestEnvironment</span><span class="p">()</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">paths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/my/local/fixed/config/environment&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// activate and set defaults</span>
-<span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestFilePaths</span><span class="p">(</span><span class="n">paths</span><span class="p">);</span><span class="w"> </span><span class="c1">// replace</span>
-<span class="w">    </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestJARURIs</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span><span class="w"> </span><span class="c1">// turn off</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
-<p><strong>Deprecated legacy API</strong>: Paths added at <code>RUNTIME</code> scope.</p>
-<h2 id="security-considerations">Security Considerations</h2>
+<h3 id="set-your-own-paths">Set your own paths<a class="headerlink" href="#set-your-own-paths" title="Permanent link">&para;</a></h3>
+<p>The <code>ConfigFactoryBuilder.setTestConfigPaths()</code> method allows you to set multiple paths for 
+each scope to be used in test mode.</p>
+<pre><code class="language-java">@BeforeAll
+static void setUpTestEnvironment() throws ConfigCheckedException
+    {
+    ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApp&quot;);
+    builder.setTestMode(true);
+
+    // Set specific test paths for USER scope
+    builder.setTestConfigPaths(ConfigScope.USER, Collections.singletonList(&quot;/my/local/fixed/config/environment&quot;));
+
+    // The resulting factory will use these paths
+    ConfigFactory factory = builder.build();
+    }
+</code></pre>
+<h2 id="automated-test-directory-management">Automated Test Directory Management<a class="headerlink" href="#automated-test-directory-management" title="Permanent link">&para;</a></h2>
+<p>The recommended way to handle configuration directories in tests is to use
+<strong>JUnit 5's <code>@TempDir</code></strong> annotation (or the corresponding feature of other test frameworks)
+combined with the <code>CREATE_MISSING_PATHS</code> feature. This ensures that:
+1. Tests run in isolation.
+2. Directories are created only for the duration of the test.
+3. The entire directory tree is automatically deleted by the test runner after the test completes.</p>
+<p>When <code>CREATE_MISSING_PATHS</code> is active, the library will automatically include designated test directories in the search list even if they do not exist yet, and create them upon the first write.</p>
+<h3 id="example-implementation">Example Implementation:<a class="headerlink" href="#example-implementation" title="Permanent link">&para;</a></h3>
+<pre><code class="language-java">class MyConfigTest {
+    @TempDir
+    Path tempDir; // JUnit 5 automatically creates and cleans this up
+
+    @Test
+    void testWithAutoCreatedPaths() throws ConfigCheckedException {
+        // NB: setTestMode() and setTestConfigPaths() return void and cannot be chained;
+        // only setFeature() returns the builder.
+        ConfigFactoryBuilder builder = ConfigFactoryBuilder.create(&quot;myCompany&quot;, &quot;myApp&quot;);
+        builder.setTestMode(true);
+        builder.setFeature(ConfigFeature.CREATE_MISSING_PATHS, true);
+        builder.setFeature(ConfigFeature.AUTOMATIC_CONFIG_CREATION, true);
+        // Point a specific scope to our temp directory
+        builder.setTestConfigPaths(ConfigScope.USER, Collections.singletonList(tempDir.toString()));
+
+        try (ConfigFactory configFactory = builder.build()) {
+            Configuration cfg = configFactory.getConfig(&quot;app-settings&quot;);
+            // This will create the file AND any missing parent directories inside tempDir
+            cfg.put(&quot;key&quot;, &quot;value&quot;, ConfigScope.USER);
+            cfg.flush();
+        }
+
+        // No manual cleanup required; @TempDir handles it.
+    }
+}
+</code></pre>
+<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
 <p>To prevent accidental or malicious activation of test mode in production environments,
 mConfig employs a two-tier security gate system.</p>
-<h3 id="151-global-static-gate-forbidtestmode-permittestmode">1.5.1 Global Static Gate (<code>forbidTestMode()</code> / <code>permitTestMode()</code>)</h3>
+<h3 id="151-global-static-gate-forbidtestmode-permittestmode">1.5.1 Global Static Gate (<code>forbidTestMode()</code> / <code>permitTestMode()</code>)<a class="headerlink" href="#151-global-static-gate-forbidtestmode-permittestmode" title="Permanent link">&para;</a></h3>
 <p>This is a JVM-wide master switch. Calling <code>ConfigFactoryBuilder.forbidTestMode()</code> 
 ensures that no code within the JVM can activate <code>TEST_MODE</code>, 
 regardless of other settings. This is intended for production environments 
-to provide a hard security boundary.</p>
-<h3 id="152-instance-dynamic-gate-permit_test_mode-feature">1.5.2 Instance Dynamic Gate (<code>PERMIT_TEST_MODE</code> Feature)</h3>
+to provide a hard security boundary. It is meant for the <strong>main application</strong>: each component using
+mConfig is responsible for its own test mode, and the main application switches all of them off at once.</p>
+<h3 id="152-instance-dynamic-gate-permit_test_mode-feature">1.5.2 Instance Dynamic Gate (<code>PERMIT_TEST_MODE</code> Feature)<a class="headerlink" href="#152-instance-dynamic-gate-permit_test_mode-feature" title="Permanent link">&para;</a></h3>
 <p>This is a per-builder configuration flag. It acts as a final check 
 before an instance activates test mode.</p>
-<h4 id="productive-by-default">"Productive by Default"</h4>
+<h4 id="productive-by-default">"Productive by Default"<a class="headerlink" href="#productive-by-default" title="Permanent link">&para;</a></h4>
 <p>To simplify development, the <code>PERMIT_TEST_MODE</code> feature defaults to <code>true</code>. 
 This allows developers to activate <code>TEST_MODE</code> using a single flag 
-(via environment variables, system properties, or <code>setFeature</code>) 
-without needing to explicitly enable permissions in standard environments.</p>
-<h4 id="test-mode-proofing-lockdown">"Test Mode Proofing" (Lockdown)</h4>
+(via <code>setFeature</code>, via runtime settings if the application enabled them, or in the component's own
+self-configuration file) without needing to explicitly enable permissions in standard environments.
+Code wins over files, so a <code>PERMIT_TEST_MODE=false</code> set in code cannot be undone by a file.</p>
+<h4 id="test-mode-proofing-lockdown">"Test Mode Proofing" (Lockdown)<a class="headerlink" href="#test-mode-proofing-lockdown" title="Permanent link">&para;</a></h4>
 <p>Despite with the default being <code>true</code>, <code>PERMIT_TEST_MODE</code> remains an useful security tool
 for some situations.
 In a complex process where <code>TEST_MODE</code> might be enabled globally
-(e.g., via <code>-DTEST_MODE=true</code>) to facilitate integration testing of some modules, a critical production-facing <code>ConfigFactory</code> can be locked down:</p>
-<p><div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">factory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CRITICAL_APP&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">PERMIT_TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="c1">// Lockdown this instance</span>
-<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// ...</span>
-<span class="w">    </span><span class="p">}</span>
-</code></pre></div>
-Even if <code>TEST_MODE</code> is requested externally, this specific instance will remain in production mode, ensuring it never reads from <code>src/test/resources</code> or other untrusted test locations,
+(e.g., via <code>-Dmconfig.runtime.test_mode=true</code>) to facilitate integration testing of some modules, a critical production-facing <code>ConfigFactory</code> can be locked down:</p>
+<pre><code class="language-java">try (ConfigFactory factory = ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;CRITICAL_APP&quot;)
+    .setFeature(ConfigFeature.PERMIT_TEST_MODE, false) // Lockdown this instance
+    .build())
+    {
+    // ...
+    }
+</code></pre>
+<p>Even if <code>TEST_MODE</code> is requested externally, this specific instance will remain in production mode, ensuring it never reads from <code>src/test/resources</code> or other untrusted test locations,
 like some dynamically generated test directories and -files.</p>
-<h3 id="activation-logic">Activation Logic</h3>
-<p>Test mode is only enabled if <strong>both</strong> the global gate and the instance gate allow it. The following logic is enforced during the <code>build()</code> process:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.</span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModePermitted</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">PERMIT_TEST_MODE</span><span class="p">))</span><span class="w"> </span>
-<span class="p">{</span>
-<span class="w">    </span><span class="c1">// Activation occurs if either the global trigger or instance trigger is set.</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testModeActive</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">getBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">))</span><span class="w"> </span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">setBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-<span class="k">else</span><span class="w"> </span>
-<span class="p">{</span>
-<span class="w">    </span><span class="c1">// If either permission gate is closed, test mode is forced to false.</span>
-<span class="w">    </span><span class="n">configFactorySettings</span><span class="p">.</span><span class="na">setBoolean</span><span class="p">(</span><span class="n">TEST_MODE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security</h3>
-<p>mConfig's self-configuration feature (loading <code>mconfig.properties</code> from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable it:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;metabit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;APP&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="p">.</span><span class="na">setFeature</span><span class="p">(</span><span class="n">ConfigFeature</span><span class="p">.</span><span class="na">ENABLE_SELF_CONFIGURATION</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
-<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-</code></pre></div>
-<p>This is particularly important in security-sensitive applications to ensure that no unexpected features (like <code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> or <code>TEST_MODE</code>) are enabled by a JAR file placed on the classpath.</p>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="14_regular_use.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: 1.4 Regular Use">
-            <div class="md-footer__button md-icon">
+<h3 id="activation-logic">Activation Logic<a class="headerlink" href="#activation-logic" title="Permanent link">&para;</a></h3>
+<p>Test mode is only enabled if <strong>both</strong> the global gate and the instance gate allow it. Self-configuration
+files are read before this check, so the gates cover file-set test mode too. The following logic is enforced
+during the <code>build()</code> process:</p>
+<pre><code class="language-java">// Test mode is only enabled if BOTH the global gate AND the instance gate allow it.
+if (testModePermitted &amp;&amp; configFactorySettings.getBoolean(PERMIT_TEST_MODE)) 
+{
+    // Activation occurs if either the global trigger or instance trigger is set.
+    if (testModeActive || configFactorySettings.getBoolean(TEST_MODE)) 
+    {
+        configFactorySettings.setBoolean(TEST_MODE, true);
+    }
+}
+else 
+{
+    // If either permission gate is closed, test mode is forced to false.
+    configFactorySettings.setBoolean(TEST_MODE, false);
+}
+</code></pre>
+<h3 id="153-self-configuration-security">1.5.3 Self-Configuration Security<a class="headerlink" href="#153-self-configuration-security" title="Permanent link">&para;</a></h3>
+<p>mConfig's self-configuration feature (loading <code>mconfig.properties</code> from the classpath) is another area where security can be tightened. If you don't want the library to automatically configure itself from classpath resources, you can disable that:</p>
+<pre><code class="language-java">ConfigFactoryBuilder.create(&quot;metabit&quot;, &quot;APP&quot;)
+    .setFeature(ConfigFeature.ENABLE_SELF_CONFIGURATION, false)
+    .build();
+</code></pre>
+<p>Self-configuration is per component: <code>.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code> applies only to
+factories for that company and application, and settings made in code always win over it. Features such as
+<code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code> or <code>ALLOW_APPLICATION_POLICY_LOCATIONS</code> can only be set in code; the
+deprecated global file <code>.config/metabit/mConfig/mconfig.properties</code> cannot set any test-mode feature either.
+See <a href="25_config_features.html#who-may-set-a-feature">Who may set a feature</a>.
+Disabling self-configuration keeps all classpath settings out, which is useful if the classpath is not "closed".</p>
+<h2 id="runtime-overrides">Runtime Overrides<a class="headerlink" href="#runtime-overrides" title="Permanent link">&para;</a></h2>
+<p>mConfig supports several library-wide and module-specific settings via environment variables
+(and the equivalent <code>-Dmconfig.runtime.*</code> system properties). They are processed early during the
+<code>ConfigFactoryBuilder.build()</code> phase, and <strong>only if the application set
+<code>ConfigFeature.ALLOW_MCONFIG_RUNTIME_SETTINGS</code> to true in code</strong>. That switch cannot be set from outside,
+neither by an environment variable nor by a classpath resource.</p>
+<h3 id="core-overrides">Core Overrides<a class="headerlink" href="#core-overrides" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Environment Variable</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_TEST_MODE</code></td>
+<td style="text-align: left;">Activates <a href="#activate-test-mode">Test Mode</a> (if permitted).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_DEBUG_LEVEL</code></td>
+<td style="text-align: left;">Sets the internal library logging level (<code>off</code>, <code>error</code>, <code>warn</code>, <code>info</code>, <code>debug</code>, <code>trace</code>, or a number).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_DEBUG_OUTPUT</code></td>
+<td style="text-align: left;">Redirects internal logging (<code>stderr</code>, <code>stdout</code>, <code>quiet</code>, <code>file:&lt;path&gt;</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_DISABLE_MODULES</code></td>
+<td style="text-align: left;">Comma-separated module IDs to disable.</td>
+</tr>
+</tbody>
+</table>
+<p><code>MCONFIG_RUNTIME_MODULES</code> (<code>ADDITIONAL_MODULE_PATHS</code>) is refused since 0.8.15: it loads code, so only code may set it.</p>
+<h3 id="module-overrides-kubernetes">Module Overrides (Kubernetes)<a class="headerlink" href="#module-overrides-kubernetes" title="Permanent link">&para;</a></h3>
+<p>These overrides are specifically useful for configuring the <code>mConfigSourceKubernetes</code> and <code>mConfigSourceKubernetesFabric8</code> modules without hardcoded values.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Environment Variable</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_KUBERNETES_API_ENDPOINT</code></td>
+<td style="text-align: left;">The URL of the Kubernetes API server.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_KUBERNETES_CONFIG_DIR</code></td>
+<td style="text-align: left;">Colon-separated list of paths for ConfigMap mounts.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_KUBERNETES_SECRETS_DIR</code></td>
+<td style="text-align: left;">Colon-separated list of paths for Secret mounts.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_KUBERNETES_SA_TOKEN_PATH</code></td>
+<td style="text-align: left;">Path to the ServiceAccount token file.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_KUBERNETES_SA_NAMESPACE_PATH</code></td>
+<td style="text-align: left;">Path to the ServiceAccount namespace file.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCONFIG_RUNTIME_KUBERNETES_SA_CA_CERT_PATH</code></td>
+<td style="text-align: left;">Path to the CA certificate for API validation.</td>
+</tr>
+</tbody>
+</table>
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                1.4 Regular Use
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="21_how_it_works.html" class="md-footer__link md-footer__link--next" aria-label="Next: 2.1 How it Works">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                2.1 How it Works
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="14_regular_use.html" class="btn btn-neutral float-left" title="1.4 Regular Use"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="20_scopes.html" class="btn btn-neutral float-right" title="2.0 Scopes">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
   </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.footer"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <span><a href="14_regular_use.html" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
-      
+      <span><a href="20_scopes.html" style="color: #fcfcfc">Next &raquo;</a></span>
     
-  </body>
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
 </html>

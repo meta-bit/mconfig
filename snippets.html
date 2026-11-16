@@ -1,1871 +1,566 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>4.6 Snippets Reference - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "4.6 Snippets Reference";
+        var mkdocs_page_input_path = "snippets.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-        <link rel="canonical" href="https://meta-bit.github.io/mconfig/snippets.html">
-      
-      
-      
-      
-        
-      
-      
-      <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
-    
-    
-      
-        <title>Snippets: Quick Solutions to Common Config Problems - mConfig Documentation</title>
-      
-    
-    
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<body class="wy-body-for-nav" role="document">
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#snippets-quick-solutions-to-common-config-problems" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="mConfig Documentation" class="md-header__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            mConfig Documentation
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              Snippets: Quick Solutions to Common Config Problems
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
 </div>
-      
-    
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+      </div>
 
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="mConfig Documentation" class="md-nav__button md-logo" aria-label="mConfig Documentation" data-md-component="logo">
-      
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
-
-    </a>
-    mConfig Documentation
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="20_scopes.html">2.0 Scopes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemas.html">2.3 Configuration Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="26_secrets_concept.html">2.6 Secrets Concept</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_events.html">3.5 Config Events</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.6 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.7 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.8 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="39_utilities_and_adapters.html">3.9 Utilities and Adapters</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.10 Better Practice: Replace This With That</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md">3.11 Experimental POJO Mapping</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">4.6 Snippets Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-api-contract-the-exact-names">1. API contract: the exact names</a>
     </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 1 Introduction & Basics
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 1 Introduction & Basics
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="11_what_is_mconfig.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.1 What is mConfig?
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l2"><a class="reference internal" href="#2-schema-fields-and-gotchas">2. Schema fields and gotchas</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="12_features_and_use_cases.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.2 Features and Use Cases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l2"><a class="reference internal" href="#3-strictness-choosing-the-failure-mode">3. Strictness: choosing the failure mode</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="13_getting_started.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.3 Getting Started
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l2"><a class="reference internal" href="#4-library-self-configuration">4. Library self-configuration</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="14_regular_use.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.4 Regular Use
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l2"><a class="reference internal" href="#5-scope-reference">5. Scope reference</a>
     </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="15_test_mode.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1.5 Test Mode
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+    <li class="toctree-l2"><a class="reference internal" href="#6-module-selection">6. Module selection</a>
     </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 2 Core Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 2 Core Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="21_how_it_works.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.1 How it Works
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="22_priorities_and_hierarchies.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.2 Priorities and Hierarchies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="23_configuration_schemes.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.3 Configuration Schemes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="24_comment_handling.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.4 Comment Handling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="25_config_features.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2.5 Config Features
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 3 Advanced Topics
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 3 Advanced Topics
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="31_writing_configurations.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.1 Writing Configurations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="32_updates.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.2 Updates
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="33_getting_information.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.3 Getting Information
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="34_definitions_and_valid_values.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.4 Definitions and Valid Values
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="35_handling_secrets.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.5 Handling Secrets
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="36_windows_registry.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.6 Windows Registry Access
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="37_extensions_and_advanced_use.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.7 Extensions and Advanced Use
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="38_code_improvements.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3.8 Code Improvements
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 4 Reference & Project
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Part 4 Reference & Project
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="41_mconfig_tool.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.1 mConfig Tool
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="42_logging.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.2 Logging
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="43_faq.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.3 FAQ
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="44_design_consolidated.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.4 Design Consolidated
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="45_ai_guidance.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.5 AI Guidance
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="46_versions.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.6 Versions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="47_contributing.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.7 Contributing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="48_legal.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.8 Legal
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Examples
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/index.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/simple_configuration_loading.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Simple Configuration Loading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/advanced_configuration_handling.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Advanced Configuration Handling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/integration_with_cicd.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Integration with CI/CD
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/testing_configurations.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Testing Configurations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/mconfig-modules.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    mConfig Modules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/java-modules.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    JPMS (Java Modules)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/configuration_views.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configuration Views
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/zookeeper.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ZooKeeper
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/handling_crypto_keys_and_certificates.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Handling Crypto Keys and Certificates
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="examples/schemes.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Schemes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Appendix
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Appendix
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="49_links.html" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4.9 Links
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-  </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-replace-hardcoded-stringsports-zero-magic-strings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Replace Hardcoded Strings/Ports (Zero Magic Strings)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-env-vars-structured-config-no-manual-parsing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Env Vars → Structured Config (No Manual Parsing)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-type-safe-config-with-defaultsvalidation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Type-Safe Config with Defaults/Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-hot-reload-on-file-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Hot-Reload on File Changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-discover-available-configs-no-guesswork" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Discover Available Configs (No Guesswork)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-secrets-without-log-leaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Secrets Without Log Leaks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-jpms-compatible-no-illegalaccesserror" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. JPMS-Compatible (No IllegalAccessError)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8-tests-isolated-configs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8. Tests: Isolated Configs
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemas.html">Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/extension_features.html">Extension Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 5 Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="50_contributing.html">5.1 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="51_legal.html">5.2 Legal</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="52_ai_guidance.html">5.3 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="53_links.html">5.4 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
 
-
-
-<h1 id="snippets-quick-solutions-to-common-config-problems">Snippets: Quick Solutions to Common Config Problems</h1>
-<p>mConfig shines for everyday config pains. Copy-paste these snippets—no setup hassles.</p>
-<p>Each solves a <strong>general problem</strong> using mConfig's magic (OS paths, layers, reloads, schemes).</p>
-<p><strong><a href="../../../../examples/starters/README.md">Starters</a> for full projects • <a href="43_faq.html">FAQ</a> for fixes • <a href="../../../../mConfigTools/README.md">CLI</a></strong></p>
-<h2 id="1-replace-hardcoded-stringsports-zero-magic-strings">1. Replace Hardcoded Strings/Ports (Zero Magic Strings)</h2>
-<p><strong>Problem:</strong> Ports, hosts scattered in code—hard to change/deploy.</p>
-<div class="highlight"><pre><span></span><code><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigUtil</span><span class="p">.</span><span class="na">quickConfig</span><span class="p">(</span><span class="s">&quot;myco&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;network&quot;</span><span class="p">);</span>
-<span class="n">String</span><span class="w"> </span><span class="n">peer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// localhost</span>
-<span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span><span class="w">    </span><span class="c1">// 8080</span>
-<span class="kt">double</span><span class="w"> </span><span class="n">prob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getDouble</span><span class="p">(</span><span class="s">&quot;probability&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 0.5</span>
-</code></pre></div>
-<p><strong>Place:</strong> <code>~/.config/myco/myapp/network.properties</code> (auto-discovered).</p>
-<p><strong>Why mConfig?</strong> Searches OS standards (XDG, AppData), formats (properties/YAML/JSON), reloads live.</p>
-<p><a href="13_getting_started.html">Getting Started</a></p>
-<h2 id="2-env-vars-structured-config-no-manual-parsing">2. Env Vars → Structured Config (No Manual Parsing)</h2>
-<p><strong>Problem:</strong> <code>process.env</code> mess; want hierarchical config.</p>
-<p><em>Add dep:</em> <code>mConfigSourceEnvVar</code></p>
-<p>Env vars:
-<div class="highlight"><pre><span></span><code>myapp_network_peer=localhost
-myapp_network_port=8080
-</code></pre></div></p>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">ConfigFactory</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myco&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">peer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">).</span><span class="na">getString</span><span class="p">(</span><span class="s">&quot;peer&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// SESSION override</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Why?</strong> <code>&lt;app&gt;_&lt;config&gt;_&lt;key&gt;</code> convention; layers over files.</p>
-<p><a href="../../../../mConfigSourceEnvVar/README.md">mConfigSourceEnvVar</a></p>
-<h2 id="3-type-safe-config-with-defaultsvalidation">3. Type-Safe Config with Defaults/Validation</h2>
-<p><strong>Problem:</strong> Runtime <code>NumberFormatException</code>; scattered defaults.</p>
-<p><code>src/main/resources/.config/myco/myapp/network.scheme.json</code>:
-<div class="highlight"><pre><span></span><code><span class="p">[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;port&quot;</span><span class="p">,</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;int&quot;</span><span class="p">,</span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="nt">&quot;min&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="mi">65535</span><span class="p">}]</span>
-</code></pre></div></p>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigScheme</span><span class="w"> </span><span class="n">scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigScheme</span><span class="p">.</span><span class="na">fromClasspath</span><span class="p">(</span><span class="s">&quot;network.scheme.json&quot;</span><span class="p">);</span>
-<span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scheme</span><span class="p">);</span>
-<span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getInteger</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Validates!</span>
-</code></pre></div>
-<p><strong>Why?</strong> Centralized scheme—no call-site defaults.</p>
-<p><a href="23_configuration_schemes.html">Configuration Schemes</a></p>
-<h2 id="4-hot-reload-on-file-changes">4. Hot-Reload on File Changes</h2>
-<p><strong>Problem:</strong> Restart for config tweaks? No thanks.</p>
-<div class="highlight"><pre><span></span><code><span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factory</span><span class="p">.</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Watches files</span>
-<span class="c1">// Edit network.properties → cfg.getInteger(&quot;port&quot;) updates instantly</span>
-</code></pre></div>
-<p><strong>Why?</strong> Built-in watcher; no polling/Spring @Refresh.</p>
-<p><a href="22_priorities_and_hierarchies.html">Priorities</a></p>
-<h2 id="5-discover-available-configs-no-guesswork">5. Discover Available Configs (No Guesswork)</h2>
-<p><strong>Problem:</strong> "Where's my config?"</p>
-<div class="highlight"><pre><span></span><code><span class="n">factory</span><span class="p">.</span><span class="na">listAvailableConfigurations</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">cdi</span><span class="w"> </span><span class="o">-&gt;</span>
-<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">cdi</span><span class="p">.</span><span class="na">getConfigName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; @ &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cdi</span><span class="p">.</span><span class="na">getUri</span><span class="p">())</span>
-<span class="p">);</span>
-</code></pre></div>
-<p><strong>Why?</strong> Traces sources/scopes; CLI equiv: <code>mconfig myco:myapp list</code></p>
-<h2 id="6-secrets-without-log-leaks">6. Secrets Without Log Leaks</h2>
-<p><strong>Problem:</strong> Passwords in logs/heap.</p>
-<p>In scheme: <code>"type":"secret"</code></p>
-<div class="highlight"><pre><span></span><code><span class="n">SecretValue</span><span class="w"> </span><span class="n">pw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">SecretValue</span><span class="p">)</span><span class="w"> </span><span class="n">cfg</span><span class="p">.</span><span class="na">getEntry</span><span class="p">(</span><span class="s">&quot;db.password&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Masked: ********</span>
-<span class="n">String</span><span class="w"> </span><span class="n">clear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pw</span><span class="p">.</span><span class="na">clearValue</span><span class="p">();</span><span class="w">  </span><span class="c1">// JIT decrypt/use</span>
-</code></pre></div>
-<p><a href="../../../../mConfigSecrets/README.md">mConfigSecrets</a></p>
-<h2 id="7-jpms-compatible-no-illegalaccesserror">7. JPMS-Compatible (No IllegalAccessError)</h2>
-<p><code>module-info.java</code>:
-<div class="highlight"><pre><span></span><code><span class="n">module</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="na">example</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">core</span><span class="p">;</span>
-<span class="w">    </span><span class="n">requires</span><span class="w"> </span><span class="n">metabit</span><span class="p">.</span><span class="na">mconfig</span><span class="p">.</span><span class="na">util</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></p>
-<p><em>Deps:</em> <code>mConfigStandard</code> (BOM) or <code>mConfigBase</code>.</p>
-<p><a href="43_faq.html#jpms-module-access-errors">JPMS FAQ</a></p>
-<h2 id="8-tests-isolated-configs">8. Tests: Isolated Configs</h2>
-<div class="highlight"><pre><span></span><code><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestMode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-<span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">setTestConfigPaths</span><span class="p">(</span><span class="n">ConfigScope</span><span class="p">.</span><span class="na">USER</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;src/test/resources&quot;</span><span class="p">));</span>
-<span class="n">Config</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConfigFactoryBuilder</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="s">&quot;myco&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">().</span><span class="na">getConfig</span><span class="p">(</span><span class="s">&quot;network&quot;</span><span class="p">);</span>
-</code></pre></div>
-<p><code>src/test/resources/.config/myco/myapp/network.properties</code></p>
-<p><a href="15_test_mode.html">Test Mode</a></p>
-<p><strong>Pro Tip:</strong> Enable logging (<code>mConfigLoggingSlf4j</code> + DEBUG) for traces.</p>
-<p><a href="index.html">Full Docs</a></p>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
         
-      </main>
-      
-        <footer class="md-footer">
-  
-    
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 4 Reference</li>
+      <li class="breadcrumb-item active">4.6 Snippets Reference</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
 </div>
-      
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="snippets-reference">Snippets Reference<a class="headerlink" href="#snippets-reference" title="Permanent link">&para;</a></h1>
+<p>A lookup page: the exact names, fields, settings and scopes to use when writing code against
+mConfig. It holds facts, not templates.</p>
+<ul>
+<li><strong>Code to copy</strong> is in
+  <a href="https://github.com/meta-bit/mconfig/blob/master/examples/snippets.md">examples/snippets.md</a>
+  (in a source checkout: <code>examples/snippets.md</code>). Its Java templates are compiled against the
+  current API on every build.</li>
+<li><strong>What to replace in existing code</strong> is in
+  <a href="38_code_improvements.html">Better practice: replace this with that</a>.</li>
+</ul>
+<p>Audience: developers and AI coding assistants. Where this page and the source code disagree, the
+code is right and this page needs fixing.</p>
+<h2 id="1-api-contract-the-exact-names">1. API contract: the exact names<a class="headerlink" href="#1-api-contract-the-exact-names" title="Permanent link">&para;</a></h2>
+<p>Older documents and generated code often contain the forms in the right-hand column.
+<strong>Do not use those.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Correct</th>
+<th>Wrong or stale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Configuration cfg = factory.getConfig("net");</code></td>
+<td><code>Config cfg = ...</code> (no such type)</td>
+</tr>
+<tr>
+<td><code>factory.getConfig(name)</code></td>
+<td><code>factory.getConfiguration(name)</code> (does not exist)</td>
+</tr>
+<tr>
+<td><code>cfg.put(key, value)</code> / <code>cfg.put(key, value, scope)</code></td>
+<td><code>cfg.set(key, value)</code> (does not exist)</td>
+</tr>
+<tr>
+<td><code>ConfigFactoryBuilder.create(org, app)</code></td>
+<td><code>new ConfigFactoryBuilder(...)</code> (it is an interface)</td>
+</tr>
+<tr>
+<td><code>builder.setTestMode(true);</code> returns <strong><code>void</code></strong></td>
+<td><code>.setTestMode(true).build()</code> (will not compile)</td>
+</tr>
+<tr>
+<td><code>builder.setTestConfigPaths(scope, list);</code> returns <strong><code>void</code></strong></td>
+<td>chaining off it (will not compile)</td>
+</tr>
+<tr>
+<td><code>builder.setFeature(...)</code> returns <strong>the builder</strong>, chainable</td>
+<td></td>
+</tr>
+<tr>
+<td><code>cfg.getSecret(key)</code> returns a <code>SecretValue</code></td>
+<td>casting <code>getEntry(...)</code> to <code>SecretValue</code></td>
+</tr>
+<tr>
+<td><code>secret.getValue()</code> (<code>byte[]</code>) / <code>getChars()</code>, then <code>erase()</code></td>
+<td><code>secret.clearValue()</code> (does not exist)</td>
+</tr>
+<tr>
+<td><code>ConfigSchema</code>, <code>SCHEMA_*</code>, <code>*.mconfig-schema.json</code></td>
+<td><code>ConfigScheme</code>, <code>SCHEME_*</code></td>
+</tr>
+<tr>
+<td><code>"SECRET": true</code> in the schema entry</td>
+<td>a "Secret" entry type; <code>"FLAGS": ["SECRET"]</code></td>
+</tr>
+</tbody>
+</table>
+<p>Other hard facts:</p>
+<ul>
+<li><strong>The key separator is <code>/</code></strong> for hierarchical formats: <code>cfg.getString("server/host")</code>.
+  Flat formats (<code>.properties</code>) keep dotted keys literal: <code>cfg.getString("db.password")</code>.</li>
+<li><strong>Typed getters return boxed types</strong> (<code>Integer</code>, <code>Boolean</code>, <code>Double</code>), so they can be <code>null</code>
+  when <code>EXCEPTION_ON_MISSING_ENTRY</code> is turned off.</li>
+<li><strong><code>ConfigException</code> is unchecked; <code>ConfigCheckedException</code> is checked.</strong>
+  <code>getConfig(String)</code> throws the unchecked one. <code>getConfig(String, ConfigSchema)</code>,
+  <code>flush()</code>, <code>reload()</code> and <code>setTestConfigPaths()</code> throw the checked one.</li>
+<li><strong><code>ConfigFactory.close()</code> is declared without <code>throws</code></strong>, so try-with-resources is clean.
+  <code>Configuration</code> inherits <code>AutoCloseable.close() throws Exception</code>; let the factory own the
+  lifecycle instead of wrapping a <code>Configuration</code> in try-with-resources.</li>
+<li><strong>One <code>ConfigFactory</code> per application.</strong> It owns the file watchers, caches and background
+  threads; <code>close()</code> releases them.</li>
+<li><strong>Never provide defaults at the call site.</strong> They belong in a <code>*.mconfig-schema.json</code> or a
+  <code>PRODUCT</code>-scope resource file.</li>
+<li><strong>Dependency versions:</strong> read the version from the project's own build file or the local
+  repository. Do not copy a version or a <code>${mconfig.version}</code> placeholder from documentation.</li>
+</ul>
+<h2 id="2-schema-fields-and-gotchas">2. Schema fields and gotchas<a class="headerlink" href="#2-schema-fields-and-gotchas" title="Permanent link">&para;</a></h2>
+<p>A schema is a JSON file named <code>&lt;configName&gt;.mconfig-schema.json</code>, placed under
+<code>.config/&lt;company&gt;/&lt;app&gt;/</code> on the classpath, or in the OS schema directories
+(<code>/etc/mconfig/schemas</code>, <code>~/.config/mconfig/schemas</code>, <code>%PROGRAMDATA%\mconfig\schemas</code>, …).
+It is found automatically. A complete example is in the
+<a href="https://github.com/meta-bit/mconfig/blob/master/examples/snippets.md#3-defaults-schema-and-resource-file">templates</a>;
+the full description is in <a href="23_configuration_schemas.html">Configuration Schemas</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KEY</code></td>
+<td>the key, with <code>/</code> as separator</td>
+</tr>
+<tr>
+<td><code>TYPE</code></td>
+<td><code>STRING</code>, <code>NUMBER</code>, <code>BOOLEAN</code>, <code>BYTES</code>, <code>MULTIPLE_STRINGS</code>, <code>ENUM</code>, <code>ENUM_SET</code>, <code>URI</code>, <code>FILEPATH</code>, <code>DATE</code>, <code>TIME</code>, <code>DATETIME</code>, <code>DURATION</code></td>
+</tr>
+<tr>
+<td><code>DEFAULT</code></td>
+<td>the default value; any JSON type</td>
+</tr>
+<tr>
+<td><code>DESCRIPTION</code></td>
+<td>text for documentation and tools</td>
+</tr>
+<tr>
+<td><code>PATTERN</code></td>
+<td>a range, an enumeration, a named validator (e.g. <code>uint16</code>) or a regular expression</td>
+</tr>
+<tr>
+<td><code>ARITY</code></td>
+<td>how many values the entry may hold</td>
+</tr>
+<tr>
+<td><code>SECRET</code></td>
+<td><code>true</code> marks the entry as a secret</td>
+</tr>
+<tr>
+<td><code>MANDATORY</code></td>
+<td>the entry must have a value</td>
+</tr>
+<tr>
+<td><code>FLAGS</code></td>
+<td>list of flags; only <code>MANDATORY</code> is acted upon today</td>
+</tr>
+<tr>
+<td><code>WRITE_SCOPE</code></td>
+<td>the scope a <code>put()</code> without scope argument writes to</td>
+</tr>
+</tbody>
+</table>
+<p>Gotchas that cost real time:</p>
+<ul>
+<li><strong>The file is an array of entry objects</strong>, each with its own <code>KEY</code>. An object keyed by
+  configuration key parses to an <em>empty</em> schema, without an error.</li>
+<li>Field names are case-insensitive, by convention UPPER CASE.</li>
+<li><code>DEFAULT</code> accepts any JSON type: <code>"DEFAULT": 8080</code>, <code>"DEFAULT": false</code> and <code>"DEFAULT": "8080"</code>
+  all work; numbers and booleans are read as their text form. A JSON array is joined into a
+  comma-separated value.</li>
+<li>Mark secrets with <strong><code>"SECRET": true</code></strong>, and only that. <code>"FLAGS": ["SECRET"]</code> parses (since
+  0.8.15 with a WARNING at schema load) but does <strong>not</strong> mark the entry secret: no redaction,
+  no <code>SecretValue</code>, no wiping.</li>
+<li>The flags <code>READ_ONLY</code>, <code>WRITE_ONLY</code> and <code>SENSITIVE</code> are parsed and kept, but not enforced yet;
+  loading a schema that uses them logs a WARNING.</li>
+<li><code>ALLOW_LOCAL_SCHEMA_OVERRIDE=false</code> locks an application to its bundled schema. The feature is
+  deprecated since 0.8.17 and replaced in 0.9.0 by an allowlist of schema sources; it keeps
+  working until then.</li>
+<li>Schemas stay in force in test mode.</li>
+</ul>
+<h2 id="3-strictness-choosing-the-failure-mode">3. Strictness: choosing the failure mode<a class="headerlink" href="#3-strictness-choosing-the-failure-mode" title="Permanent link">&para;</a></h2>
+<p>Set with <code>ConfigFactoryBuilder.setFeature(...)</code>; all settings are described in
+<a href="25_config_features.html">Config Features</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EXCEPTION_ON_MISSING_ENTRY</code></td>
+<td><code>true</code></td>
+<td>a key with neither value nor default throws <code>ConfigException</code>; <code>false</code> returns <code>null</code></td>
+</tr>
+<tr>
+<td><code>EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND</code></td>
+<td><code>false</code></td>
+<td><code>true</code>: a missing configuration as a whole throws</td>
+</tr>
+<tr>
+<td><code>SCHEMA_STRICT_MODE</code></td>
+<td><code>false</code></td>
+<td><code>true</code>: keys the schema does not declare are rejected</td>
+</tr>
+<tr>
+<td><code>FALLBACKS_ACROSS_SCOPES</code></td>
+<td><code>true</code></td>
+<td>a lookup continues into more general scopes; <code>false</code> restricts the fallback to <code>PRODUCT</code></td>
+</tr>
+<tr>
+<td><code>WRITE_FALLBACK_ACROSS_SCOPES</code></td>
+<td><code>false</code></td>
+<td><code>true</code>: a write may fall back to a more specific scope</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Schema <code>DEFAULT</code> values apply in either mode; <code>null</code> only comes back for a key with no value
+  and no default.</li>
+<li><code>DEFAULT_ON_MISSING_ENTRY</code> is deprecated since 0.8.17: it was never evaluated, and setting it
+  has no effect. Do not generate it.</li>
+<li>Do not make up for a lenient setting with <code>if (v == null) v = FALLBACK;</code> at the call site.
+  Declare the default in the schema.</li>
+</ul>
+<h2 id="4-library-self-configuration">4. Library self-configuration<a class="headerlink" href="#4-library-self-configuration" title="Permanent link">&para;</a></h2>
+<p>Library settings can be shipped as a classpath resource of your component instead of code.
+The file applies only to factories created for that company and application; values set in code win.</p>
+<p><code>src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/mconfig.properties</code></p>
+<pre><code class="language-properties">EVENTS_DETAIL_LEVEL=FAILURES_ONLY
+UPDATE_CHECK_FREQUENCY_MS=2000
+</code></pre>
+<ul>
+<li>Features marked <code>CODE_ONLY</code> (<code>ALLOW_MCONFIG_RUNTIME_SETTINGS</code>, <code>ENABLE_SELF_CONFIGURATION</code>,
+  <code>ALLOW_APPLICATION_POLICY_LOCATIONS</code>, …) are ignored in this file, with a warning; set them in
+  code. See <a href="25_config_features.html#who-may-set-a-feature">who may set a feature</a>.</li>
+<li>Do not use the global <code>.config/metabit/mConfig/mconfig.properties</code>: it is deprecated and will be
+  removed before 0.9.0.</li>
+<li>Per-module settings go into their own file in the same directory (<code>vault.properties</code>,
+  <code>aws.properties</code>, <code>kubernetes.properties</code>), which keeps the modules apart.</li>
+<li><code>ENABLE_SELF_CONFIGURATION=false</code>, set in code, switches classpath self-configuration off
+  where the classpath is not fully controlled.</li>
+</ul>
+<h2 id="5-scope-reference">5. Scope reference<a class="headerlink" href="#5-scope-reference" title="Permanent link">&para;</a></h2>
+<p>Resolution runs from the most specific scope down; the first hit wins.
+Details: <a href="20_scopes.html">Scopes</a>, <a href="22_priorities_and_hierarchies.html">Priorities and Hierarchies</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Scope</th>
+<th>Typical source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 (top)</td>
+<td><code>POLICY</code></td>
+<td>Group Policy / enforced admin settings</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>RUNTIME</code></td>
+<td>In-memory, set by your own code</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>SESSION</code></td>
+<td>Environment variables, CLI arguments</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>USER</code></td>
+<td><code>~/.config/</code>, <code>%APPDATA%</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>APPLICATION</code></td>
+<td>Installation directory, portable root</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>HOST</code></td>
+<td><code>/etc/</code>, <code>%PROGRAMDATA%</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>CLUSTER</code></td>
+<td>ZooKeeper, Kubernetes</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>CLOUD</code></td>
+<td>Cross-cluster shared configuration</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>ORGANIZATION</code></td>
+<td>Licensee / tenant settings</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>PRODUCT</code></td>
+<td>Schema defaults, JAR resources</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Do not register <code>POLICY</code>-scope locations from application code; outside test mode they fail
+  unless <code>ALLOW_APPLICATION_POLICY_LOCATIONS</code> is set in code.</li>
+<li>Environment variables are read-only: a <code>put(..., ConfigScope.SESSION)</code> against them is refused.</li>
+</ul>
+<h2 id="6-module-selection">6. Module selection<a class="headerlink" href="#6-module-selection" title="Permanent link">&para;</a></h2>
+<p>Artifact IDs are lower case; the <code>groupId</code> is <code>org.metabit.platform.support.config</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Bundle</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mconfigbasic</code></td>
+<td>lightweight, purely file-based Java: core, schema, secrets, filesystem, JAR, <code>.properties</code>, util</td>
+</tr>
+<tr>
+<td><code>mconfigstandard</code></td>
+<td>cloud-native: adds environment variables, JSON/YAML/TOML (Jackson), INI, slf4j, the Windows registry</td>
+</tr>
+</tbody>
+</table>
+<p>Vault, AWS Secrets Manager and Kubernetes are opt-in storage modules, in neither bundle. They are
+not secrets providers; mConfig ships no secrets provider.</p>
+<p>Packing everything into a single JAR must merge the <code>META-INF/services</code> files; never use the
+assembly descriptor <code>jar-with-dependencies</code>. See
+<a href="13_getting_started.html#138-packaging-as-a-single-jar">Packaging as a single JAR</a>.</p>
+<hr />
+<p>Related: <a href="13_getting_started.html">Getting Started</a> ·
+<a href="examples/index.html">Examples</a> ·
+<a href="52_ai_guidance.html">AI Guidance</a></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="46_versions.html" class="btn btn-neutral float-left" title="4.5 Versions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="examples/index.html" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
   </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.footer"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <span><a href="46_versions.html" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
-      
+      <span><a href="examples/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
     
-  </body>
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
 </html>

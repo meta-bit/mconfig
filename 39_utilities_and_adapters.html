@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>3.9 Utilities and Adapters - mConfig Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "3.9 Utilities and Adapters";
+        var mkdocs_page_input_path = "39_utilities_and_adapters.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="index.html" class="icon icon-home"> mConfig Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="index.html">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 1 Introduction & Basics</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="11_what_is_mconfig.html">1.1 What is mConfig?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="12_features_and_use_cases.html">1.2 Features and Use Cases</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="13_getting_started.html">1.3 Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="14_regular_use.html">1.4 Regular Use</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="15_test_mode.html">1.5 Test Mode</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 2 Core Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="20_scopes.html">2.0 Scopes</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="21_how_it_works.html">2.1 How it Works</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="22_priorities_and_hierarchies.html">2.2 Priorities and Hierarchies</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="23_configuration_schemas.html">2.3 Configuration Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="24_comment_handling.html">2.4 Comment Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="25_config_features.html">2.5 Config Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="26_secrets_concept.html">2.6 Secrets Concept</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 3 Advanced Topics</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="31_writing_configurations.html">3.1 Writing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="32_updates.html">3.2 Updates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="33_getting_information.html">3.3 Getting Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="34_definitions_and_valid_values.html">3.4 Definitions and Valid Values</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="45_events.html">3.5 Config Events</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="35_handling_secrets.html">3.6 Handling Secrets</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="36_windows_registry.html">3.7 Windows Registry Access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="37_extensions_and_advanced_use.html">3.8 Extensions and Advanced Use</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">3.9 Utilities and Adapters</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#391-core-adapters">3.9.1 Core Adapters</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#3911-propertiesconfiguration">3.9.1.1 PropertiesConfiguration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3912-overridingconfiguration">3.9.1.2 OverridingConfiguration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3913-remappedconfiguration">3.9.1.3 RemappedConfiguration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3914-what-the-adapters-are-and-what-they-are-not">3.9.1.4 What the adapters are, and what they are not</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#392-scope-restricted-reads">3.9.2 Scope-Restricted Reads</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#393-configutil-entry-point">3.9.3 ConfigUtil Entry Point</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#394-usage">3.9.4 Usage</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="38_code_improvements.html">3.10 Better Practice: Replace This With That</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="https://github.com/meta-bit/mconfig/blob/master/mConfigMapper/README.md">3.11 Experimental POJO Mapping</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 4 Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="41_mconfig_tool.html">4.1 mConfig Tool</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="42_logging.html">4.2 Logging</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="43_faq.html">4.3 FAQ</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="44_design_consolidated.html">4.4 Design Consolidated</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Examples</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/simple_configuration_loading.html">Simple Configuration Loading</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/advanced_configuration_handling.html">Advanced Configuration Handling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/integration_with_cicd.html">Integration with CI/CD</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/testing_configurations.html">Testing Configurations</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/mconfig-modules.html">mConfig Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/java-modules.html">JPMS (Java Modules)</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/configuration_views.html">Configuration Views</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/zookeeper.html">ZooKeeper</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/handling_crypto_keys_and_certificates.html">Handling Crypto Keys and Certificates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/schemas.html">Schemas</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="examples/extension_features.html">Extension Features</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Part 5 Project</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="50_contributing.html">5.1 Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="51_legal.html">5.2 Legal</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="52_ai_guidance.html">5.3 AI Guidance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="53_links.html">5.4 Links</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mConfig Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Part 3 Advanced Topics</li>
+      <li class="breadcrumb-item active">3.9 Utilities and Adapters</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="39-utilities-and-adapters">3.9 Utilities and Adapters<a class="headerlink" href="#39-utilities-and-adapters" title="Permanent link">&para;</a></h1>
+<p>The <code>mConfigUtil</code> module provides specialized <code>Configuration</code> implementations (adapters) and static utility methods to bridge existing Java structures with the <code>mConfig</code> ecosystem.</p>
+<h2 id="391-core-adapters">3.9.1 Core Adapters<a class="headerlink" href="#391-core-adapters" title="Permanent link">&para;</a></h2>
+<p>These classes allow existing configuration sources to be viewed through the <code>Configuration</code> interface.</p>
+<h3 id="3911-propertiesconfiguration">3.9.1.1 <code>PropertiesConfiguration</code><a class="headerlink" href="#3911-propertiesconfiguration" title="Permanent link">&para;</a></h3>
+<p>Used for adapting legacy code step-by-step. It allows programmatically generated <code>java.util.Properties</code> to be integrated into the unified <code>mConfig</code> structure.
+- <strong>Note</strong>: This adapter provides almost none of the advanced features <code>mConfig</code> supplies (like multi-tier resolution or automatic schema discovery).
+- <strong>Recommendation</strong>: Consider loading properties via <code>mConfig</code> itself by adding paths to <code>ConfigFeature.ADDITIONAL_USER_DIRECTORIES</code>.</p>
+<h3 id="3912-overridingconfiguration">3.9.1.2 <code>OverridingConfiguration</code><a class="headerlink" href="#3912-overridingconfiguration" title="Permanent link">&para;</a></h3>
+<p>Provides an immutable view that overlays a <code>Map&lt;String, Object&gt;</code> on top of an existing <code>Configuration</code>. Overrides take precedence.
+- <strong>Note</strong>: This is intended for temporary, in-memory overlays. 
+- <strong>Recommendation</strong>: For most use cases, prefer using <code>Configuration.put*(key, value, ConfigScope.RUNTIME)</code>. The <code>RUNTIME</code> scope is specifically designed for temporary overrides that are not persisted.</p>
+<h3 id="3913-remappedconfiguration">3.9.1.3 <code>RemappedConfiguration</code><a class="headerlink" href="#3913-remappedconfiguration" title="Permanent link">&para;</a></h3>
+<p>Remaps keys matching a <code>newPrefix</code> to an <code>oldPrefix</code> for lookup in an underlying <code>source</code> configuration. This is useful for maintaining backward compatibility or redirecting configuration branches.</p>
+<h3 id="3914-what-the-adapters-are-and-what-they-are-not">3.9.1.4 What the adapters are, and what they are not<a class="headerlink" href="#3914-what-the-adapters-are-and-what-they-are-not" title="Permanent link">&para;</a></h3>
+<p>The adapters help with transition and adoption. They are views for reading, not a second facade;
+for anything beyond that, use the mConfig <code>Configuration</code> itself.</p>
+<ul>
+<li><strong>Read-only.</strong> Every <code>put(...)</code> throws <code>ConfigException</code> with reason <code>NOT_WRITEABLE</code>, with or
+  without a scope; <code>isWriteable()</code> is <code>false</code>. (Up to 0.8.16, <code>RemappedConfiguration</code> wrote through
+  for some <code>put</code> variants.)</li>
+<li><strong>No cursor</strong>, and the schema cannot be set on a view: <code>getConfigCursor()</code> and <code>setConfigSchema()</code>
+  throw <code>UnsupportedOperationException</code>.</li>
+<li><strong><code>RemappedConfiguration</code> and <code>OverridingConfiguration</code> show their source as it is.</strong> Values,
+  entries, the schema, <code>getSourceLocations()</code>, <code>isClosed()</code> and update subscriptions are those of
+  the configuration behind the view. A secret is handed on as a <code>SecretValue</code>. An entry reports
+  the key, scope and location it has in the source; the schema of a remapped view knows the keys
+  under the old prefix.</li>
+<li><strong>A remapped view hides what the source has under the new prefix.</strong> Every key starting with
+  <code>newPrefix</code> is read from <code>oldPrefix</code>, so a key the source itself has under <code>newPrefix</code> cannot be
+  read through the view; a listing still names it once, since the view shows both under the same name.
+  Choose a <code>newPrefix</code> the source does not use.</li>
+<li><strong>Overrides are checked when read.</strong> An override that cannot be converted to the requested type
+  throws <code>ConfigException</code> (<code>CONVERSION_FAILURE</code>); one that does not match the schema of the parent
+  throws <code>ConfigException</code> (<code>ARGUMENT_INVALID</code>). The value is not put into the message. An entry
+  from the overrides has no scope and no location (<code>null</code>): it was not read from anywhere.</li>
+<li><strong><code>PropertiesConfiguration</code> behaves like the <code>Properties</code> behind it.</strong> A key that is not there
+  gives <code>null</code>, no exception. A value that cannot be converted to the requested type throws
+  <code>ConfigException</code> (<code>CONVERSION_FAILURE</code>), as parsing the string in plain Java would (up to 0.8.16:
+  <code>null</code>). <code>getSecret()</code> returns the property as a <code>SecretValue</code> (up to 0.8.16: always <code>null</code>);
+  in the <code>Properties</code> it stays a plain, unprotected String, so the first such access is logged at
+  INFO level, once per JVM, through the JDK's <code>System.Logger</code> named <code>mConfig</code>. Read secrets through
+  mConfig itself. No schema, no locations, no update notifications.</li>
+</ul>
+<h2 id="392-scope-restricted-reads">3.9.2 Scope-Restricted Reads<a class="headerlink" href="#392-scope-restricted-reads" title="Permanent link">&para;</a></h2>
+<p>All three adapter classes implement the full <code>Configuration</code> interface, including the
+scope-aware read methods. Scope restriction is <strong>per-call</strong> — there is no per-instance
+scope state — so the same adapter instance can safely serve call sites that need
+different scope views.</p>
+<p>The adapters do not treat the scopes alike:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Adapter</th>
+<th style="text-align: left;">Scope-restricted read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>RemappedConfiguration</code></td>
+<td style="text-align: left;">passed on to the source: only the given scopes are read</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OverridingConfiguration</code></td>
+<td style="text-align: left;">an override applies whatever the scopes; keys that are not overridden are read from the parent in the given scopes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PropertiesConfiguration</code></td>
+<td style="text-align: left;">the scopes are ignored: <code>Properties</code> have none</td>
+</tr>
+</tbody>
+</table>
+<p>To read a value only from specific scopes, use <code>getConfigEntryFromFullKey(key, scopes)</code>:</p>
+<pre><code class="language-java">EnumSet&lt;ConfigScope&gt; localScopes = EnumSet.of(ConfigScope.PRODUCT, ConfigScope.HOST);
+
+Configuration remapped = ConfigUtil.remapped(base, &quot;old.prefix&quot;, &quot;new.prefix&quot;);
+
+ConfigEntry entry = remapped.getConfigEntryFromFullKey(&quot;my.key&quot;, localScopes);
+String value = (entry != null) ? entry.getValueAsString() : null;
+</code></pre>
+<p>To enumerate all keys visible in specific scopes:</p>
+<pre><code class="language-java">Set&lt;String&gt; keys = config.getAllConfigurationKeysFlattened(localScopes);
+</code></pre>
+<h2 id="393-configutil-entry-point">3.9.3 <code>ConfigUtil</code> Entry Point<a class="headerlink" href="#393-configutil-entry-point" title="Permanent link">&para;</a></h2>
+<p>The <code>ConfigUtil</code> class provides convenient factory methods for the adapters above, along with other helper functions:</p>
+<ul>
+<li><strong>Factory Methods</strong>:<ul>
+<li><code>ConfigUtil.fromProperties(Properties props)</code></li>
+<li><code>ConfigUtil.withOverrides(Configuration parent, Map&lt;String, Object&gt; overrides)</code></li>
+<li><code>ConfigUtil.remapped(Configuration source, String oldPrefix, String newPrefix)</code></li>
+</ul>
+</li>
+<li><strong>Path Discovery</strong>:<ul>
+<li><code>ConfigUtil.whereToPutMyFiles(...)</code>: Helps find writable configuration paths for a given scope.</li>
+<li><code>ConfigUtil.printConfigPaths(...)</code>: Prints the discovered configuration search paths for debugging.</li>
+</ul>
+</li>
+<li><strong>Property Extraction</strong>:<ul>
+<li><code>ConfigUtil.copyPrefixedEntriesToJavaProperties(...)</code>: Exports a subset of a configuration to a <code>Properties</code> object.</li>
+<li><code>ConfigUtil.copySchemeDefinedEntriesToJavaProperties(...)</code>: Exports all entries defined by the configuration schema.</li>
+</ul>
+</li>
+<li><strong>Quick Configuration</strong>:<ul>
+<li><code>ConfigUtil.quickConfig(...)</code>: A one-liner for bootstrapping a standard configuration for simple applications.</li>
+</ul>
+</li>
+</ul>
+<h2 id="394-usage">3.9.4 Usage<a class="headerlink" href="#394-usage" title="Permanent link">&para;</a></h2>
+<p>Add the following dependency to your project:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.metabit.platform.support.config&lt;/groupId&gt;
+    &lt;artifactId&gt;mConfigUtil&lt;/artifactId&gt;
+    &lt;version&gt;${mconfig.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>JPMS module name:</p>
+<pre><code class="language-java">requires metabit.mconfig.util;
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="37_extensions_and_advanced_use.html" class="btn btn-neutral float-left" title="3.8 Extensions and Advanced Use"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="38_code_improvements.html" class="btn btn-neutral float-right" title="3.10 Better Practice: Replace This With That">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="37_extensions_and_advanced_use.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="38_code_improvements.html" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
