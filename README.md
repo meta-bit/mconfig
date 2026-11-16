@@ -264,7 +264,7 @@ status
 | Build (CI) | [![Build (github)](https://github.com/meta-bit/mconfig/actions/workflows/maven.yml/badge.svg)](https://github.com/meta-bit/mconfig/actions/workflows/maven.yml)                                                     |
 | Artifact   | [![Maven Central](https://img.shields.io/maven-central/v/org.metabit.platform.support.config/mconfig.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/org.metabit.platform.support.config/mconfig) |
 | Javadoc    | [![javadoc](https://javadoc.io/badge2/org.metabit.platform.support.config/mconfigcore/javadoc.svg)](https://javadoc.io/doc/org.metabit.platform.support.config/mconfigcore)                                         |
-<!-- dependabot, coverage etc. planned ->
+<!-- dependabot, coverage etc. planned -->
 
 The "Hen-and-Egg" Problem Solved.
 
