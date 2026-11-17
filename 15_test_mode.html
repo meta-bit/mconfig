@@ -293,6 +293,10 @@ See <a href="25_config_features.html#who-may-set-a-feature">Who may set a featur
 KUBERNETES_API_ENDPOINT=http://localhost:8080
 # send the ServiceAccount token to the http mock server
 KUBERNETES_ALLOW_INSECURE_TRANSPORT=true</code></pre>
+<p>For an <code>https</code> mock server with a self-signed certificate, point <code>KUBERNETES_SA_CA_CERT_PATH</code> to its CA
+  certificate, or set <code>KubernetesFeatures.TRUST_ALL_CERTIFICATES</code> in code. That feature switches certificate
+  checks off and is therefore taken from code only, never from a file or an environment variable.
+  Settings made in code or in <code>mconfig.properties</code> win over this bootstrap file.</p>
 <p>To let the module run in <code>TEST_MODE</code> at all, set the feature <code>KUBERNETES_BYPASS_TEST=true</code>, in code or in
   the component's <code>src/test/resources/.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code>.</p>
 <p>Alternatively, use environment variables (see <a href="#runtime-overrides">Runtime Overrides</a> below).</p>

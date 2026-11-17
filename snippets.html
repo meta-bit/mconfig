@@ -418,7 +418,8 @@ UPDATE_CHECK_FREQUENCY_MS=2000</code></pre>
   where the classpath is not fully controlled.</li>
 </ul>
 <h2 id="5-scope-reference">5. Scope reference<a class="headerlink" href="#5-scope-reference" title="Permanent link">&para;</a></h2>
-<p>Resolution runs from the most specific scope down; the first hit wins.
+<p>Resolution runs from the most specific scope down; the topmost layer holding the key wins. Within one
+scope, a location later in the search list overrides an earlier one.
 Details: <a href="20_scopes.html">Scopes</a>, <a href="22_priorities_and_hierarchies.html">Priorities and Hierarchies</a>.</p>
 <table>
 <thead>
@@ -457,7 +458,7 @@ Details: <a href="20_scopes.html">Scopes</a>, <a href="22_priorities_and_hierarc
 <tr>
 <td>6</td>
 <td><code>HOST</code></td>
-<td><code>/etc/</code>, <code>%PROGRAMDATA%</code></td>
+<td><code>/etc/opt/&lt;company&gt;/&lt;app&gt;/</code>, <code>%PROGRAMDATA%\&lt;company&gt;\&lt;app&gt;</code></td>
 </tr>
 <tr>
 <td>7</td>

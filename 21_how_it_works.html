@@ -284,44 +284,41 @@ within the same scope. <code>SUB_PATH</code> (if set) is appended to the applica
 <blockquote>
 <p><strong>Candidate Search List &amp; Dynamic Discovery</strong>: <code>getSearchList()</code> contains all candidate <code>ConfigLocation</code>s considered by active storage providers (e.g., standard OS directories). Candidate directories are retained in the search list even if they do not exist on disk at initialization time. When a missing directory or configuration file is created later while the application runs, background change checkers detect it and dynamically attach it to active configurations. Conversely, <code>configuration.getSourceLocations()</code> lists only the locations that currently exist and contributed active data layers.</p>
 <p><strong>Optional Company Segment</strong>: <code>&lt;company&gt;</code> omitted if <code>COMPANY_NAME</code> blank/null/whitespace (recommended but can be intentionally left blank for app-only paths). Examples below show both forms where applicable.</p>
+<p><strong>Always below the application's directory</strong>: every location contains the application name (on Android,
+the directory belongs to the app). A configuration named <code>database</code> is read from, e.g.,
+<code>/etc/opt/&lt;company&gt;/&lt;app&gt;/database.properties</code>, never from a shared <code>/etc/database.properties</code>; applications
+do not see each other's files. Exception, under review: the macOS APPLICATION scope (<code>&lt;appDir&gt;/.config</code>, see there).</p>
+<p><strong>Order within a scope</strong>: a location further down a list overrides the ones above it in the same scope,
+e.g. on Linux <code>/usr/local/etc/&lt;app&gt;</code> overrides <code>/etc/opt/&lt;app&gt;</code>. See
+<a href="22_priorities_and_hierarchies.html">Priorities and Hierarchies</a>.</p>
 </blockquote>
 <p><strong>Linux (and most Unix-like systems)</strong></p>
 <p>HOST scope:
 - <code>$XDG_CONFIG_DIRS</code> (default <code>/etc/xdg</code>), each entry: <code>&lt;dir&gt;/&lt;app&gt;</code>
 - <code>/etc/opt/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code>
 - <code>/etc/opt/&lt;app&gt;/&lt;subPath&gt;</code>
-- <code>/usr/local/etc/&lt;app&gt;/&lt;subPath&gt;</code>
-- <code>/etc/&lt;app&gt;/&lt;subPath&gt;</code>
-- <code>/etc/opt/[&lt;company&gt;/]</code> (broader HOST scope)
-- <code>/etc/opt/</code> (broader HOST scope)
-- <code>/usr/local/etc/</code> (broader HOST scope)
-- <code>/etc/</code> (broader HOST scope)</p>
+- <code>/usr/local/etc/&lt;app&gt;/&lt;subPath&gt;</code></p>
 <p>USER scope:
-- <code>$XDG_CONFIG_HOME/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code> (if set)
-- <code>~/.config/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code>
-- <code>~/.&lt;app&gt;/&lt;subPath&gt;</code>
-- 
-SESSION scope:
+- <code>$XDG_CONFIG_HOME/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code> if <code>XDG_CONFIG_HOME</code> is set (an absolute path), otherwise
+  <code>~/.config/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code>
+- <code>~/.&lt;app&gt;/&lt;subPath&gt;</code></p>
+<p>SESSION scope:
 - <code>$PWD/.config/&lt;app&gt;/&lt;subPath&gt;</code></p>
 <p><strong>Windows</strong></p>
 <p>SESSION scope:
-- <code>%CD%\\.config\\&lt;app&gt;\\&lt;subPath&gt;</code>
-- <code>%CD%</code> (legacy side-by-side .ini, .properties, etc.)</p>
+- <code>%CD%\.config\&lt;app&gt;\&lt;subPath&gt;</code>
+- <code>%CD%\&lt;app&gt;\&lt;subPath&gt;</code> (legacy side-by-side .ini, .properties, etc.)</p>
 <p>USER scope:
-- <code>%XDG_CONFIG_HOME%\\&lt;app&gt;\\&lt;subPath&gt;</code> (if set)
-- <code>%AppData%\\[&lt;company&gt;\\&lt;]&lt;app&gt;\\&lt;subPath&gt;</code>
-- <code>%LocalAppData%\\[&lt;company&gt;\\&lt;]&lt;app&gt;\\&lt;subPath&gt;</code>
-- <code>%UserProfile%\\.config\\&lt;app&gt;\\&lt;subPath&gt;</code></p>
-<p>APPLICATION scope:
-- <code>&lt;appDir&gt;\\.config</code>
-- <code>&lt;appDir&gt;</code></p>
+- <code>%XDG_CONFIG_HOME%\&lt;app&gt;\&lt;subPath&gt;</code> (if set)
+- <code>%AppData%\[&lt;company&gt;\]&lt;app&gt;\&lt;subPath&gt;</code>
+- <code>%LocalAppData%\[&lt;company&gt;\]&lt;app&gt;\&lt;subPath&gt;</code>
+- <code>%UserProfile%\.config\&lt;app&gt;\&lt;subPath&gt;</code></p>
+<p>APPLICATION scope (<code>&lt;appDir&gt;</code>: the directory of the mConfig filesystem module's JAR):
+- <code>&lt;appDir&gt;\.config\&lt;app&gt;\&lt;subPath&gt;</code>
+- <code>&lt;appDir&gt;\&lt;app&gt;\&lt;subPath&gt;</code></p>
 <p>HOST scope:
-- <code>%ProgramData%\\[&lt;company&gt;\\&lt;]&lt;app&gt;</code>
-- <code>%AllUsersProfile%\\[&lt;company&gt;\\&lt;]&lt;app&gt;</code>
-- <code>%ProgramData%\\[&lt;company&gt;\\&lt;]</code> (broader HOST scope)
-- <code>%ProgramData%</code> (broader HOST scope)
-- <code>%AllUsersProfile%\\[&lt;company&gt;\\&lt;]</code> (broader HOST scope)
-- <code>%AllUsersProfile%</code> (broader HOST scope)</p>
+- <code>%ProgramData%\[&lt;company&gt;\]&lt;app&gt;\&lt;subPath&gt;</code>
+- <code>%AllUsersProfile%\[&lt;company&gt;\]&lt;app&gt;\&lt;subPath&gt;</code></p>
 <p><strong>macOS (experimental)</strong></p>
 <p>USER scope:
 - <code>$XDG_CONFIG_HOME/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code> (if set)
@@ -331,9 +328,10 @@ SESSION scope:
 <p>HOST scope:
 - <code>/Library/Application Support/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code>
 - <code>/Library/Preferences/[&lt;company&gt;/]&lt;app&gt;/&lt;subPath&gt;</code></p>
-<p>APPLICATION scope:
+<p>APPLICATION scope (<code>&lt;appDir&gt;</code>: the directory of the mConfig filesystem module's JAR):
 - <code>&lt;appDir&gt;/.config</code>
 - <code>&lt;appDir&gt;</code></p>
+<p>These two carry no application name, unlike their Windows counterparts; this is under review.</p>
 <p>SESSION scope:
 - <code>$PWD/.config/&lt;app&gt;/&lt;subPath&gt;</code></p>
 <p><strong>Android (experimental)</strong></p>
