@@ -132,7 +132,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.7 Snippets Reference</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Examples</span></p>
@@ -220,12 +222,12 @@ Do not rely on their output in automation yet.</p>
 <li><code>validate</code>: Validate a configuration against its schema. Checks the effective values only,
   not the values in each layer.</li>
 <li><code>propose-schema</code>: Generate a draft <code>ConfigSchema</code> JSON from an existing configuration.
-  Currently disabled; being rewritten for 0.9.2.</li>
+  Currently disabled; being rewritten for 0.9.6.</li>
 <li><code>kubernetes-rbac</code>: Print a Role and RoleBinding for the ServiceAccount of a pod that reads its
   configuration through the Kubernetes sources. <strong>The output is a broad template:</strong> it grants read
   on all ConfigMaps and Secrets in the namespace. Restrict it with <code>resourceNames</code> to the
   resources you configured before applying it. A generator limited to the configured resources is
-  planned for 0.9.3.</li>
+  planned for 0.9.7.</li>
 </ul>
 <h3 id="4121-set-command-options">4.1.2.1 <code>set</code> command options:<a class="headerlink" href="#4121-set-command-options" title="Permanent link">&para;</a></h3>
 <ul>

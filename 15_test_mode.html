@@ -162,7 +162,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.7 Snippets Reference</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Examples</span></p>
@@ -279,6 +281,18 @@ See <a href="25_config_features.html#who-may-set-a-feature">Who may set a featur
 </ul>
 <p>This is based on the standard maven test run setup,
   where the tests are run from one level above the src directory.
+- <em>not</em> disable environment variables (<code>mConfigSourceEnvVar</code>): they belong to the test environment, set by
+  whoever starts the tests (a CI job, an ephemeral container). On top of them, the test can supply its own:
+  <pre class="highlight"><code class="language-java">ConfigFactoryBuilder.create("ACME", "demoApp")
+        .setTestMode(true)
+        .setTestEnvironment(Map.of("DEMOAPP_NETWORK_SERVER_HOST", "localhost"))
+        .build();</code></pre>
+  A variable given there wins over a real one of the same name; outside test mode the map is ignored.
+  To keep the real environment (e.g. variables exported in a developer's shell) out of the tests, set
+  <code>ENVVAR_REAL_ENVIRONMENT_IN_TEST_MODE=false</code>, in code (<code>EnvVarFeatures.REAL_ENVIRONMENT_IN_TEST_MODE</code>) or in
+  the component's <code>src/test/resources/.config/&lt;company&gt;/&lt;application&gt;/mconfig.properties</code>; then only the
+  variables from <code>setTestEnvironment()</code> are read. The variables a configuration reads in test mode are named in
+  an INFO line (names only, never values).
 - disable lookup in default network environments, if network config sources are active. For example, <code>mConfigSourceKubernetes</code> will automatically disable its API client when <code>TEST_MODE</code> is active to prevent accidental cluster communication.
 - enable lookup in test network environments, if available/configured (e.g., using <code>BYPASS_TEST</code> and mock endpoints). </p>
 <p><strong>Testing Networked Modules:</strong>

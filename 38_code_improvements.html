@@ -129,19 +129,17 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#26-a-dot-as-separator-in-hierarchical-keys">2.6 A dot as separator in hierarchical keys</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#27-chaining-off-settestmode">2.7 Chaining off setTestMode()</a>
+    <li class="toctree-l3"><a class="reference internal" href="#27-reading-the-environment-next-to-mconfig">2.7 Reading the environment next to mConfig</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#28-reading-the-environment-next-to-mconfig">2.8 Reading the environment next to mConfig</a>
+    <li class="toctree-l3"><a class="reference internal" href="#28-your-own-override-or-fallback-logic">2.8 Your own override or fallback logic</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#29-your-own-override-or-fallback-logic">2.9 Your own override or fallback logic</a>
+    <li class="toctree-l3"><a class="reference internal" href="#29-packing-a-single-jar-with-jar-with-dependencies">2.9 Packing a single JAR with jar-with-dependencies</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#210-packing-a-single-jar-with-jar-with-dependencies">2.10 Packing a single JAR with jar-with-dependencies</a>
+    <li class="toctree-l3"><a class="reference internal" href="#210-library-settings-in-the-global-mconfigproperties">2.10 Library settings in the global mconfig.properties</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#211-library-settings-in-the-global-mconfigproperties">2.11 Library settings in the global mconfig.properties</a>
+    <li class="toctree-l3"><a class="reference internal" href="#211-policy-locations-registered-by-the-application">2.11 POLICY locations registered by the application</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#212-policy-locations-registered-by-the-application">2.12 POLICY locations registered by the application</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#213-a-version-copied-from-documentation">2.13 A version copied from documentation</a>
+    <li class="toctree-l3"><a class="reference internal" href="#212-a-version-copied-from-documentation">2.12 A version copied from documentation</a>
     </li>
         </ul>
     </li>
@@ -164,7 +162,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.7 Snippets Reference</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Examples</span></p>
@@ -368,17 +368,7 @@ never closed leaks them.</p>
 <pre class="highlight"><code class="language-java">cfg.getString("server/host");</code></pre></p>
 <p>Why: the separator is <code>/</code>. A dot is part of the key; in flat formats such as <code>.properties</code> the
 key <code>server.host</code> is one literal name.</p>
-<h3 id="27-chaining-off-settestmode">2.7 Chaining off <code>setTestMode()</code><a class="headerlink" href="#27-chaining-off-settestmode" title="Permanent link">&para;</a></h3>
-<p>Instead of:
-<pre class="highlight"><code class="language-java">ConfigFactory factory = ConfigFactoryBuilder.create("ACME", "demoApp").setTestMode(true).build();</code></pre></p>
-<p>Do this:
-<pre class="highlight"><code class="language-java">ConfigFactoryBuilder builder = ConfigFactoryBuilder.create("ACME", "demoApp");
-builder.setTestMode(true);
-ConfigFactory factory = builder.build();</code></pre></p>
-<p>Why: <code>setTestMode()</code>, <code>setTestConfigPaths()</code> and <code>setTestParameters()</code> return <code>void</code>; the chained
-form does not compile. Only the <code>setFeature(...)</code> family, <code>setSchemas()</code>, <code>addSource()</code> and
-<code>addSecretsProvider()</code> return the builder.</p>
-<h3 id="28-reading-the-environment-next-to-mconfig">2.8 Reading the environment next to mConfig<a class="headerlink" href="#28-reading-the-environment-next-to-mconfig" title="Permanent link">&para;</a></h3>
+<h3 id="27-reading-the-environment-next-to-mconfig">2.7 Reading the environment next to mConfig<a class="headerlink" href="#27-reading-the-environment-next-to-mconfig" title="Permanent link">&para;</a></h3>
 <p>Instead of:
 <pre class="highlight"><code class="language-java">String host = System.getenv("DEMOAPP_NETWORK_SERVER_HOST");
 if (host == null)
@@ -387,7 +377,7 @@ if (host == null)
 <pre class="highlight"><code class="language-java">String host = cfg.getString("server/host");</code></pre></p>
 <p>Why: with <code>mconfigsourceenvvar</code> the variable already arrives in the <code>SESSION</code> scope and overrides
 the files. Your own precedence logic duplicates the hierarchy and hides the origin of the value.</p>
-<h3 id="29-your-own-override-or-fallback-logic">2.9 Your own override or fallback logic<a class="headerlink" href="#29-your-own-override-or-fallback-logic" title="Permanent link">&para;</a></h3>
+<h3 id="28-your-own-override-or-fallback-logic">2.8 Your own override or fallback logic<a class="headerlink" href="#28-your-own-override-or-fallback-logic" title="Permanent link">&para;</a></h3>
 <p>Instead of:
 <pre class="highlight"><code class="language-java">String value = overrides.containsKey(key) ? overrides.get(key) : cfg.getString(key);</code></pre></p>
 <p>Do this:
@@ -395,7 +385,7 @@ the files. Your own precedence logic duplicates the hierarchy and hides the orig
 <p>Why: <code>RUNTIME</code> is the scope for in-memory overrides by your own code; it wins over everything
 except <code>POLICY</code>. Fallback between scopes is built in (<code>FALLBACKS_ACROSS_SCOPES</code>). The
 <code>ConfigUtil.withOverrides()</code> view is for cases where the configuration must not be changed.</p>
-<h3 id="210-packing-a-single-jar-with-jar-with-dependencies">2.10 Packing a single JAR with <code>jar-with-dependencies</code><a class="headerlink" href="#210-packing-a-single-jar-with-jar-with-dependencies" title="Permanent link">&para;</a></h3>
+<h3 id="29-packing-a-single-jar-with-jar-with-dependencies">2.9 Packing a single JAR with <code>jar-with-dependencies</code><a class="headerlink" href="#29-packing-a-single-jar-with-jar-with-dependencies" title="Permanent link">&para;</a></h3>
 <p>Instead of:
 <pre class="highlight"><code class="language-xml">&lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;</code></pre></p>
 <p>Do this: use a packaging that merges the <code>META-INF/services</code> files (the merging assembly
@@ -403,19 +393,19 @@ descriptor, shade's <code>ServicesResourceTransformer</code>, or Shadow's <code>
 <p>Why: that descriptor keeps one file per service interface, so storages and formats go missing;
 <code>build()</code> fails with <code>JAVA_SERVICE_CONFIGURATION_ERROR</code>, or sources are lost without notice.
 Template: "Dependencies"; details: <a href="13_getting_started.html#138-packaging-as-a-single-jar">Packaging as a single JAR</a>.</p>
-<h3 id="211-library-settings-in-the-global-mconfigproperties">2.11 Library settings in the global <code>mconfig.properties</code><a class="headerlink" href="#211-library-settings-in-the-global-mconfigproperties" title="Permanent link">&para;</a></h3>
+<h3 id="210-library-settings-in-the-global-mconfigproperties">2.10 Library settings in the global <code>mconfig.properties</code><a class="headerlink" href="#210-library-settings-in-the-global-mconfigproperties" title="Permanent link">&para;</a></h3>
 <p>Instead of: <code>src/main/resources/.config/metabit/mConfig/mconfig.properties</code></p>
 <p>Do this: <code>src/main/resources/.config/&lt;company&gt;/&lt;app&gt;/mconfig.properties</code>, or <code>setFeature(...)</code> in code.</p>
 <p>Why: the global file is deprecated and removed before 0.9.0; a component configures the library
 for itself only. Features marked <code>CODE_ONLY</code> can be set in code only.</p>
-<h3 id="212-policy-locations-registered-by-the-application">2.12 POLICY locations registered by the application<a class="headerlink" href="#212-policy-locations-registered-by-the-application" title="Permanent link">&para;</a></h3>
+<h3 id="211-policy-locations-registered-by-the-application">2.11 POLICY locations registered by the application<a class="headerlink" href="#211-policy-locations-registered-by-the-application" title="Permanent link">&para;</a></h3>
 <p>Instead of:
 <pre class="highlight"><code class="language-java">builder.setFeature(ConfigFeature.ADDITIONAL_RUNTIME_DIRECTORIES, List.of("POLICY:/opt/myapp/policy"));</code></pre></p>
 <p>Do this: leave <code>POLICY</code> to the administrator's locations (Group Policy, enforced settings). Use
 <code>HOST</code> or <code>APPLICATION</code> for what the application ships.</p>
 <p>Why: <code>POLICY</code> overrides everything, so an application must not grant it to itself. Outside test
 mode such a location fails unless <code>ALLOW_APPLICATION_POLICY_LOCATIONS</code> is set in code.</p>
-<h3 id="213-a-version-copied-from-documentation">2.13 A version copied from documentation<a class="headerlink" href="#213-a-version-copied-from-documentation" title="Permanent link">&para;</a></h3>
+<h3 id="212-a-version-copied-from-documentation">2.12 A version copied from documentation<a class="headerlink" href="#212-a-version-copied-from-documentation" title="Permanent link">&para;</a></h3>
 <p>Instead of: copying <code>&lt;version&gt;${mconfig.version}&lt;/version&gt;</code>, or a version number from an example,
 into a build file.</p>
 <p>Do this: take the version the project already uses (its <code>pom.xml</code>, <code>build.gradle</code>, or the local

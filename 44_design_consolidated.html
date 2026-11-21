@@ -234,7 +234,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.7 Snippets Reference</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Examples</span></p>
@@ -303,7 +305,8 @@
 <h2 id="441-overview">4.4.1 Overview<a class="headerlink" href="#441-overview" title="Permanent link">&para;</a></h2>
 <p>mConfig is a modular configuration library for Java, designed for flexibility, 
 extensibility, and standardized configuration management 
-across different operating systems and environments.</p>
+across different operating systems and environments.
+Terms are used as defined in the <a href="47_glossary.html">Glossary</a>.</p>
 <h3 id="4411-multi-platform-and-environment-portability-goal">4.4.1.1 Multi-Platform and Environment Portability Goal<a class="headerlink" href="#4411-multi-platform-and-environment-portability-goal" title="Permanent link">&para;</a></h3>
 <p>While the primary implementation is in Java, mConfig is designed 
 with future ports to other languages (e.g., C, Rust, Python) and varied deployment environments in mind.
@@ -389,11 +392,15 @@ without significant architectural changes.</p>
 <p><strong>Default Order (Highest to Lowest):</strong>
 1. <code>RAM</code> (In-memory overrides)
 2. <code>secrets</code> (Encrypted/sensitive data)
-3. <code>files</code> (Local filesystem)
-4. <code>registry</code> (Windows Registry - JNR-FFI)
-5. <code>registryjni</code> (Windows Registry - JNI)
-6. <code>zookeeper</code> (ZooKeeper - Experimental, Self-configuring)
-7. <code>JAR</code> (Classpath resources/defaults)</p>
+3. <code>vault</code> (HashiCorp Vault)
+4. <code>aws-secrets</code> (AWS Secrets Manager)
+5. <code>envvar</code> (Environment variables)
+6. <code>files</code> (Local filesystem)
+7. <code>registry</code> (Windows Registry - JNR-FFI)
+8. <code>registryjni</code> (Windows Registry - JNI)
+9. <code>zookeeper</code> (ZooKeeper - Experimental, Self-configuring)
+10. <code>JAR</code> (Classpath resources/defaults)</p>
+<p>An entry also covers the IDs it prefixes up to a <code>-</code> or <code>.</code> (<code>RAM</code> covers <code>RAM-SESSION</code>).</p>
 <p>This order can be customized via <code>STORAGE_TYPE_PRIORITIES</code> (List of IDs) and <code>STORAGE_TYPE_ALLOW_ALL_STORAGES</code> (Boolean).</p>
 <h2 id="4422-self-configuration">4.4.2.2 Self-Configuration<a class="headerlink" href="#4422-self-configuration" title="Permanent link">&para;</a></h2>
 <p>mConfig supports "self-configuration" to allow the library to configure 
@@ -555,12 +562,19 @@ partially loaded configurations for their own initialization
 <h3 id="yaml">YAML<a class="headerlink" href="#yaml" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Supports hierarchical structures.</li>
-<li>Implementation must ensure secure parsing (avoiding arbitrary command execution).</li>
+<li>Implementation must ensure secure parsing (avoiding arbitrary command execution). The SnakeYAML module composes
+  nodes only and uses <code>SafeConstructor</code>; content with global tags (<code>!!java.…</code>, <code>!!javax.script.…</code>) is refused as a
+  parse error.</li>
+<li>Read and written as UTF-8 (UTF-16/32 by byte order mark), whatever the platform charset.</li>
 </ul>
 <h3 id="ini">INI<a class="headerlink" href="#ini" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Section-based (<code>[section]</code>).</li>
 <li>Hierarchical keys can be mapped to sections using <code>/</code> (e.g., <code>[first/second]</code>).</li>
+<li>Read and written as UTF-8, whatever the platform charset; a leading byte order mark is ignored.</li>
+<li>Strict since 0.9.0: a line that is not blank, a comment (<code>;</code>, <code>#</code>), a <code>[section]</code> header or <code>key=value</code> makes the
+  whole file invalid (unclosed section header, line without <code>=</code>, empty key). The storage logs a WARNING with the
+  line number and continues without that file; the line's content is never logged.</li>
 </ul>
 <h3 id="4477-writing-priorities">4.4.7.7 Writing Priorities<a class="headerlink" href="#4477-writing-priorities" title="Permanent link">&para;</a></h3>
 <p>When writing to a configuration (e.g., via <code>put</code>), mConfig applies the following priorities within the requested scope(s):</p>

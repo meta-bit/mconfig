@@ -124,7 +124,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.7 Snippets Reference</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Examples</span></p>
@@ -260,16 +262,20 @@ Both support reading configuration data from <code>HKEY_CURRENT_USER</code> (USE
     // ...
     }</code></pre></p>
 <h2 id="363-base-path-configuration">3.6.3 Base Path Configuration<a class="headerlink" href="#363-base-path-configuration" title="Permanent link">&para;</a></h2>
-<p>By default, the registry source looks under <code>Software\\[&lt;CompanyName&gt;\\\\]&lt;ApplicationName&gt;</code> (company segment omitted if <code>COMPANY_NAME</code> blank/null/whitespace). You can override this using the <code>REGISTRY_BASE_PATH</code> feature. </p>
+<p>By default, the registry source looks under <code>Software\\[&lt;CompanyName&gt;\\\\]&lt;ApplicationName&gt;</code> (company segment omitted if <code>COMPANY_NAME</code> blank/null/whitespace). You can override this using the <code>WINDOWS_REGISTRY_BASE_PATH</code> feature (named <code>REGISTRY_BASE_PATH</code> before 0.9.0;
+the old name still works, with a deprecation WARNING).</p>
 <p>You can use the module-specific feature classes, or a string-based key to avoid a compile-time dependency on a specific implementation:</p>
 <pre class="highlight"><code class="language-java">// Option 1: Using module-specific classes
 // For mConfigWinRegistry
-builder.setFeature(WinRegistryFeatures.REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
+builder.setFeature(WinRegistryFeatures.WINDOWS_REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
 // For mConfigWinRegistryJNI
-builder.setFeature(WinRegistryJNIFeatures.REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
+builder.setFeature(WinRegistryJNIFeatures.WINDOWS_REGISTRY_BASE_PATH, "Software\\LegacyPath\\App");
 
 // Option 2: Using a string key (works for both modules)
-builder.setFeature("REGISTRY_BASE_PATH", "Software\\LegacyPath\\App");</code></pre>
+builder.setFeature("WINDOWS_REGISTRY_BASE_PATH", "Software\\LegacyPath\\App");</code></pre>
+<p>The two registry modules do the same job (capability <code>windows-registry</code>); use only one of them. With both on the
+class path, mConfig uses neither and logs a WARNING; <code>DISABLED_MODULE_IDS=registry</code> keeps the JNI module,
+<code>DISABLED_MODULE_IDS=registryjni</code> the jnr-ffi module.</p>
               
             </div>
           </div><footer>

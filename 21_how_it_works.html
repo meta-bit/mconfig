@@ -166,7 +166,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.7 Snippets Reference</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Examples</span></p>
@@ -234,7 +236,9 @@
                 <h1 id="21-how-it-works">2.1 How it Works<a class="headerlink" href="#21-how-it-works" title="Permanent link">&para;</a></h1>
 <p>To get library operation started, we need a lot of preparation and settings.
 These are collected in a factory builder, <code>ConfigFactoryBuilder</code>,
-which then builds a <code>ConfigFactory</code> with specific settings.</p>
+which then builds a <code>ConfigFactory</code> with specific settings.
+The terms used on this page (storage, location, layer, search list, component) are defined in the
+<a href="47_glossary.html">Glossary</a>.</p>
 <h3 id="self-configuration">Self-Configuration<a class="headerlink" href="#self-configuration" title="Permanent link">&para;</a></h3>
 <p>Before the ConfigFactory is fully operational, it may perform "self-configuration".
 During <code>build()</code>, the factory searches the classpath for the component file
@@ -267,12 +271,16 @@ See <a href="25_config_features.html#self-configuration-per-component">Self-conf
 2. <code>secrets</code> (Encrypted/sensitive data)
 3. <code>vault</code> (HashiCorp Vault)
 4. <code>aws-secrets</code> (AWS Secrets Manager)
-5. <code>files</code> (Local filesystem)
-6. <code>registry</code> (Windows Registry)
-7. <code>registryjni</code> (Windows Registry JNI)
-8. <code>zookeeper</code> (ZooKeeper module)
-9. <code>JAR</code> (Classpath resources/defaults)</p>
-<p>Storages not in this list, such as <code>kubernetes</code> and <code>kubernetes-fabric8</code>, rank below all listed ones.
+5. <code>envvar</code> (Environment variables, SESSION scope)
+6. <code>files</code> (Local filesystem)
+7. <code>registry</code> (Windows Registry)
+8. <code>registryjni</code> (Windows Registry JNI)
+9. <code>zookeeper</code> (ZooKeeper module)
+10. <code>JAR</code> (Classpath resources/defaults)</p>
+<p>An entry also covers the IDs it prefixes up to a <code>-</code> or <code>.</code>: <code>RAM</code> covers <code>RAM-RUNTIME</code> and <code>RAM-SESSION</code>,
+<code>secrets</code> covers <code>secrets.&lt;provider&gt;</code>. So in the SESSION scope a value put by code wins over an environment
+variable, which wins over a SESSION file.
+Storages not in this list, such as <code>kubernetes</code> and <code>kubernetes-fabric8</code>, rank below all listed ones.
 The ConfigMap and Secret directories the Kubernetes modules mount into the <code>CLUSTER</code> scope are read
 through <code>files</code> and rank as such.</p>
 <p>Use <code>STORAGE_TYPE_PRIORITIES</code> to change this order within a scope.</p>

@@ -72,6 +72,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#config-feature-registry">Config Feature Registry</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#module-features-capabilities-and-conflicts">Module features, capabilities and conflicts</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#self-configuration-per-component">Self-configuration per component</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#who-may-set-a-feature">Who may set a feature</a>
@@ -105,6 +107,8 @@
     <li class="toctree-l3"><a class="reference internal" href="#secrets-providers-mconfigsecrets">Secrets providers (mConfigSecrets)</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#zookeeper-mconfigsourcezookeeper">ZooKeeper (mConfigSourceZooKeeper)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#environment-variables-mconfigsourceenvvar">Environment variables (mConfigSourceEnvVar)</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#vault-mconfigsourcevault">Vault (mConfigSourceVault)</a>
     </li>
@@ -162,7 +166,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="snippets.html">4.7 Snippets Reference</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Examples</span></p>
@@ -230,6 +236,9 @@
                 <h1 id="25-config-features">2.5 Config Features<a class="headerlink" href="#25-config-features" title="Permanent link">&para;</a></h1>
 <p>ConfigFeature flags tune how a ConfigFactory is built and how it behaves.
 Set them on the ConfigFactoryBuilder before calling <code>build()</code>.</p>
+<p>A feature is an <strong>mConfig setting</strong>: it controls mConfig itself, not your application's configuration.
+Rule of thumb: a feature says how mConfig should behave (you set it); a fact says where mConfig is
+(it finds out). See the <a href="47_glossary.html">Glossary</a>.</p>
 <p>mConfig uses a two-tier system for features:
 1.  <strong>Core Features</strong>: Standard settings defined in the <code>ConfigFeature</code> enum (e.g., <code>TEST_MODE</code>, <code>LOGLEVEL_NUMBER</code>).
 2.  <strong>Extension Features</strong>: Module-specific settings (e.g., <code>VaultFeatures.BOOTSTRAP_CONFIG_NAME</code>) that are automatically registered when the module is on the classpath.</p>
@@ -247,7 +256,28 @@ builder.setFeature("ALLOW_MCONFIG_RUNTIME_SETTINGS", true);
 
 // Using a string key for an extension feature
 builder.setFeature("VAULT_BOOTSTRAP_CONFIG_NAME", "custom-vault");</code></pre>
-<p>If a feature is not yet registered (e.g., because the module hasn't been initialized), the value is stored as a raw property and validated once the module attempts to access it.</p>
+<p>Module features are registered at the start of <code>build()</code>, from the descriptors of the modules on the class path
+(<code>ConfigModuleInterface</code>, since 0.9.0). A value set by name before that is converted then; a name that no core
+feature and no module defines is ignored, with a WARNING when it comes from a component file.</p>
+<h2 id="module-features-capabilities-and-conflicts">Module features, capabilities and conflicts<a class="headerlink" href="#module-features-capabilities-and-conflicts" title="Permanent link">&para;</a></h2>
+<p>Each module names the features it defines in its <strong>module descriptor</strong>. Since 0.9.0 a module feature can therefore
+be set in the component file and through runtime settings like a core feature, whether or not the module's classes
+were loaded before. Its setting level is checked the same way.</p>
+<p>A module declares the <strong>capabilities</strong> it takes: jobs only one module may do at a time, each with a feature-name
+prefix that starts all the module's feature names (<code>VAULT_</code>, <code>KUBERNETES_</code>, <code>WINDOWS_REGISTRY_</code>). Two modules
+doing the same job share the capability, e.g. <code>mConfigSourceKubernetes</code> and <code>mConfigSourceKubernetesFabric8</code>
+(<code>kubernetes</code>), or <code>mConfigWinRegistry</code> and <code>mConfigWinRegistryJNI</code> (<code>windows-registry</code>).</p>
+<ul>
+<li><strong>Both on the class path:</strong> mConfig uses <strong>neither</strong>, logs a WARNING that names the fix, and records a
+  <code>SOURCE_UNAVAILABLE</code> event. Remove one of them, or list one in <code>DISABLED_MODULE_IDS</code>, e.g.
+  <code>DISABLED_MODULE_IDS=kubernetes</code> to use <code>kubernetes-fabric8</code>.</li>
+<li><strong><code>DISABLED_MODULE_IDS</code></strong> takes module IDs (<code>vault</code>, <code>aws-secrets</code>, <code>envvar</code>, <code>zookeeper</code>, <code>kubernetes</code>,
+  <code>kubernetes-fabric8</code>, <code>registry</code>, <code>registryjni</code>) as well as storage and format IDs.</li>
+<li><strong>Rule violations</strong> (a feature outside the module's prefix, a prefix overlapping another module's, a core feature
+  name, two modules defining one feature differently) make mConfig refuse the module concerned, with a WARNING.
+  <code>build()</code> does not fail on them.</li>
+</ul>
+<p>The terms are defined in the <a href="47_glossary.html">Glossary</a>.</p>
 <p>Notes:
 - Booleans default to <code>false</code> unless a default is explicitly listed below.
 - Extension features are only available when the corresponding module is on the classpath.
@@ -443,7 +473,9 @@ applications that legitimately ship their own policy location (e.g. administrati
 <li><code>PERMIT_TEST_MODE</code> (Boolean, default: true; level <code>COMPONENT</code>): Master gate for test mode usage.</li>
 <li><code>TEST_MODE</code> (Boolean, default: false; level <code>COMPONENT</code>): Activate test-mode search locations.</li>
 <li><code>TESTMODE_DIRECTORIES</code> (<code>List&lt;String&gt;</code>, default: empty; level <code>COMPONENT</code>): Scoped paths in <code>SCOPE:PATH</code> format.</li>
-<li><code>TESTMODE_PARAMETERS</code> (<code>Map&lt;String,String&gt;</code>): Additional test parameters.</li>
+<li><code>TEST_ENVIRONMENT</code> (<code>Map&lt;String,String&gt;</code>; code only, via <code>ConfigFactoryBuilder.setTestEnvironment()</code>): environment
+  variables for test mode, by name. The environment-variable source reads them on top of the real environment in
+  test mode; ignored otherwise. (<code>TESTMODE_PARAMETERS</code> / <code>setTestParameters()</code> were removed in 0.8.18; nothing read them.)</li>
 </ul>
 <h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h3>
 <ul>
@@ -467,7 +499,7 @@ applications that legitimately ship their own policy location (e.g. administrati
   throws <code>ConfigException</code> (<code>CONVERSION_FAILURE</code>) for anything else, an empty value included. For compatibility with
   files written for the plain Java behaviour. <strong>Limitation:</strong> it acts in the <code>Configuration</code> getters only. Code
   that converts a <code>ConfigEntry</code> itself (<code>getValueAsBoolean()</code>), the ConfigMapper, and the schema check of <code>BOOLEAN</code>
-  entries always convert strictly. Boolean features themselves (in <code>mconfig.properties</code>, <code>setTestParameters()</code>)
+  entries always convert strictly. Boolean features themselves (in <code>mconfig.properties</code> and runtime settings)
   are always read strictly as well.</li>
 <li><code>WRITE_CONDENSED_FORMAT</code> (Boolean, default: false): Prefer compact output when writing text formats.</li>
 </ul>
@@ -480,8 +512,8 @@ applications that legitimately ship their own policy location (e.g. administrati
 </ul>
 <h3 id="storage-type-priorities">Storage type priorities<a class="headerlink" href="#storage-type-priorities" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>STORAGE_TYPE_PRIORITIES</code> (<code>List&lt;String&gt;</code>, default: <code>RAM,secrets,vault,aws-secrets,files,registry,registryjni,zookeeper,JAR</code>): Init/search order within a scope.</li>
-<li><code>STORAGE_TYPE_ALLOW_ALL_STORAGES</code> (Boolean, default: true): Allow storages not explicitly listed. Set to <code>false</code> to use only the storages covered by <code>STORAGE_TYPE_PRIORITIES</code>; the others are not initialised and read nothing. An entry covers the storage ID itself and the IDs it prefixes up to a <code>-</code> or <code>.</code> (<code>RAM</code> covers <code>RAM-RUNTIME</code> and <code>RAM-SESSION</code>, <code>secrets</code> covers <code>secrets.&lt;provider&gt;</code>). Core's own storages (<code>defaults</code>, <code>RAM-*</code>) are always used. Storages missing from the default list, such as <code>envvar</code> (environment variables) or <code>kubernetes</code>, must be added explicitly. Sources added with <code>addSource()</code> are not affected. The INFO line at factory start lists the storages in use.</li>
+<li><code>STORAGE_TYPE_PRIORITIES</code> (<code>List&lt;String&gt;</code>, default: <code>RAM,secrets,vault,aws-secrets,envvar,files,registry,registryjni,zookeeper,JAR</code>): Init/search order within a scope; an earlier entry wins. An entry covers the storage ID itself and the IDs it prefixes up to a <code>-</code> or <code>.</code> (<code>RAM</code> covers <code>RAM-RUNTIME</code> and <code>RAM-SESSION</code>, <code>secrets</code> covers <code>secrets.&lt;provider&gt;</code>). Storages not covered rank below all listed ones.</li>
+<li><code>STORAGE_TYPE_ALLOW_ALL_STORAGES</code> (Boolean, default: true): Allow storages not explicitly listed. Set to <code>false</code> to use only the storages covered by <code>STORAGE_TYPE_PRIORITIES</code> (same matching as above); the others are not initialised and read nothing. Core's own storages (<code>defaults</code>, <code>RAM-*</code>) are always used. Storages missing from the default list, such as <code>kubernetes</code>, must be added explicitly. Sources added with <code>addSource()</code> are not affected. The INFO line at factory start lists the storages in use.</li>
 </ul>
 <h3 id="schemas-and-defaults">Schemas and defaults<a class="headerlink" href="#schemas-and-defaults" title="Permanent link">&para;</a></h3>
 <ul>
@@ -547,6 +579,13 @@ that on. Set <code>SCHEMA_STRICT_MODE</code> to true if you want unschemad keys 
 <li><code>ZOOKEEPER_BOOTSTRAP_CONFIG_NAME</code> (String, default: <code>zookeeper</code>): Bootstrap config name.
   (Available via <code>ZooKeeperFeatures</code> in <code>mConfigSourceZooKeeper</code>)</li>
 </ul>
+<h3 id="environment-variables-mconfigsourceenvvar">Environment variables (mConfigSourceEnvVar)<a class="headerlink" href="#environment-variables-mconfigsourceenvvar" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>ENVVAR_REAL_ENVIRONMENT_IN_TEST_MODE</code> (Boolean, default: true; component level): read the real environment in
+  test mode too. Set to false to keep variables exported in a developer's shell out of tests; variables set with
+  <code>setTestEnvironment()</code> are read either way. See <a href="15_test_mode.html">Test Mode</a>.
+  (Available via <code>EnvVarFeatures</code> in <code>mConfigSourceEnvVar</code>)</li>
+</ul>
 <h3 id="vault-mconfigsourcevault">Vault (mConfigSourceVault)<a class="headerlink" href="#vault-mconfigsourcevault" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>VAULT_BOOTSTRAP_CONFIG_NAME</code> (String, default: <code>vault</code>): Bootstrap config name.
@@ -554,14 +593,18 @@ that on. Set <code>SCHEMA_STRICT_MODE</code> to true if you want unschemad keys 
 </ul>
 <h3 id="aws-secrets-manager-mconfigsourceawssecretsmanager">AWS Secrets Manager (mConfigSourceAwsSecretsManager)<a class="headerlink" href="#aws-secrets-manager-mconfigsourceawssecretsmanager" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>AWS_BOOTSTRAP_CONFIG_NAME</code> (String, default: <code>aws</code>): Bootstrap config name.
+<li><code>AWS_SECRETS_BOOTSTRAP_CONFIG_NAME</code> (String, default: <code>aws</code>): Bootstrap config name. Before 0.9.0: <code>AWS_BOOTSTRAP_CONFIG_NAME</code>.</li>
+<li><code>AWS_SECRETS_BYPASS_TEST</code> (Boolean, default: false): active in test mode too. Before 0.9.0: <code>AWS_BYPASS_TEST</code>.
   (Available via <code>AwsFeatures</code> in <code>mConfigSourceAwsSecretsManager</code>)</li>
 </ul>
 <h3 id="windows-registry-mconfigwinregistry-mconfigwinregistryjni">Windows Registry (mConfigWinRegistry / mConfigWinRegistryJNI)<a class="headerlink" href="#windows-registry-mconfigwinregistry-mconfigwinregistryjni" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>REGISTRY_BASE_PATH</code> (String): Registry root path (default <code>Software/[&lt;company&gt;/]&lt;application&gt;</code>; omits company if blank).
+<li><code>WINDOWS_REGISTRY_BASE_PATH</code> (String): Registry root path (default <code>Software/[&lt;company&gt;/]&lt;application&gt;</code>; omits company if blank).
+  Before 0.9.0: <code>REGISTRY_BASE_PATH</code>.
   (Available via <code>WinRegistryFeatures</code> in <code>mConfigWinRegistry</code> or <code>WinRegistryJNIFeatures</code> in <code>mConfigWinRegistryJNI</code>)</li>
 </ul>
+<p>The old names of renamed features still work in code, runtime settings and the component file, with a deprecation
+WARNING naming the new one. They are removed before 0.9.0 is released.</p>
 <h3 id="class-loading">Class loading<a class="headerlink" href="#class-loading" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>USE_CONTEXT_CLASS_LOADER</code> (Boolean, default: false): Prefer thread context loader.</li>

@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="img/favicon.ico" />
-    <title>4.6 Snippets Reference - mConfig Documentation</title>
+    <title>4.7 Snippets Reference - mConfig Documentation</title>
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "4.6 Snippets Reference";
+        var mkdocs_page_name = "4.7 Snippets Reference";
         var mkdocs_page_input_path = "snippets.md";
         var mkdocs_page_url = null;
       </script>
@@ -110,7 +110,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="46_versions.html">4.5 Versions</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">4.6 Snippets Reference</a>
+                  <li class="toctree-l1"><a class="reference internal" href="47_glossary.html">4.6 Glossary</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">4.7 Snippets Reference</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#1-api-contract-the-exact-names">1. API contract: the exact names</a>
     </li>
@@ -180,7 +182,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html" class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Part 4 Reference</li>
-      <li class="breadcrumb-item active">4.6 Snippets Reference</li>
+      <li class="breadcrumb-item active">4.7 Snippets Reference</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -230,12 +232,12 @@ code is right and this page needs fixing.</p>
 <td><code>new ConfigFactoryBuilder(...)</code> (it is an interface)</td>
 </tr>
 <tr>
-<td><code>builder.setTestMode(true);</code> returns <strong><code>void</code></strong></td>
-<td><code>.setTestMode(true).build()</code> (will not compile)</td>
+<td><code>builder.setTestMode(true)</code> returns <strong>the builder</strong> (0.8.18+)</td>
+<td><code>builder.setTestParameters(...)</code> (removed in 0.8.18)</td>
 </tr>
 <tr>
-<td><code>builder.setTestConfigPaths(scope, list);</code> returns <strong><code>void</code></strong></td>
-<td>chaining off it (will not compile)</td>
+<td><code>builder.setTestEnvironment(Map)</code>: env vars for test mode</td>
+<td><code>System.getenv()</code> beside mConfig</td>
 </tr>
 <tr>
 <td><code>builder.setFeature(...)</code> returns <strong>the builder</strong>, chainable</td>
@@ -520,7 +522,7 @@ assembly descriptor <code>jar-with-dependencies</code>. See
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="46_versions.html" class="btn btn-neutral float-left" title="4.5 Versions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="47_glossary.html" class="btn btn-neutral float-left" title="4.6 Glossary"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="examples/index.html" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -544,7 +546,7 @@ assembly descriptor <code>jar-with-dependencies</code>. See
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="46_versions.html" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="47_glossary.html" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="examples/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
