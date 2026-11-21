@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://meta-bit.github.io/mconfig/21_how_it_works.html" />
       <link rel="shortcut icon" href="img/favicon.ico" />
     <title>2.1 How it Works - mConfig Documentation</title>
     <link rel="stylesheet" href="css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "2.1 How it Works";
         var mkdocs_page_input_path = "21_how_it_works.md";
-        var mkdocs_page_url = null;
+        var mkdocs_page_url = "/mconfig/21_how_it_works.html";
       </script>
     
     <!--[if lt IE 9]>
@@ -387,12 +387,22 @@ entries, and some information about them.</p>
 <h4 id="the-validation-process">The Validation Process<a class="headerlink" href="#the-validation-process" title="Permanent link">&para;</a></h4>
 <p>When a configuration is accessed:
 1. <strong>Discovery</strong>: The library searches for the key through the layered stack.
-2. <strong>Type Enforcement</strong>: If a schema is active, the raw data from a <code>ConfigSource</code> is converted to the type specified in the schema. If conversion fails (e.g., "abc" for a <code>NUMBER</code>), the entry is considered invalid, and the search continues in lower priority layers.
-3. <strong>Constraint Checking</strong>: The converted value is checked against validation rules (regex, ranges, enums).
+2. <strong>Type Enforcement</strong>: If a schema is active, the raw data from a <code>ConfigSource</code> is checked against the type specified in the schema. If it does not fit (e.g., "abc" for a <code>NUMBER</code>), the value is invalid.
+3. <strong>Constraint Checking</strong>: The value is checked against validation rules (regex, ranges, enums, named formats, arity).
 4. <strong>Outcome</strong>:
-   - <strong>Valid</strong>: The entry is returned and potentially cached.
-   - <strong>Invalid</strong>: By default, the library logs a warning and skips the invalid entry, continuing the search in lower priority layers.
-   - <strong>Missing Mandatory</strong>: If a <code>MANDATORY</code> entry is not found in any layer (including the default layer), a <code>ConfigException</code> is thrown upon access.</p>
+   - <strong>Valid</strong>: The entry is returned.
+   - <strong>Invalid</strong> (since 0.9.0): the value is reported once per location and key, as a WARNING in the log and a
+     <code>VALIDATION/VALUE_REJECTED</code> event naming key, scope, location, reason and rule, and what is used instead.
+     The value itself is shown as <code>[REDACTED]</code> for secret entries. Then:
+     - with <code>ON_INVALID: FALLBACK</code> (the default), the value is ignored as if not set, and the search continues in
+       lower priority layers, down to the schema <code>DEFAULT</code>;
+     - with <code>ON_INVALID: FAIL</code> in the schema entry, or <code>EXCEPTION_ON_INVALID_ENTRY=true</code> for entries without it,
+       reading the key throws <code>ConfigException</code> with reason <code>INVALID_VALUE</code> at once.
+   - <strong>Nothing valid left</strong>: with <code>EXCEPTION_ON_MISSING_ENTRY=true</code> (the default), a <code>ConfigException</code> is thrown:
+     <code>INVALID_VALUE</code> if a rejected value was the reason, <code>NO_MATCHING_ENTRY</code> if nothing was configured at all.
+     With <code>false</code>, the getter returns <code>null</code>.</p>
+<p>To find invalid values at start-up rather than when a key is first read, call <code>Configuration.validate()</code> or
+<code>ConfigFactory.validateAll()</code> (<a href="23_configuration_schemas.html#invalid-values">Configuration Schemas</a>).</p>
 <h4 id="schema-activation">Schema Activation<a class="headerlink" href="#schema-activation" title="Permanent link">&para;</a></h4>
 <p>When a <code>ConfigSchema</code> is activated for a <code>Configuration</code>:
 - It populates the <strong>Default Layer</strong> (PRODUCT scope) with any default values defined in the schema.

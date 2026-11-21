@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://meta-bit.github.io/mconfig/45_events.html" />
       <link rel="shortcut icon" href="img/favicon.ico" />
     <title>3.5 Config Events - mConfig Documentation</title>
     <link rel="stylesheet" href="css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "3.5 Config Events";
         var mkdocs_page_input_path = "45_events.md";
-        var mkdocs_page_url = null;
+        var mkdocs_page_url = "/mconfig/45_events.html";
       </script>
     
     <!--[if lt IE 9]>
@@ -94,6 +94,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#example-json-with-comments">Example: JSON with Comments</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#example-unavailable-sources">Example: Unavailable Sources</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-rejected-values">Example: Rejected Values</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#cleanup">Cleanup</a>
     </li>
@@ -242,6 +244,51 @@ is the way to notice that a value did not come from where it should have. It cou
 <pre class="highlight"><code class="language-java">factory.getEvents().stream()
        .filter(ev -&gt; ev.getKind() == ConfigEvent.Kind.SOURCE_UNAVAILABLE)
        .forEach(ev -&gt; System.err.println(ev.getDetailCode()+": "+ev.getMessage()));</code></pre>
+<h2 id="example-rejected-values">Example: Rejected Values<a class="headerlink" href="#example-rejected-values" title="Permanent link">&para;</a></h2>
+<p>When a configured value fails its schema check (type, <code>PATTERN</code> range/enum/regex, named format, arity), mConfig
+logs a WARNING and records a <code>VALIDATION/VALUE_REJECTED</code> event (since 0.9.0), once per location and key until that
+location changes. It counts as a failure for <code>FAILURES_ONLY</code>; with <code>OFF</code> only the WARNING remains.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Event field / attribute</th>
+<th style="text-align: left;">Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>getConfigName()</code>, <code>getKeyPath()</code>, <code>getScope()</code>, <code>getLocation()</code></td>
+<td style="text-align: left;">where the rejected value is</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>getDetailCode()</code></td>
+<td style="text-align: left;"><code>VALUE_REJECTED_&lt;reason&gt;</code>, e.g. <code>VALUE_REJECTED_RANGE</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>reason</code></td>
+<td style="text-align: left;"><code>TYPE</code>, <code>RANGE</code>, <code>ENUM</code>, <code>PATTERN</code>, <code>FORMAT</code>, <code>ARITY</code>, <code>PATH</code>, <code>TEMPORAL</code>, <code>UNDEFINED_KEY</code>, <code>UNSPECIFIED</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rule</code></td>
+<td style="text-align: left;">the rule from the schema, e.g. <code>[22, 256]</code> (absent if unknown)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>value</code></td>
+<td style="text-align: left;">the rejected value in quotes; <code>[REDACTED]</code> for secret entries</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>usedInstead</code></td>
+<td style="text-align: left;"><code>LOWER_LAYER</code> (with <code>usedInsteadLocation</code>), <code>DEFAULT</code>, or <code>NONE</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>onInvalid</code></td>
+<td style="text-align: left;"><code>FALLBACK</code> or <code>FAIL</code>, as applied</td>
+</tr>
+</tbody>
+</table>
+<p><code>Configuration.validate()</code> and <code>ConfigFactory.validateAll()</code> return the same events for every value, read or not:</p>
+<pre class="highlight"><code class="language-java">List&lt;ConfigEvent&gt; rejected = factory.validateAll();
+rejected.forEach(ev -&gt; System.err.println(ev.getMessage()));</code></pre>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
 <p>To clear accumulated events:</p>
 <pre class="highlight"><code class="language-java">factory.getEvents().clean();</code></pre>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://meta-bit.github.io/mconfig/25_config_features.html" />
       <link rel="shortcut icon" href="img/favicon.ico" />
     <title>2.5 Config Features - mConfig Documentation</title>
     <link rel="stylesheet" href="css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "2.5 Config Features";
         var mkdocs_page_input_path = "25_config_features.md";
-        var mkdocs_page_url = null;
+        var mkdocs_page_url = "/mconfig/25_config_features.html";
       </script>
     
     <!--[if lt IE 9]>
@@ -434,6 +434,11 @@ module-specific features are <code>ANY</code> unless the module says otherwise. 
 <td><code>COMPONENT</code></td>
 <td>how a component reads its own files, not every component's</td>
 </tr>
+<tr>
+<td><code>EXCEPTION_ON_INVALID_ENTRY</code></td>
+<td><code>COMPONENT</code></td>
+<td>how strictly a component treats its own invalid values</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Why "delegated" is different from a classpath file.</strong>
@@ -525,7 +530,12 @@ applications that legitimately ship their own policy location (e.g. administrati
 that on. Set <code>SCHEMA_STRICT_MODE</code> to true if you want unschemad keys rejected instead.</p>
 <h3 id="missing-entry-behavior">Missing entry behavior<a class="headerlink" href="#missing-entry-behavior" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>EXCEPTION_ON_MISSING_ENTRY</code> (Boolean, default: true): Throw when a key is absent.</li>
+<li><code>EXCEPTION_ON_MISSING_ENTRY</code> (Boolean, default: true): Throw when a key is absent. If a configured value was
+  rejected by the schema and nothing valid remains, the reason is <code>INVALID_VALUE</code>, otherwise <code>NO_MATCHING_ENTRY</code>.</li>
+<li><code>EXCEPTION_ON_INVALID_ENTRY</code> (Boolean, default: false; component; since 0.9.0): for schema entries without
+  <code>ON_INVALID</code>, <code>true</code> makes a rejected value throw <code>INVALID_VALUE</code> at once (<code>FAIL</code>), without lower locations or the
+  <code>DEFAULT</code>; <code>false</code> ignores it as if not set (<code>FALLBACK</code>). A rejected value is reported either way. Useful for
+  tests and strict deployments. See <a href="23_configuration_schemas.html#invalid-values">Invalid values</a>.</li>
 <li><code>DEFAULT_ON_MISSING_ENTRY</code> (Boolean): deprecated since 0.8.17, never evaluated, removed in 0.9.0. Schema
   <code>DEFAULT</code> values apply anyway; with <code>EXCEPTION_ON_MISSING_ENTRY=false</code>, a key with neither value nor default
   returns <code>null</code>.</li>

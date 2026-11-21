@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://meta-bit.github.io/mconfig/snippets.html" />
       <link rel="shortcut icon" href="img/favicon.ico" />
     <title>4.7 Snippets Reference - mConfig Documentation</title>
     <link rel="stylesheet" href="css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "4.7 Snippets Reference";
         var mkdocs_page_input_path = "snippets.md";
-        var mkdocs_page_url = null;
+        var mkdocs_page_url = "/mconfig/snippets.html";
       </script>
     
     <!--[if lt IE 9]>
@@ -371,6 +371,11 @@ the full description is in <a href="23_configuration_schemas.html">Configuration
 <td><code>EXCEPTION_ON_MISSING_ENTRY</code></td>
 <td><code>true</code></td>
 <td>a key with neither value nor default throws <code>ConfigException</code>; <code>false</code> returns <code>null</code></td>
+</tr>
+<tr>
+<td><code>EXCEPTION_ON_INVALID_ENTRY</code></td>
+<td><code>false</code></td>
+<td><code>true</code>: a value rejected by the schema throws <code>INVALID_VALUE</code> (entries without <code>ON_INVALID</code>)</td>
 </tr>
 <tr>
 <td><code>EXCEPTION_WHEN_CONFIGURATION_NOT_FOUND</code></td>

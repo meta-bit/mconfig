@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://meta-bit.github.io/mconfig/23_configuration_schemas.html" />
       <link rel="shortcut icon" href="img/favicon.ico" />
     <title>2.3 Configuration Schemas - mConfig Documentation</title>
     <link rel="stylesheet" href="css/theme.css" />
@@ -14,7 +14,7 @@
         // Current page data
         var mkdocs_page_name = "2.3 Configuration Schemas";
         var mkdocs_page_input_path = "23_configuration_schemas.md";
-        var mkdocs_page_url = null;
+        var mkdocs_page_url = "/mconfig/23_configuration_schemas.html";
       </script>
     
     <!--[if lt IE 9]>
@@ -90,7 +90,9 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#2333-validation-patterns-pattern">2.3.3.3 Validation Patterns (PATTERN)</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#2334-internationalization-i18n">2.3.3.4 Internationalization (I18N)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#2334-invalid-values-on_invalid">2.3.3.4 Invalid values (ON_INVALID)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2335-internationalization-i18n">2.3.3.5 Internationalization (I18N)</a>
     </li>
         </ul>
     </li>
@@ -339,14 +341,19 @@ When a configuration is loaded (e.g., via <code>getConfig(name)</code>), mConfig
 <td style="text-align: left;">Boolean</td>
 <td style="text-align: left;">(Optional) For <code>DATETIME</code>, requires an offset (e.g., <code>+02:00</code> or <code>Z</code>).</td>
 </tr>
+<tr>
+<td style="text-align: left;"><code>ON_INVALID</code></td>
+<td style="text-align: left;">String</td>
+<td style="text-align: left;">(Optional, since 0.9.0) <code>FALLBACK</code> or <code>FAIL</code>: what happens when a configured value fails validation. See <a href="#invalid-values">Invalid values</a>. Any other value fails the schema load.</td>
+</tr>
 </tbody>
 </table>
 <p>Property names are matched case-insensitively, so <code>"KEY"</code> and <code>"key"</code> are equivalent.</p>
 <h4 id="boolean-values">Boolean values<a class="headerlink" href="#boolean-values" title="Permanent link">&para;</a></h4>
 <p>An entry of <code>TYPE</code> <code>BOOLEAN</code> accepts <code>true/false</code>, <code>yes/no</code>, <code>on/off</code> and <code>1/0</code>, in any case and with
 surrounding blanks; a <code>DEFAULT</code> of <code>"on"</code> is valid. Any other value, an empty one included, does not match the
-schema. Such a value is skipped when read: the next layer, or finally the <code>DEFAULT</code>, applies, so a typing error in
-one file does not switch a feature off. Writing such a value through <code>put()</code> is rejected. (Up to 0.8.16 the check
+schema. Such a value is rejected and reported (see <a href="#invalid-values">Invalid values</a>): by default the next layer,
+or finally the <code>DEFAULT</code>, applies, so a typing error in one file does not switch a feature off. Writing such a value through <code>put()</code> is rejected. (Up to 0.8.16 the check
 accepted <code>true</code> and <code>false</code> only.)</p>
 <p>Without a schema, <code>getBoolean()</code> uses the first value found and throws <code>ConfigException</code> (<code>CONVERSION_FAILURE</code>) if
 it is not one of these literals. See <a href="25_config_features.html"><code>LENIENT_BOOLEAN_CONVERSION</code></a> for the plain Java
@@ -456,7 +463,59 @@ redundant and not reported. 0.9.0 will be stricter.</p>
 </ul>
 </li>
 </ul>
-<h3 id="2334-internationalization-i18n">2.3.3.4 Internationalization (I18N)<a class="headerlink" href="#2334-internationalization-i18n" title="Permanent link">&para;</a></h3>
+<p><a id="invalid-values"></a></p>
+<h3 id="2334-invalid-values-on_invalid">2.3.3.4 Invalid values (<code>ON_INVALID</code>)<a class="headerlink" href="#2334-invalid-values-on_invalid" title="Permanent link">&para;</a></h3>
+<p>A configured value that fails its entry's checks (type, <code>PATTERN</code>, named format, arity, path or temporal flags) is
+<strong>rejected</strong>. Since 0.9.0 a rejected value is never dropped silently:</p>
+<ul>
+<li><strong>Reported</strong>, once per location and key until that location changes: a WARNING in the log and a
+  <code>VALIDATION/VALUE_REJECTED</code> event (<a href="45_events.html#example-rejected-values">Config Events</a>) with key, scope, location,
+  reason, rule and what is used instead. The value is shown as <code>[REDACTED]</code> for <code>SECRET</code> entries; exception messages
+  never contain it.</li>
+<li><strong>Then handled</strong> as <code>ON_INVALID</code> says, or, for entries without it, as
+  <a href="25_config_features.html"><code>EXCEPTION_ON_INVALID_ENTRY</code></a> says (default <code>false</code> = <code>FALLBACK</code>):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>ON_INVALID</code></th>
+<th style="text-align: left;">Effect when the value is read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>FALLBACK</code></td>
+<td style="text-align: left;">ignored as if not set: a valid value from a lower-precedence location applies, else the <code>DEFAULT</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>FAIL</code></td>
+<td style="text-align: left;"><code>ConfigException</code> with reason <code>INVALID_VALUE</code> at once; lower locations and the <code>DEFAULT</code> are not used</td>
+</tr>
+</tbody>
+</table>
+<p>If nothing valid remains under <code>FALLBACK</code>, <code>EXCEPTION_ON_MISSING_ENTRY</code> decides: <code>true</code> (default) throws
+<code>INVALID_VALUE</code> naming the rejected location(s), <code>false</code> returns <code>null</code>. <code>NO_MATCHING_ENTRY</code> is kept for keys
+that are not configured at all.</p>
+<p>Use <code>FAIL</code> for settings where a quiet fallback is worse than not starting, e.g. a token length or a database type:</p>
+<pre class="highlight"><code class="language-json">[
+  { "KEY": "token.length",  "TYPE": "NUMBER", "PATTERN": "[22, 256]", "DEFAULT": 34, "ON_INVALID": "FAIL" },
+  { "KEY": "database.type", "TYPE": "ENUM", "PATTERN": "embedded|mariadb|postgres", "DEFAULT": "embedded" }
+]</code></pre>
+<p><strong>Checking at start-up.</strong> A rejected value otherwise shows only when its key is read. <code>Configuration.validate()</code>
+checks one configuration, <code>ConfigFactory.validateAll()</code> every configuration with a known schema, opened or not; both
+check all locations and return the <code>VALUE_REJECTED</code> events (empty if everything passes) without throwing:</p>
+<pre class="highlight"><code class="language-java">List&lt;ConfigEvent&gt; rejected = factory.validateAll();
+if (!rejected.isEmpty())
+    {
+    rejected.forEach(ev -&gt; log.error(ev.getMessage()));
+    throw new IllegalStateException(rejected.size()+" invalid configuration values");
+    }</code></pre>
+<p>In JSON Schema files the property is <code>"x-mconfig-on-invalid"</code>.</p>
+<blockquote>
+<p><strong>Older versions:</strong> mConfig before 0.9.0 ignores unknown schema properties, <code>ON_INVALID</code> included, without notice:
+it falls back silently. Require 0.9.0 or later where <code>FAIL</code> matters.</p>
+</blockquote>
+<h3 id="2335-internationalization-i18n">2.3.3.5 Internationalization (I18N)<a class="headerlink" href="#2335-internationalization-i18n" title="Permanent link">&para;</a></h3>
 <p>The <code>DESCRIPTION</code> property can be a plain string or a key in a Resource Bundle.
 - mConfig looks for Resource Bundles named <code>messages</code> in the same locations as schemas (e.g., <code>.config/messages.properties</code>).
 - If a matching key is found in the bundle for the current locale (configured via <code>ConfigFeature.PREFERRED_LANGUAGE</code>), the localized string is used.
